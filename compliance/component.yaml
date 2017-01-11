@@ -1,12 +1,12 @@
 schema_version: 3.0.0
-name: ATF eRegs
+name: OMB TODO
 documentation_complete: false
 references:
 - name: New Relic Application Monitoring
   path: https://newrelic.com/application-monitoring
   type: URL
 - name: Repository's Github
-  path: https://github.com/18F/atf-eregs
+  path: https://github.com/18F/omb-eregs
   type: URL
 - name: Custom User Provided Service Documentation
   path: https://docs.cloudfoundry.org/devguide/services/user-provided.html
@@ -33,19 +33,11 @@ satisfies:
 - standard_key: NIST-800-53
   control_key: AC-3   # Access Enforcement
   narrative:
-    - text: >
-        The majority of the application's functionality is read-only, and
-        accessible to the general public. The ability to *update* data (i.e.
-        write-access) is restricted via HTTP BASIC AUTH credentials. Combined,
-        the user name and password are 64 randomly generated hexadecimal
-        characters. For more details, see
-        http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
+    - text: TODO
 - standard_key: NIST-800-53
   control_key: AC-6   # Least Privilege
   narrative:
-    - text: >
-        As noted above, the only "privilege" is write access, which only
-        developers have (due to configuring the system).
+    - text: TODO
 - standard_key: NIST-800-53
   control_key: AU-2   # Audit Events
   narrative:
@@ -90,15 +82,7 @@ satisfies:
 - standard_key: NIST-800-53
   control_key: CM-6   # Configuration Settings
   narrative:
-    - text: >
-        As described in the application docs, configurable settings are
-        defined in a handful of locations. Configurations which can be shared
-        between cloud.gov environments are located in the manifest_base.yml,
-        atf_eregs/settings/base.py and prod.py files ("prod" here meaning in
-        contrast to local development). Configurations which are specific to
-        one cloud.gov environment (i.e. either the staging or production
-        environment) are located in the appropriate manifest_*.yml file or
-        stored in and provided by a cloud.gov "custom user provided service".
+    - text: TODO
   references:
     - verification_key: cups
 - standard_key: NIST-800-53
@@ -113,13 +97,7 @@ satisfies:
   control_key: IA-2   # Identification and Authentication (Organizational
                       # Users)
   narrative:
-    - text: >
-        Cloud.gov controls cover the majority, here. We also use a
-        randomly-generated 64-character hexadecimal HTTP BASIC AUTH token to
-        identify organizational users when updating regulation data. This token
-        (split into two halves for "username" and "password") is stored in a
-        cloud.gov "custom user provided service", from which developers retrieve
-        the credentials before using them.
+    - text: TODO
 - standard_key: NIST-800-53
   control_key: IA-2 (1)   # Identification and Authentication (Organizational
                           # Users)
@@ -141,12 +119,7 @@ satisfies:
 - standard_key: NIST-800-53
   control_key: PL-8   # Information Security Architecture
   narrative:
-    - text: >
-        In addition to cloud.gov controls, note the diagrams in
-        http://atf-eregs.readthedocs.io/en/latest/production_setup.html#production-setup
-        . In summary, data is indirectly retrieved from the Federal Register
-        and FDSYS (via the regulations-parser library), but passes through a
-        developer before it reaches the server.
+    - text: TODO
 - standard_key: NIST-800-53
   control_key: RA-5   # Vulnerability Scanning
   narrative:
@@ -243,26 +216,22 @@ satisfies:
 - standard_key: NIST-800-53
   control_key: SI-10  # Information Input Validation
   narrative:
-    - text: >
-        At the application layer (see cloud.gov controls for lower), we
-        validate a JSON schema for incoming regulatory data (though the
-        information can only come from a trusted source). That said, the data
-        is generally low risk, as it comes from a developer.
+    - text: TODO
 verifications:
 - key: travis
   name: Repository's Travis CI
-  path: https://travis-ci.org/18F/atf-eregs
+  path: TODO
   type: URL
 - key: gemnasium
   name: Project's Gemnasium Results
-  path: https://gemnasium.com/github.com/18F/atf-eregs
+  path: TODO
   type: URL
 - key: code-climate
   name: Project's Code Climate Results
-  path: https://codeclimate.com/github/18F/atf-eregs
+  path: TODO
   type: URL
 - key: quantified-code
   name: Project's Quantified Code Results
-  path: https://www.quantifiedcode.com/app/project/e2ee92b5c3db486f89d47371c4d89a2f
+  path: TODO
   type: URL
 
