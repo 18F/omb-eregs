@@ -1,22 +1,18 @@
-# ATF eRegulations
-This repository contains code necessary to run a Bureau of Alcohol,
-Tobacco, Firearms and Explosives ([ATF](https://www.atf.gov)) instance of
-[eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer). Live version: [https://atf-eregs.apps.cloud.gov/](https://atf-eregs.apps.cloud.gov/)
-
-This code glues together general-purpose/non-agency-specific eRegulations libraries (which are not in this repository) with ATF-specific styles, templates, and plugins (which are in this repository).
+# OMB eRegulations
+This repository contains code necessary to run the White House Office of Management and Budget (OMB) instance of
+[eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer). 
 
 ## Status
-[![Build Status](https://travis-ci.org/18F/atf-eregs.svg?branch=master)](https://travis-ci.org/18F/atf-eregs)
-[![Quantified Code](https://www.quantifiedcode.com/api/v1/project/e2ee92b5c3db486f89d47371c4d89a2f/badge.svg)](https://www.quantifiedcode.com/app/project/e2ee92b5c3db486f89d47371c4d89a2f)
-[![Dependency Status](https://gemnasium.com/18F/atf-eregs.svg)](https://gemnasium.com/18F/atf-eregs)
+[![Build Status](https://travis-ci.org/18F/omb-eregs.svg?branch=master)](https://travis-ci.org/18F/omb-eregs)
+[![Code Climate](https://codeclimate.com/github/18F/omb-eregs/badges/gpa.svg)](https://codeclimate.com/github/18F/omb-eregs)
 
 ## Documentation and contributing
 
 See the [eRegulations overview](https://eregs.github.io/) for context about eRegulations, which is a multi-agency project.
 
-To learn how to set up ATF eRegulations (locally or in production) and customize it/develop for it, see [the documentation hosted on Read the Docs](https://atf-eregs.readthedocs.org/).
+To learn how to set up OMB eRegulations (locally or in production) and customize it/develop for it, see [the documentation hosted on Read the Docs](https://readthedocs.org/projects/omb-eregs/).
 
-If you're interested in contributing to ATF eRegulations, see [the contributing guidelines](CONTRIBUTING.md).
+If you're interested in contributing to OMB eRegulations, see [the contributing guidelines](CONTRIBUTING.md).
 
 ## Public domain
 
