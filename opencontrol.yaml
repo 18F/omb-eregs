@@ -1,11 +1,11 @@
 schema_version: "1.0.0"
-name: ATF eRegs
+name: OMB TODO
 metadata:
-  description: >
-    A pilot project to display ATF's regulations and associated meta data.
+  description: TODO
   maintainers:
     - christopher.lubinski@gsa.gov
     - tadhg.ohiggins@gsa.gov
+    - theresa.summa@gsa.gov
     - william.sullivan@gsa.gov
 components:
   - ./compliance
