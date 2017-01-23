@@ -1,5 +1,5 @@
 ---
-name: ATF eRegs
+name: OMB eRegs
 uniqueID: MB18F15ATF01
 version: 1.0.0
 phase: beta
@@ -13,29 +13,29 @@ system-type: minor
 level-of-identity-assurance: 0
 staff:
     authorizing-official:
-        name: Aaron Snow
-        title: 18F Executive Director 
+        name: Noah Kunin
+        title: TTS Infrastructure Director
         org: General Services Administration
-        unit: 18F
-        email: 18F@gsa.gov
+        unit: TTS
+        email: devops@gsa.gov
     system-owner: 
-        name: Noah Kunin
-        title: 18F Infrastructure Director
+        name: TBD
+        title: 
         org: General Services Administration
-        unit: 18F
-        email: devops@gsa.gov
+        unit: 
+        email: 
     system-management:
-        name: Noah Kunin
-        title: 18F Infrastructure Director
+        name: Joe Hoyt
+        title: TODO
         org: General Services Administration
-        unit: 18F
-        email: devops@gsa.gov
+        unit: 
+        email: 
     system-security-officer:
-        name: Noah Kunin
-        title: 18F Infrastructure Director
+        name: Randy Bator
+        title: TODO
         org: General Services Administration
-        unit: 18F
-        email: devops@gsa.gov
+        unit: TTS
+        email: 
     technical-lead:
         name: CM Lubinski
         title: Technical Lead
@@ -44,12 +44,12 @@ staff:
         email: christopher.lubinski@gsa.gov
 leveraged-authorizations: 
 - https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
-purpose: https://github.com/18F/atf-eregs
+purpose: https://github.com/18F/omb-eregs
 components: 
 - https://github.com/eregs/regulations-core
 - https://github.com/eregs/regulations-site
-diagram: http://atf-eregs.readthedocs.io/en/latest/production_setup.html#architecture
-network-architecture: http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
+diagram: TODO:REPLACE http://atf-eregs.readthedocs.io/en/latest/production_setup.html#architecture
+network-architecture: TODO:REPLACE http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
 environments:
 - Cloud Foundry
 - Amazon Web Services East / West
@@ -59,6 +59,6 @@ user-types:
         - deployment
         - engineering
 controls: 
-- http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
+- TODO:REPLACE http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
 - https://github.com/eregs/regulations-core#security
 ---
