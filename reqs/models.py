@@ -5,7 +5,7 @@ class Requirement(models.Model):
     policy_number = models.CharField(max_length=16)
     policy_title = models.CharField(max_length=1024)
     uri_policy_id = models.CharField(max_length=256)
-    omb_policy_id = models.CharField(max_length=16)
+    omb_policy_id = models.CharField(max_length=16, blank=True)
     policy_type = models.CharField(max_length=32)
     policy_issuance_year = models.CharField(max_length=32)
     policy_subset = models.CharField(max_length=32)

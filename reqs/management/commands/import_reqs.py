@@ -7,6 +7,12 @@ from django.core.management.base import BaseCommand
 from reqs.models import Requirement
 
 
+def convert_omb_policy_id(string):
+    if string in ('NA', 'None'):
+        return ''
+    return string
+
+
 class Command(BaseCommand):
     help = 'Populate requirements from a CSV'   # noqa
 
@@ -22,7 +28,7 @@ class Command(BaseCommand):
                 policy_number=row['policyNumber'],
                 policy_title=row['policyTitle'],
                 uri_policy_id=row['uriPolicyId'],
-                omb_policy_id=row['ombPolicyId'],
+                omb_policy_id=convert_omb_policy_id(row['ombPolicyId']),
                 policy_type=row['policyType'],
                 policy_issuance_year=row['policyIssuanceYear'],
                 policy_subset=row['policySunset'],

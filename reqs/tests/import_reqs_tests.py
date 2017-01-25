@@ -22,7 +22,7 @@ def test_imports_correctly(tmpdir):
     assert len(reqs) == 2
     # Spot checks
     assert reqs[0].policy_number == '1'
-    assert reqs[0].omb_policy_id == 'NA'  # @TODO
+    assert reqs[0].omb_policy_id == ''
     assert reqs[0].policy_issuance_year == '12/9/2010'    # @TODO
     assert reqs[0].req_text == (
         "Moving forward, Federal IT programs must be structured to deploy "
