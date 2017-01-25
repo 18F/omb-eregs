@@ -42,3 +42,9 @@ class Requirement(models.Model):
     definitions = models.BooleanField(default=False)
     reporting = models.BooleanField(default=False)
     other_keywords = models.CharField(max_length=1024)
+
+    def __str__(self):
+        text = self.req_text[:40]
+        if len(self.req_text) > 40:
+            text += '...'
+        return 'Requirement {0}:{1}'.format(self.req_id, text)
