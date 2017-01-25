@@ -1,4 +1,14 @@
+from enum import Enum, unique
+
 from django.db import models
+
+
+@unique
+class PolicyTypes(Enum):
+    memorandum = 'Memorandum'
+    circular = 'Circular'
+    strategy = 'Strategy'
+    review = 'Policy Review'
 
 
 class Requirement(models.Model):
@@ -6,7 +16,8 @@ class Requirement(models.Model):
     policy_title = models.CharField(max_length=1024)
     uri_policy_id = models.CharField(max_length=256)
     omb_policy_id = models.CharField(max_length=16, blank=True)
-    policy_type = models.CharField(max_length=32)
+    policy_type = models.CharField(
+        max_length=32, choices=[(e.name, e.value) for e in PolicyTypes])
     policy_issuance_year = models.CharField(max_length=32)
     policy_subset = models.CharField(max_length=32)
     req_id = models.CharField(max_length=16)

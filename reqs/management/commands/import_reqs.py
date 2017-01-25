@@ -1,16 +1,26 @@
 import argparse
 import csv
+import logging
 import sys
 
 from django.core.management.base import BaseCommand
 
-from reqs.models import Requirement
+from reqs.models import PolicyTypes, Requirement
+
+logger = logging.getLogger(__name__)
 
 
 def convert_omb_policy_id(string):
     if string in ('NA', 'None'):
         return ''
     return string
+
+
+def convert_policy_type(string):
+    """Raises a ValueError if the string type can't be found"""
+    if 'memo' in string.lower():
+        return PolicyTypes.memorandum
+    return PolicyTypes(string)
 
 
 class Command(BaseCommand):
@@ -24,53 +34,59 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         reqs = []
         for row in csv.DictReader(options['input_file']):
-            params = dict(
-                policy_number=row['policyNumber'],
-                policy_title=row['policyTitle'],
-                uri_policy_id=row['uriPolicyId'],
-                omb_policy_id=convert_omb_policy_id(row['ombPolicyId']),
-                policy_type=row['policyType'],
-                policy_issuance_year=row['policyIssuanceYear'],
-                policy_subset=row['policySunset'],
-                req_id=row['reqId'],
-                issuing_body=row['issuingBody'],
-                policy_section=row['policySection'],
-                policy_sub_section=row['policySubSection'],
-                req_text=row['reqText'],
-                verb=row['verb'],
-                impacted_entity=row['Impacted Entity'],
-                req_deadline=row['reqDeadline'],
-                citation=row['citation'],
-                aquisition=bool(row['Acquisition/Contracts (Keywords)']),
-                human_capital=bool(row['Human Capital (Keywords)']),
-                cloud=bool(row['Cloud (Keywords)']),
-                data_centers=bool(row['Data Centers (Keywords)']),
-                cybersecurity=bool(row['Cybersecurity (Keywords)']),
-                privacy=bool(row['Privacy (Keywords)']),
-                shared_services=bool(row['Shared Services (Keywords)']),
-                it_project_management=bool(row['IT Project Management '
-                                               '(Keywords)']),
-                software=bool(row['Software (Keywords)']),
-                digital_services=bool(row['Digital Services (Keywords)']),
-                mobile=bool(row['Mobile (Keywords)']),
-                hardware=bool(row['Hardware/Government Furnished Equipment '
-                                  '(GFE) (Keywords)']),
-                transparency=bool(row['IT Transparency (Open Data, FOIA, '
-                                      'Public Records, etc.) (Keywords)']),
-                statistics=bool(row['Agency Statistics (Keywords)']),
-                customer_services=bool(row['Customer Services (Keywords)']),
-                governance=bool(row['Governance (Keywords)']),
-                financial_systems=bool(row['Financial Systems (Keywords)']),
-                budget=bool(row['Budget (Keywords)']),
-                governance_org_structure=bool(row['Governance - Org '
-                                                  'Structure (Keywords)']),
-                governance_implementation=bool(row[
-                    'Governance - Implementation (Keywords)']),
-                data_management=bool(row['Data Management/Standards '
-                                         '(Keywords)']),
-                definitions=bool(row['Definitions (Keywords)']),
-                reporting=bool(row['Reporting (Keywords)']),
-                other_keywords=row['Other (Keywords)'],
-            )
-            reqs.append(Requirement(**params))
+            try:
+                params = dict(
+                    policy_number=row['policyNumber'],
+                    policy_title=row['policyTitle'],
+                    uri_policy_id=row['uriPolicyId'],
+                    omb_policy_id=convert_omb_policy_id(row['ombPolicyId']),
+                    policy_type=convert_policy_type(row['policyType']).value,
+                    policy_issuance_year=row['policyIssuanceYear'],
+                    policy_subset=row['policySunset'],
+                    req_id=row['reqId'],
+                    issuing_body=row['issuingBody'],
+                    policy_section=row['policySection'],
+                    policy_sub_section=row['policySubSection'],
+                    req_text=row['reqText'],
+                    verb=row['verb'],
+                    impacted_entity=row['Impacted Entity'],
+                    req_deadline=row['reqDeadline'],
+                    citation=row['citation'],
+                    aquisition=bool(row['Acquisition/Contracts (Keywords)']),
+                    human_capital=bool(row['Human Capital (Keywords)']),
+                    cloud=bool(row['Cloud (Keywords)']),
+                    data_centers=bool(row['Data Centers (Keywords)']),
+                    cybersecurity=bool(row['Cybersecurity (Keywords)']),
+                    privacy=bool(row['Privacy (Keywords)']),
+                    shared_services=bool(row['Shared Services (Keywords)']),
+                    it_project_management=bool(row['IT Project Management '
+                                                   '(Keywords)']),
+                    software=bool(row['Software (Keywords)']),
+                    digital_services=bool(row['Digital Services (Keywords)']),
+                    mobile=bool(row['Mobile (Keywords)']),
+                    hardware=bool(
+                        row['Hardware/Government Furnished Equipment (GFE) '
+                            '(Keywords)']),
+                    transparency=bool(row['IT Transparency (Open Data, FOIA, '
+                                          'Public Records, etc.) (Keywords)']),
+                    statistics=bool(row['Agency Statistics (Keywords)']),
+                    customer_services=bool(
+                        row['Customer Services (Keywords)']),
+                    governance=bool(row['Governance (Keywords)']),
+                    financial_systems=bool(
+                        row['Financial Systems (Keywords)']),
+                    budget=bool(row['Budget (Keywords)']),
+                    governance_org_structure=bool(row['Governance - Org '
+                                                      'Structure (Keywords)']),
+                    governance_implementation=bool(row[
+                        'Governance - Implementation (Keywords)']),
+                    data_management=bool(row['Data Management/Standards '
+                                             '(Keywords)']),
+                    definitions=bool(row['Definitions (Keywords)']),
+                    reporting=bool(row['Reporting (Keywords)']),
+                    other_keywords=row['Other (Keywords)'],
+                )
+                reqs.append(Requirement(**params))
+            except ValueError as err:
+                logger.warning("Problem with this row: %s -- %s", err, row)
         Requirement.objects.bulk_create(reqs)

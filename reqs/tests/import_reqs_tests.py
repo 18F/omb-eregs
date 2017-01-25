@@ -23,6 +23,7 @@ def test_imports_correctly(tmpdir):
     # Spot checks
     assert reqs[0].policy_number == '1'
     assert reqs[0].omb_policy_id == ''
+    assert reqs[0].policy_type == 'Strategy'
     assert reqs[0].policy_issuance_year == '12/9/2010'    # @TODO
     assert reqs[0].req_text == (
         "Moving forward, Federal IT programs must be structured to deploy "
@@ -35,6 +36,7 @@ def test_imports_correctly(tmpdir):
     assert reqs[0].other_keywords == 'Software Development Lifecycle/Agile'
 
     assert reqs[1].policy_title == 'Data Center Optimization Initiative (DCOI)'
+    assert reqs[1].policy_type == 'Memorandum'
     assert reqs[1].req_id == '21.44'
     assert reqs[1].verb == 'Will'
     assert reqs[1].req_deadline == 'Within 30 days'
