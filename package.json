@@ -19,5 +19,8 @@
   "homepage": "https://github.com/18F/omb-eregs#readme",
   "devDependencies": {
     "webpack": "^2.2.0"
+  },
+  "dependencies": {
+    "uswds": "^0.14.0"
   }
 }
