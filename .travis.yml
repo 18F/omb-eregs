@@ -3,6 +3,8 @@ sudo: false
 python: 3.5
 install:
   - pip install -r requirements_dev.txt
+  - npm install
 script:
   - py.test
   - flake8
+  - webpack
