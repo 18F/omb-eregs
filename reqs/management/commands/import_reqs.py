@@ -20,6 +20,8 @@ def convert_policy_type(string):
     """Raises a ValueError if the string type can't be found"""
     if 'memo' in string.lower():
         return PolicyTypes.memorandum
+    elif 'circular' in string.lower():
+        return PolicyTypes.circular
     return PolicyTypes(string)
 
 
