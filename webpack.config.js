@@ -7,12 +7,17 @@ module.exports = {
     module: {
         loaders: [
           {
-           test: /\.js$/,
-            exclude: /(node_modules|bower_components)/,
-            loaders: ['babel-loader', "eslint-loader"],
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader',
             query: {
               presets: ['es2015']
             }
+          },
+          {
+            test: /\.js$/,
+            loader: "eslint-loader",
+            exclude: /node_modules/
           },
           {
             test: /\.scss$/,
