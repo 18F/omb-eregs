@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         reqs = []
-        for row in csv.DictReader(options['input_file']):
+        for idx, row in enumerate(csv.DictReader(options['input_file'])):
             try:
                 params = dict(
                     policy_number=row['policyNumber'],
@@ -90,5 +90,5 @@ class Command(BaseCommand):
                 )
                 reqs.append(Requirement(**params))
             except ValueError as err:
-                logger.warning("Problem with this row: %s -- %s", err, row)
+                logger.warning("Problem with this row %s: %s", idx, err)
         Requirement.objects.bulk_create(reqs)
