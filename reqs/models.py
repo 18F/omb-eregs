@@ -18,8 +18,8 @@ class Requirement(models.Model):
     omb_policy_id = models.CharField(max_length=16, blank=True)
     policy_type = models.CharField(
         max_length=32, choices=[(e.name, e.value) for e in PolicyTypes])
-    policy_issuance_year = models.CharField(max_length=32)
-    policy_subset = models.CharField(max_length=32)
+    policy_issuance = models.DateField()
+    policy_sunset = models.DateField(blank=True, null=True)
     req_id = models.CharField(max_length=16)
     issuing_body = models.CharField(max_length=512)
     policy_section = models.CharField(max_length=1024)

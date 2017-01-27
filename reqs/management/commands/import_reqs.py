@@ -2,6 +2,7 @@ import argparse
 import csv
 import logging
 import sys
+from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
@@ -23,6 +24,13 @@ def convert_policy_type(string):
     return PolicyTypes(string)
 
 
+def convert_date(string):
+    """Tries to convert a date string into a date. Accounts for NA. May raise
+    a ValueError"""
+    if string not in ('NA', 'None specified'):
+        return datetime.strptime(string, '%m/%d/%Y').date()
+
+
 class Command(BaseCommand):
     help = 'Populate requirements from a CSV'   # noqa
 
@@ -41,8 +49,8 @@ class Command(BaseCommand):
                     uri_policy_id=row['uriPolicyId'],
                     omb_policy_id=convert_omb_policy_id(row['ombPolicyId']),
                     policy_type=convert_policy_type(row['policyType']).value,
-                    policy_issuance_year=row['policyIssuanceYear'],
-                    policy_subset=row['policySunset'],
+                    policy_issuance=convert_date(row['policyIssuanceYear']),
+                    policy_sunset=convert_date(row['policySunset']),
                     req_id=row['reqId'],
                     issuing_body=row['issuingBody'],
                     policy_section=row['policySection'],
