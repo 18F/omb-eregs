@@ -1,6 +1,8 @@
 language: python
 sudo: false
 python: 3.5
+before_install:
+  - nvm install node
 install:
   - pip install -r requirements_dev.txt
   - npm install
