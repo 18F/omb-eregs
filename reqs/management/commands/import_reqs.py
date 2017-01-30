@@ -20,6 +20,8 @@ def convert_policy_type(string):
     """Raises a ValueError if the string type can't be found"""
     if 'memo' in string.lower():
         return PolicyTypes.memorandum
+    elif 'circular' in string.lower():
+        return PolicyTypes.circular
     return PolicyTypes(string)
 
 
@@ -33,7 +35,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         reqs = []
-        for row in csv.DictReader(options['input_file']):
+        for idx, row in enumerate(csv.DictReader(options['input_file'])):
             try:
                 params = dict(
                     policy_number=row['policyNumber'],
@@ -88,5 +90,5 @@ class Command(BaseCommand):
                 )
                 reqs.append(Requirement(**params))
             except ValueError as err:
-                logger.warning("Problem with this row: %s -- %s", err, row)
+                logger.warning("Problem with this row %s: %s", idx, err)
         Requirement.objects.bulk_create(reqs)
