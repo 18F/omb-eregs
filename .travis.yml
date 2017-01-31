@@ -9,7 +9,6 @@ install:
 script:
   - py.test
   - flake8
-  - webpack
   - wget https://github.com/ombegov/policy-v2/raw/master/assets/Phase1_CombinedQA_AllPhase1_Nov21.csv
   - iconv -f Windows-1252 -t utf-8 Phase1_CombinedQA_AllPhase1_Nov21.csv > data.csv
   - python manage.py migrate
