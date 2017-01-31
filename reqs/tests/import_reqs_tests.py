@@ -1,3 +1,5 @@
+from datetime import date
+
 import pytest
 from django.core.management import call_command
 
@@ -18,13 +20,14 @@ def test_imports_correctly(tmpdir):
         """.strip())    # noqa
     call_command('import_reqs', str(csv_file))
 
-    reqs = list(Requirement.objects.order_by('policy_number'))
+    reqs = list(Requirement.objects.order_by('req_id'))
     assert len(reqs) == 2
     # Spot checks
-    assert reqs[0].policy_number == '1'
-    assert reqs[0].omb_policy_id == ''
-    assert reqs[0].policy_type == 'Strategy'
-    assert reqs[0].policy_issuance_year == '12/9/2010'    # @TODO
+    assert reqs[0].policy.policy_number == 1
+    assert reqs[0].policy.omb_policy_id == ''
+    assert reqs[0].policy.policy_type == 'Strategy'
+    assert reqs[0].policy.issuance == date(2010, 12, 9)
+    assert reqs[0].policy.sunset is None
     assert reqs[0].req_text == (
         "Moving forward, Federal IT programs must be structured to deploy "
         "working business functionality in release cycles no longer than 12 "
@@ -35,8 +38,9 @@ def test_imports_correctly(tmpdir):
     assert reqs[0].software
     assert reqs[0].other_keywords == 'Software Development Lifecycle/Agile'
 
-    assert reqs[1].policy_title == 'Data Center Optimization Initiative (DCOI)'
-    assert reqs[1].policy_type == 'Memorandum'
+    assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
+    assert reqs[1].policy.policy_type == 'Memorandum'
+    assert reqs[1].policy.sunset == date(2018, 9, 30)
     assert reqs[1].req_id == '21.44'
     assert reqs[1].verb == 'Will'
     assert reqs[1].req_deadline == 'Within 30 days'

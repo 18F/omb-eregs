@@ -2,10 +2,11 @@ import argparse
 import csv
 import logging
 import sys
+from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from reqs.models import PolicyTypes, Requirement
+from reqs.models import Policy, PolicyTypes, Requirement
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,28 @@ def convert_policy_type(string):
     """Raises a ValueError if the string type can't be found"""
     if 'memo' in string.lower():
         return PolicyTypes.memorandum
+    elif 'circular' in string.lower():
+        return PolicyTypes.circular
     return PolicyTypes(string)
+
+
+def convert_date(string):
+    """Tries to convert a date string into a date. Accounts for NA. May raise
+    a ValueError"""
+    if string not in ('NA', 'None specified'):
+        return datetime.strptime(string, '%m/%d/%Y').date()
+
+
+def policy_from_row(row):
+    return Policy.objects.create(
+        policy_number=int(row['policyNumber']),
+        title=row['policyTitle'],
+        uri=row['uriPolicyId'],
+        omb_policy_id=convert_omb_policy_id(row['ombPolicyId']),
+        policy_type=convert_policy_type(row['policyType']).value,
+        issuance=convert_date(row['policyIssuanceYear']),
+        sunset=convert_date(row['policySunset'])
+    )
 
 
 class Command(BaseCommand):
@@ -32,17 +54,15 @@ class Command(BaseCommand):
             default=sys.stdin)
 
     def handle(self, *args, **options):
+        policies = {}
         reqs = []
-        for row in csv.DictReader(options['input_file']):
+        for idx, row in enumerate(csv.DictReader(options['input_file'])):
             try:
+                policy_num = row['policyNumber']
+                if policy_num not in policies:
+                    policies[policy_num] = policy_from_row(row)
                 params = dict(
-                    policy_number=row['policyNumber'],
-                    policy_title=row['policyTitle'],
-                    uri_policy_id=row['uriPolicyId'],
-                    omb_policy_id=convert_omb_policy_id(row['ombPolicyId']),
-                    policy_type=convert_policy_type(row['policyType']).value,
-                    policy_issuance_year=row['policyIssuanceYear'],
-                    policy_subset=row['policySunset'],
+                    policy=policies[policy_num],
                     req_id=row['reqId'],
                     issuing_body=row['issuingBody'],
                     policy_section=row['policySection'],
@@ -88,5 +108,5 @@ class Command(BaseCommand):
                 )
                 reqs.append(Requirement(**params))
             except ValueError as err:
-                logger.warning("Problem with this row: %s -- %s", err, row)
+                logger.warning("Problem with this row %s: %s", idx, err)
         Requirement.objects.bulk_create(reqs)

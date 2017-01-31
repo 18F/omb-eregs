@@ -11,15 +11,20 @@ class PolicyTypes(Enum):
     review = 'Policy Review'
 
 
-class Requirement(models.Model):
-    policy_number = models.CharField(max_length=16)
-    policy_title = models.CharField(max_length=1024)
-    uri_policy_id = models.CharField(max_length=256)
+class Policy(models.Model):
+    policy_number = models.IntegerField(unique=True)
+    title = models.CharField(max_length=1024)
+    uri = models.CharField(max_length=256)
     omb_policy_id = models.CharField(max_length=16, blank=True)
     policy_type = models.CharField(
         max_length=32, choices=[(e.name, e.value) for e in PolicyTypes])
-    policy_issuance_year = models.CharField(max_length=32)
-    policy_subset = models.CharField(max_length=32)
+    issuance = models.DateField()
+    sunset = models.DateField(blank=True, null=True)
+
+
+class Requirement(models.Model):
+    policy = models.ForeignKey(
+        Policy, on_delete=models.CASCADE, blank=True, null=True)
     req_id = models.CharField(max_length=16)
     issuing_body = models.CharField(max_length=512)
     policy_section = models.CharField(max_length=1024)
