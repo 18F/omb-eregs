@@ -7,7 +7,7 @@ install:
   - pip install -r requirements_dev.txt
   - npm install
   - export PKG=eslint-config-airbnb
-  - npm info "$PKG@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs npm install --save-dev "$PKG@latest"
+  - npm info "$PKG@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs npm install "$PKG@latest"
 script:
   - py.test
   - flake8
