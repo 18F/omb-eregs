@@ -114,3 +114,20 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TAGGIT_CASE_INSENSITIVE = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    }
+}

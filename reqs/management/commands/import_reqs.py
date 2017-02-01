@@ -6,7 +6,8 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from reqs.models import Policy, PolicyTypes, Requirement
+from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
+                         Requirement)
 
 logger = logging.getLogger(__name__)
 
@@ -45,17 +46,31 @@ def policy_from_row(row):
     )
 
 
-def keywords(row):
-    to_return = []
-    for field, value in row.items():
-        if field == 'Other (Keywords)':
-            to_return.extend(kw.strip()
-                             for kw_semi in value.split(';')
-                             for kw in kw_semi.split(',')
-                             if kw.strip())
-        elif '(Keywords)' in field and value:
-            to_return.append(field.replace('(Keywords)', '').strip())
-    return to_return
+class KeywordProcessor:
+    """Creates or retrieves Keyword models"""
+    def __init__(self):
+        self.cache = {}
+
+    @staticmethod
+    def keywords(row):
+        to_return = []
+        for field, value in row.items():
+            if field == 'Other (Keywords)':
+                to_return.extend(kw.strip()
+                                 for kw_semi in value.split(';')
+                                 for kw in kw_semi.split(',')
+                                 if kw.strip())
+            elif '(Keywords)' in field and value:
+                to_return.append(field.replace('(Keywords)', '').strip())
+        return to_return
+
+    def connections(self, row, req_pk):
+        for keyword in self.keywords(row):
+            if keyword not in self.cache:
+                self.cache[keyword] = Keyword.objects.get_or_create(
+                    name=keyword)[0].pk
+            yield KeywordConnect(tag_id=self.cache[keyword],
+                                 content_object_id=req_pk)
 
 
 class Command(BaseCommand):
@@ -68,7 +83,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         policies = {}
+        connections, keywords = [], KeywordProcessor()
         for idx, row in enumerate(csv.DictReader(options['input_file'])):
+            if idx % 100 == 0:
+                logger.info('Processing row %s', idx)
             try:
                 policy_num = row['policyNumber']
                 if policy_num not in policies:
@@ -86,6 +104,7 @@ class Command(BaseCommand):
                     citation=row['citation'],
                 )
                 req = Requirement.objects.create(**params)
-                req.keywords.add(*keywords(row))
+                connections.extend(keywords.connections(row, req.pk))
             except ValueError as err:
                 logger.warning("Problem with this row %s: %s", idx, err)
+        KeywordConnect.objects.bulk_create(connections)
