@@ -1,0 +1,40 @@
+{
+  "name": "omb-eregs",
+  "version": "1.0.0",
+  "description": "This repository contains code necessary to run the White House Office of Management and Budget (OMB) instance of [eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --config mywebpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/18F/omb-eregs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/18F/omb-eregs/issues"
+  },
+  "homepage": "https://github.com/18F/omb-eregs#readme",
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "css-loader": "^0.26.1",
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0",
+    "lodash.debounce": "^4.0.8",
+    "node-sass": "^4.3.0",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1",
+    "webpack": "^2.2.0"
+  },
+  "dependencies": {
+    "uswds": "^0.14.0"
+  }
+}

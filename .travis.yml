@@ -1,8 +1,11 @@
 language: python
 sudo: false
 python: 3.5
+before_install:
+  - nvm install node
 install:
   - pip install -r requirements_dev.txt
+  - npm install
 script:
   - py.test
   - flake8
@@ -10,3 +13,4 @@ script:
   - iconv -f Windows-1252 -t utf-8 Phase1_CombinedQA_AllPhase1_Nov21.csv > data.csv
   - python manage.py migrate
   - python manage.py import_reqs data.csv   # just looking for explosions
+  - webpack
