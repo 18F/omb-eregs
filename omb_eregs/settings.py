@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'reqs.apps.ReqsConfig',
     'taggit',
+    'taggit_autosuggest',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,4 +131,9 @@ LOGGING = {
             'level': 'INFO',
         },
     }
+}
+
+TAGGIT_AUTOSUGGEST_MODELS = {
+    'default': ('taggit', 'Tag'),
+    'reqs.keyword': ('reqs', 'Keyword')
 }
