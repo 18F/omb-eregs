@@ -10,7 +10,7 @@ from taggit_autosuggest.managers import TaggableManager
 class Keyword(TagBase):
     class Meta:
         verbose_name = ugettext_lazy('Keyword')
-        verbose_name_plural = ugettext_lazy('Tags')
+        verbose_name_plural = ugettext_lazy('Keywords')
 
 
 class KeywordConnect(ItemBase):
