@@ -45,6 +45,19 @@ def policy_from_row(row):
     )
 
 
+def keywords(row):
+    to_return = []
+    for field, value in row.items():
+        if field == 'Other (Keywords)':
+            to_return.extend(kw.strip()
+                             for kw_semi in value.split(';')
+                             for kw in kw_semi.split(',')
+                             if kw.strip())
+        elif '(Keywords)' in field and value:
+            to_return.append(field.replace('(Keywords)', '').strip())
+    return to_return
+
+
 class Command(BaseCommand):
     help = 'Populate requirements from a CSV'   # noqa
 
@@ -55,7 +68,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         policies = {}
-        reqs = []
         for idx, row in enumerate(csv.DictReader(options['input_file'])):
             try:
                 policy_num = row['policyNumber']
@@ -72,41 +84,8 @@ class Command(BaseCommand):
                     impacted_entity=row['Impacted Entity'],
                     req_deadline=row['reqDeadline'],
                     citation=row['citation'],
-                    aquisition=bool(row['Acquisition/Contracts (Keywords)']),
-                    human_capital=bool(row['Human Capital (Keywords)']),
-                    cloud=bool(row['Cloud (Keywords)']),
-                    data_centers=bool(row['Data Centers (Keywords)']),
-                    cybersecurity=bool(row['Cybersecurity (Keywords)']),
-                    privacy=bool(row['Privacy (Keywords)']),
-                    shared_services=bool(row['Shared Services (Keywords)']),
-                    it_project_management=bool(row['IT Project Management '
-                                                   '(Keywords)']),
-                    software=bool(row['Software (Keywords)']),
-                    digital_services=bool(row['Digital Services (Keywords)']),
-                    mobile=bool(row['Mobile (Keywords)']),
-                    hardware=bool(
-                        row['Hardware/Government Furnished Equipment (GFE) '
-                            '(Keywords)']),
-                    transparency=bool(row['IT Transparency (Open Data, FOIA, '
-                                          'Public Records, etc.) (Keywords)']),
-                    statistics=bool(row['Agency Statistics (Keywords)']),
-                    customer_services=bool(
-                        row['Customer Services (Keywords)']),
-                    governance=bool(row['Governance (Keywords)']),
-                    financial_systems=bool(
-                        row['Financial Systems (Keywords)']),
-                    budget=bool(row['Budget (Keywords)']),
-                    governance_org_structure=bool(row['Governance - Org '
-                                                      'Structure (Keywords)']),
-                    governance_implementation=bool(row[
-                        'Governance - Implementation (Keywords)']),
-                    data_management=bool(row['Data Management/Standards '
-                                             '(Keywords)']),
-                    definitions=bool(row['Definitions (Keywords)']),
-                    reporting=bool(row['Reporting (Keywords)']),
-                    other_keywords=row['Other (Keywords)'],
                 )
-                reqs.append(Requirement(**params))
+                req = Requirement.objects.create(**params)
+                req.keywords.add(*keywords(row))
             except ValueError as err:
                 logger.warning("Problem with this row %s: %s", idx, err)
-        Requirement.objects.bulk_create(reqs)

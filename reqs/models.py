@@ -14,8 +14,19 @@ class Keyword(TagBase):
 
 
 class KeywordConnect(ItemBase):
-    tag = models.ForeignKey(Keyword, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Keyword, on_delete=models.CASCADE,
+                            related_name='keyword')
     content_object = models.ForeignKey('Requirement', on_delete=models.CASCADE)
+
+    @classmethod
+    def tags_for(cls, model, instance=None, **extra_filters):
+        kwargs = dict(extra_filters)
+        key = '{0}__content_object'.format(cls.tag_relname())
+        if instance is not None:
+            kwargs[key] = instance.pk
+        else:
+            kwargs[key + '__isnull'] = False
+        return Keyword.objects.filter(**kwargs).distinct()
 
 
 @unique
