@@ -34,6 +34,17 @@ attr_to_keyword = dict(
 keyword_to_attr = {keyword:attr for attr, keyword in attr_to_keyword.items()}
 
 
+# copy-pasted to ensure migrations are consistent over time
+def priority_split(text, *splitters):
+    """When we don't know which character is being used to combine text, run
+    through a list of potential splitters and split on the first"""
+    present = [s for s in splitters if s in text]
+    # fall back to non-present splitter; ensures we have a splitter
+    splitters = present + list(splitters)
+    splitter = splitters[0]
+    return [seg.strip() for seg in text.split(splitter) if seg.strip()]
+
+
 def forward(apps, schema_editor):
     Keyword = apps.get_model('reqs', 'Keyword')
     KeywordConnect = apps.get_model('reqs', 'KeywordConnect')
@@ -44,10 +55,7 @@ def forward(apps, schema_editor):
         for field_name, tag_name in attr_to_keyword.items():
             if getattr(req, field_name):
                 req_keywords.append(tag_name)
-        req_keywords.extend(kw.strip()
-                            for kw_semi in req.other_keywords.split(';')
-                            for kw in kw_semi.split(',')
-                            if kw.strip())
+        req_keywords.extend(priority_split(req.other_keywords, ';', ','))
         for keyword in req_keywords:
             kw_slug = slugify(keyword)
             if kw_slug not in keyword_cache:

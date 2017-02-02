@@ -3,6 +3,7 @@ from datetime import date
 import pytest
 from django.core.management import call_command
 
+from reqs.management.commands import import_reqs
 from reqs.models import Requirement
 
 
@@ -46,3 +47,13 @@ def test_imports_correctly(tmpdir):
     assert set(reqs[1].keywords.names()) == {
         'Governance - Org Structure', 'Financial Systems',
         'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
+
+
+@pytest.mark.parametrize('text,result', [
+    ('some text; here', ['some text', 'here']),
+    ('a 1; b 2; c 3', ['a 1', 'b 2', 'c 3']),
+    ('a 1, b 2, c 3', ['a 1', 'b 2', 'c 3']),
+    ('a 1; b 2, c 3', ['a 1', 'b 2, c 3']),
+])
+def test_priority_split(text, result):
+    assert import_reqs.priority_split(text, ';', ',') == result

@@ -46,6 +46,16 @@ def policy_from_row(row):
     )
 
 
+def priority_split(text, *splitters):
+    """When we don't know which character is being used to combine text, run
+    through a list of potential splitters and split on the first"""
+    present = [s for s in splitters if s in text]
+    # fall back to non-present splitter; ensures we have a splitter
+    splitters = present + list(splitters)
+    splitter = splitters[0]
+    return [seg.strip() for seg in text.split(splitter) if seg.strip()]
+
+
 class KeywordProcessor:
     """Creates or retrieves Keyword models"""
     def __init__(self):
@@ -56,10 +66,7 @@ class KeywordProcessor:
         to_return = []
         for field, value in row.items():
             if field == 'Other (Keywords)':
-                to_return.extend(kw.strip()
-                                 for kw_semi in value.split(';')
-                                 for kw in kw_semi.split(',')
-                                 if kw.strip())
+                to_return.extend(priority_split(value, ';', ','))
             elif '(Keywords)' in field and value:
                 to_return.append(field.replace('(Keywords)', '').strip())
         return to_return
