@@ -2,6 +2,9 @@
 This repository contains code necessary to run the White House Office of Management and Budget (OMB) instance of
 [eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer). 
 
+See our bi-weekly demos [on
+YouTube](https://www.youtube.com/playlist?list=PLd9b-GuOJ3nEJsDD5BZ5qlVkr9RZ0PivQ).
+
 ## Status
 [![Build Status](https://travis-ci.org/18F/omb-eregs.svg?branch=master)](https://travis-ci.org/18F/omb-eregs)
 [![Code Climate](https://codeclimate.com/github/18F/omb-eregs/badges/gpa.svg)](https://codeclimate.com/github/18F/omb-eregs)
