@@ -35,6 +35,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'reqs.apps.ReqsConfig',
+    'taggit',
+    'taggit_autosuggest',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -114,3 +116,27 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.environ.get('TMPDIR', '.') + '/static/'
+
+TAGGIT_CASE_INSENSITIVE = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    }
+}
+
+TAGGIT_AUTOSUGGEST_MODELS = {
+    'default': ('taggit', 'Tag'),
+    'reqs.keyword': ('reqs', 'Keyword')
+}
