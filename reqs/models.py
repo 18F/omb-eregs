@@ -1,6 +1,32 @@
 from enum import Enum, unique
 
 from django.db import models
+from django.utils.translation import ugettext_lazy
+from taggit.models import ItemBase, TagBase
+from taggit_autosuggest.managers import TaggableManager
+
+
+# Custom class for name-spacing
+class Keyword(TagBase):
+    class Meta:
+        verbose_name = ugettext_lazy('Keyword')
+        verbose_name_plural = ugettext_lazy('Keywords')
+
+
+class KeywordConnect(ItemBase):
+    tag = models.ForeignKey(Keyword, on_delete=models.CASCADE,
+                            related_name='keyword')
+    content_object = models.ForeignKey('Requirement', on_delete=models.CASCADE)
+
+    @classmethod
+    def tags_for(cls, model, instance=None, **extra_filters):
+        kwargs = dict(extra_filters)
+        key = '{0}__content_object'.format(cls.tag_relname())
+        if instance is not None:
+            kwargs[key] = instance.pk
+        else:
+            kwargs[key + '__isnull'] = False
+        return Keyword.objects.filter(**kwargs).distinct()
 
 
 @unique
@@ -34,30 +60,11 @@ class Requirement(models.Model):
     impacted_entity = models.CharField(max_length=1024)
     req_deadline = models.CharField(max_length=128)
     citation = models.CharField(max_length=1024)
-    aquisition = models.BooleanField(default=False)
-    human_capital = models.BooleanField(default=False)
-    cloud = models.BooleanField(default=False)
-    data_centers = models.BooleanField(default=False)
-    cybersecurity = models.BooleanField(default=False)
-    privacy = models.BooleanField(default=False)
-    shared_services = models.BooleanField(default=False)
-    it_project_management = models.BooleanField(default=False)
-    software = models.BooleanField(default=False)
-    digital_services = models.BooleanField(default=False)
-    mobile = models.BooleanField(default=False)
-    hardware = models.BooleanField(default=False)
-    transparency = models.BooleanField(default=False)
-    statistics = models.BooleanField(default=False)
-    customer_services = models.BooleanField(default=False)
-    governance = models.BooleanField(default=False)
-    financial_systems = models.BooleanField(default=False)
-    budget = models.BooleanField(default=False)
-    governance_org_structure = models.BooleanField(default=False)
-    governance_implementation = models.BooleanField(default=False)
-    data_management = models.BooleanField(default=False)
-    definitions = models.BooleanField(default=False)
-    reporting = models.BooleanField(default=False)
-    other_keywords = models.CharField(max_length=1024)
+    keywords = TaggableManager(
+        through=KeywordConnect,
+        verbose_name=ugettext_lazy('Keywords'),
+        blank=True
+    )
 
     def __str__(self):
         text = self.req_text[:40]

@@ -6,7 +6,8 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from reqs.models import Policy, PolicyTypes, Requirement
+from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
+                         Requirement)
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,40 @@ def policy_from_row(row):
     )
 
 
+def priority_split(text, *splitters):
+    """When we don't know which character is being used to combine text, run
+    through a list of potential splitters and split on the first"""
+    present = [s for s in splitters if s in text]
+    # fall back to non-present splitter; ensures we have a splitter
+    splitters = present + list(splitters)
+    splitter = splitters[0]
+    return [seg.strip() for seg in text.split(splitter) if seg.strip()]
+
+
+class KeywordProcessor:
+    """Creates or retrieves Keyword models"""
+    def __init__(self):
+        self.cache = {}
+
+    @staticmethod
+    def keywords(row):
+        to_return = []
+        for field, value in row.items():
+            if field == 'Other (Keywords)':
+                to_return.extend(priority_split(value, ';', ','))
+            elif '(Keywords)' in field and value:
+                to_return.append(field.replace('(Keywords)', '').strip())
+        return to_return
+
+    def connections(self, row, req_pk):
+        for keyword in self.keywords(row):
+            if keyword not in self.cache:
+                self.cache[keyword] = Keyword.objects.get_or_create(
+                    name=keyword)[0].pk
+            yield KeywordConnect(tag_id=self.cache[keyword],
+                                 content_object_id=req_pk)
+
+
 class Command(BaseCommand):
     help = 'Populate requirements from a CSV'   # noqa
 
@@ -55,8 +90,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         policies = {}
-        reqs = []
+        connections, keywords = [], KeywordProcessor()
         for idx, row in enumerate(csv.DictReader(options['input_file'])):
+            if idx % 100 == 0:
+                logger.info('Processing row %s', idx)
             try:
                 policy_num = row['policyNumber']
                 if policy_num not in policies:
@@ -72,41 +109,9 @@ class Command(BaseCommand):
                     impacted_entity=row['Impacted Entity'],
                     req_deadline=row['reqDeadline'],
                     citation=row['citation'],
-                    aquisition=bool(row['Acquisition/Contracts (Keywords)']),
-                    human_capital=bool(row['Human Capital (Keywords)']),
-                    cloud=bool(row['Cloud (Keywords)']),
-                    data_centers=bool(row['Data Centers (Keywords)']),
-                    cybersecurity=bool(row['Cybersecurity (Keywords)']),
-                    privacy=bool(row['Privacy (Keywords)']),
-                    shared_services=bool(row['Shared Services (Keywords)']),
-                    it_project_management=bool(row['IT Project Management '
-                                                   '(Keywords)']),
-                    software=bool(row['Software (Keywords)']),
-                    digital_services=bool(row['Digital Services (Keywords)']),
-                    mobile=bool(row['Mobile (Keywords)']),
-                    hardware=bool(
-                        row['Hardware/Government Furnished Equipment (GFE) '
-                            '(Keywords)']),
-                    transparency=bool(row['IT Transparency (Open Data, FOIA, '
-                                          'Public Records, etc.) (Keywords)']),
-                    statistics=bool(row['Agency Statistics (Keywords)']),
-                    customer_services=bool(
-                        row['Customer Services (Keywords)']),
-                    governance=bool(row['Governance (Keywords)']),
-                    financial_systems=bool(
-                        row['Financial Systems (Keywords)']),
-                    budget=bool(row['Budget (Keywords)']),
-                    governance_org_structure=bool(row['Governance - Org '
-                                                      'Structure (Keywords)']),
-                    governance_implementation=bool(row[
-                        'Governance - Implementation (Keywords)']),
-                    data_management=bool(row['Data Management/Standards '
-                                             '(Keywords)']),
-                    definitions=bool(row['Definitions (Keywords)']),
-                    reporting=bool(row['Reporting (Keywords)']),
-                    other_keywords=row['Other (Keywords)'],
                 )
-                reqs.append(Requirement(**params))
+                req = Requirement.objects.create(**params)
+                connections.extend(keywords.connections(row, req.pk))
             except ValueError as err:
                 logger.warning("Problem with this row %s: %s", idx, err)
-        Requirement.objects.bulk_create(reqs)
+        KeywordConnect.objects.bulk_create(connections)
