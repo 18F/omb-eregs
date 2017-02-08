@@ -38,6 +38,10 @@ class PolicyTypes(Enum):
 
 
 class Policy(models.Model):
+    class Meta:
+        verbose_name_plural = ugettext_lazy('Policies')
+        ordering = ['policy_number']
+
     policy_number = models.IntegerField(unique=True)
     title = models.CharField(max_length=1024)
     uri = models.CharField(max_length=256)
@@ -47,8 +51,17 @@ class Policy(models.Model):
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
 
+    def __str__(self):
+        text = self.title[:40]
+        if len(self.title) > 40:
+            text += '...'
+        return '{0}: {1}'.format(self.policy_number, text)
+
 
 class Requirement(models.Model):
+    class Meta:
+        ordering = ['req_id']
+
     policy = models.ForeignKey(
         Policy, on_delete=models.CASCADE, blank=True, null=True)
     req_id = models.CharField(max_length=16)
@@ -70,4 +83,4 @@ class Requirement(models.Model):
         text = self.req_text[:40]
         if len(self.req_text) > 40:
             text += '...'
-        return 'Requirement {0}:{1}'.format(self.req_id, text)
+        return '{0}: {1}'.format(self.req_id, text)
