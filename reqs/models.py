@@ -29,7 +29,6 @@ class KeywordConnect(ItemBase):
         return Keyword.objects.filter(**kwargs).distinct()
 
 
-
 @unique
 class PolicyTypes(Enum):
     memorandum = 'Memorandum'
