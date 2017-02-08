@@ -3,6 +3,7 @@ from datetime import date
 import pytest
 from django.core.management import call_command
 
+from reqs.management.commands import import_reqs
 from reqs.models import Requirement
 
 
@@ -34,9 +35,8 @@ def test_imports_correctly(tmpdir):
         "months, and, ideally, less than six months, with initial deployment "
         "to end users no later than 18 months after the program begins.")
     assert reqs[0].impacted_entity == 'All CFO-Act Agencies'
-    assert not reqs[0].aquisition
-    assert reqs[0].software
-    assert reqs[0].other_keywords == 'Software Development Lifecycle/Agile'
+    assert set(reqs[0].keywords.names()) == {
+        'Software', 'Software Development Lifecycle/Agile'}
 
     assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
     assert reqs[1].policy.policy_type == 'Memorandum'
@@ -44,3 +44,16 @@ def test_imports_correctly(tmpdir):
     assert reqs[1].req_id == '21.44'
     assert reqs[1].verb == 'Will'
     assert reqs[1].req_deadline == 'Within 30 days'
+    assert set(reqs[1].keywords.names()) == {
+        'Governance - Org Structure', 'Financial Systems',
+        'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
+
+
+@pytest.mark.parametrize('text,result', [
+    ('some text; here', ['some text', 'here']),
+    ('a 1; b 2; c 3', ['a 1', 'b 2', 'c 3']),
+    ('a 1, b 2, c 3', ['a 1', 'b 2', 'c 3']),
+    ('a 1; b 2, c 3', ['a 1', 'b 2, c 3']),
+])
+def test_priority_split(text, result):
+    assert import_reqs.priority_split(text, ';', ',') == result
