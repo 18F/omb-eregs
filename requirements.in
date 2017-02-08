@@ -1,4 +1,8 @@
+cfenv
 Django>=1.10,<1.11
 django-taggit
 django-taggit-autosuggest
 dj-database-url
+gunicorn
+psycopg2
+whitenoise
