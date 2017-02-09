@@ -20,6 +20,9 @@ deploy:
   api: https://api.fr.cloud.gov
   organization: omb-eregs
   space: dev
+  manifest: manifest_dev.yml
+  on:
+    branch: master
   username:
     secure: OT5p4N2siCxRNJ/FY20bB0fou9jjyUDIbn3LCxVaYT6kzj2SxpI0W+Ccbg4TjZzEwA62ZpSR3U8w9oy7NOjJe9yeRPqPBOBSe1gaLbf3rvDdAXQ1W9GOvO6RixyzI16l+3vr6O/8wJL/iDk0CU2Bq5VYloYmoXZLuMSDptwxfBXy9Oni+jBySB6HkdAiYwF3yaciC38/fdCz5A0FrYDNAg5M8QvQkuvh2AL3U78z5X8reCvWFWQlhK/pWyyUkNSbDprhSvfrI/XorY4pPxGWEffowhoZBfhJfcqXN7RO+Q7LG3xJbZW//BEsmkNvBzyDw7Colr26Y9RuxRrc1AFSqmoKDwDLNxZW6WilmJVofbSb3GnSrsiXIcbSuCwh1ykpPcE9e+N2tf2VXEHwUIxUjQZ3LAzrSJcU8wwLgypihCE3k0rM+fb32vG/oCdwSeDG1DPrP8/YWB7dy4teLPUno+rtekGlNXQhNyh/mMPYtS4CfmbJKPevePXoohsJnEuINxa0d8x+j0aciFntF5OF2uszEVyi291cpfJJlhHdbJicVetPdUmESJVxtJr/n5NEvf0ltAADJE/6zWdXHDkM1IzuBdITZV0ulNIIO7q6urvzUKhrHZw9Bt0OM0xDwsHlhhlu/XTC43LBczzNw7ZH/fYjc9lAE+6o+62jUj5opXs=
   password:
