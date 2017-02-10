@@ -1,0 +1,9 @@
+#!/bin/bash
+
+until (echo 2>/dev/null > /dev/tcp/persistent_db/5432)
+do
+  echo "Startup: Waiting for Postgres"
+  sleep 1
+done
+
+exec "$@"
