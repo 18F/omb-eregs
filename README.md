@@ -12,42 +12,22 @@ YouTube](https://www.youtube.com/playlist?list=PLd9b-GuOJ3nEJsDD5BZ5qlVkr9RZ0Piv
 ## Running
 
 ### Requirements
-This project assumes Python 3.5. Perhaps the easiest way to get this installed
-is through [pyenv](https://github.com/yyuu/pyenv):
 
-```bash
-curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
-pyenv update
-pyenv install 3.5.3
-pyenv shell 3.5.3   # will need to run this when opening a new shell, too
-```
-
-Once you have Python set up, you'll want to install the project's developer
-requirements:
-
-```bash
-pip install -r requirements_dev.txt
-```
-
-We use [`pip-tools`](https://github.com/nvie/pip-tools) to pin our
-dependencies. If adding a new requirement, you'll want to modify
-`requirements.in`, then run:
-
-```bash
-pip install pip-tools   # if you haven't already
-pip-compile --output-file requirements.txt requirements.in
-pip-compile --output-file requirements_dev.txt requirements_dev.in
-pip-sync requirements_dev.txt
-```
+We recommend using
+[Docker](https://www.docker.com/products/overview#install_the_platform), an
+open source container engine. If you haven't already please install Docker and
+[Docker-compose](https://docs.docker.com/compose/install/) (which is installed
+automatically with Docker on Windows and OS X).
 
 ### Admin
 
-Now that you have the libraries installed, let's run the admin.
+Let's start by adding an admin user.
 
 ```bash
-python manage.py migrate    # updates a local (sqlite) database
-python manage.py createsuperuser
-python manage.py runserver
+docker-compose run manage.py createsuperuser
+# fill out information
+docker-compose up prod
+# Ctrl-c to kill
 ```
 
 Then navigate to http://localhost:8000/admin/ and log in.
@@ -57,15 +37,29 @@ Then navigate to http://localhost:8000/admin/ and log in.
 Let's also load the requirements data from OMB:
 
 ```bash
-# Download the CSV
-wget https://github.com/ombegov/policy-v2/raw/master/assets/Phase1_CombinedQA_AllPhase1_Nov21.csv
-# Convert it to UTF-8
-iconv -f Windows-1252 -t utf-8 Phase1_CombinedQA_AllPhase1_Nov21.csv > data.csv
-python manage.py import_reqs data.csv
+docker-compose run manage.py fetch_csv
+docker-compose run manage.py import_reqs data.csv
 ```
 
 This may emit some warnings for improper input. The next time you visit the
 admin, you'll see it's populated.
+
+### Docker-compose commands
+
+There are two types of entry points:
+
+1. Services which will run until you press `ctrl-c`. These are activated via
+  `docker-compose up`
+  * `prod` - Build the app and run it in "production" mode on port 8000
+  * `dev` - Build the app and run it in "development" mode on port 8000
+1. One use commands which run until complete. These are ran via
+  `docker-compose run`
+  * `manage.py`
+  * `py.test`
+  * `flake8`
+  * `pip-compile`
+  * `npm`
+  * `webpack`
 
 ## Documentation and contributing
 
