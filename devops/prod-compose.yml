@@ -1,0 +1,24 @@
+version: '2'
+services:
+  database:
+    image: postgres:9.4
+    volumes:
+      - database:/data/postgres
+  web:
+    image: omb-eregs:prod
+    build:
+      context: ..
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres@database/postgres
+      - PORT=8000
+      - DJANGO_SETTINGS_MODULE=omb_eregs.settings_prod
+      - TMPDIR=/tmp
+    command: ./devops/wait_for_db_then make prod_native
+    volumes:
+      - $PWD:/code    # override to source the current directory
+    depends_on:
+      - database
+volumes:
+  database:

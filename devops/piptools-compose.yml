@@ -1,0 +1,9 @@
+version: '2'
+services:
+  compile:
+    image: pip-tools:1.8.0
+    build:
+      context: .
+      dockerfile: piptools.Dockerfile
+    volumes:
+      - $PWD:/code
