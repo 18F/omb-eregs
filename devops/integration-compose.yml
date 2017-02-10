@@ -1,0 +1,18 @@
+version: '2'
+services:
+  database:
+    image: postgres:9.4
+  web:
+    image: omb-eregs:debug
+    build:
+      context: ..
+      args:
+        DEBUG: "true"
+    command: ./devops/wait_for_db_then make loaddata_native
+    environment:
+      - DATABASE_URL=postgres://postgres@database/postgres
+      - DJANGO_SETTINGS_MODULE=omb_eregs.settings
+    volumes:
+      - $PWD:/code    # override to source the current directory
+    depends_on:
+      - database

@@ -1,19 +1,11 @@
-language: python
-sudo: false
-python: 3.5
-before_install:
-- nvm install node
-install:
-- pip install -r requirements_dev.txt
-- npm install
+language: generic
+sudo: required
+services:
+- docker
 script:
-- py.test
-- flake8
-- wget https://github.com/ombegov/policy-v2/raw/master/assets/Phase1_CombinedQA_AllPhase1_Nov21.csv
-- iconv -f Windows-1252 -t utf-8 Phase1_CombinedQA_AllPhase1_Nov21.csv > data.csv
-- python manage.py migrate
-- python manage.py import_reqs data.csv
-- webpack
+- make reqs/static/js/bundle.js
+- make pytest
+- make integration_tests
 deploy:
   edge: true
   provider: cloudfoundry
