@@ -5,4 +5,5 @@ django-taggit-autosuggest
 dj-database-url
 gunicorn
 psycopg2
+requests
 whitenoise
