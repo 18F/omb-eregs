@@ -4,7 +4,7 @@ import pytest
 from django.core.management import call_command
 
 from reqs.management.commands import import_reqs
-from reqs.models import Requirement
+from reqs.models import Policy, PolicyTypes, Requirement
 
 
 header = """
@@ -57,3 +57,36 @@ def test_imports_correctly(tmpdir):
 ])
 def test_priority_split(text, result):
     assert import_reqs.priority_split(text, ';', ',') == result
+
+
+@pytest.mark.django_db
+def test_policy_from_row():
+    row = {'policyNumber': '123', 'policyTitle': 'title 1',
+           'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
+           'policyType': 'Memo', 'policyIssuanceYear': '12/20/2001',
+           'policySunset': 'NA'}
+    policy = import_reqs.policy_from_row(row)
+    assert policy.policy_number == 123
+    assert policy.title == 'title 1'
+    assert policy.uri == 'http://example.com/a'
+    assert policy.omb_policy_id == 'policy'
+    assert PolicyTypes(policy.policy_type) == PolicyTypes.memorandum
+    assert policy.issuance == date(2001, 12, 20)
+    assert policy.sunset is None
+
+
+@pytest.mark.django_db
+def test_policy_from_row_duplicate():
+    assert Policy.objects.count() == 0
+    row = {'policyNumber': '123', 'policyTitle': 'title 1',
+           'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
+           'policyType': 'Memo', 'policyIssuanceYear': '12/20/2001',
+           'policySunset': 'NA'}
+    import_reqs.policy_from_row(row)
+    assert Policy.objects.count() == 1
+    assert Policy.objects.get(policy_number=123).title == 'title 1'
+
+    row['policyTitle'] = 'title 2'
+    import_reqs.policy_from_row(row)
+    assert Policy.objects.count() == 1
+    assert Policy.objects.get(policy_number=123).title == 'title 2'

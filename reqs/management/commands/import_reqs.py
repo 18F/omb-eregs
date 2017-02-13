@@ -35,15 +35,21 @@ def convert_date(string):
 
 
 def policy_from_row(row):
-    return Policy.objects.create(
-        policy_number=int(row['policyNumber']),
-        title=row['policyTitle'],
-        uri=row['uriPolicyId'],
-        omb_policy_id=convert_omb_policy_id(row['ombPolicyId']),
-        policy_type=convert_policy_type(row['policyType']).value,
-        issuance=convert_date(row['policyIssuanceYear']),
-        sunset=convert_date(row['policySunset'])
+    """Create/update a Policy object based on the data found in a CSV row"""
+    policy_number = int(row['policyNumber'])
+    policy, _ = Policy.objects.update_or_create(
+        policy_number=policy_number,
+        defaults={
+            'policy_number': policy_number,
+            'title': row['policyTitle'],
+            'uri': row['uriPolicyId'],
+            'omb_policy_id': convert_omb_policy_id(row['ombPolicyId']),
+            'policy_type': convert_policy_type(row['policyType']).value,
+            'issuance': convert_date(row['policyIssuanceYear']),
+            'sunset': convert_date(row['policySunset'])
+        }
     )
+    return policy
 
 
 def priority_split(text, *splitters):
