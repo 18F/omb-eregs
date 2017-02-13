@@ -24,8 +24,9 @@ automatically with Docker on Windows and OS X).
 Let's start by adding an admin user.
 
 ```bash
+docker-compose run manage.py migrate  # set up database
 docker-compose run manage.py createsuperuser
-# fill out information
+# [fill out information]
 docker-compose up prod
 # Ctrl-c to kill
 ```
