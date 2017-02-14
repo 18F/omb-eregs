@@ -142,4 +142,7 @@ class Command(BaseCommand):
                 rows.add(row)
             except ValueError as err:
                 logger.warning("Problem with this row %s: %s", idx, err)
+        # Delete all keyword connections which may exist in the DB
+        KeywordConnect.objects.filter(
+            content_object__req_id__in=rows.req_ids).delete()
         KeywordConnect.objects.bulk_create(rows.connections)
