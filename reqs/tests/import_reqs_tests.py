@@ -1,7 +1,9 @@
 from datetime import date
+from unittest.mock import Mock
 
 import pytest
 from django.core.management import call_command
+from model_mommy import mommy
 
 from reqs.management.commands import import_reqs
 from reqs.models import Policy, PolicyTypes, Requirement
@@ -65,7 +67,8 @@ def test_policy_from_row():
            'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
            'policyType': 'Memo', 'policyIssuanceYear': '12/20/2001',
            'policySunset': 'NA'}
-    policy = import_reqs.policy_from_row(row)
+    policy_proc = import_reqs.PolicyProcessor()
+    policy = policy_proc.from_row(row)
     assert policy.policy_number == 123
     assert policy.title == 'title 1'
     assert policy.uri == 'http://example.com/a'
@@ -73,6 +76,7 @@ def test_policy_from_row():
     assert PolicyTypes(policy.policy_type) == PolicyTypes.memorandum
     assert policy.issuance == date(2001, 12, 20)
     assert policy.sunset is None
+    assert {123: policy} == policy_proc.policies
 
 
 @pytest.mark.django_db
@@ -82,11 +86,39 @@ def test_policy_from_row_duplicate():
            'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
            'policyType': 'Memo', 'policyIssuanceYear': '12/20/2001',
            'policySunset': 'NA'}
-    import_reqs.policy_from_row(row)
+    import_reqs.PolicyProcessor().from_row(row)
     assert Policy.objects.count() == 1
     assert Policy.objects.get(policy_number=123).title == 'title 1'
 
     row['policyTitle'] = 'title 2'
-    import_reqs.policy_from_row(row)
+    import_reqs.PolicyProcessor().from_row(row)
     assert Policy.objects.count() == 1
     assert Policy.objects.get(policy_number=123).title == 'title 2'
+
+
+@pytest.mark.django_db
+def test_repeat_row():
+    """If the same requirement id is present twice, raise an exception"""
+    assert Requirement.objects.count() == 0
+
+    processor = import_reqs.RowProcessor()
+    processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})
+    row = {'reqId': '13.37', 'issuingBody': 'body', 'policySection': 'None',
+           'policySubSection': 'None', 'reqText': 'texttexttext',
+           'verb': 'shall', 'Impacted Entity': 'something',
+           'reqDeadline': 'N/A', 'citation': 'N/A'}
+    processor.add(row)
+    assert Requirement.objects.count() == 1
+    assert Requirement.objects.first().issuing_body == 'body'
+
+    with pytest.raises(ValueError):
+        processor.add(row)
+
+    row['issuingBody'] = 'body2'
+    processor2 = import_reqs.RowProcessor()
+    processor2.policies = processor.policies
+    # Different processor, so we don't raise an exception, we just modify the
+    # existing entry
+    processor2.add(row)
+    assert Requirement.objects.count() == 1
+    assert Requirement.objects.first().issuing_body == 'body2'
