@@ -1,1 +1,1 @@
-web: ./run.sh
+web: ./devops/prod.sh
