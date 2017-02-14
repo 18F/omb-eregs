@@ -64,7 +64,7 @@ class Requirement(models.Model):
 
     policy = models.ForeignKey(
         Policy, on_delete=models.CASCADE, blank=True, null=True)
-    req_id = models.CharField(max_length=16)
+    req_id = models.CharField(max_length=16, unique=True)
     issuing_body = models.CharField(max_length=512)
     policy_section = models.CharField(max_length=1024)
     policy_sub_section = models.CharField(max_length=1024)
