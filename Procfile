@@ -1,1 +1,0 @@
-web: ./devops/prod.sh
