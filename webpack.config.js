@@ -35,7 +35,7 @@ module.exports = [
   },
   {
     target: 'node',
-    entry: path.join(__dirname, 'ui', 'server.js'),
+    entry: path.join(__dirname, 'ui', 'server.jsx'),
     output: {
       path: path.join(__dirname, 'ui-dist'),
       filename: 'server.js',
@@ -52,17 +52,20 @@ module.exports = [
     module: {
       loaders: [
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           exclude: /node_modules/,
           loaders: 'babel-loader',
-          query: { presets: ['es2015'] },
+          query: { presets: ['es2015', 'react'] },
         },
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           exclude: /node_modules/,
           loaders: 'eslint-loader',
         },
       ],
+    },
+    resolve: {
+      extensions: ['.js', '.jsx'],
     },
   },
 ];
