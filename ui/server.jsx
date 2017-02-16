@@ -14,6 +14,7 @@ const app = express();
 const env = cfenv.getAppEnv();
 
 app.use(morgan('combined'));
+app.use('/static', express.static(path.join('ui-dist', 'static')));
 
 app.get('*', (req, res) => {
   match({ routes, location: req.url }, (error, redirectCtx, renderProps) => {
@@ -26,6 +27,7 @@ app.get('*', (req, res) => {
         `<html>
           <body>
             <div id="app">${renderToString(<RouterContext {...renderProps} />)}</div>
+            <script src="/static/browser.js"></script>
           </body>
         </html>`);
     } else {

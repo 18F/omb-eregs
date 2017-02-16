@@ -14,15 +14,15 @@ module.exports = [
     module: {
       loaders: [
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
           query: {
-            presets: ['es2015'],
+            presets: ['es2015', 'react'],
           },
         },
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           loader: 'eslint-loader',
           exclude: /node_modules/,
         },
@@ -31,6 +31,40 @@ module.exports = [
           loaders: ['style-loader', 'css-loader', 'sass-loader'],
         },
       ],
+    },
+    resolve: {
+      extensions: ['.js', '.jsx'],
+    },
+  },
+  {
+    entry: path.join(__dirname, 'ui', 'browser.js'),
+    output: {
+      path: path.join(__dirname, 'ui-dist', 'static'),
+      filename: 'browser.js',
+    },
+    module: {
+      loaders: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+          query: {
+            presets: ['es2015', 'react'],
+          },
+        },
+        {
+          test: /\.jsx?$/,
+          loader: 'eslint-loader',
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.scss$/,
+          loaders: ['style-loader', 'css-loader', 'sass-loader'],
+        },
+      ],
+    },
+    resolve: {
+      extensions: ['.js', '.jsx'],
     },
   },
   {
