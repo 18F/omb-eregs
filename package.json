@@ -32,9 +32,16 @@
     "node-sass": "^4.3.0",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
-    "webpack": "^2.2.0"
+    "webpack": "^2.2.0",
+    "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
+    "cfenv": "^1.0.4",
+    "express": "^4.14.1",
+    "source-map-support": "^0.4.11",
     "uswds": "^0.14.0"
+  },
+  "engines": {
+    "node": "6.9.x"
   }
 }
