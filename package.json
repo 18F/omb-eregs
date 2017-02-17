@@ -35,6 +35,8 @@
     "webpack": "^2.2.0"
   },
   "dependencies": {
-    "uswds": "^0.14.0"
+    "react-addons-create-fragment": "^15.4.2",
+    "uswds": "^0.14.0",
+    "whatwg-fetch": "^2.0.2"
   }
 }
