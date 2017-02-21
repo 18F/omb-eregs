@@ -1,5 +1,6 @@
 cfenv
 Django>=1.10,<1.11
+django-cors-headers
 django-taggit
 django-taggit-autosuggest
 dj-database-url
