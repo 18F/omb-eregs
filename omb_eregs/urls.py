@@ -16,7 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from reqs.router import router
+
 urlpatterns = [
+    url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
 ]
