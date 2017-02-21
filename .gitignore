@@ -4,6 +4,7 @@
 # Javascript stuff
 node_modules
 reqs/static/js/bundle.js
+ui-dist
 
 # Data
 *.csv

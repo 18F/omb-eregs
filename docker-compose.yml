@@ -5,16 +5,16 @@ services:
     volumes:
       - database_data:/data/postgres
 
-  prod: &PROD_BASE
+  prod-api: &PROD_API_BASE
     image: omb-eregs:prod
     build:
       context: .
-    command: ./devops/wait_for_db_then ./devops/prod.sh
+    command: ./devops/wait_for_db_then ./devops/prod_api.sh
     ports:
-      - "8000:8000"
+      - "8001:8001"
     environment: &WEB_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
-      PORT: 8000
+      PORT: 8001
       DJANGO_SETTINGS_MODULE: omb_eregs.settings_prod
       TMPDIR: /tmp
     volumes:
@@ -24,37 +24,48 @@ services:
     stdin_open: true
     tty: true
 
-  dev:  &DEV_BASE
-    <<: *PROD_BASE
+  dev-api:  &DEB_API_BASE
+    <<: *PROD_API_BASE
     image: omb-eregs:debug
     build:
       context: .
       args:
         DEV_MODE: "true"
-    command: ./devops/wait_for_db_then ./devops/dev.sh
+    command: ./devops/wait_for_db_then ./devops/dev_api.sh
     environment:
       <<: *WEB_ENV
       DJANGO_SETTINGS_MODULE: omb_eregs.settings
 
+  ui:
+    image: node:6
+    volumes:
+      - $PWD:/usr/src/app
+    working_dir: /usr/src/app
+    command: ./devops/ui_build_run.sh
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+
   #---- Commands ----
   manage.py:
-    <<: *PROD_BASE
+    <<: *PROD_API_BASE
     entrypoint: ./devops/wait_for_db_then ./manage.py
     command: ''
 
   py.test:
-    <<: *DEV_BASE
+    <<: *DEB_API_BASE
     entrypoint: ./devops/wait_for_db_then py.test
     command: ''
 
   flake8:
-    <<: *DEV_BASE
+    <<: *DEB_API_BASE
     entrypoint: flake8
     depends_on: []
     command: ''
 
   pip-compile:
-    <<: *DEV_BASE
+    <<: *DEB_API_BASE
     entrypoint: pip-compile
     depends_on: []
     command: ''

@@ -19,7 +19,7 @@ open source container engine. If you haven't already please install Docker and
 [Docker-compose](https://docs.docker.com/compose/install/) (which is installed
 automatically with Docker on Windows and OS X).
 
-### Admin
+### Admin/API
 
 Let's start by adding an admin user.
 
@@ -27,11 +27,22 @@ Let's start by adding an admin user.
 docker-compose run manage.py migrate  # set up database
 docker-compose run manage.py createsuperuser
 # [fill out information]
-docker-compose up prod
+docker-compose up prod-api
 # Ctrl-c to kill
 ```
 
-Then navigate to http://localhost:8000/admin/ and log in.
+Then navigate to http://localhost:8001/admin/ and log in.
+
+### UI
+
+We can also start the UI server (which runs NodeJS) via:
+
+```bash
+docker-compose up ui
+# Ctrl-c to kill
+```
+
+Then navigate to http://localhost:8000/
 
 ### Data
 
@@ -51,8 +62,11 @@ There are two types of entry points:
 
 1. Services which will run until you press `ctrl-c`. These are activated via
   `docker-compose up`
-  * `prod` - Build the app and run it in "production" mode on port 8000
-  * `dev` - Build the app and run it in "development" mode on port 8000
+  * `prod-api` - Build the admin/API app and run it in "production" mode on
+    port 8001
+  * `dev-api` - Build the admin/API app and run it in "development" mode on
+    port 8001
+  * `ui` - Build the UI app and run it on port 8000
 1. One use commands which run until complete. These are ran via
   `docker-compose run`
   * `manage.py`

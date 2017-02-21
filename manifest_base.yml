@@ -1,11 +1,5 @@
 ---
 stack: cflinuxfs2
-buildpack: python_buildpack
-
-applications:
-  - name: web
-services:
-  - database  # aws-rds medium-psql
 env:
   DJANGO_SETTINGS_MODULE: omb_eregs.settings_prod
   DISABLE_COLLECTSTATIC: 1

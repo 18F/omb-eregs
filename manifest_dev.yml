@@ -1,3 +1,16 @@
 ---
 inherit: manifest_base.yml
-host: omb-eregs-dev
+
+# Unfortunately, these configs needs to be repeated across dev/prod. Can be
+# fixed by using different domains
+applications:
+  - name: api
+    buildpack: python_buildpack
+    services:
+      - database  # aws-rds medium-psql
+    command: ./devops/prod_api.sh
+    host: omb-eregs-api-demo
+  - name: ui
+    buildpack: nodejs_buildpack
+    command: node ui-dist/server.js
+    host: omb-eregs-demo
