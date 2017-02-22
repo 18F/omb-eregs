@@ -6,6 +6,7 @@ import express from 'express';
 import morgan from 'morgan';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+import { Resolver } from 'react-resolver';
 import { match, RouterContext } from 'react-router';
 
 import routes from './routes';
@@ -23,13 +24,16 @@ app.get('*', (req, res) => {
     } else if (redirectCtx) {
       res.redirect(302, redirectCtx.pathname + redirectCtx.search);
     } else if (renderProps) {
-      res.status(200).send(
-        `<html>
-          <body>
-            <div id="app">${renderToString(<RouterContext {...renderProps} />)}</div>
-            <script src="/static/browser.js"></script>
-          </body>
-        </html>`);
+      Resolver.resolve(() => <RouterContext {...renderProps} />).then(({ Resolved, data }) => {
+        res.status(200).send(
+          `<html>
+            <body>
+              <div id="app">${renderToString(<Resolved />)}</div>
+              <script>window.__REACT_RESOLVER_PAYLOAD__ = ${JSON.stringify(data)}</script>
+              <script src="/static/browser.js"></script>
+            </body>
+          </html>`);
+      });
     } else {
       res.status(404).send('Not found');
     }
