@@ -50,6 +50,7 @@ class Policy(models.Model):
         max_length=32, choices=[(e.name, e.value) for e in PolicyTypes])
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
+    policy_status = models.CharField(max_length=32, blank=True)
 
     def __str__(self):
         text = self.title[:40]
@@ -78,6 +79,10 @@ class Requirement(models.Model):
         verbose_name=ugettext_lazy('Keywords'),
         blank=True
     )
+    req_status = models.CharField(max_length=32, blank=True)
+    precedent = models.CharField(max_length=1024, blank=True)
+    related_reqs = models.CharField(max_length=1024, blank=True)
+    omb_data_collection = models.CharField(max_length=1024, blank=True)
 
     def __str__(self):
         text = self.req_text[:40]
