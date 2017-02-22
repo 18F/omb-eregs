@@ -9,6 +9,7 @@ applications:
     buildpack: python_buildpack
     services:
       - database  # aws-rds medium-psql
+      - config    # user-provided service w/ DJANGO_SECRET_KEY defined
     command: ./devops/prod_api.sh
     host: omb-eregs-api
   - name: ui
