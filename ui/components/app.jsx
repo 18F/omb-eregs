@@ -14,10 +14,12 @@ function App(props) {
 
 App.defaultProps = {
   children: null,
+  data: [],
 };
 
 App.propTypes = {
   children: React.PropTypes.node,
+  data: React.PropTypes.arrayOf(React.PropTypes.shape({ name: React.PropTypes.string })),
 };
 
 export default resolve(
