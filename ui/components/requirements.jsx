@@ -10,6 +10,7 @@ function Requirements(props) {
   return (
     <div>
       <h1>Requirements</h1>
+      <h2>{props.location.query.keywords__name__in}</h2>
       <ul>
         {props.data.map((requirement) => <Requirement req_text={requirement.req_text} req_id={requirement.req_id} />)}
       </ul>
@@ -32,5 +33,5 @@ Requirements.propTypes = {
 
 export default resolve(
   'data',
-  (props) => axios.get(`https://omb-eregs-api-demo.app.cloud.gov/requirements/?req_id=${props.params.req_id}`).then(({ data }) => data),
+  (props) => axios.get('https://omb-eregs-api-demo.app.cloud.gov/requirements/', { params: props.location.query }).then(({ data }) => data),
 )(Requirements);
