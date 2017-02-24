@@ -17,6 +17,10 @@ services:
       PORT: 8001
       DJANGO_SETTINGS_MODULE: omb_eregs.settings_prod
       TMPDIR: /tmp
+      VCAP_APPLICATION: >
+        {"uris": ["localhost", "0.0.0.0", "127.0.0.1"]}
+      VCAP_SERVICES: >
+        {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}]}
     volumes:
       - $PWD:/code    # override to source the current directory
     depends_on:
