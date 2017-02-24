@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
+import { Link } from 'react-router';
 
 function Keyword(props) {
   return <li>{props.keyword}</li>
@@ -11,7 +12,7 @@ function Keywords(props) {
     <div>
       <h1>Keywords</h1>
       <ul>
-        {props.data.map((keyword) => <Keyword keyword={keyword.name} />)}
+        {props.data.map((keyword) => <Link to={{ pathname: '/requirements/', query: { keywords__name__in: keyword.name } }}><Keyword keyword={keyword.name} /></Link>)}
       </ul>
     </div>
   );

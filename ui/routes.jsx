@@ -11,6 +11,7 @@ export default <Router history={browserHistory} >
   <Route path="/" component={App}>
     <IndexRoute component={Index} />
     <Route path="keywords" component={Keywords} />
+    <Route path="requirements/:req_id" component={Requirements} />
     <Route path="requirements" component={Requirements} />
   </Route>
 </Router>;
