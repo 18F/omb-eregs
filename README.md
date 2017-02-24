@@ -76,6 +76,22 @@ There are two types of entry points:
   * `npm`
   * `webpack`
 
+## API Endpoints
+
+We provide access to JSON-serialized versions of each of our data types via a
+RESTful API. This data can be filtered using a Django queryset-like syntax
+(see [Django Filters](https://django-filter.readthedocs.io/en/latest/)).
+Notably, one can query on related fields and using Django-style lookups like
+`__in` and `__range`. For example, to query for requirements which match a
+certain set of keywords, use:
+
+```
+https://.../requirements/?keywords__name__in=Keyword1,Keyword2,Keyword3
+```
+
+See our [list of endpoints](reqs/router.py) and [available
+filters](reqs/views.py).
+
 ## Documentation and contributing
 
 See the [eRegulations overview](https://eregs.github.io/) for context about eRegulations, which is a multi-agency project.

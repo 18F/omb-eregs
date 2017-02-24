@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_autosuggest',
     'corsheaders',
+    'rest_framework',
+    'taggit_serializer',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,4 +145,17 @@ LOGGING = {
 TAGGIT_AUTOSUGGEST_MODELS = {
     'default': ('taggit', 'Tag'),
     'reqs.keyword': ('reqs', 'Keyword')
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
 }
