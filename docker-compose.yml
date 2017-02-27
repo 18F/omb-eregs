@@ -3,16 +3,16 @@ services:
   persistent_db:
     image: postgres:9.4
     volumes:
-      - database_data:/data/postgres
+      - database_data:/var/lib/postgresql/data
 
-  prod-api: &PROD_API_BASE
+  prod-api: &PROD_API
     image: omb-eregs:prod
     build:
       context: .
     command: ./devops/wait_for_db_then ./devops/prod_api.sh
     ports:
       - "8001:8001"
-    environment: &WEB_ENV
+    environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
       PORT: 8001
       DJANGO_SETTINGS_MODULE: omb_eregs.settings_prod
@@ -28,8 +28,8 @@ services:
     stdin_open: true
     tty: true
 
-  dev-api:  &DEB_API_BASE
-    <<: *PROD_API_BASE
+  dev-api: &DEV_API
+    <<: *PROD_API
     image: omb-eregs:debug
     build:
       context: .
@@ -37,53 +37,61 @@ services:
         DEV_MODE: "true"
     command: ./devops/wait_for_db_then ./devops/dev_api.sh
     environment:
-      <<: *WEB_ENV
+      <<: *API_ENV
       DJANGO_SETTINGS_MODULE: omb_eregs.settings
 
-  ui:
+  prod-ui: &PROD_UI
     image: node:6
     volumes:
       - $PWD:/usr/src/app
     working_dir: /usr/src/app
-    command: ./devops/ui_build_run.sh
+    command: npm start
     ports:
       - "8000:8000"
-    environment:
+    environment: &UI_ENV
       PORT: 8000
+      NODE_ENV: production
+
+  dev-ui: &DEV_UI
+    <<: *PROD_UI
+    command: ./devops/dev_ui.sh
+    environment:
+      <<: *UI_ENV
+      NODE_ENV: ''
+
 
   #---- Commands ----
   manage.py:
-    <<: *PROD_API_BASE
+    <<: *PROD_API
     entrypoint: ./devops/wait_for_db_then ./manage.py
     command: ''
 
   py.test:
-    <<: *DEB_API_BASE
+    <<: *DEV_API
     entrypoint: ./devops/wait_for_db_then py.test
     command: ''
 
   flake8:
-    <<: *DEB_API_BASE
+    <<: *DEV_API
     entrypoint: flake8
     depends_on: []
     command: ''
 
   pip-compile:
-    <<: *DEB_API_BASE
+    <<: *DEV_API
     entrypoint: pip-compile
     depends_on: []
     command: ''
 
-  npm: &NODE_BASE
-    image: node:6
-    volumes:
-      - $PWD:/usr/src/app
-    working_dir: /usr/src/app
+  npm:
+    <<: *DEV_UI
     entrypoint: npm
+    command: ''
 
   webpack:
-    <<: *NODE_BASE
+    <<: *DEV_UI
     entrypoint: ./node_modules/.bin/webpack
+    command: ''
 
 
 volumes:
