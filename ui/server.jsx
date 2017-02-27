@@ -10,10 +10,13 @@ import { Resolver } from 'react-resolver';
 import { match, RouterContext } from 'react-router';
 
 import routes from './routes';
+import { setApiUrl } from './globals';
 
 const app = express();
 const env = cfenv.getAppEnv();
+const apiFromEnv = process.env.API_URL;
 
+setApiUrl(apiFromEnv);
 app.use(morgan('combined'));
 app.use('/static', express.static(path.join('ui-dist', 'static')));
 
@@ -30,6 +33,7 @@ app.get('*', (req, res) => {
             <body>
               <div id="app">${renderToString(<Resolved />)}</div>
               <script>window.__REACT_RESOLVER_PAYLOAD__ = ${JSON.stringify(data)}</script>
+              <script>window.API_URL = "${apiFromEnv}";</script>
               <script src="/static/browser.js"></script>
             </body>
           </html>`);

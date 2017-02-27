@@ -3,6 +3,8 @@ import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 
+import { apiUrl } from '../globals';
+
 function Keyword(props) {
   return <li>{props.keyword}</li>;
 }
@@ -39,5 +41,5 @@ Keyword.propTypes = {
 
 export default resolve(
   'data',
-  () => axios.get('https://omb-eregs-api-demo.app.cloud.gov/keywords/').then(({ data }) => data),
+  () => axios.get(`${apiUrl()}keywords/`).then(({ data }) => data),
 )(Keywords);
