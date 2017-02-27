@@ -14,9 +14,8 @@ import { setApiUrl } from './globals';
 
 const app = express();
 const env = cfenv.getAppEnv();
-const apiFromEnv = process.env.API_URL;
 
-setApiUrl(apiFromEnv);
+setApiUrl(process.env.INTERNAL_API);
 app.use(morgan('combined'));
 app.use('/static', express.static(path.join('ui-dist', 'static')));
 
@@ -33,7 +32,7 @@ app.get('*', (req, res) => {
             <body>
               <div id="app">${renderToString(<Resolved />)}</div>
               <script>window.__REACT_RESOLVER_PAYLOAD__ = ${JSON.stringify(data)}</script>
-              <script>window.API_URL = "${apiFromEnv}";</script>
+              <script>window.API_URL = "${process.env.PUBLIC_API}";</script>
               <script src="/static/browser.js"></script>
             </body>
           </html>`);

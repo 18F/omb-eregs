@@ -16,4 +16,5 @@ applications:
     command: node ui-dist/server.js
     host: omb-eregs-demo
     env:
-      API_URL: https://omb-eregs-api-demo.app.cloud.gov/
+      INTERNAL_API: https://omb-eregs-api-demo.app.cloud.gov/
+      PUBLIC_API: https://omb-eregs-api-demo.app.cloud.gov/

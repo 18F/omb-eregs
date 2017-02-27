@@ -51,7 +51,8 @@ services:
     environment: &UI_ENV
       PORT: 8000
       NODE_ENV: production
-      API_URL: 'http://prod-api:8001/'
+      INTERNAL_API: 'http://prod-api:8001/'
+      PUBLIC_API: 'http://0.0.0.0:8001/'
     depends_on:
       - prod-api
 
@@ -61,7 +62,8 @@ services:
     environment:
       <<: *UI_ENV
       NODE_ENV: ''
-      API_URL: 'http://dev-api:8001/'
+      INTERNAL_API: 'http://dev-api:8001/'
+      PUBLIC_API: 'http://0.0.0.0:8001/'
     depends_on:
       - dev-api
 
