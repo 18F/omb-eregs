@@ -15,3 +15,5 @@ applications:
     buildpack: nodejs_buildpack
     command: node ui-dist/server.js
     host: omb-eregs-demo
+    env:
+      API_URL: https://omb-eregs-api-demo.app.cloud.gov/

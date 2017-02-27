@@ -18,7 +18,7 @@ services:
       DJANGO_SETTINGS_MODULE: omb_eregs.settings_prod
       TMPDIR: /tmp
       VCAP_APPLICATION: >
-        {"uris": ["localhost", "0.0.0.0", "127.0.0.1"]}
+        {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api"]}
       VCAP_SERVICES: >
         {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}]}
     volumes:
@@ -40,7 +40,7 @@ services:
       <<: *API_ENV
       DJANGO_SETTINGS_MODULE: omb_eregs.settings
 
-  prod-ui: &PROD_UI
+  prod: &PROD_UI
     image: node:6
     volumes:
       - $PWD:/usr/src/app
@@ -51,13 +51,19 @@ services:
     environment: &UI_ENV
       PORT: 8000
       NODE_ENV: production
+      API_URL: 'http://prod-api:8001/'
+    depends_on:
+      - prod-api
 
-  dev-ui: &DEV_UI
+  dev: &DEV_UI
     <<: *PROD_UI
     command: ./devops/dev_ui.sh
     environment:
       <<: *UI_ENV
       NODE_ENV: ''
+      API_URL: 'http://dev-api:8001/'
+    depends_on:
+      - dev-api
 
 
   #---- Commands ----
