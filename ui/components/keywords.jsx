@@ -4,7 +4,7 @@ import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 
 function Keyword(props) {
-  return <li>{props.keyword}</li>
+  return <li>{props.keyword}</li>;
 }
 
 function Keywords(props) {
@@ -12,20 +12,21 @@ function Keywords(props) {
     <div>
       <h1>Keywords</h1>
       <ul>
-        {props.data.map((keyword) => <Link to={{ pathname: '/requirements/', query: { keywords__name__in: keyword.name } }}><Keyword keyword={keyword.name} /></Link>)}
+        {props.data.map(keyword => <Link to={{ pathname: '/requirements/', query: { keywords__name__in: keyword.name } }}><Keyword keyword={keyword.name} /></Link>)}
       </ul>
     </div>
   );
 }
 
 Keywords.defaultProps = {
-  children: null,
   data: [],
 };
 
 Keywords.propTypes = {
-  children: React.PropTypes.node,
-  data: React.PropTypes.arrayOf(React.PropTypes.shape({ name: React.PropTypes.string })),
+  data: React.PropTypes.arrayOf(React.PropTypes.shape({
+    name: React.PropTypes.string,
+    keyword: React.PropTypes.string,
+  })),
 };
 
 export default resolve(

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function App(props) {
+function App(props) {
   return (
     <div>
       <h1>App</h1>
@@ -8,3 +8,13 @@ export default function App(props) {
     </div>
   );
 }
+
+App.defaultProps = {
+  children: null,
+};
+
+App.propTypes = {
+  children: React.PropTypes.node,
+};
+
+export default App;
