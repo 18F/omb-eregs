@@ -5,7 +5,10 @@ export default function Index() {
   return (
     <div>
       <h2>Index</h2>
-      <Link to="/subpath">Go to Subpath</Link>
+      <ul>
+        <li><Link to="/keywords">Keywords</Link></li>
+        <li><Link to="/requirements">Requirements</Link></li>
+      </ul>
     </div>
   );
 }
