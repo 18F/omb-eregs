@@ -21,6 +21,7 @@ function Requirements(props) {
 
 Requirements.defaultProps = {
   data: [],
+  location: {},
 };
 
 Requirements.propTypes = {
@@ -33,6 +34,17 @@ Requirements.propTypes = {
       keywords__name__in: React.PropTypes.string,
     }),
   }),
+};
+
+Requirement.defaultProps = {
+  req_text: null,
+  req_id: null,
+  location: {},
+};
+
+Requirement.propTypes = {
+  req_text: React.PropTypes.string,
+  req_id: React.PropTypes.string,
 };
 
 export default resolve(

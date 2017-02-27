@@ -29,6 +29,14 @@ Keywords.propTypes = {
   })),
 };
 
+Keyword.defaultProps = {
+  keyword: null,
+};
+
+Keyword.propTypes = {
+  keyword: React.PropTypes.string,
+};
+
 export default resolve(
   'data',
   () => axios.get('https://omb-eregs-api-demo.app.cloud.gov/keywords/').then(({ data }) => data),
