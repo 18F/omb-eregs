@@ -17,6 +17,7 @@ furl==0.5.7               # via cfenv
 gunicorn==19.6.0
 orderedmultidict==0.7.11  # via furl
 psycopg2==2.6.2
+python-dateutil==2.6.0
 requests==2.13.0
-six==1.10.0               # via furl, orderedmultidict
+six==1.10.0               # via furl, orderedmultidict, python-dateutil
 whitenoise==3.3.0

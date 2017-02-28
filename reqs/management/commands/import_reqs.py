@@ -2,8 +2,8 @@ import argparse
 import csv
 import logging
 import sys
-from datetime import datetime
 
+from dateutil import parser as dateutil_parser
 from django.core.management.base import BaseCommand
 
 from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
@@ -20,18 +20,26 @@ def convert_omb_policy_id(string):
 
 def convert_policy_type(string):
     """Raises a ValueError if the string type can't be found"""
+    string = string.strip()
     if 'memo' in string.lower():
-        return PolicyTypes.memorandum
+        return PolicyTypes.memorandum.value
     elif 'circular' in string.lower():
-        return PolicyTypes.circular
-    return PolicyTypes(string)
+        return PolicyTypes.circular.value
+    elif string in ('', 'NA'):
+        return ''
+    else:
+        return PolicyTypes(string).value
 
 
 def convert_date(string):
     """Tries to convert a date string into a date. Accounts for NA. May raise
     a ValueError"""
-    if string not in ('NA', 'None specified'):
-        return datetime.strptime(string, '%m/%d/%Y').date()
+    string = string.rstrip('†')
+    if string not in ('NA', 'None specified', 'TBA', 'None', 'N/A', ''):
+        try:
+            return dateutil_parser.parse(string).date()
+        except ValueError:  # dateutil's error messages aren't friendly
+            raise ValueError("Not a date: {0}".format(string))
 
 
 class PolicyProcessor:
@@ -47,9 +55,9 @@ class PolicyProcessor:
             params = {
                 'policy_number': policy_number,
                 'title': row['policyTitle'],
-                'uri': row['uriPolicyId'],
-                'omb_policy_id': convert_omb_policy_id(row['ombPolicyId']),
-                'policy_type': convert_policy_type(row['policyType']).value,
+                'uri': row['uriPolicyID'],
+                'omb_policy_id': convert_omb_policy_id(row['ombPolicyID']),
+                'policy_type': convert_policy_type(row['policyType']),
                 'issuance': convert_date(row['policyIssuanceYear']),
                 'sunset': convert_date(row['policySunset'])
             }
@@ -103,9 +111,11 @@ class RowProcessor:
         self.req_ids = set()
 
     def add(self, row):
-        req_id = row['reqId']
+        req_id = row['reqID']
+        if req_id in ('None', ''):
+            raise ValueError("Requirement without ID")
         if req_id in self.req_ids:
-            raise ValueError("Req ID already seen: {0}".format(req_id))
+            raise ValueError("Duplicated Req ID: {0}".format(req_id))
 
         params = dict(
             policy=self.policies.from_row(row),
@@ -114,10 +124,10 @@ class RowProcessor:
             policy_section=row['policySection'],
             policy_sub_section=row['policySubSection'],
             req_text=row['reqText'],
-            verb=row['verb'],
-            impacted_entity=row['Impacted Entity'],
+            verb=row['reqVerb'],
+            impacted_entity=row['agenciesImpacted'],
             req_deadline=row['reqDeadline'],
-            citation=row['citation'],
+            citation=row['Citation '],
         )
         req, _ = Requirement.objects.update_or_create(
             req_id=req_id, defaults=params)
@@ -132,16 +142,18 @@ class Command(BaseCommand):
         parser.add_argument(
             'input_file', nargs='?', type=argparse.FileType('r'),
             default=sys.stdin)
+        parser.add_argument('--status', type=int,
+                            help='How frequently to log status')
 
     def handle(self, *args, **options):
         rows = RowProcessor()
         for idx, row in enumerate(csv.DictReader(options['input_file'])):
-            if idx % 100 == 0:
-                logger.info('Processing row %s', idx)
+            if options['status'] and idx % options['status'] == 0:
+                logger.info('Processed %s rows', idx)
             try:
                 rows.add(row)
             except ValueError as err:
-                logger.warning("Problem with this row %s: %s", idx, err)
+                logger.warning("Problem with row %s: %s", idx + 1, err)
         # Delete all keyword connections which may exist in the DB
         KeywordConnect.objects.filter(
             content_object__req_id__in=rows.req_ids).delete()
