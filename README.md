@@ -38,11 +38,19 @@ Then navigate to http://localhost:8001/admin/ and log in.
 We can also start the UI server (which runs NodeJS) via:
 
 ```bash
-docker-compose up ui
+docker-compose up dev
 # Ctrl-c to kill
 ```
 
 Then navigate to http://localhost:8000/
+
+This runs in development mode (including automatic JS recompilation). To run
+in prod mode, run
+
+```bash
+docker-compose run webpack  # to build the server JS
+docker-compose up prod
+```
 
 ### Data
 
@@ -66,7 +74,10 @@ There are two types of entry points:
     port 8001
   * `dev-api` - Build the admin/API app and run it in "development" mode on
     port 8001
-  * `ui` - Build the UI app and run it on port 8000
+  * `dev` - Build and run the UI and API app in "development" mode (port 8000
+    for UI, 8001 for API).
+  * `prod` - Run the UI and API apps in "production" mode (port 8000 for UI,
+    8001 for API). Note that this requires the JS be compiled already.
 1. One use commands which run until complete. These are ran via
   `docker-compose run`
   * `manage.py`

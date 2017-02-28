@@ -2,6 +2,8 @@ import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
 
+import { apiUrl } from '../globals';
+
 function Requirement(props) {
   return <li>{props.req_id}: {props.req_text}</li>;
 }
@@ -49,5 +51,5 @@ Requirement.propTypes = {
 
 export default resolve(
   'data',
-  props => axios.get('https://omb-eregs-api-demo.app.cloud.gov/requirements/', { params: props.location.query }).then(({ data }) => data),
+  props => axios.get(`${apiUrl()}requirements/`, { params: props.location.query }).then(({ data }) => data),
 )(Requirements);

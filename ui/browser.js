@@ -1,5 +1,7 @@
-import ReactDOM from 'react-dom';
+import { Resolver } from 'react-resolver';
 
 import routes from './routes';
+import { setApiUrl } from './globals';
 
-ReactDOM.render(routes, document.getElementById('app'));
+setApiUrl(window.API_URL);
+Resolver.render(() => routes, document.getElementById('app'));
