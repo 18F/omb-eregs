@@ -16,8 +16,8 @@ def test_keyword_filtering(path, num_results):
     client = APIClient()
     for i in range(10):
         mommy.make(Keyword, name=str(i)*10)
-    result = client.get(path).json()
-    assert len(result) == num_results
+    results = client.get(path).json()['results']
+    assert len(results) == num_results
 
 
 @pytest.mark.django_db
@@ -36,5 +36,5 @@ def test_requirement_filtering_keyword(path, num_results):
     req1.keywords.add('0000', '1111')
     req2.keywords.add('1111', '2222')
     req3.keywords.add('3333')
-    result = client.get(path).json()
-    assert len(result) == num_results
+    results = client.get(path).json()['results']
+    assert len(results) == num_results
