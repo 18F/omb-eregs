@@ -5,7 +5,7 @@ import { resolve } from 'react-resolver';
 import { apiUrl } from '../globals';
 
 function Requirement(props) {
-  return <li>{props.req_id}: {props.req_text}</li>;
+  return <li className="req">{props.req_id}: {props.req_text}</li>;
 }
 
 function Requirements(props) {

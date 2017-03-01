@@ -29,6 +29,7 @@ app.get('*', (req, res) => {
       Resolver.resolve(() => <RouterContext {...renderProps} />).then(({ Resolved, data }) => {
         res.status(200).send(
           `<html>
+            <head><link rel="stylesheet" href="/static/styles.css" /></head>
             <body>
               <div id="app">${renderToString(<Resolved />)}</div>
               <script>window.__REACT_RESOLVER_PAYLOAD__ = ${JSON.stringify(data)}</script>
