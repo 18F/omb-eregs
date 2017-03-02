@@ -24,8 +24,8 @@ automatically with Docker on Windows and OS X).
 Let's start by adding an admin user.
 
 ```bash
-docker-compose run manage.py migrate  # set up database
-docker-compose run manage.py createsuperuser
+docker-compose run --rm manage.py migrate  # set up database
+docker-compose run --rm manage.py createsuperuser
 # [fill out information]
 docker-compose up prod-api
 # Ctrl-c to kill
@@ -48,7 +48,7 @@ This runs in development mode (including automatic JS recompilation). To run
 in prod mode, run
 
 ```bash
-docker-compose run webpack  # to build the server JS
+docker-compose run --rm webpack  # to build the server JS
 docker-compose up prod
 ```
 
@@ -57,8 +57,8 @@ docker-compose up prod
 Let's also load the requirements data from OMB:
 
 ```bash
-docker-compose run manage.py fetch_csv
-docker-compose run manage.py import_reqs data.csv
+docker-compose run --rm manage.py fetch_csv
+docker-compose run --rm manage.py import_reqs data.csv
 ```
 
 This may emit some warnings for improper input. The next time you visit the
@@ -79,13 +79,40 @@ There are two types of entry points:
   * `prod` - Run the UI and API apps in "production" mode (port 8000 for UI,
     8001 for API). Note that this requires the JS be compiled already.
 1. One use commands which run until complete. These are ran via
-  `docker-compose run`
+  `docker-compose run --rm` (the `--rm` just deletes the images after running;
+  it's not strictly required)
   * `manage.py`
   * `py.test`
   * `flake8`
   * `pip-compile`
   * `npm`
   * `webpack`
+
+### Resolving common container issues
+
+If a Javascript dependency has been added (indicated by an error within
+`node_modules`), run
+```sh
+docker-compose run --rm npm install
+```
+
+If a Python dependency has been added, run
+```sh
+docker-compose build  # rebuilds images, which include Python libs
+```
+
+If you see an error about a conflicting port, try spinning down the running
+services
+```sh
+docker-compose down
+```
+
+If all it lost and you want to start from scratch, run
+```sh
+docker-compose down
+docker volume rm omberegs_database_data   # remove database data
+docker-compose build
+```
 
 ## API Endpoints
 
