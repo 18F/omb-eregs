@@ -31,18 +31,18 @@ class KeywordConnect(ItemBase):
 
 @unique
 class PolicyTypes(Enum):
-    memorandum = 'Memorandum'
     circular = 'Circular'
-    strategy = 'Strategy'
-    review = 'Policy Review'
     executive = 'Executive Order'
     guidance = 'Guidance'
-    standards = 'Standards'
-    law = 'Law'
-    plan = 'Plan'
     hspd = 'HSPD'
-    ppd = 'PPD'
+    law = 'Law'
+    memorandum = 'Memorandum'
     national_action = 'National Action Plan'
+    plan = 'Plan'
+    ppd = 'PPD'
+    review = 'Policy Review'
+    standards = 'Standards'
+    strategy = 'Strategy'
 
 
 class Policy(models.Model):

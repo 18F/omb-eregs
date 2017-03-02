@@ -140,3 +140,101 @@ def test_repeat_row():
     processor2.add(row)
     assert Requirement.objects.count() == 1
     assert Requirement.objects.first().issuing_body == 'body2'
+
+
+@pytest.mark.django_db
+def test_no_matching_policy_type():
+    """If the policy type isn't found, raise an exception"""
+    row = {'policyNumber': '123', 'policyTitle': 'title 1',
+           'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
+           'policyType': 'IAmAnOutlier', 'policyIssuanceYear': '12/20/2001',
+           'policySunset': 'NA'}
+    policy_proc = import_reqs.PolicyProcessor()
+    with pytest.raises(ValueError):
+        policy_proc.from_row(row)
+
+
+@pytest.mark.django_db
+def test_varying_headers():
+    """
+    Test that we can handle a variety of names for fields (in this case, the
+    OMB Policy ID field).
+    """
+    numbers = iter(range(1, 200))
+    row = {'policyNumber': '123', 'policyTitle': 'title 1',
+           'uriPolicyId': 'http://example.com/a',
+           'policyType': 'Guidance', 'policyIssuanceYear': '12/20/2001',
+           'policySunset': 'NA'}
+    for key in ("ombPolicyId", "ombPolicyID"):
+        num = next(numbers)
+        row[key] = "policy"
+        row["policyNumber"] = str(num)
+        policy_proc = import_reqs.PolicyProcessor()
+        policy = policy_proc.from_row(row)
+        assert policy.policy_number == num
+        del row[key]
+
+
+@pytest.mark.django_db
+def test_policy_from_bad_row():
+    row = {
+        'Acquisition/Contracts': 'X',
+        'Agency Statistics': '',
+        'Budget': '',
+        'Citation ': 'NA',
+        'Cloud': '',
+        'Customer Services': '',
+        'Cybersecurity': '',
+        'Data Centers': '',
+        'Data Management/Standards': '',
+        'Definitions': '',
+        'Digital Services': '',
+        'Financial Systems': '',
+        'Governance - Implementation': '',
+        'Governance - Org Structure': '',
+        'Governance': 'X',
+        'Hardware/Government Furnished Equipment (GFE)': '',
+        'Human Capital': '',
+        'IT Project Management': 'X',
+        'IT Transparency (Open Data, FOIA, Public Records, etc.)': '',
+        'Mobile': '',
+        'Other': '',
+        'Privacy': '',
+        'Reporting': '',
+        'Shared Services': '',
+        'Software': '',
+        'agenciesImpacted': 'Agencies',
+        'issuingBody': 'Office of Management and Budget (OMB)',
+        'ombDataCollection': '',
+        'ombPolicyID': 'OMB Circular A-11',
+        'policyIssuanceYear': '6/1/2006',
+        'policyNumber': '1065',
+        'policySection': 'I.3 Functional Requirements',
+        'policyStatus': '',
+        'policySubSection': 'NA',
+        'policySunset': 'NA',
+        'policyTitle': 'Capital Programming Guide',
+        'policyType': 'Guidance',
+        'precedent': '',
+        'relatedReqs': '',
+        'reqDeadline': 'NA',
+        'reqID': '1065.01',
+        'reqStatus': '',
+        'reqText': 'If current',
+        'reqVerb': '',
+        'uriPolicyID':
+            'https://www.whitehouse.gov/sites/default/files/omb/assets/'
+            'a11_current_year/part7.pdf',
+    }
+    policy_proc = import_reqs.PolicyProcessor()
+    policy = policy_proc.from_row(row)
+    assert policy.policy_number == 1065
+    assert policy.title == 'Capital Programming Guide'
+    assert policy.uri == "%s%s" % (
+        'https://www.whitehouse.gov/sites/default/files/omb/assets/',
+        'a11_current_year/part7.pdf')
+    assert policy.omb_policy_id == 'OMB Circular A-11'
+    assert PolicyTypes(policy.policy_type) == PolicyTypes.guidance
+    assert policy.issuance == date(2006, 6, 1)
+    assert policy.sunset is None
+    assert {1065: policy} == policy_proc.policies

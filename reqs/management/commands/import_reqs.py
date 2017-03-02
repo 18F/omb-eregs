@@ -42,6 +42,19 @@ def convert_date(string):
             raise ValueError("Not a date: {0}".format(string))
 
 
+def find_key(options, row, highlander=True):
+    """
+    Inconsistencies in the CSVs mean we have to look for one of several
+    possibilities for header names.
+    """
+    acceptable_numbers = (1,) if highlander else (0, 1)
+    keys = [k for k in options if k in row.keys()]
+    if len(keys) not in acceptable_numbers:
+        raise ValueError("Could not determine key (should be one of %s)."
+                         % str(options))
+    return keys[0]
+
+
 class PolicyProcessor:
     """Creates/updates and tracks Policy objects based on the data found in
     CSV rows"""
@@ -51,12 +64,15 @@ class PolicyProcessor:
     def from_row(self, row):
         """Retrieve/create/update a Policy object"""
         policy_number = int(row['policyNumber'])
+        uri_key = find_key(("uriPolicyID", "uriPolicyId"), row)
+        omb_key = find_key(("ombPolicyID", "ombPolicyId"), row)
         if policy_number not in self.policies:
             params = {
                 'policy_number': policy_number,
                 'title': row['policyTitle'],
-                'uri': row['uriPolicyID'],
-                'omb_policy_id': convert_omb_policy_id(row['ombPolicyID']),
+                'uri': row[uri_key],
+                'omb_policy_id': convert_omb_policy_id(row[omb_key]),
+                'policy_status': row.get("policyStatus", ""),
                 'policy_type': convert_policy_type(row['policyType']),
                 'issuance': convert_date(row['policyIssuanceYear']),
                 'sunset': convert_date(row['policySunset'])
@@ -79,17 +95,18 @@ def priority_split(text, *splitters):
 
 class KeywordProcessor:
     """Creates or retrieves Keyword models"""
-    def __init__(self):
+    def __init__(self, fields):
         self.cache = {}
+        self.fields = fields
 
-    @staticmethod
-    def keywords(row):
+    def keywords(self, row):
         to_return = []
-        for field, value in row.items():
-            if field == 'Other (Keywords)':
+        for field in self.fields:
+            value = row.get(field, None)
+            if field in ('Other', 'Other (Keywords)'):
                 to_return.extend(priority_split(value, ';', ','))
-            elif '(Keywords)' in field and value:
-                to_return.append(field.replace('(Keywords)', '').strip())
+            elif value:
+                to_return.append(field.replace("(Keywords)", "").strip())
         return to_return
 
     def connections(self, row, req_pk):
@@ -104,30 +121,40 @@ class KeywordProcessor:
 class RowProcessor:
     """Creates Requirement objects, Policies, and Keyword connections,
     raising exceptions if something goes wrong with the process."""
-    def __init__(self):
+    def __init__(self, keywords=None):
         self.policies = PolicyProcessor()
-        self.keywords = KeywordProcessor()
+        if keywords is None:
+            keywords = []
+        self.keywords = KeywordProcessor(keywords)
         self.connections = []
         self.req_ids = set()
 
     def add(self, row):
-        req_id = row['reqID']
+        req_key = find_key(
+            ("reqId", "reqID", "reqid", "req_Id", "req_ID", "req_id"), row)
+        req_id = row[req_key]
         if req_id in ('None', ''):
             raise ValueError("Requirement without ID")
         if req_id in self.req_ids:
             raise ValueError("Duplicated Req ID: {0}".format(req_id))
+        verb_key = find_key(("reqVerb", "req_verb", "verb"), row)
+        impacted_key = find_key(("Impacted Entity", "agenciesImpacted"), row)
+        citation_key = find_key(("Citation", "Citation ", "citation"), row)
 
         params = dict(
-            policy=self.policies.from_row(row),
-            req_id=req_id,
+            citation=row[citation_key],
+            impacted_entity=row[impacted_key],
             issuing_body=row['issuingBody'],
+            omb_data_collection=row.get("ombDataCollection", ""),
+            policy=self.policies.from_row(row),
             policy_section=row['policySection'],
             policy_sub_section=row['policySubSection'],
-            req_text=row['reqText'],
-            verb=row['reqVerb'],
-            impacted_entity=row['agenciesImpacted'],
+            precedent=row.get("precedent", ""),
+            related_reqs=row.get("relatedReqs", ""),
             req_deadline=row['reqDeadline'],
-            citation=row['Citation '],
+            req_id=req_id,
+            req_text=row['reqText'],
+            verb=row[verb_key],
         )
         req, _ = Requirement.objects.update_or_create(
             req_id=req_id, defaults=params)
@@ -146,8 +173,13 @@ class Command(BaseCommand):
                             help='How frequently to log status')
 
     def handle(self, *args, **options):
-        rows = RowProcessor()
-        for idx, row in enumerate(csv.DictReader(options['input_file'])):
+        data = csv.DictReader(options['input_file'])
+        # We think that any columns after "Citation " will be keyword columns.
+        citation_key = find_key(("Citation", "Citation ", "citation"),
+                                {k: "" for k in data.fieldnames})
+        keywords = data.fieldnames[data.fieldnames.index(citation_key) + 1:]
+        rows = RowProcessor(keywords)
+        for idx, row in enumerate(data):
             if options['status'] and idx % options['status'] == 0:
                 logger.info('Processed %s rows', idx)
             try:
