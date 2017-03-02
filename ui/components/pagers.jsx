@@ -18,6 +18,7 @@ export default function Pagers({ pathname, query, count }) {
   return (
     <div>
       { prevPage }
+      {` ${pageInt} of ${Math.ceil(count / 25)} `}
       { nextPage }
     </div>
   );
