@@ -21,9 +21,55 @@ policyNumber,policyTitle,uriPolicyId,ombPolicyId,policyType,policyIssuanceYear,p
     yield csv_file_obj
 
 
+@pytest.fixture
+def csv_file2(tmpdir):
+    """
+    Tests headers that are closers to the ones used by the newest file.
+    """
+    csv_file_obj = tmpdir.join('some_file2.csv')
+    csv_file_obj.write("""
+policyNumber,policyTitle,uriPolicyID,ombPolicyID,policyType,policyIssuanceYear,policySunset,reqId,issuingBody,policySection,policySubSection,reqText,verb,Impacted Entity,reqDeadline,citation,Acquisition/Contracts,Human Capital,Cloud,Data Centers (Keywords),Cybersecurity (Keywords),Privacy (Keywords),Shared Services (Keywords),IT Project Management (Keywords),Software (Keywords),Digital Services (Keywords),Mobile (Keywords),Hardware/Government Furnished Equipment (GFE) (Keywords),"IT Transparency (Open Data, FOIA, Public Records, etc.) (Keywords)",Agency Statistics (Keywords),Customer Services (Keywords),Governance (Keywords),Financial Systems,Budget (Keywords),Governance - Org Structure,Governance - Implementation (Keywords),Data Management/Standards (Keywords),Definitions (Keywords),Reporting (Keywords),Other (Keywords)
+1,25 Point Implementation Plan To Reform Federal Information Technology Management,https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/25-point-implementation-plan-to-reform-federal-it.pdf,NA,Strategy,12/9/2010,NA,1.15,"Office of the Federal Chief Information Officer, OMB",PART II: EFFECTIVELY MANAGING LARGE-SCALE IT PROGRAMS,NA,"Moving forward, Federal IT programs must be structured to deploy working business functionality in release cycles no longer than 12 months, and, ideally, less than six months, with initial deployment to end users no later than 18 months after the program begins.",Must,All CFO-Act Agencies,NA,NA,,,,,,,,,x,,,,,,,,,,,,,,,Software Development Lifecycle/Agile
+21,Data Center Optimization Initiative (DCOI),https://www.whitehouse.gov/sites/default/files/omb/memoranda/2016/m_16_19_1.pdf,M-16-19,M-Memorandum,8/1/2016,9/30/2018,21.44,"Office of the Federal Chief Information Officer, OMB",Metric Target Values,Goal 2: Cost Savings and Avoidance,"Within 30 days after publication of this document, OMB OFCIO will set individual cost savings and cost avoidance goals for each agency.",Will,OMB OFCIO,Within 30 days,NA,,,,,,,,,,,,,X,,,,X,,X,,,,,
+""".strip())    # noqa
+    yield csv_file_obj
+
+
 @pytest.mark.django_db
 def test_imports_correctly(csv_file):
     call_command('import_reqs', str(csv_file))
+
+    reqs = list(Requirement.objects.order_by('req_id'))
+    assert len(reqs) == 2
+    # Spot checks
+    assert reqs[0].policy.policy_number == 1
+    assert reqs[0].policy.omb_policy_id == ''
+    assert reqs[0].policy.policy_type == 'Strategy'
+    assert reqs[0].policy.issuance == date(2010, 12, 9)
+    assert reqs[0].policy.sunset is None
+    assert reqs[0].req_text == (
+        "Moving forward, Federal IT programs must be structured to deploy "
+        "working business functionality in release cycles no longer than 12 "
+        "months, and, ideally, less than six months, with initial deployment "
+        "to end users no later than 18 months after the program begins.")
+    assert reqs[0].impacted_entity == 'All CFO-Act Agencies'
+    assert set(reqs[0].keywords.names()) == {
+        'Software', 'Software Development Lifecycle/Agile'}
+
+    assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
+    assert reqs[1].policy.policy_type == 'Memorandum'
+    assert reqs[1].policy.sunset == date(2018, 9, 30)
+    assert reqs[1].req_id == '21.44'
+    assert reqs[1].verb == 'Will'
+    assert reqs[1].req_deadline == 'Within 30 days'
+    assert set(reqs[1].keywords.names()) == {
+        'Governance - Org Structure', 'Financial Systems',
+        'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
+
+
+@pytest.mark.django_db
+def test_imports_correctly2(csv_file2):
+    call_command('import_reqs', str(csv_file2))
 
     reqs = list(Requirement.objects.order_by('req_id'))
     assert len(reqs) == 2
@@ -173,68 +219,3 @@ def test_varying_headers():
         policy = policy_proc.from_row(row)
         assert policy.policy_number == num
         del row[key]
-
-
-@pytest.mark.django_db
-def test_policy_from_bad_row():
-    row = {
-        'Acquisition/Contracts': 'X',
-        'Agency Statistics': '',
-        'Budget': '',
-        'Citation ': 'NA',
-        'Cloud': '',
-        'Customer Services': '',
-        'Cybersecurity': '',
-        'Data Centers': '',
-        'Data Management/Standards': '',
-        'Definitions': '',
-        'Digital Services': '',
-        'Financial Systems': '',
-        'Governance - Implementation': '',
-        'Governance - Org Structure': '',
-        'Governance': 'X',
-        'Hardware/Government Furnished Equipment (GFE)': '',
-        'Human Capital': '',
-        'IT Project Management': 'X',
-        'IT Transparency (Open Data, FOIA, Public Records, etc.)': '',
-        'Mobile': '',
-        'Other': '',
-        'Privacy': '',
-        'Reporting': '',
-        'Shared Services': '',
-        'Software': '',
-        'agenciesImpacted': 'Agencies',
-        'issuingBody': 'Office of Management and Budget (OMB)',
-        'ombDataCollection': '',
-        'ombPolicyID': 'OMB Circular A-11',
-        'policyIssuanceYear': '6/1/2006',
-        'policyNumber': '1065',
-        'policySection': 'I.3 Functional Requirements',
-        'policyStatus': '',
-        'policySubSection': 'NA',
-        'policySunset': 'NA',
-        'policyTitle': 'Capital Programming Guide',
-        'policyType': 'Guidance',
-        'precedent': '',
-        'relatedReqs': '',
-        'reqDeadline': 'NA',
-        'reqID': '1065.01',
-        'reqStatus': '',
-        'reqText': 'If current',
-        'reqVerb': '',
-        'uriPolicyID':
-            'https://www.whitehouse.gov/sites/default/files/omb/assets/'
-            'a11_current_year/part7.pdf',
-    }
-    policy_proc = import_reqs.PolicyProcessor()
-    policy = policy_proc.from_row(row)
-    assert policy.policy_number == 1065
-    assert policy.title == 'Capital Programming Guide'
-    assert policy.uri == "{0}{1}".format(
-        'https://www.whitehouse.gov/sites/default/files/omb/assets/',
-        'a11_current_year/part7.pdf')
-    assert policy.omb_policy_id == 'OMB Circular A-11'
-    assert PolicyTypes(policy.policy_type) == PolicyTypes.guidance
-    assert policy.issuance == date(2006, 6, 1)
-    assert policy.sunset is None
-    assert {1065: policy} == policy_proc.policies
