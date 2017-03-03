@@ -87,6 +87,7 @@ There are two types of entry points:
   * `pip-compile`
   * `npm`
   * `webpack`
+  * `psql`
 
 ### Resolving common container issues
 

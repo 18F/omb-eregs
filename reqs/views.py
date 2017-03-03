@@ -1,3 +1,4 @@
+from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
 
 from reqs.models import Keyword, Policy, Requirement
@@ -30,8 +31,9 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
 
 class RequirementViewSet(viewsets.ModelViewSet):
+    # Distinct to account for multiple tag matches when filtering
     queryset = Requirement.objects.select_related('policy').prefetch_related(
-        'keywords').all()
+        'keywords').distinct()
     serializer_class = RequirementSerializer
     filter_fields = {
         'req_id': ('exact',),
@@ -51,3 +53,17 @@ class RequirementViewSet(viewsets.ModelViewSet):
     filter_fields.update(
         {'keywords__' + key: value
          for key, value in KeywordViewSet.filter_fields.items()})
+
+    def get_queryset(self):
+        """Order by number of matching keywords"""
+        kw_param = self.request.query_params.get('keywords__name__in', '')
+        keywords = tuple(kw.strip() for kw in kw_param.split(','))
+        sql = """
+            SELECT count(*) FROM reqs_keywordconnect AS con
+            INNER JOIN reqs_keyword kw ON (con.tag_id = kw.id)
+            WHERE kw.name IN %s
+            AND con.content_object_id = reqs_requirement.id
+        """
+        annotated = self.queryset.annotate(kw_count=RawSQL(sql, (keywords,)))
+        ordered = annotated.order_by('-kw_count', 'req_id')
+        return ordered
