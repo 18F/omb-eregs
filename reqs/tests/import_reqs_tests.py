@@ -230,7 +230,7 @@ def test_policy_from_bad_row():
     policy = policy_proc.from_row(row)
     assert policy.policy_number == 1065
     assert policy.title == 'Capital Programming Guide'
-    assert policy.uri == "%s%s" % (
+    assert policy.uri == "{0}{1}".format(
         'https://www.whitehouse.gov/sites/default/files/omb/assets/',
         'a11_current_year/part7.pdf')
     assert policy.omb_policy_id == 'OMB Circular A-11'

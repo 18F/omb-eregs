@@ -50,8 +50,9 @@ def find_key(options, row, highlander=True):
     acceptable_numbers = (1,) if highlander else (0, 1)
     keys = [k for k in options if k in row.keys()]
     if len(keys) not in acceptable_numbers:
-        raise ValueError("Could not determine key (should be one of %s)."
-                         % str(options))
+        raise ValueError(
+            "Could not determine key (should be one of {0}).".format(
+                str(options)))
     return keys[0]
 
 
