@@ -63,7 +63,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True    # Big ol' TODO
+# Allow most URLs to be used by any service; do not allow the admin to be
+# accessed this way
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/(?!admin).*$'
 
 ROOT_URLCONF = 'omb_eregs.urls'
 
@@ -161,4 +164,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 25,
 }

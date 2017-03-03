@@ -16,8 +16,8 @@ def test_keyword_filtering(path, num_results):
     client = APIClient()
     for i in range(10):
         mommy.make(Keyword, name=str(i)*10)
-    result = client.get(path).json()
-    assert len(result) == num_results
+    results = client.get(path).json()['results']
+    assert len(results) == num_results
 
 
 @pytest.mark.django_db
@@ -36,5 +36,21 @@ def test_requirement_filtering_keyword(path, num_results):
     req1.keywords.add('0000', '1111')
     req2.keywords.add('1111', '2222')
     req3.keywords.add('3333')
-    result = client.get(path).json()
-    assert len(result) == num_results
+    results = client.get(path).json()['results']
+    assert len(results) == num_results
+
+
+@pytest.mark.django_db
+def test_requirements_queryset_order():
+    """We should receive results in # of matches order"""
+    client = APIClient()
+    for i in range(6):
+        mommy.make(Keyword, name=str(i + 1)*4)
+    req1, req2, req3 = [mommy.make(Requirement, req_id=str(i + 1))
+                        for i in range(3)]
+    req1.keywords.add('1111', '2222')
+    req2.keywords.add('2222', '3333', '4444')
+    req3.keywords.add('1111', '5555', '6666')
+    response = client.get('/requirements/?keywords__name__in=1111,3333,4444')
+    req_ids = [req['req_id'] for req in response.json()['results']]
+    assert req_ids == ['2', '1', '3']
