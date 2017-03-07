@@ -53,6 +53,9 @@ services:
       NODE_ENV: production
       INTERNAL_API: 'http://prod-api:8001/'
       PUBLIC_API: 'http://0.0.0.0:8001/'
+      VCAP_SERVICES: >
+        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
+        }}}]}
     depends_on:
       - prod-api
 
@@ -64,6 +67,9 @@ services:
       NODE_ENV: ''
       INTERNAL_API: 'http://dev-api:8001/'
       PUBLIC_API: 'http://0.0.0.0:8001/'
+      VCAP_SERVICES: >
+        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
+        }}}]}
     depends_on:
       - dev-api
 

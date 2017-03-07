@@ -115,6 +115,28 @@ docker volume rm omberegs_database_data   # remove database data
 docker-compose build
 ```
 
+### Running w/ Credentials
+
+Generally, we don't need to set up local development with authentication
+credentials. To exercise that workflow, however, you can edit the
+docker-compose.yml file. Hop to the `dev` or `prod` key (whichever environment
+you plan to run) and inside the `VCAP_SERVICES` key, you'll see an empty JS
+object next to `UI_BASIC_AUTH`. Insert your username and password to this
+object (keyed by username) to test out authentication.
+
+For example (skipping all irrelevant keys)
+```yml
+services:
+  dev:
+    environment:
+      VCAP_SERVICES: >
+        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
+          "myusername": "mypassword",
+          "myothername": "itspassword"
+        }}}]}
+```
+
+
 ## API Endpoints
 
 We provide access to JSON-serialized versions of each of our data types via a
