@@ -4,38 +4,41 @@ import { resolve } from 'react-resolver';
 
 import { apiUrl } from '../globals';
 import Pagers from './pagers';
+import ReqFilterUI, { fetchData as fetchKeywords } from './req-filter-ui';
 
 function Requirement({ requirement }) {
   return <li className="req">{requirement.req_id}: {requirement.req_text}</li>;
 }
 
-function Requirements({ location: { query }, data }) {
+function Requirements({ location: { query }, pagedReqs, keywords }) {
   return (
     <div>
       <h1>Requirements</h1>
-      <h2>{query.keywords__name__in}</h2>
-      <ul>
-        { data.results.map(requirement =>
+      <ReqFilterUI keywords={keywords} />
+      <ul className="req-list">
+        { pagedReqs.results.map(requirement =>
           <Requirement key={requirement.req_id} requirement={requirement} />) }
       </ul>
-      <Pagers pathname="/requirements/" query={query} count={data.count} />
+      <Pagers pathname="/requirements/" query={query} count={pagedReqs.count} />
     </div>
   );
 }
 
 Requirements.defaultProps = {
-  data: { results: [], count: 0 },
+  pagedReqs: { results: [], count: 0 },
+  keywords: ReqFilterUI.defaultProps.keywords,
   location: { query: {} },
 };
 
 Requirements.propTypes = {
-  data: React.PropTypes.shape({
+  pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
       req_text: React.PropTypes.string,
       req_id: React.PropTypes.string,
     })),
     count: React.PropTypes.number,
   }),
+  keywords: ReqFilterUI.propTypes.keywords,
   location: React.PropTypes.shape({
     query: React.PropTypes.shape({
       keywords__name__in: React.PropTypes.string,
@@ -54,8 +57,12 @@ Requirement.propTypes = {
   }),
 };
 
-export default resolve(
-  'data',
-  ({ location: { query } }) =>
-    axios.get(`${apiUrl()}requirements/`, { params: query }).then(({ data }) => data),
-)(Requirements);
+function fetchRequirements({ location: { query } }) {
+  return axios.get(`${apiUrl()}requirements/`, { params: query }).then(
+      ({ data }) => data);
+}
+
+export default resolve({
+  pagedReqs: fetchRequirements,
+  keywords: fetchKeywords,
+})(Requirements);
