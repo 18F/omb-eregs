@@ -1,0 +1,32 @@
+{% extends "admin/change_form.html" %}
+{% comment %}
+  Extend the change_form template to add a table of related requirements.
+{% endcomment %}
+
+{% block after_related_objects %}
+<div class="inline-group">
+  <div class="tabular inline-related">
+    <fieldset class="module">
+      <h2>Requirements</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Requirement</th>
+            <th>Text</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in original.requirements.all %}
+          <tr class="form-row {% cycle "row1" "row2" %}">
+            <td><a href="{% url "admin:reqs_requirement_change" req.pk %}"
+                   >{{req.req_id}}</a></td>
+            <td>{{ req.req_text }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </fieldset>
+  </div>
+</div>
+{% endblock %}
+

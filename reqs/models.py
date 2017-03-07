@@ -9,8 +9,15 @@ from taggit_autosuggest.managers import TaggableManager
 # Custom class for name-spacing
 class Keyword(TagBase):
     class Meta:
+        ordering = ['name']
         verbose_name = ugettext_lazy('Keyword')
         verbose_name_plural = ugettext_lazy('Keywords')
+
+    @property
+    def requirements(self):
+        """Taggit isn't creating a backwards relation as we'd expect, so
+        simulate it here"""
+        return Requirement.objects.filter(keywords=self.pk)
 
 
 class KeywordConnect(ItemBase):
