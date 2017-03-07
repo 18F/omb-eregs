@@ -9,15 +9,18 @@ import { renderToString } from 'react-dom/server';
 import { Resolver } from 'react-resolver';
 import { match, RouterContext } from 'react-router';
 
+import addBasicAuth from './basic-auth';
 import routes from './routes';
 import { setApiUrl } from './globals';
 
 const app = express();
 const env = cfenv.getAppEnv();
+const credentials = env.getServiceCreds('config');
 
 setApiUrl(process.env.INTERNAL_API);
 app.use(morgan('combined'));
 app.use('/static', express.static(path.join('ui-dist', 'static')));
+addBasicAuth(credentials, app);
 
 app.get('*', (req, res) => {
   match({ routes, location: req.url }, (error, redirectCtx, renderProps) => {

@@ -40,8 +40,10 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "buffer-equal-constant-time": "^1.0.1",
     "cfenv": "^1.0.4",
     "express": "^4.14.1",
+    "http-auth": "^3.1.1",
     "morgan": "^1.8.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
