@@ -201,21 +201,53 @@ def test_no_matching_policy_type():
 
 
 @pytest.mark.django_db
-def test_varying_headers():
+@pytest.mark.parametrize("citation_field", import_reqs.FIELDS["citations"])
+@pytest.mark.parametrize("entity_field", import_reqs.FIELDS["entities"])
+@pytest.mark.parametrize("reqid_field", import_reqs.FIELDS["req_ids"])
+@pytest.mark.parametrize("verb_field", import_reqs.FIELDS["verbs"])
+def test_varying_requirement_headers(verb_field, reqid_field, entity_field,
+                                     citation_field):
+    processor = import_reqs.RowProcessor()
+    processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})
+    row = {
+        'issuingBody': 'body',
+        'policySection': 'None',
+        'policySubSection': 'None',
+        'reqDeadline': 'N/A',
+        'reqText': 'texttexttext',
+    }
+    row[citation_field] = 'N/A'
+    row[entity_field] = 'something'
+    row[reqid_field] = '13.37'
+    row[verb_field] = 'shall'
+    processor.add(row)
+    assert Requirement.objects.count() == 1
+    assert Requirement.objects.first().issuing_body == 'body'
+    assert Requirement.objects.first().citation == 'N/A'
+    assert Requirement.objects.first().impacted_entity == 'something'
+    assert Requirement.objects.first().req_id == '13.37'
+    assert Requirement.objects.first().verb == 'shall'
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("opfid_field", import_reqs.FIELDS["omb_policy_ids"])
+@pytest.mark.parametrize("uri_field", import_reqs.FIELDS["uri_policy_ids"])
+def test_varying_policy_headers(opfid_field, uri_field):
     """
     Test that we can handle a variety of names for fields (in this case, the
     OMB Policy ID field).
     """
-    numbers = iter(range(1, 200))
-    row = {'policyNumber': '123', 'policyTitle': 'title 1',
-           'uriPolicyId': 'http://example.com/a',
-           'policyType': 'Guidance', 'policyIssuanceYear': '12/20/2001',
-           'policySunset': 'NA'}
-    for key in ("ombPolicyId", "ombPolicyID"):
-        num = next(numbers)
-        row[key] = "policy"
-        row["policyNumber"] = str(num)
-        policy_proc = import_reqs.PolicyProcessor()
-        policy = policy_proc.from_row(row)
-        assert policy.policy_number == num
-        del row[key]
+    row = {
+        'policyIssuanceYear': '12/20/2001',
+        'policyNumber': '123',
+        'policySunset': 'NA',
+        'policyTitle': 'title 1',
+        'policyType': 'Guidance',
+    }
+    row[opfid_field] = "some identifier"
+    row[uri_field] = "http://example.com/a"
+    policy_proc = import_reqs.PolicyProcessor()
+    policy = policy_proc.from_row(row)
+    assert policy.policy_number == 123
+    assert policy.omb_policy_id == "some identifier"
+    assert policy.uri == "http://example.com/a"

@@ -11,6 +11,17 @@ from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
 
 logger = logging.getLogger(__name__)
 
+# We have a set of field names that change depending on the input file, and
+# storing that information in one spot is probably the best appraoch.
+FIELDS = {
+    "verbs": ("reqVerb", "req_verb", "verb"),
+    "req_ids": ("reqId", "reqID", "reqid", "req_Id", "req_ID", "req_id"),
+    "entities": ("Impacted Entity", "agenciesImpacted"),
+    "citations": ("Citation", "Citation ", "citation"),
+    "uri_policy_ids": ("uriPolicyID", "uriPolicyId"),
+    "omb_policy_ids": ("ombPolicyID", "ombPolicyId")
+}
+
 
 def convert_omb_policy_id(string):
     if string in ('NA', 'None'):
@@ -42,12 +53,12 @@ def convert_date(string):
             raise ValueError("Not a date: {0}".format(string))
 
 
-def find_key(options, row, highlander=True):
+def find_key(options, row):
     """
     Inconsistencies in the CSVs mean we have to look for one of several
     possibilities for header names.
     """
-    acceptable_numbers = (1,) if highlander else (0, 1)
+    acceptable_numbers = (0, 1)
     keys = [k for k in options if k in row.keys()]
     if len(keys) not in acceptable_numbers:
         raise ValueError(
@@ -65,8 +76,8 @@ class PolicyProcessor:
     def from_row(self, row):
         """Retrieve/create/update a Policy object"""
         policy_number = int(row['policyNumber'])
-        uri_key = find_key(("uriPolicyID", "uriPolicyId"), row)
-        omb_key = find_key(("ombPolicyID", "ombPolicyId"), row)
+        uri_key = find_key(FIELDS["uri_policy_ids"], row)
+        omb_key = find_key(FIELDS["omb_policy_ids"], row)
         if policy_number not in self.policies:
             params = {
                 'policy_number': policy_number,
@@ -103,7 +114,7 @@ class KeywordProcessor:
     def keywords(self, row):
         to_return = []
         for field in self.fields:
-            value = row.get(field, None)
+            value = row.get(field)
             if field in ('Other', 'Other (Keywords)'):
                 to_return.extend(priority_split(value, ';', ','))
             elif value:
@@ -131,16 +142,15 @@ class RowProcessor:
         self.req_ids = set()
 
     def add(self, row):
-        req_key = find_key(
-            ("reqId", "reqID", "reqid", "req_Id", "req_ID", "req_id"), row)
+        req_key = find_key(FIELDS["req_ids"], row)
         req_id = row[req_key]
         if req_id in ('None', ''):
             raise ValueError("Requirement without ID")
         if req_id in self.req_ids:
             raise ValueError("Duplicated Req ID: {0}".format(req_id))
-        verb_key = find_key(("reqVerb", "req_verb", "verb"), row)
-        impacted_key = find_key(("Impacted Entity", "agenciesImpacted"), row)
-        citation_key = find_key(("Citation", "Citation ", "citation"), row)
+        verb_key = find_key(FIELDS["verbs"], row)
+        impacted_key = find_key(FIELDS["entities"], row)
+        citation_key = find_key(FIELDS["citations"], row)
 
         params = dict(
             citation=row[citation_key],
@@ -176,7 +186,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         data = csv.DictReader(options['input_file'])
         # We think that any columns after "Citation " will be keyword columns.
-        citation_key = find_key(("Citation", "Citation ", "citation"),
+        citation_key = find_key(FIELDS["citations"],
                                 {k: "" for k in data.fieldnames})
         keywords = data.fieldnames[data.fieldnames.index(citation_key) + 1:]
         rows = RowProcessor(keywords)
