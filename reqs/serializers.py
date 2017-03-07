@@ -30,4 +30,4 @@ class RequirementSerializer(TaggitSerializer, serializers.ModelSerializer):
 class KeywordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Keyword
-        fields = ('name',)
+        fields = ('id', 'name')

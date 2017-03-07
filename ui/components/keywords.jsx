@@ -9,17 +9,28 @@ import Pagers from './pagers';
 function Keyword({ keyword }) {
   return (
     <li>
-      <Link to={{ pathname: '/requirements/', query: { keywords__name__in: keyword } }} >{ keyword }</Link>
+      <Link to={{ pathname: '/requirements/', query: { keywords__id__in: keyword.id } }} >{ keyword.name }</Link>
     </li>
   );
 }
+
+Keyword.defaultProps = {
+  keyword: {},
+};
+Keyword.propTypes = {
+  keyword: React.PropTypes.shape({
+    id: React.PropTypes.number,
+    name: React.PropTypes.string,
+  }),
+};
+
 
 function Keywords({ location: { query }, data }) {
   return (
     <div>
       <h1>Keywords</h1>
       <ul>
-        { data.results.map(keyword => <Keyword key={keyword.name} keyword={keyword.name} />) }
+        { data.results.map(keyword => <Keyword key={keyword.id} keyword={keyword} />) }
       </ul>
       <Pagers pathname="/keywords/" query={query} count={data.count} />
     </div>
@@ -33,22 +44,12 @@ Keywords.defaultProps = {
 
 Keywords.propTypes = {
   data: React.PropTypes.shape({
-    results: React.PropTypes.arrayOf(React.PropTypes.shape({
-      name: React.PropTypes.string,
-    })),
+    results: React.PropTypes.arrayOf(Keyword.propTypes),
     count: React.PropTypes.number,
   }),
   location: React.PropTypes.shape({
     query: React.PropTypes.shape({}),
   }),
-};
-
-Keyword.defaultProps = {
-  keyword: null,
-};
-
-Keyword.propTypes = {
-  keyword: React.PropTypes.string,
 };
 
 export default resolve(

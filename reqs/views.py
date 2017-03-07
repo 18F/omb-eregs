@@ -10,6 +10,7 @@ class KeywordViewSet(viewsets.ModelViewSet):
     queryset = Keyword.objects.all()
     serializer_class = KeywordSerializer
     filter_fields = {
+        'id': ('exact', 'in'),
         'name': ('exact', 'icontains', 'in')
     }
 
