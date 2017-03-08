@@ -14,7 +14,7 @@ function Requirements({ location: { query }, pagedReqs, keywords }) {
   return (
     <div>
       <h1>Requirements</h1>
-      <ReqFilterUI keywords={keywords} />
+      <ReqFilterUI keywords={keywords} query={query} />
       <ul className="req-list">
         { pagedReqs.results.map(requirement =>
           <Requirement key={requirement.req_id} requirement={requirement} />) }
