@@ -38,10 +38,18 @@ class KeywordConnect(ItemBase):
 
 @unique
 class PolicyTypes(Enum):
-    memorandum = 'Memorandum'
     circular = 'Circular'
-    strategy = 'Strategy'
+    executive = 'Executive Order'
+    guidance = 'Guidance'
+    hspd = 'HSPD'
+    law = 'Law'
+    memorandum = 'Memorandum'
+    national_action = 'National Action Plan'
+    plan = 'Plan'
+    ppd = 'PPD'
     review = 'Policy Review'
+    standards = 'Standards'
+    strategy = 'Strategy'
 
 
 class Policy(models.Model):
@@ -52,9 +60,11 @@ class Policy(models.Model):
     policy_number = models.IntegerField(unique=True)
     title = models.CharField(max_length=1024)
     uri = models.CharField(max_length=256)
-    omb_policy_id = models.CharField(max_length=16, blank=True)
+    omb_policy_id = models.CharField(max_length=64, blank=True)
     policy_type = models.CharField(
-        max_length=32, choices=[(e.name, e.value) for e in PolicyTypes])
+        max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
+        blank=True
+    )
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
     policy_status = models.CharField(max_length=32, blank=True)
@@ -78,8 +88,8 @@ class Requirement(models.Model):
     policy_sub_section = models.CharField(max_length=1024)
     req_text = models.TextField()
     verb = models.CharField(max_length=1024)
-    impacted_entity = models.CharField(max_length=1024)
-    req_deadline = models.CharField(max_length=128)
+    impacted_entity = models.CharField(max_length=8192)
+    req_deadline = models.CharField(max_length=512)
     citation = models.CharField(max_length=1024)
     keywords = TaggableManager(
         through=KeywordConnect,

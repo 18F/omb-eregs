@@ -9,5 +9,6 @@ djangorestframework
 dj-database-url
 gunicorn
 psycopg2
+python-dateutil
 requests
 whitenoise

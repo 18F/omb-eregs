@@ -43,6 +43,7 @@ pyparsing==2.1.10         # via packaging
 pytest-cov==2.4.0
 pytest-django==3.1.2
 pytest==3.0.6
+python-dateutil==2.6.0
 requests==2.13.0
 six==1.10.0
 testfixtures==4.13.4      # via flake8-isort

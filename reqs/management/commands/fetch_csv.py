@@ -5,8 +5,12 @@ import requests
 from django.core.management.base import BaseCommand
 
 logger = logging.getLogger(__name__)
-CSV_URL = ("https://github.com/ombegov/policy-v2/raw/master/assets/"
-           "Phase1_CombinedQA_AllPhase1_Nov21.csv")
+CSV_URL_BASE = "https://github.com/ombegov/policy-v2/raw/master/assets/"
+CSV_URLS = (
+    "Phase1_CombinedQA_AllPhase1_Nov21.csv",
+    "AllPhasesCombinedTaggingTemp_Feb16.csv",
+)
+CSV_URL = "{0}{1}".format(CSV_URL_BASE, CSV_URLS[-1])
 FILENAME = 'data.csv'
 
 
