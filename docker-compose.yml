@@ -79,33 +79,39 @@ services:
     <<: *PROD_API
     entrypoint: ./devops/wait_for_db_then ./manage.py
     command: ''
+    ports: []
 
   py.test:
     <<: *DEV_API
     entrypoint: ./devops/wait_for_db_then py.test
     command: ''
+    ports: []
 
   flake8:
     <<: *DEV_API
     entrypoint: flake8
     depends_on: []
     command: ''
+    ports: []
 
   pip-compile:
     <<: *DEV_API
     entrypoint: pip-compile
     depends_on: []
     command: ''
+    ports: []
 
   npm:
     <<: *DEV_UI
     entrypoint: npm
     command: ''
+    ports: []
 
   webpack:
     <<: *DEV_UI
     entrypoint: ./node_modules/.bin/webpack
     command: ''
+    ports: []
 
   psql:
     image: postgres:9.4
