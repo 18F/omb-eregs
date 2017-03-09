@@ -8,7 +8,7 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = [
   {
     name: 'styles',
-    entry: path.join(__dirname, 'ui', 'styles.scss'),
+    entry: path.join(__dirname, 'ui/assets/css', 'main.scss'),
     output: {
       path: path.join(__dirname, 'ui-dist', 'static'),
       filename: 'styles.css',
