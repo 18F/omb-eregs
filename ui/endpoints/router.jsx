@@ -1,3 +1,5 @@
+/* Primary application entrypoint; uses our react-routes to resolve the
+ * requested URL and then renders it */
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { Resolver } from 'react-resolver';
