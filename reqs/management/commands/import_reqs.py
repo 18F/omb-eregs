@@ -1,6 +1,7 @@
 import argparse
 import csv
 import logging
+import re
 import sys
 
 from dateutil import parser as dateutil_parser
@@ -11,8 +12,10 @@ from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
 
 logger = logging.getLogger(__name__)
 
-# We have a set of field names that change depending on the input file, and
-# storing that information in one spot is probably the best appraoch.
+"""
+We have a set of field names that change depending on the input file, and
+storing that information in one spot is probably the best appraoch.
+"""
 FIELDS = {
     "verbs": ("reqVerb", "req_verb", "verb"),
     "req_ids": ("reqId", "reqID", "reqid", "req_Id", "req_ID", "req_id"),
@@ -21,11 +24,23 @@ FIELDS = {
     "uri_policy_ids": ("uriPolicyID", "uriPolicyId"),
     "omb_policy_ids": ("ombPolicyID", "ombPolicyId")
 }
-# The same appears to be true for keywords.
-# Executive decision: keyword values must be init-caps.
-# Here we're listing the problematic values and what they should be.
+"""
+The same appears to be true for keywords.
+See ``KeywordProcessor.normalize_keywords`` for some decisions about keywords
+formatting.
+
+Here we're listing the problematic values as dictionary keys, and what they
+should be as values (each value is a list, since some inputs should result in
+multiple keywords).
+"""
 KEYWORDS = {
-    "Emergency Preparedness?": "Emergency Preparedness"
+    "Data Management/Standards. Reporting": [
+        "Data Management/Standards",
+        "Reporting"
+    ],
+    "Definition": ["Definitions"],
+    "Emergency Preparedness?": ["Emergency Preparedness"],
+    "Record Management": ["Records Management"],
 }
 
 
@@ -119,12 +134,24 @@ class KeywordProcessor:
         self.fields = fields
 
     def normalize_keywords(self, values):
+        """
+        Executive decisions:
+        +   Keywords cannot contain whitespace at the start or end.
+        +   All whitespace will be converted to a single space.
+        +   Keyword values must be init-caps.
+        +   Use of hyphens as separators requires a single space around the
+            hyphen.
+        """
+
         normalized = []
         for value in values:
+            value = value.replace("-", " - ")
+            value = re.sub("\s+", " ", value).strip()
             value = value.title()
             if value in KEYWORDS:
-                value = KEYWORDS[value]
-            normalized.append(value)
+                normalized.extend(KEYWORDS[value])
+            else:
+                normalized.append(value)
         return normalized
 
     def keywords(self, row):

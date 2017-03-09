@@ -9,7 +9,6 @@ from reqs.management.commands import import_reqs
 from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
                          Requirement)
 
-
 SAMPLE_CSV = [
     """policyNumber,policyTitle,uriPolicyId,ombPolicyId,policyType,policyIssuanceYear,policySunset,reqId,issuingBody,policySection,policySubSection,reqText,verb,Impacted Entity,reqDeadline,citation,Acquisition/Contracts (Keywords),Human Capital (Keywords),Cloud (Keywords),Data Centers (Keywords),Cybersecurity (Keywords),Privacy (Keywords),Shared Services (Keywords),IT Project Management (Keywords),Software (Keywords),Digital Services (Keywords),Mobile (Keywords),Hardware/Government Furnished Equipment (GFE) (Keywords),"IT Transparency (Open Data, FOIA, Public Records, etc.) (Keywords)",Agency Statistics (Keywords),Customer Services (Keywords),Governance (Keywords),Financial Systems (Keywords),Budget (Keywords),Governance - Org Structure (Keywords),Governance - Implementation (Keywords),Data Management/Standards (Keywords),Definitions (Keywords),Reporting (Keywords),Other (Keywords)""",  # noqa
     """1,25 Point Implementation Plan To Reform Federal Information Technology Management,https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/25-point-implementation-plan-to-reform-federal-it.pdf,NA,Strategy,12/9/2010,NA,1.15,"Office of the Federal Chief Information Officer, OMB",PART II: EFFECTIVELY MANAGING LARGE-SCALE IT PROGRAMS,NA,"Moving forward, Federal IT programs must be structured to deploy working business functionality in release cycles no longer than 12 months, and, ideally, less than six months, with initial deployment to end users no later than 18 months after the program begins.",Must,All CFO-Act Agencies,NA,NA,,,,,,,,,x,,,,,,,,,,,,,,,Software Development Lifecycle/Agile""",  # noqa
@@ -262,44 +261,36 @@ def test_varying_policy_headers(opfid_field, uri_field):
 
 
 @pytest.mark.django_db
-# @pytest.mark.parametrize("opfid_field", import_reqs.FIELDS["omb_policy_ids"])
-# @pytest.mark.parametrize("uri_field", import_reqs.FIELDS["uri_policy_ids"])
-def test_keyword_normalization(blank_csv_file):
+@pytest.mark.parametrize("keyword,expected", (
+    ("Data Management/Standards", ["Data Management/Standards"]),
+    ("Data Management/Standards. Reporting", ["Data Management/Standards",
+                                              "Reporting"]),
+    ("data management/standards", ["Data Management/Standards"]),
+    ("Definition", ["Definitions"]),
+    ("Emergency Preparedness?", ["Emergency Preparedness"]),
+    ("Governance-Organization", ["Governance - Organization"]),
+    ("Governance -Organization", ["Governance - Organization"]),
+    ("Governance- Organization", ["Governance - Organization"]),
+    ("Governance - Organization", ["Governance - Organization"]),
+    ("Governance -  Organization", ["Governance - Organization"]),
+    ("Governance -  Organization ", ["Governance - Organization"]),
+    ("investments", ["Investments"]),
+    ("Record Management", ["Records Management"]),
+))
+def test_keyword_normalization2(blank_csv_file, keyword, expected):
     """
     Test that we don't add keywords with different capitalization into the
     data.
     """
-    csv_lines = (
-        SAMPLE_CSV[0],
-        SAMPLE_CSV2[1].replace("Software Development Lifecycle/Agile",
-                               "Data Management/Standards"),
-        SAMPLE_CSV2[1].replace(
-            "Software Development Lifecycle/Agile",
-            "data management/standards").replace(
-                "1.15", "1.16"),
-        SAMPLE_CSV2[1].replace(
-            "Software Development Lifecycle/Agile",
-            "Emergency Preparedness?").replace(
-                "1.15", "1.17"),
-
-    )
+    line = SAMPLE_CSV2[1].replace("Software Development Lifecycle/Agile",
+                                  keyword)
+    csv_lines = [SAMPLE_CSV2[0], line]
     csv_str = "\n".join(csv_lines)
+
     blank_csv_file.write(csv_str)
 
     call_command('import_reqs', str(blank_csv_file))
 
-    reqs = list(Requirement.objects.order_by('req_id'))
-    # pytest.set_trace()
-    assert len(reqs) == 3
-    assert set(reqs[0].keywords.names()) == {
-        "Data Management/Standards",
-        "Software"
-    }
-    assert set(reqs[1].keywords.names()) == {
-        "Data Management/Standards",
-        "Software"
-    }
-    assert set(reqs[2].keywords.names()) == {
-        "Emergency Preparedness",
-        "Software"
-    }
+    reqs = list(Requirement.objects.order_by("req_id"))
+    assert len(reqs) == 1
+    assert set(reqs[0].keywords.names()) == set(expected + ["Software"])
