@@ -45,6 +45,7 @@ class RequirementViewSet(viewsets.ModelViewSet):
         'impacted_entity': ('icontains',),
         'req_deadline': ('icontains',),
         'citation': ('icontains',),
+        'policy_id': ('exact', 'in'),
     }
     # Allow filtering by related objects
     filter_fields.update(

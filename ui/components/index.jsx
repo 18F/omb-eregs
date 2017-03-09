@@ -7,6 +7,7 @@ export default function Index() {
       <h2>Index</h2>
       <ul>
         <li><Link to="/keywords">Keywords</Link></li>
+        <li><Link to="/policies">Policies</Link></li>
         <li><Link to="/requirements">Requirements</Link></li>
       </ul>
     </div>
