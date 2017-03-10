@@ -34,6 +34,7 @@ should be as values (each value is a list, since some inputs should result in
 multiple keywords).
 """
 KEYWORDS = {
+    "Commodity It": ["Commodity IT"],  # This one is due to str.title()
     "Data Management/Standards. Reporting": [
         "Data Management/Standards",
         "Reporting"

@@ -262,6 +262,7 @@ def test_varying_policy_headers(opfid_field, uri_field):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("keyword,expected", (
+    ("Commodity IT", ["Commodity IT"]),
     ("Data Management/Standards", ["Data Management/Standards"]),
     ("Data Management/Standards. Reporting", ["Data Management/Standards",
                                               "Reporting"]),
@@ -282,11 +283,10 @@ def test_keyword_normalization2(blank_csv_file, keyword, expected):
     Test that we don't add keywords with different capitalization into the
     data.
     """
-    line = SAMPLE_CSV2[1].replace("Software Development Lifecycle/Agile",
-                                  keyword)
-    csv_lines = [SAMPLE_CSV2[0], line]
-    csv_str = "\n".join(csv_lines)
-
+    csv_str = "\n".join([
+        SAMPLE_CSV2[0],
+        SAMPLE_CSV2[1].replace("Software Development Lifecycle/Agile", keyword)
+    ])
     blank_csv_file.write(csv_str)
 
     call_command('import_reqs', str(blank_csv_file))
