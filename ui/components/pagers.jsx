@@ -4,8 +4,12 @@ import { Link } from 'react-router';
 export default function Pagers({ pathname, query, count }) {
   let prevPage = null;
   let nextPage = null;
-  const pageInt = parseInt(query.page || '1', 10);
+  let pageInt = parseInt(query.page || '1', 10) || 1;
   const nextOffset = pageInt * 25;
+
+  if (count === 0) {
+    pageInt = 0;
+  }
 
   if (pageInt > 1) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt - 1 });
