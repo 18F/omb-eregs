@@ -28,7 +28,7 @@ module.exports = [
     plugins: [
       new ExtractTextPlugin('styles.css'),
       new CopyWebpackPlugin([
-          { from: 'ui/assets/font/*', to: '/ui-dist/font', flatten: true },
+          { from: 'ui/assets/font/*', to: '/ui-dist/static/font', flatten: true },
       ]),
     ],
   },
