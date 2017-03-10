@@ -266,19 +266,19 @@ def test_varying_policy_headers(opfid_field, uri_field):
     ("Data Management/Standards", ["Data Management/Standards"]),
     ("Data Management/Standards. Reporting", ["Data Management/Standards",
                                               "Reporting"]),
-    ("data management/standards", ["Data Management/Standards"]),
     ("Definition", ["Definitions"]),
     ("Emergency Preparedness?", ["Emergency Preparedness"]),
-    ("Governance-Organization", ["Governance - Organization"]),
+    ("Governance -  Organization ", ["Governance - Organization"]),
+    ("Governance -  Organization", ["Governance - Organization"]),
+    ("Governance - Organization", ["Governance - Organization"]),
     ("Governance -Organization", ["Governance - Organization"]),
     ("Governance- Organization", ["Governance - Organization"]),
-    ("Governance - Organization", ["Governance - Organization"]),
-    ("Governance -  Organization", ["Governance - Organization"]),
-    ("Governance -  Organization ", ["Governance - Organization"]),
-    ("investments", ["Investments"]),
+    ("Governance-Organization", ["Governance - Organization"]),
     ("Record Management", ["Records Management"]),
+    ("data management/standards", ["Data Management/Standards"]),
+    ("investments", ["Investments"]),
 ))
-def test_keyword_normalization2(blank_csv_file, keyword, expected):
+def test_keyword_normalization(blank_csv_file, keyword, expected):
     """
     Test that we don't add keywords with different capitalization into the
     data.
