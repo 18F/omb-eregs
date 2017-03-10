@@ -127,7 +127,7 @@ def test_imports_twice(csv_file):
     ('a 1; b 2; c 3', ['a 1', 'b 2', 'c 3']),
     ('a 1, b 2, c 3', ['a 1', 'b 2', 'c 3']),
     ('a 1; b 2, c 3', ['a 1', 'b 2, c 3']),
-])
+], ids=repr)
 def test_priority_split(text, result):
     assert import_reqs.priority_split(text, ';', ',') == result
 
@@ -277,7 +277,7 @@ def test_varying_policy_headers(opfid_field, uri_field):
     ("Record Management", ["Records Management"]),
     ("data management/standards", ["Data Management/Standards"]),
     ("investments", ["Investments"]),
-))
+), ids=repr)
 def test_keyword_normalization(blank_csv_file, keyword, expected):
     """
     Test that we don't add keywords with different capitalization into the
