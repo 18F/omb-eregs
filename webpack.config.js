@@ -3,12 +3,13 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 module.exports = [
   {
     name: 'styles',
-    entry: path.join(__dirname, 'ui', 'styles.scss'),
+    entry: path.join(__dirname, 'ui/assets/css', 'main.scss'),
     output: {
       path: path.join(__dirname, 'ui-dist', 'static'),
       filename: 'styles.css',
@@ -26,6 +27,9 @@ module.exports = [
     },
     plugins: [
       new ExtractTextPlugin('styles.css'),
+      new CopyWebpackPlugin([
+          { from: 'ui/assets/font/*', to: 'font', flatten: true },
+      ]),
     ],
   },
   {
