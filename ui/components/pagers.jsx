@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-export default function Pagers({ pathname, query, count }) {
+export default function Pagers({ location, count }) {
   let prevPage = null;
   let nextPage = null;
+  const { pathname, query } = location;
   let pageInt = parseInt(query.page || '1', 10) || 1;
   const nextOffset = pageInt * 25;
 
@@ -29,15 +30,16 @@ export default function Pagers({ pathname, query, count }) {
 }
 
 Pagers.defaultProps = {
-  pathname: '/',
-  query: { page: '1' },
+  location: { pathname: '/', query: { page: '1' } },
   count: 0,
 };
 
 Pagers.propTypes = {
-  pathname: React.PropTypes.string,
-  query: React.PropTypes.shape({
-    page: React.PropTypes.string,
+  location: React.PropTypes.shape({
+    pathname: React.PropTypes.string,
+    query: React.PropTypes.shape({
+      page: React.PropTypes.string,
+    }),
   }),
   count: React.PropTypes.number,
 };

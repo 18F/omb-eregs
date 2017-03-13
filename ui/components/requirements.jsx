@@ -10,7 +10,8 @@ function Requirement({ requirement }) {
   return <li className="req">{requirement.req_id}: {requirement.req_text}</li>;
 }
 
-function Requirements({ location: { query }, pagedReqs, keywords }) {
+function Requirements({ location, pagedReqs, keywords }) {
+  const { query } = location;
   return (
     <div>
       <h1>Requirements</h1>
@@ -19,7 +20,7 @@ function Requirements({ location: { query }, pagedReqs, keywords }) {
         { pagedReqs.results.map(requirement =>
           <Requirement key={requirement.req_id} requirement={requirement} />) }
       </ul>
-      <Pagers pathname="/requirements/" query={query} count={pagedReqs.count} />
+      <Pagers location={location} count={pagedReqs.count} />
     </div>
   );
 }

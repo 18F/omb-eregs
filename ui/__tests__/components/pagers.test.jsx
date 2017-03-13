@@ -17,7 +17,7 @@ describe('<Pagers />', () => {
   });
 
   it('shows a right arrow but no left arrow when on page 1', () => {
-    const result = shallow(<Pagers count={100} query={{ page: '1' }} />);
+    const result = shallow(<Pagers count={100} location={{ query: { page: '1' } }} />);
     expect(result.text()).toMatch(/1 of 4/);
     expect(result.find('Link').length).toEqual(1);
     expect(result.childAt(0).name()).toBeNull();
@@ -25,7 +25,7 @@ describe('<Pagers />', () => {
   });
 
   it('shows a left arrow but no right arrow when on final page', () => {
-    const result = shallow(<Pagers count={100} query={{ page: '4' }} />);
+    const result = shallow(<Pagers count={100} location={{ query: { page: '4' } }} />);
     expect(result.text()).toMatch(/4 of 4/);
     expect(result.find('Link').length).toEqual(1);
     expect(result.childAt(0).name()).toEqual('Link');
@@ -33,7 +33,7 @@ describe('<Pagers />', () => {
   });
 
   it('shows both arrows if on an intermediary page', () => {
-    const result = shallow(<Pagers count={100} query={{ page: '2' }} />);
+    const result = shallow(<Pagers count={100} location={{ query: { page: '2' } }} />);
     expect(result.text()).toMatch(/2 of 4/);
     expect(result.find('Link').length).toEqual(2);
     expect(result.childAt(0).name()).toEqual('Link');
@@ -53,12 +53,12 @@ describe('<Pagers />', () => {
   });
 
   it('defaults to 1 for bad page numbers', () => {
-    const text = shallow(<Pagers count={100} query={{ page: 'abcd' }} />).text();
+    const text = shallow(<Pagers count={100} location={{ query: { page: 'abcd' } }} />).text();
     expect(text).toMatch(/1 of 4/);
   });
 
   it('links to one page less and one more than the current', () => {
-    const component = shallow(<Pagers count={125} query={{ page: '3' }} />);
+    const component = shallow(<Pagers count={125} location={{ query: { page: '3' } }} />);
     expect(component.childAt(0).prop('to').query.page).toEqual(2);
     expect(component.childAt(2).prop('to').query.page).toEqual(4);
   });

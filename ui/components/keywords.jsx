@@ -25,21 +25,21 @@ Keyword.propTypes = {
 };
 
 
-function Keywords({ location: { query }, data }) {
+function Keywords({ location, data }) {
   return (
     <div>
       <h1>Keywords</h1>
       <ul>
         { data.results.map(keyword => <Keyword key={keyword.id} keyword={keyword} />) }
       </ul>
-      <Pagers pathname="/keywords/" query={query} count={data.count} />
+      <Pagers location={location} count={data.count} />
     </div>
   );
 }
 
 Keywords.defaultProps = {
   data: { results: [], count: 0 },
-  location: { query: {} },
+  location: {},
 };
 
 Keywords.propTypes = {
@@ -47,9 +47,7 @@ Keywords.propTypes = {
     results: React.PropTypes.arrayOf(Keyword.propTypes),
     count: React.PropTypes.number,
   }),
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({}),
-  }),
+  location: React.PropTypes.shape({}),
 };
 
 export default resolve(
