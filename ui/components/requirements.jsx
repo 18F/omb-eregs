@@ -4,7 +4,7 @@ import { resolve } from 'react-resolver';
 
 import { apiUrl } from '../globals';
 import Pagers from './pagers';
-import ReqFilterUI, { fetchData as fetchKeywords } from './req-filter-ui';
+import FilterList, { fetchData as fetchKeywords } from './filter-list';
 
 function Requirement({ requirement }) {
   return <li className="req">{requirement.req_id}: {requirement.req_text}</li>;
@@ -14,7 +14,7 @@ function Requirements({ location: { query }, pagedReqs, keywords }) {
   return (
     <div>
       <h1>Requirements</h1>
-      <ReqFilterUI keywords={keywords} query={query} />
+      <FilterList keywords={keywords} query={query} />
       <ul className="req-list">
         { pagedReqs.results.map(requirement =>
           <Requirement key={requirement.req_id} requirement={requirement} />) }
@@ -26,7 +26,7 @@ function Requirements({ location: { query }, pagedReqs, keywords }) {
 
 Requirements.defaultProps = {
   pagedReqs: { results: [], count: 0 },
-  keywords: ReqFilterUI.defaultProps.keywords,
+  keywords: FilterList.defaultProps.keywords,
   location: { query: {} },
 };
 
@@ -38,7 +38,7 @@ Requirements.propTypes = {
     })),
     count: React.PropTypes.number,
   }),
-  keywords: ReqFilterUI.propTypes.keywords,
+  keywords: FilterList.propTypes.keywords,
   location: React.PropTypes.shape({
     query: React.PropTypes.shape({
       keywords__name__in: React.PropTypes.string,

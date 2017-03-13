@@ -1,10 +1,14 @@
+/**
+ * A container for filters, which can be removed with a click. Currently
+ * closely tied to Keywords, but can be generalized in the future
+ **/
 import axios from 'axios';
 import React from 'react';
 import { Link } from 'react-router';
 
 import { apiUrl } from '../globals';
 
-function FilterItem({ keywordIds, keyword, query }) {
+function Filter({ keywordIds, keyword, query }) {
   const remainingKws = keywordIds.filter(v => v !== keyword.id.toString());
   const queryWithoutKw = Object.assign({}, query, {
     keywords__id__in: remainingKws.join(','),
@@ -19,12 +23,12 @@ function FilterItem({ keywordIds, keyword, query }) {
     </li>
   );
 }
-FilterItem.defaultProps = {
+Filter.defaultProps = {
   keywordIds: [],
   keyword: {},
   query: {},
 };
-FilterItem.propTypes = {
+Filter.propTypes = {
   keywordIds: React.PropTypes.arrayOf(React.PropTypes.string),
   keyword: React.PropTypes.shape({
     id: React.PropTypes.number,
@@ -33,7 +37,7 @@ FilterItem.propTypes = {
   query: React.PropTypes.shape({}),
 };
 
-export default function ReqFilterUI({ query, keywords }) {
+export default function FilterList({ query, keywords }) {
   const keywordIds = (query.keywords__id__in || '').split(',');
   const removeQuery = Object.assign({}, query);
   delete removeQuery.page;
@@ -41,18 +45,18 @@ export default function ReqFilterUI({ query, keywords }) {
   return (
     <ol className="req-filter-ui">
       { keywords.map(keyword =>
-        <FilterItem
+        <Filter
           key={keyword.id} keywordIds={keywordIds} keyword={keyword}
           query={removeQuery}
         />)}
     </ol>
   );
 }
-ReqFilterUI.defaultProps = {
+FilterList.defaultProps = {
   query: {},
   keywords: [],
 };
-ReqFilterUI.propTypes = {
+FilterList.propTypes = {
   query: React.PropTypes.shape({
     keywords__id__in: React.PropTypes.string,
   }),
