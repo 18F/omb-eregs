@@ -1,0 +1,14 @@
+.req-filter-ui {
+  width: 15%;
+  border: 1px solid black;
+  display: inline-block;
+  float: left;
+  list-style: none;
+  padding: 10px;
+
+  li {
+    /* Handing indent */
+    padding-left: 15px;
+    text-indent: -15px;
+  }
+}
