@@ -3,16 +3,18 @@ sudo: required
 services:
 - docker
 script:
-# Smoke test for Node
-- docker-compose run npm install
-- docker-compose run webpack
+# JS tests
+- docker-compose run --rm npm install --quiet
+- docker-compose run --rm npm test
+# Smoke test and lint
+- docker-compose run --rm webpack
 # Python tests and linting
-- docker-compose run py.test
-- docker-compose run flake8
+- docker-compose run --rm py.test
+- docker-compose run --rm flake8
 # Smoke test for loading data
-- docker-compose run manage.py migrate --noinput
-- docker-compose run manage.py fetch_csv
-- docker-compose run manage.py import_reqs data.csv
+- docker-compose run --rm manage.py migrate --noinput
+- docker-compose run --rm manage.py fetch_csv
+- docker-compose run --rm manage.py import_reqs data.csv
 deploy:
   edge: true
   provider: cloudfoundry

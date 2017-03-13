@@ -1,7 +1,13 @@
 {
-  "extends": "airbnb",
+  "env": {
+    "jest/globals": true,
+  },
+  "extends": ["airbnb", "plugin:jest/recommended"],
   "globals": {
     "document": true,
     "window": true
-  }
+  },
+  "plugins": [
+    "jest"
+  ]
 }
