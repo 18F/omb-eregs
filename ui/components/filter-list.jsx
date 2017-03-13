@@ -8,7 +8,7 @@ import { Link } from 'react-router';
 
 import { apiUrl } from '../globals';
 
-function Filter({ keywordIds, keyword, query }) {
+export function Filter({ keywordIds, keyword, query }) {
   const remainingKws = keywordIds.filter(v => v !== keyword.id.toString());
   const queryWithoutKw = Object.assign({}, query, {
     keywords__id__in: remainingKws.join(','),
@@ -37,7 +37,7 @@ Filter.propTypes = {
   query: React.PropTypes.shape({}),
 };
 
-function AddKeyword({ location }) {
+export function AddKeyword({ location }) {
   return (
     <form action="/keywords/search-redirect/" method="GET">
       <input type="hidden" name="insertParam" value="keywords__id__in" />
@@ -62,6 +62,7 @@ export default function FilterList({ location, keywords }) {
   const keywordIds = (location.query.keywords__id__in || '').split(',');
   const removeQuery = Object.assign({}, location.query);
   delete removeQuery.page;
+  delete removeQuery.keywords__id__in;
 
   return (
     <div className="req-filter-ui">
