@@ -37,28 +37,55 @@ Filter.propTypes = {
   query: React.PropTypes.shape({}),
 };
 
-export default function FilterList({ query, keywords }) {
-  const keywordIds = (query.keywords__id__in || '').split(',');
-  const removeQuery = Object.assign({}, query);
+function AddKeyword({ location }) {
+  return (
+    <form action="/keywords/search-redirect/" method="GET">
+      <input type="hidden" name="insertParam" value="keywords__id__in" />
+      <input type="hidden" name="redirectPathname" value="/requirements/" />
+      <input type="text" name="q" />
+      { Object.keys(location.query).map(key =>
+        <input key={key} type="hidden" name={`redirectQuery__${key}`} value={location.query[key]} />)}
+      <input type="submit" value="Add" />
+    </form>
+  );
+}
+AddKeyword.defaultProps = {
+  location: { query: {} },
+};
+AddKeyword.propTypes = {
+  location: React.PropTypes.shape({
+    query: React.PropTypes.shape({}),
+  }),
+};
+
+export default function FilterList({ location, keywords }) {
+  const keywordIds = (location.query.keywords__id__in || '').split(',');
+  const removeQuery = Object.assign({}, location.query);
   delete removeQuery.page;
 
   return (
-    <ol className="req-filter-ui">
-      { keywords.map(keyword =>
-        <Filter
-          key={keyword.id} keywordIds={keywordIds} keyword={keyword}
-          query={removeQuery}
-        />)}
-    </ol>
+    <div className="req-filter-ui">
+      <h3>Keywords</h3>
+      <ol>
+        { keywords.map(keyword =>
+          <Filter
+            key={keyword.id} keywordIds={keywordIds} keyword={keyword}
+            query={removeQuery}
+          />)}
+      </ol>
+      <AddKeyword location={location} />
+    </div>
   );
 }
 FilterList.defaultProps = {
-  query: {},
+  location: { query: {} },
   keywords: [],
 };
 FilterList.propTypes = {
-  query: React.PropTypes.shape({
-    keywords__id__in: React.PropTypes.string,
+  location: React.PropTypes.shape({
+    query: React.PropTypes.shape({
+      keywords__id__in: React.PropTypes.string,
+    }),
   }),
   keywords: React.PropTypes.arrayOf(React.PropTypes.shape({
     id: React.PropTypes.number,

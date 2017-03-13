@@ -11,11 +11,10 @@ function Requirement({ requirement }) {
 }
 
 function Requirements({ location, pagedReqs, keywords }) {
-  const { query } = location;
   return (
     <div>
       <h1>Requirements</h1>
-      <FilterList keywords={keywords} query={query} />
+      <FilterList keywords={keywords} location={location} />
       <ul className="req-list">
         { pagedReqs.results.map(requirement =>
           <Requirement key={requirement.req_id} requirement={requirement} />) }
@@ -28,7 +27,7 @@ function Requirements({ location, pagedReqs, keywords }) {
 Requirements.defaultProps = {
   pagedReqs: { results: [], count: 0 },
   keywords: FilterList.defaultProps.keywords,
-  location: { query: {} },
+  location: {},
 };
 
 Requirements.propTypes = {
@@ -40,11 +39,7 @@ Requirements.propTypes = {
     count: React.PropTypes.number,
   }),
   keywords: FilterList.propTypes.keywords,
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({
-      keywords__name__in: React.PropTypes.string,
-    }),
-  }),
+  location: React.PropTypes.shape({}),
 };
 
 Requirement.defaultProps = {
