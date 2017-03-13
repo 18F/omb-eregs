@@ -153,6 +153,26 @@ https://.../requirements/?keywords__name__in=Keyword1,Keyword2,Keyword3
 See our [list of endpoints](reqs/router.py) and [available
 filters](reqs/views.py).
 
+## Testing
+
+We have unit tests for the API/admin (Python) and for the React-based frontend
+(JS), which are executed in different ways.
+
+For Python, run:
+```sh
+docker-compose run --rm py.test
+docker-compose run --rm flake8  # linting
+```
+
+For JS, run:
+```sh
+docker-compose run --rm npm install   # not always needed
+docker-compose run --rm npm test
+docker-compose run --rm webpack       # lints (and builds)
+```
+
+See our `.travis.yml` test for a list of the exact commands we run in CI.
+
 ## Documentation and contributing
 
 See the [eRegulations overview](https://eregs.github.io/) for context about eRegulations, which is a multi-agency project.
