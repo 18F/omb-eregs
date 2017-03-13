@@ -1,6 +1,7 @@
 import argparse
 import csv
 import logging
+import re
 import sys
 
 from dateutil import parser as dateutil_parser
@@ -11,8 +12,10 @@ from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
 
 logger = logging.getLogger(__name__)
 
-# We have a set of field names that change depending on the input file, and
-# storing that information in one spot is probably the best appraoch.
+"""
+We have a set of field names that change depending on the input file, and
+storing that information in one spot is probably the best appraoch.
+"""
 FIELDS = {
     "verbs": ("reqVerb", "req_verb", "verb"),
     "req_ids": ("reqId", "reqID", "reqid", "req_Id", "req_ID", "req_id"),
@@ -21,43 +24,63 @@ FIELDS = {
     "uri_policy_ids": ("uriPolicyID", "uriPolicyId"),
     "omb_policy_ids": ("ombPolicyID", "ombPolicyId")
 }
+"""
+The same appears to be true for keywords.
+See ``KeywordProcessor.normalize_keywords`` for some decisions about keywords
+formatting.
+
+Here we're listing the problematic values as dictionary keys, and what they
+should be as values (each value is a list, since some inputs should result in
+multiple keywords).
+"""
+KEYWORDS = {
+    "Commodity It": ["Commodity IT"],  # This one is due to str.title()
+    "Data Management/Standards. Reporting": [
+        "Data Management/Standards",
+        "Reporting"
+    ],
+    "Definition": ["Definitions"],
+    "Emergency Preparedness?": ["Emergency Preparedness"],
+    "Record Management": ["Records Management"],
+}
 
 
-def convert_omb_policy_id(string):
-    if string in ('NA', 'None'):
+def convert_omb_policy_id(value):
+    if value in ('NA', 'None'):
         return ''
-    return string
+    return value
 
 
-def convert_policy_type(string):
-    """Raises a ValueError if the string type can't be found"""
-    string = string.strip()
-    if 'memo' in string.lower():
+def convert_policy_type(policy_type):
+    """Raises a ValueError if the policy type can't be found"""
+    policy_type = policy_type.strip()
+    if 'memo' in policy_type.lower():
         return PolicyTypes.memorandum.value
-    elif 'circular' in string.lower():
+    elif 'circular' in policy_type.lower():
         return PolicyTypes.circular.value
-    elif string in ('', 'NA'):
+    elif policy_type in ('', 'NA'):
         return ''
     else:
-        return PolicyTypes(string).value
+        return PolicyTypes(policy_type).value
 
 
-def convert_date(string):
-    """Tries to convert a date string into a date. Accounts for NA. May raise
-    a ValueError"""
-    string = string.rstrip('†')
-    if string not in ('NA', 'None specified', 'TBA', 'None', 'N/A', ''):
+def convert_date(datestring):
+    """Tries to convert a date datestring into a date. Accounts for NA. May
+    raise a ValueError"""
+    datestring = datestring.rstrip('†')
+    if datestring not in ('NA', 'None specified', 'TBA', 'None', 'N/A', ''):
         try:
-            return dateutil_parser.parse(string).date()
+            return dateutil_parser.parse(datestring).date()
         except ValueError:  # dateutil's error messages aren't friendly
-            raise ValueError("Not a date: {0}".format(string))
+            raise ValueError("Not a date: {0}".format(datestring))
 
 
-def find_key(options, row):
+def find_key(key_name, row):
     """
     Inconsistencies in the CSVs mean we have to look for one of several
     possibilities for header names.
     """
+    options = FIELDS[key_name]
     acceptable_numbers = (0, 1)
     keys = [k for k in options if k in row.keys()]
     if len(keys) not in acceptable_numbers:
@@ -76,8 +99,8 @@ class PolicyProcessor:
     def from_row(self, row):
         """Retrieve/create/update a Policy object"""
         policy_number = int(row['policyNumber'])
-        uri_key = find_key(FIELDS["uri_policy_ids"], row)
-        omb_key = find_key(FIELDS["omb_policy_ids"], row)
+        uri_key = find_key("uri_policy_ids", row)
+        omb_key = find_key("omb_policy_ids", row)
         if policy_number not in self.policies:
             params = {
                 'policy_number': policy_number,
@@ -111,12 +134,35 @@ class KeywordProcessor:
         self.cache = {}
         self.fields = fields
 
+    def normalize_keywords(self, values):
+        """
+        Executive decisions:
+        +   Keywords cannot contain whitespace at the start or end.
+        +   All whitespace will be converted to a single space.
+        +   Keyword values must be init-caps.
+        +   Use of hyphens as separators requires a single space around the
+            hyphen.
+        """
+
+        normalized = []
+        for value in values:
+            value = value.replace("-", " - ")
+            value = re.sub("\s+", " ", value).strip()
+            value = value.title()
+            if value in KEYWORDS:
+                normalized.extend(KEYWORDS[value])
+            else:
+                normalized.append(value)
+        return normalized
+
     def keywords(self, row):
         to_return = []
         for field in self.fields:
             value = row.get(field)
             if field in ('Other', 'Other (Keywords)'):
-                to_return.extend(priority_split(value, ';', ','))
+                values = self.normalize_keywords(
+                    priority_split(value, ';', ','))
+                to_return.extend(values)
             elif value:
                 to_return.append(field.replace("(Keywords)", "").strip())
         return to_return
@@ -142,15 +188,15 @@ class RowProcessor:
         self.req_ids = set()
 
     def add(self, row):
-        req_key = find_key(FIELDS["req_ids"], row)
+        req_key = find_key("req_ids", row)
         req_id = row[req_key]
         if req_id in ('None', ''):
             raise ValueError("Requirement without ID")
         if req_id in self.req_ids:
             raise ValueError("Duplicated Req ID: {0}".format(req_id))
-        verb_key = find_key(FIELDS["verbs"], row)
-        impacted_key = find_key(FIELDS["entities"], row)
-        citation_key = find_key(FIELDS["citations"], row)
+        verb_key = find_key("verbs", row)
+        impacted_key = find_key("entities", row)
+        citation_key = find_key("citations", row)
 
         params = dict(
             citation=row[citation_key],
@@ -186,8 +232,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         data = csv.DictReader(options['input_file'])
         # We think that any columns after "Citation " will be keyword columns.
-        citation_key = find_key(FIELDS["citations"],
-                                {k: "" for k in data.fieldnames})
+        citation_key = find_key("citations", {k: "" for k in data.fieldnames})
         keywords = data.fieldnames[data.fieldnames.index(citation_key) + 1:]
         rows = RowProcessor(keywords)
         for idx, row in enumerate(data):
