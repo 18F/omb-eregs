@@ -41,7 +41,7 @@ KEYWORDS = {
     ],
     "Definition": ["Definitions"],
     "Emergency Preparedness?": ["Emergency Preparedness"],
-    "Governance - Org Structure": ["Governance - Organization"],
+    "Governance - Organization": ["Governance - Org Structure"],
     "Policy Exceptions": ["Policy Exemptions"],
     "Record Management": ["Records Management"],
     "Research & Development": ["Research"],
