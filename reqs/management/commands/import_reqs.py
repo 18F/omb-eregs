@@ -41,7 +41,10 @@ KEYWORDS = {
     ],
     "Definition": ["Definitions"],
     "Emergency Preparedness?": ["Emergency Preparedness"],
+    "Governance - Organization": ["Governance - Org Structure"],
+    "Policy Exceptions": ["Policy Exemptions"],
     "Record Management": ["Records Management"],
+    "Research & Development": ["Research"],
 }
 
 
@@ -140,13 +143,14 @@ class KeywordProcessor:
         +   Keywords cannot contain whitespace at the start or end.
         +   All whitespace will be converted to a single space.
         +   Keyword values must be init-caps.
-        +   Use of hyphens as separators requires a single space around the
-            hyphen.
+        +   Use of hyphens/ampersands as separators requires a single space
+            around the separator.
         """
 
         normalized = []
         for value in values:
             value = value.replace("-", " - ")
+            value = value.replace("&", " & ")
             value = re.sub("\s+", " ", value).strip()
             value = value.title()
             if value in KEYWORDS:
