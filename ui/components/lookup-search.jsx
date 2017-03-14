@@ -14,24 +14,24 @@ const redirectQueryPrefix = 'redirectQuery__';
 /**
  * We expect a query like
  *  /some/path/?q=term&insertParam=lookup_id__in&page=1
- *    &redirectPathname=/prev/path&redirectQuery[lookup_id__in]=1,2,3
- *    &redirectQuery[someOtherParameter]=value
+ *    &redirectPathname=/prev/path&redirectQuery__lookup_id__in=1,2,3
+ *    &redirectQuery__someOtherParameter=value
  * Return a clean version of that data; if we can't validate, raise an
  * exception.
  **/
-function cleanParams(query) {
+export function cleanParams(query) {
   const clean = {
     q: (query.q || '').toString(),
     insertParam: (query.insertParam || '').toString(),
     redirect: {
       pathname: (query.redirectPathname || '').toString(),
-      params: {},
+      query: {},
     },
     page: (query.page || '1').toString(),
   };
   Object.keys(query).forEach((key) => {
     if (key.startsWith(redirectQueryPrefix)) {
-      clean.redirect.params[key.substring(redirectQueryPrefix.length)] = query[key];
+      clean.redirect.query[key.substring(redirectQueryPrefix.length)] = query[key];
     }
   });
 
@@ -52,9 +52,9 @@ function cleanParams(query) {
  * Mix in the idToInsert into the original request parameters. We assume the
  * parameters have been validated per cleanParams()
  **/
-function redirectQuery(params, idToInsert) {
-  const result = Object.assign({}, params.redirect.params);
-  const ids = (result[params.insertParam] || '').split(',');
+export function redirectQuery(params, idToInsert) {
+  const result = Object.assign({}, params.redirect.query);
+  const ids = (result[params.insertParam] || '').split(',').filter(i => i.length > 0);
   delete result.page;
 
   if (!ids.includes(idToInsert)) {
@@ -75,12 +75,12 @@ const apiParam = {
 };
 
 export function redirectIfMatched({ routes, location: { query } }, redirect, done) {
-  const lookup = routes[routes.length - 2].path;
   if (query.page) {
     /* If the user's already paging through search results, we shouldn't try
      * to find an exact match */
     done();
   } else {
+    const lookup = routes[routes.length - 2].path;
     const apiQuery = { params: { [apiParam[lookup]]: query.q } };
     axios.get(`${apiUrl()}${lookup}/`, apiQuery)
       .then(({ data: { count, results } }) => {
@@ -108,7 +108,7 @@ function Entry({ entry, location, lookup }) {
 }
 Entry.defaultProps = {
   entry: { name: '' },
-  location: { query: '' },
+  location: { query: {} },
   lookup: 'keywords',
 };
 Entry.propTypes = {
@@ -116,16 +116,21 @@ Entry.propTypes = {
     name: React.PropTypes.string,
   }),
   location: React.PropTypes.shape({
-    query: React.PropTypes.string,
+    query: React.PropTypes.shape({}),
   }),
   lookup: React.PropTypes.oneOf(Object.keys(apiParam)),
 };
 
 
-function LookupSearch({ routes, location, pagedEntries }) {
+export function LookupSearch({ routes, location, pagedEntries }) {
   const lookup = routes[routes.length - 2].path;
+  const params = cleanParams(location.query);
+
   return (
     <div>
+      <div>
+        <Link to={params.redirect}>Return</Link>
+      </div>
       <ul>
         { pagedEntries.results.map(entry =>
           <Entry key={entry.id} lookup={lookup} location={location} entry={entry} />) }
@@ -136,14 +141,16 @@ function LookupSearch({ routes, location, pagedEntries }) {
 }
 LookupSearch.defaultProps = {
   routes: [{ path: 'keywords' }, {}],
-  location: {},
+  location: { query: {} },
   pagedEntries: { count: 0, entries: [] },
 };
 LookupSearch.propTypes = {
   routes: React.PropTypes.arrayOf(React.PropTypes.shape({
     path: React.PropTypes.string,
   })),
-  location: React.PropTypes.shape({}),
+  location: React.PropTypes.shape({
+    query: React.PropTypes.shape({}),
+  }),
   pagedEntries: React.PropTypes.shape({
     count: React.PropTypes.number,
     entries: React.PropTypes.arrayOf(React.PropTypes.shape({
