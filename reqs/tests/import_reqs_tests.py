@@ -301,3 +301,15 @@ def test_keyword_normalization(blank_csv_file, keyword, expected):
     reqs = list(Requirement.objects.order_by("req_id"))
     assert len(reqs) == 1
     assert set(reqs[0].keywords.names()) == set(expected)
+
+
+@pytest.mark.parametrize("test_input,expected", (
+    ({"reqStatus": "Active", "policySunset": "12/23/2010"},
+     {"reqStatus": "Active", "policySunset": "12/23/2010"}),
+    ({"reqStatus": "12/23/2010", "policySunset": "Active"},
+     {"reqStatus": "Active", "policySunset": "12/23/2010"}),
+    ({"reqStatus": "2010-12-23", "policySunset": "Active"},
+     {"reqStatus": "Active", "policySunset": "2010-12-23"}),
+), ids=repr)
+def test_handle_transposed_reqstatus(test_input, expected):
+    assert import_reqs.handle_transposed_reqstatus(test_input) == expected

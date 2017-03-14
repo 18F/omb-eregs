@@ -101,25 +101,24 @@ def handle_transposed_reqstatus(row):
     We're going to assume that this means they were transposed, and correct
     those rows.
     """
-    if "reqStatus" not in row:
+    if "reqStatus" not in row or "policySunset" not in row:
         return row
 
-    status_date, sunset_date = None, None
-    try:
-        status_date = dateutil_parser.parse(
-            row["reqStatus"]).strftime("%Y-%m-%d")
-    except ValueError:
-        pass  # We expect this to not be a date.
-    try:
-        status_date = dateutil_parser.parse(
-            row["policySunset"]).strftime("%Y-%m-%d")
-    except ValueError:  # dateutil's error messages aren't friendly
-        logger.warning("Not a date in policySunset: {0}".format(
-            row["policySunset"]))
-    if status_date is not None and sunset_date is None:
-        # Looks like they've been transposed.
-        row["reqStatus"] = row["policyStatus"]
-        row["policySunset"] = status_date
+    def is_date(value, warn=False):
+        try:
+            dateutil_parser.parse(value)
+        except ValueError:
+            if warn:
+                logger.warning("Not a valid date: {0}".format(value))
+            return False
+
+        return True
+
+    status, sunset = row["reqStatus"], row["policySunset"]
+
+    if is_date(status) and not is_date(sunset, warn=True):
+        row["reqStatus"], row["policySunset"] = sunset, status
+
     return row
 
 
