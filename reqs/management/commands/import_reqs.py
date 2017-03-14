@@ -93,6 +93,35 @@ def find_key(key_name, row):
     return keys[0]
 
 
+def handle_transposed_reqstatus(row):
+    """
+    There are a number of rows that have date content in the ``reqStatus``
+    field and non-date content in the ``policySunset`` field.
+
+    We're going to assume that this means they were transposed, and correct
+    those rows.
+    """
+    if "reqStatus" not in row or "policySunset" not in row:
+        return row
+
+    def is_date(value, warn=False):
+        try:
+            dateutil_parser.parse(value)
+        except ValueError:
+            if warn:
+                logger.warning("Not a valid date: {0}".format(value))
+            return False
+
+        return True
+
+    status, sunset = row["reqStatus"], row["policySunset"]
+
+    if is_date(status) and not is_date(sunset, warn=True):
+        row["reqStatus"], row["policySunset"] = sunset, status
+
+    return row
+
+
 class PolicyProcessor:
     """Creates/updates and tracks Policy objects based on the data found in
     CSV rows"""
@@ -198,6 +227,7 @@ class RowProcessor:
             raise ValueError("Requirement without ID")
         if req_id in self.req_ids:
             raise ValueError("Duplicated Req ID: {0}".format(req_id))
+        row = handle_transposed_reqstatus(row)
         verb_key = find_key("verbs", row)
         impacted_key = find_key("entities", row)
         citation_key = find_key("citations", row)
