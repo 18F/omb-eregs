@@ -7,6 +7,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import { apiUrl } from '../globals';
+import SearchAutocomplete from './search-autocomplete';
 
 export function Filter({ keywordIds, keyword, query }) {
   const remainingKws = keywordIds.filter(v => v !== keyword.id.toString());
@@ -37,27 +38,6 @@ Filter.propTypes = {
   query: React.PropTypes.shape({}),
 };
 
-export function AddKeyword({ location }) {
-  return (
-    <form action="/keywords/search-redirect/" method="GET">
-      <input type="hidden" name="insertParam" value="keywords__id__in" />
-      <input type="hidden" name="redirectPathname" value="/requirements/" />
-      <input type="text" name="q" />
-      { Object.keys(location.query).map(key =>
-        <input key={key} type="hidden" name={`redirectQuery__${key}`} value={location.query[key]} />)}
-      <input type="submit" value="Add" />
-    </form>
-  );
-}
-AddKeyword.defaultProps = {
-  location: { query: {} },
-};
-AddKeyword.propTypes = {
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({}),
-  }),
-};
-
 export default function FilterList({ keywords, router }) {
   const { location: { query } } = router;
   const keywordIds = (query.keywords__id__in || '').split(',');
@@ -74,7 +54,7 @@ export default function FilterList({ keywords, router }) {
             query={removeQuery}
           />)}
       </ol>
-      <AddKeyword location={location} />
+      <SearchAutocomplete lookup="keywords" insertParam="keywords__id__in" router={router} />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import FilterList, { AddKeyword, fetchData, Filter } from '../../components/filter-list';
+import FilterList, { fetchData, Filter } from '../../components/filter-list';
 
 jest.mock('axios');
 jest.mock('../../globals', () => ({ apiUrl: jest.fn(() => 'api-start/') }));
@@ -60,28 +60,7 @@ describe('<FilterList />', () => {
     };
     const result = shallow(<FilterList {...params} />);
     expect(result.find('DoesNotExist')).toHaveLength(0);
-    expect(result.find('AddKeyword')).toHaveLength(1);
-  });
-});
-
-describe('<AddKeyword />', () => {
-  it('creates a form with the correct url', () => {
-    const result = shallow(<AddKeyword location={{ query: {} }} />);
-    expect(result.prop('action')).toEqual('/keywords/search-redirect/');
-    expect(result.prop('method')).toEqual('GET');
-  });
-  it('contains a hidden element for each param', () => {
-    const location = { query: { some: 'thing', more: 'params', et: 'c' } };
-    const result = shallow(<AddKeyword location={location} />);
-    expect(result.contains(
-      <input key="some" type="hidden" name="redirectQuery__some" value="thing" />,
-    )).toBeTruthy();
-    expect(result.contains(
-      <input key="more" type="hidden" name="redirectQuery__more" value="params" />,
-    )).toBeTruthy();
-    expect(result.contains(
-      <input key="et" type="hidden" name="redirectQuery__et" value="c" />,
-    )).toBeTruthy();
+    expect(result.find('SearchAutocomplete')).toHaveLength(1);
   });
 });
 
