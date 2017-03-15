@@ -532,6 +532,11 @@
       "from": "uuid@>=3.0.0 <4.0.0",
       "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.0.1.tgz"
     },
+    "validator": {
+      "version": "7.0.0",
+      "from": "validator@>=7.0.0 <8.0.0",
+      "resolved": "https://registry.npmjs.org/validator/-/validator-7.0.0.tgz"
+    },
     "vary": {
       "version": "1.1.0",
       "from": "vary@>=1.1.0 <1.2.0",
