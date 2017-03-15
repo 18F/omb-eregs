@@ -57,19 +57,12 @@ describe('cleanParams()', () => {
 
 describe('redirectQuery()', () => {
   it('updates an empty query', () => {
-    const params = {
-      insertParam: 'myParam',
-      redirect: { query: { some: 'thing' } },
-    };
-    const result = redirectQuery(params, 3);
+    const result = redirectQuery({ some: 'thing' }, 'myParam', 3);
     expect(result).toEqual({ some: 'thing', myParam: '3' });
   });
   it('updates a populated query', () => {
-    const params = {
-      insertParam: 'myParam',
-      redirect: { query: { some: 'thing', myParam: '1,7,9' } },
-    };
-    const result = redirectQuery(params, 3);
+    const query = { some: 'thing', myParam: '1,7,9' };
+    const result = redirectQuery(query, 'myParam', 3);
     expect(result).toEqual({ some: 'thing', myParam: '1,7,9,3' });
   });
 });

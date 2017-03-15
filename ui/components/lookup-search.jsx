@@ -49,28 +49,28 @@ export function cleanParams(query) {
 }
 
 /**
- * Mix in the idToInsert into the original request parameters. We assume the
- * parameters have been validated per cleanParams()
+ * Mix in the idToInsert into the original request parameters.
  **/
-export function redirectQuery(params, idToInsert) {
-  const result = Object.assign({}, params.redirect.query);
-  const ids = (result[params.insertParam] || '').split(',').filter(i => i.length > 0);
+export function redirectQuery(query, insertParam, idToInsert) {
+  const result = Object.assign({}, query);
+  const ids = (result[insertParam] || '').split(',').filter(i => i.length > 0);
   delete result.page;
 
   if (!ids.includes(idToInsert)) {
     ids.push(idToInsert);
   }
-  result[params.insertParam] = ids.join(',');
+  result[insertParam] = ids.join(',');
 
   return result;
 }
 
 function redirectUrl(params, idToInsert) {
-  const paramStr = querystring.stringify(redirectQuery(params, idToInsert));
+  const query = redirectQuery(params.redirect.query, params.insertParam, idToInsert);
+  const paramStr = querystring.stringify(query);
   return `${params.redirect.pathname}?${paramStr}`;
 }
 
-const apiParam = {
+export const apiParam = {
   keywords: 'name',
 };
 
@@ -97,7 +97,7 @@ export function redirectIfMatched({ routes, location: { query } }, redirect, don
 function Entry({ entry, location, lookup }) {
   const name = entry[apiParam[lookup]];
   const params = cleanParams(location.query);
-  const modifiedQuery = redirectQuery(params, entry.id);
+  const modifiedQuery = redirectQuery(params.redirect.query, params.insertParam, entry.id);
   return (
     <li>
       <Link to={{ pathname: params.redirect.pathname, query: modifiedQuery }}>
@@ -159,6 +159,11 @@ LookupSearch.propTypes = {
   }),
 };
 
+export function search(lookup, q, page = '1') {
+  const queryParam = `${apiParam[lookup]}__icontains`;
+  const apiQuery = { params: { [queryParam]: q, page } };
+  return axios.get(`${apiUrl()}${lookup}/`, apiQuery).then(({ data }) => data);
+}
 
 /**
  * Asynchronously grab the search result data from the API.
@@ -167,11 +172,8 @@ LookupSearch.propTypes = {
  **/
 function fetchData({ routes, location: { query } }) {
   const lookup = routes[routes.length - 2].path;
-  const queryParam = `${apiParam[lookup]}__icontains`;
   const userParams = cleanParams(query);
-  const apiQuery = { params: { [queryParam]: userParams.q, page: userParams.page } };
-
-  return axios.get(`${apiUrl()}${lookup}/`, apiQuery).then(({ data }) => data);
+  return search(lookup, userParams.q, userParams.page);
 }
 
 export default resolve('pagedEntries', fetchData)(LookupSearch);

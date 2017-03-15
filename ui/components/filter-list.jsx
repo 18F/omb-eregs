@@ -58,12 +58,12 @@ AddKeyword.propTypes = {
   }),
 };
 
-export default function FilterList({ location, keywords }) {
-  const keywordIds = (location.query.keywords__id__in || '').split(',');
-  const removeQuery = Object.assign({}, location.query);
+export default function FilterList({ keywords, router }) {
+  const { location: { query } } = router;
+  const keywordIds = (query.keywords__id__in || '').split(',');
+  const removeQuery = Object.assign({}, query);
   delete removeQuery.page;
   delete removeQuery.keywords__id__in;
-
   return (
     <div className="req-filter-ui">
       <h3>Keywords</h3>
@@ -79,19 +79,21 @@ export default function FilterList({ location, keywords }) {
   );
 }
 FilterList.defaultProps = {
-  location: { query: {} },
   keywords: [],
+  router: { location: { query: {} } },
 };
 FilterList.propTypes = {
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({
-      keywords__id__in: React.PropTypes.string,
-    }),
-  }),
   keywords: React.PropTypes.arrayOf(React.PropTypes.shape({
     id: React.PropTypes.number,
     name: React.PropTypes.string,
   })),
+  router: React.PropTypes.shape({
+    location: React.PropTypes.shape({
+      query: React.PropTypes.shape({
+        keywords__id__in: React.PropTypes.string,
+      }),
+    }),
+  }),
 };
 
 export function fetchData({ location: { query } }) {

@@ -31,7 +31,9 @@ describe('fetchData()', () => {
 describe('<FilterList />', () => {
   it('passed transformed args to its Filters', () => {
     const params = {
-      location: { query: { keywords__id__in: '1,7,10', some: 'field', page: '5' } },
+      router: { location: { query: {
+        keywords__id__in: '1,7,10', some: 'field', page: '5',
+      } } },
       keywords: [{ id: 1, name: 'a' }],
     };
     const filter = shallow(<FilterList {...params} />).find('Filter').first();
@@ -41,7 +43,7 @@ describe('<FilterList />', () => {
   });
   it('contains the correct number of Filters', () => {
     const params = {
-      location: { query: {} },
+      router: { location: { query: {} } },
       keywords: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
     };
     let result = shallow(<FilterList {...params} />);
@@ -52,7 +54,10 @@ describe('<FilterList />', () => {
     expect(result.find('Filter')).toHaveLength(3);
   });
   it('contains an AddKeyword', () => {
-    const params = { location: { query: {} }, keywords: [] };
+    const params = {
+      router: { location: { query: {} } },
+      keywords: [],
+    };
     const result = shallow(<FilterList {...params} />);
     expect(result.find('DoesNotExist')).toHaveLength(0);
     expect(result.find('AddKeyword')).toHaveLength(1);
