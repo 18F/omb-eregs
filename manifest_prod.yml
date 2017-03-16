@@ -16,6 +16,8 @@ applications:
     buildpack: nodejs_buildpack
     command: node ui-dist/server.js
     host: omb-eregs
+    services:
+      - config    # user-provided service w/ UI_BASIC_AUTH defined
     env:
       INTERNAL_API: https://omb-eregs-api.app.cloud.gov/
       PUBLIC_API: https://omb-eregs-api.app.cloud.gov/
