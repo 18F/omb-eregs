@@ -106,12 +106,12 @@ def test_requirements_ordered_by_multiple_keys(params, result):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('params', (
-    "sort=gibberish",
-    "sort=-gibberish",
-    "sort=-",
-    "sort=asdf",
-    "sort=policy__",
-    "sort=policy__gibberish",
+    "gibberish",
+    "-gibberish",
+    "-",
+    "asdf",
+    "policy__",
+    "policy__gibberish",
 ))
 def test_requirements_ordered_by_bad_key(params):
     """
@@ -121,6 +121,6 @@ def test_requirements_ordered_by_bad_key(params):
     for i in range(3):
         policy = mommy.make(Policy, policy_number=str(10 - i))
         mommy.make(Requirement, req_id=str(i), policy=policy)
-    path = "/requirements/?{0}".format(params)
+    path = "/requirements/?sort={0}".format(params)
     response = client.get(path)
     assert response.status_code == 400
