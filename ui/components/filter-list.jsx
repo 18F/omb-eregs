@@ -47,7 +47,7 @@ export default function FilterList({ keywords, router }) {
   return (
     <div className="req-filter-ui">
       <h3>Keywords</h3>
-      <ol>
+      <ol className="list-reset">
         { keywords.map(keyword =>
           <Filter
             key={keyword.id} keywordIds={keywordIds} keyword={keyword}

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
-import { withRouter } from 'react-router';
+import { Link, withRouter } from 'react-router';
 
 import { apiUrl } from '../globals';
 import Pagers from './pagers';
@@ -13,14 +13,26 @@ function Requirement({ requirement }) {
 
 function Requirements({ keywords, pagedReqs, router }) {
   return (
-    <div>
-      <h1>Requirements</h1>
-      <FilterList keywords={keywords} router={router} />
-      <ul className="req-list">
-        { pagedReqs.results.map(requirement =>
-          <Requirement key={requirement.req_id} requirement={requirement} />) }
-      </ul>
-      <Pagers location={router.location} count={pagedReqs.count} />
+    <div className="clearfix">
+      <div className="col col-2 border p2">
+        <FilterList keywords={keywords} router={router} />
+      </div>
+      <div className="col col-10 pl3">
+        <div>
+          <span className="mr4">Organize by</span>
+          <ul className="list-reset inline-block">
+            <li className="inline-block mr4 bold">Requirement</li>
+            <li className="inline-block mr4">
+              <Link to="/#not-implemented">Policy</Link>
+            </li>
+          </ul>
+        </div>
+        <ul className="list-reset">
+          { pagedReqs.results.map(requirement =>
+            <Requirement key={requirement.req_id} requirement={requirement} />) }
+        </ul>
+        <Pagers location={router.location} count={pagedReqs.count} />
+      </div>
     </div>
   );
 }
