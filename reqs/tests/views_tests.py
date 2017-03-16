@@ -2,7 +2,7 @@ import pytest
 from model_mommy import mommy
 from rest_framework.test import APIClient
 
-from reqs.models import Keyword, Requirement
+from reqs.models import Keyword, Policy, Requirement
 
 
 @pytest.mark.django_db
@@ -54,3 +54,49 @@ def test_requirements_queryset_order():
     response = client.get('/requirements/?keywords__name__in=1111,3333,4444')
     req_ids = [req['req_id'] for req in response.json()['results']]
     assert req_ids == ['2', '1', '3']
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('params,req_ids,policy_numbers,result', (
+    ('', (1, 2, 3), (10, 11, 12), ["1", "2", "3"]),
+    ('sort', (1, 2, 3), (10, 11, 12), ["1", "2", "3"]),
+    ('sort=', (1, 2, 3), (10, 11, 12), ["1", "2", "3"]),
+    ('', (3, 2, 1), (10, 11, 12), ["1", "2", "3"]),
+    ('sort=-req_id', (2, 1, 3), (10, 11, 12), ["3", "2", "1"]),
+    ('sort=policy__policy_number', (1, 2, 3), (20, 30, 10), ["3", "1", "2"]),
+    ('sort=-policy__policy_number', (1, 2, 3), (20, 30, 10), ["2", "1", "3"]),
+), ids=repr)
+def test_requirements_ordered_by_key(params, req_ids, policy_numbers, result):
+    """
+    We should be able to pass in arbitrary sort fields.
+    """
+    client = APIClient()
+    for i in range(len(req_ids)):
+        policy = mommy.make(Policy, policy_number=str(policy_numbers[i]))
+        mommy.make(Requirement, req_id=str(req_ids[i]), policy=policy)
+    path = "/requirements/?{0}".format(params)
+    response = client.get(path)
+    req_ids = [req['req_id'] for req in response.json()['results']]
+    assert req_ids == result
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize('params', (
+    "sort=gibberish",
+    "sort=-gibberish",
+    "sort=-",
+    "sort=asdf",
+    "sort=policy__",
+    "sort=policy__gibberish",
+))
+def test_requirements_ordered_by_bad_key(params):
+    """
+    Sorting by keys that don't exist should result in an error.
+    """
+    client = APIClient()
+    for i in range(3):
+        policy = mommy.make(Policy, policy_number=str(10 - i))
+        mommy.make(Requirement, req_id=str(i), policy=policy)
+    path = "/requirements/?{0}".format(params)
+    response = client.get(path)
+    assert response.status_code == 400

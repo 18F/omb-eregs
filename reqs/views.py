@@ -1,5 +1,7 @@
+from django.core.exceptions import FieldError
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
+from rest_framework.exceptions import ParseError
 
 from reqs.models import Keyword, Policy, Requirement
 from reqs.serializers import (KeywordSerializer, PolicySerializer,
@@ -57,7 +59,20 @@ class RequirementViewSet(viewsets.ModelViewSet):
          for key, value in KeywordViewSet.filter_fields.items()})
 
     def get_queryset(self):
-        """Order by number of matching keywords"""
+        """
+        If there is a valid sort parameter, order using it.
+        Otherwise, order by number of matching keywords.
+        """
+        sort_param = self.request.query_params.get('sort', '')
+        sort_keys = [k.strip() for k in sort_param.split(',') if k.strip()]
+        if len(sort_keys):
+            try:
+                ordered = self.queryset.order_by(*sort_keys)
+                list(ordered)  # Have to resolve list to raise field errors.
+                return ordered
+            except FieldError:
+                raise ParseError
+
         kw_param = self.request.query_params.get('keywords__name__in', '')
         keywords = tuple(kw.strip() for kw in kw_param.split(','))
         sql = """
