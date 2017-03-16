@@ -3,7 +3,7 @@
 import bufferEq from 'buffer-equal-constant-time';
 import httpAuth from 'http-auth';
 
-export default function (envCreds, expressApp) {
+export default function (envCreds) {
   if (envCreds && envCreds.UI_BASIC_AUTH
       && Object.keys(envCreds.UI_BASIC_AUTH).length > 0) {
     const authCreds = envCreds.UI_BASIC_AUTH;
@@ -13,6 +13,7 @@ export default function (envCreds, expressApp) {
           && bufferEq(new Buffer(authCreds[key]), new Buffer(password)));
       callback(hasMatch);
     });
-    expressApp.use(httpAuth.connect(auther));
+    return httpAuth.connect(auther);
   }
+  return null;
 }

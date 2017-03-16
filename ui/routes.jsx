@@ -6,12 +6,15 @@ import Keywords from './components/keywords';
 import Index from './components/index';
 import Policies from './components/policies';
 import Requirements from './components/requirements';
-
+import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
 
 export default <Router history={browserHistory} >
   <Route path="/" component={App}>
     <IndexRoute component={Index} />
-    <Route path="keywords" component={Keywords} />
+    <Route path="keywords">
+      <IndexRoute component={Keywords} />
+      <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
+    </Route>
     <Route path="policies" component={Policies} />
     <Route path="requirements" component={Requirements} />
   </Route>

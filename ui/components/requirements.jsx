@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
+import { withRouter } from 'react-router';
 
 import { apiUrl } from '../globals';
 import Pagers from './pagers';
@@ -10,27 +11,28 @@ function Requirement({ requirement }) {
   return <li className="req">{requirement.req_id}: {requirement.req_text}</li>;
 }
 
-function Requirements({ location: { query }, pagedReqs, keywords }) {
+function Requirements({ keywords, pagedReqs, router }) {
   return (
     <div>
       <h1>Requirements</h1>
-      <FilterList keywords={keywords} query={query} />
+      <FilterList keywords={keywords} router={router} />
       <ul className="req-list">
         { pagedReqs.results.map(requirement =>
           <Requirement key={requirement.req_id} requirement={requirement} />) }
       </ul>
-      <Pagers pathname="/requirements/" query={query} count={pagedReqs.count} />
+      <Pagers location={router.location} count={pagedReqs.count} />
     </div>
   );
 }
 
 Requirements.defaultProps = {
-  pagedReqs: { results: [], count: 0 },
   keywords: FilterList.defaultProps.keywords,
-  location: { query: {} },
+  pagedReqs: { results: [], count: 0 },
+  router: { location: {} },
 };
 
 Requirements.propTypes = {
+  keywords: FilterList.propTypes.keywords,
   pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
       req_text: React.PropTypes.string,
@@ -38,11 +40,8 @@ Requirements.propTypes = {
     })),
     count: React.PropTypes.number,
   }),
-  keywords: FilterList.propTypes.keywords,
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({
-      keywords__name__in: React.PropTypes.string,
-    }),
+  router: React.PropTypes.shape({
+    location: React.PropTypes.shape({}),
   }),
 };
 
@@ -65,4 +64,4 @@ function fetchRequirements({ location: { query } }) {
 export default resolve({
   pagedReqs: fetchRequirements,
   keywords: fetchKeywords,
-})(Requirements);
+})(withRouter(Requirements));

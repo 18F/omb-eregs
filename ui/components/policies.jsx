@@ -25,30 +25,28 @@ Policy.propTypes = {
   }),
 };
 
-function Policies({ location: { query }, data }) {
+function Policies({ location, data }) {
   return (
     <div>
       <h1>Policies</h1>
       <ul>
         { data.results.map(policy => <Policy key={policy.id} policy={policy} />) }
       </ul>
-      <Pagers pathname="/policies/" query={query} count={data.count} />
+      <Pagers location={location} count={data.count} />
     </div>
   );
 }
 
 Policies.defaultProps = {
   data: { results: [], count: 0 },
-  location: { query: {} },
+  location: {},
 };
 Policies.propTypes = {
   data: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(Policy.propTypes.policy),
     count: React.PropTypes.number,
   }),
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({}),
-  }),
+  location: React.PropTypes.shape({}),
 };
 
 export default resolve(

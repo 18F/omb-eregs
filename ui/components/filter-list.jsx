@@ -7,8 +7,9 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import { apiUrl } from '../globals';
+import SearchAutocomplete from './search-autocomplete';
 
-function Filter({ keywordIds, keyword, query }) {
+export function Filter({ keywordIds, keyword, query }) {
   const remainingKws = keywordIds.filter(v => v !== keyword.id.toString());
   const queryWithoutKw = Object.assign({}, query, {
     keywords__id__in: remainingKws.join(','),
@@ -37,33 +38,42 @@ Filter.propTypes = {
   query: React.PropTypes.shape({}),
 };
 
-export default function FilterList({ query, keywords }) {
+export default function FilterList({ keywords, router }) {
+  const { location: { query } } = router;
   const keywordIds = (query.keywords__id__in || '').split(',');
   const removeQuery = Object.assign({}, query);
   delete removeQuery.page;
-
+  delete removeQuery.keywords__id__in;
   return (
-    <ol className="req-filter-ui">
-      { keywords.map(keyword =>
-        <Filter
-          key={keyword.id} keywordIds={keywordIds} keyword={keyword}
-          query={removeQuery}
-        />)}
-    </ol>
+    <div className="req-filter-ui">
+      <h3>Keywords</h3>
+      <ol>
+        { keywords.map(keyword =>
+          <Filter
+            key={keyword.id} keywordIds={keywordIds} keyword={keyword}
+            query={removeQuery}
+          />)}
+      </ol>
+      <SearchAutocomplete lookup="keywords" insertParam="keywords__id__in" router={router} />
+    </div>
   );
 }
 FilterList.defaultProps = {
-  query: {},
   keywords: [],
+  router: { location: { query: {} } },
 };
 FilterList.propTypes = {
-  query: React.PropTypes.shape({
-    keywords__id__in: React.PropTypes.string,
-  }),
   keywords: React.PropTypes.arrayOf(React.PropTypes.shape({
     id: React.PropTypes.number,
     name: React.PropTypes.string,
   })),
+  router: React.PropTypes.shape({
+    location: React.PropTypes.shape({
+      query: React.PropTypes.shape({
+        keywords__id__in: React.PropTypes.string,
+      }),
+    }),
+  }),
 };
 
 export function fetchData({ location: { query } }) {
