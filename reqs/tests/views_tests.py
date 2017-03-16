@@ -81,6 +81,30 @@ def test_requirements_ordered_by_key(params, req_ids, policy_numbers, result):
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize('params,result', (
+    ('sort=req_id', ["1", "2", "3"]),
+    ('sort=policy__policy_number', ["3", "1", "2"]),
+    ('sort=policy__policy_number,-req_id', ["3", "2", "1"]),
+    ('sort=policy__policy_number,verb', ["3", "2", "1"]),
+    ('sort=policy__policy_number,req_id', ["3", "1", "2"]),
+), ids=repr)
+def test_requirements_ordered_by_multiple_keys(params, result):
+    """
+    We should be able to pass in arbitrary sort fields.
+    """
+    policy1 = mommy.make(Policy, policy_number="23")
+    policy2 = mommy.make(Policy, policy_number="17")
+    mommy.make(Requirement, req_id=1, verb="zoot", policy=policy1)
+    mommy.make(Requirement, req_id=2, verb="yo", policy=policy1)
+    mommy.make(Requirement, req_id=3, verb="xi", policy=policy2)
+    client = APIClient()
+    path = "/requirements/?{0}".format(params)
+    response = client.get(path)
+    req_ids = [req['req_id'] for req in response.json()['results']]
+    assert req_ids == result
+
+
+@pytest.mark.django_db
 @pytest.mark.parametrize('params', (
     "sort=gibberish",
     "sort=-gibberish",
