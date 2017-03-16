@@ -7,19 +7,28 @@ import Pagers from './pagers';
 import FilterList, { fetchData as fetchKeywords } from './filter-list';
 
 function Requirement({ requirement }) {
-  return <li className="req">{requirement.req_id}: {requirement.req_text}</li>;
+  return <li className="gray-border rounded border p2 my2 clearfix">
+    <span className="inline-block col col-1">
+      {requirement.req_id}
+    </span>
+    <span className="inline-block col col-11">
+      {requirement.req_text}
+    </span>
+  </li>;
 }
 
 function Requirements({ location: { query }, pagedReqs, keywords }) {
   return (
     <div>
-      <h1>Requirements</h1>
       <FilterList keywords={keywords} query={query} />
-      <ul className="req-list">
-        { pagedReqs.results.map(requirement =>
-          <Requirement key={requirement.req_id} requirement={requirement} />) }
-      </ul>
-      <Pagers pathname="/requirements/" query={query} count={pagedReqs.count} />
+      <div className="col col-10 px2 border-left">
+        <h1>Requirements</h1>
+        <ul className="list-reset">
+          { pagedReqs.results.map(requirement =>
+            <Requirement key={requirement.req_id} requirement={requirement} />) }
+        </ul>
+        <Pagers pathname="/requirements/" query={query} count={pagedReqs.count} />
+      </div>
     </div>
   );
 }

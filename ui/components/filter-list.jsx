@@ -43,13 +43,15 @@ export default function FilterList({ query, keywords }) {
   delete removeQuery.page;
 
   return (
-    <ol className="req-filter-ui">
-      { keywords.map(keyword =>
-        <Filter
-          key={keyword.id} keywordIds={keywordIds} keyword={keyword}
-          query={removeQuery}
-        />)}
-    </ol>
+    <div className="col col-2">
+      <ol className="req-filter-ui">
+        { keywords.map(keyword =>
+          <Filter
+            key={keyword.id} keywordIds={keywordIds} keyword={keyword}
+            query={removeQuery}
+          />)}
+      </ol>
+    </div>
   );
 }
 FilterList.defaultProps = {

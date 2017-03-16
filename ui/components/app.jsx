@@ -3,8 +3,12 @@ import React from 'react';
 function App(props) {
   return (
     <div>
-      <h1>App</h1>
-      {props.children}
+      <div>
+        <h1>App</h1>
+      </div>
+      <div className="clearfix">
+        {props.children}
+      </div>
     </div>
   );
 }
