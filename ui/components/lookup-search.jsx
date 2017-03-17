@@ -74,6 +74,7 @@ function redirectUrl(params, idToInsert) {
  * should search against/display */
 export const apiParam = {
   keywords: 'name',
+  policies: 'title',
 };
 
 export function redirectIfMatched({ routes, location: { query } }, redirect, done) {

@@ -48,6 +48,7 @@ Filter.propTypes = {
  * this would need to modify to add/remove lookup values */
 export const searchParam = {
   keywords: 'keywords__id__in',
+  policies: 'policy_id__in',
 };
 
 export default function FilterList({ existingFilters, lookup, router }) {
@@ -85,6 +86,13 @@ FilterList.propTypes = {
 export function fetchKeywords({ location: { query } }) {
   if (query.keywords__id__in) {
     const fetch = axios.get(`${apiUrl()}keywords/`, { params: { id__in: query.keywords__id__in } });
+    return fetch.then(({ data: { results } }) => results);
+  }
+  return Promise.resolve([]);
+}
+export function fetchPolicies({ location: { query } }) {
+  if (query.policy_id__in) {
+    const fetch = axios.get(`${apiUrl()}policies/`, { params: { id__in: query.policy_id__in } });
     return fetch.then(({ data: { results } }) => results);
   }
   return Promise.resolve([]);
