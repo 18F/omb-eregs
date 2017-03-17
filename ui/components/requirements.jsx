@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router';
 
 import { apiUrl } from '../globals';
 import Pagers from './pagers';
-import FilterList, { fetchData as fetchKeywords } from './filter-list';
+import FilterList, { fetchKeywords } from './filter-list';
 
 function Requirement({ requirement }) {
   return <li className="req">{requirement.req_id}: {requirement.req_text}</li>;
@@ -15,7 +15,7 @@ function Requirements({ keywords, pagedReqs, router }) {
   return (
     <div className="clearfix">
       <div className="col col-2 border p2">
-        <FilterList keywords={keywords} router={router} />
+        <FilterList existingFilters={keywords} lookup="keywords" router={router} />
       </div>
       <div className="col col-10 pl3">
         <div>

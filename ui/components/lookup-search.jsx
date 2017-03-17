@@ -70,6 +70,8 @@ function redirectUrl(params, idToInsert) {
   return `${params.redirect.pathname}?${paramStr}`;
 }
 
+/* Mapping between a lookup type (e.g. "keywords") and the field in the API we
+ * should search against/display */
 export const apiParam = {
   keywords: 'name',
 };
