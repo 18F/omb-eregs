@@ -71,9 +71,9 @@ def test_requirements_ordered_by_key(params, req_ids, policy_numbers, result):
     We should be able to pass in arbitrary sort fields.
     """
     client = APIClient()
-    for i in range(len(req_ids)):
-        policy = mommy.make(Policy, policy_number=str(policy_numbers[i]))
-        mommy.make(Requirement, req_id=str(req_ids[i]), policy=policy)
+    for req_id, policy_number in zip(req_ids, policy_numbers):
+        policy = mommy.make(Policy, policy_number=str(policy_number))
+        mommy.make(Requirement, req_id=str(req_id), policy=policy)
     path = "/requirements/?{0}".format(params)
     response = client.get(path)
     req_ids = [req['req_id'] for req in response.json()['results']]
