@@ -1,4 +1,5 @@
 -r requirements.txt
+django-debug-toolbar
 flake8
 flake8-bugbear
 flake8-builtins

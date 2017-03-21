@@ -10,6 +10,7 @@ cfenv==0.5.2
 coverage==4.3.4           # via pytest-cov
 dj-database-url==0.4.2
 django-cors-headers==2.0.2
+django-debug-toolbar==1.7
 django-filter==1.0.1
 django-taggit-autosuggest==0.3.0
 django-taggit-serializer==0.1.5
@@ -46,6 +47,7 @@ pytest==3.0.6
 python-dateutil==2.6.0
 requests==2.13.0
 six==1.10.0
+sqlparse==0.2.3           # via django-debug-toolbar
 testfixtures==4.13.4      # via flake8-isort
 whitenoise==3.3.0
 
