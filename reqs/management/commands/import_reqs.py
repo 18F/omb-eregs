@@ -58,13 +58,13 @@ def convert_policy_type(policy_type):
     """Raises a ValueError if the policy type can't be found"""
     policy_type = policy_type.strip()
     if 'memo' in policy_type.lower():
-        return PolicyTypes.memorandum.value
+        return PolicyTypes.memorandum.name
     elif 'circular' in policy_type.lower():
-        return PolicyTypes.circular.value
+        return PolicyTypes.circular.name
     elif policy_type in ('', 'NA'):
         return ''
     else:
-        return PolicyTypes(policy_type).value
+        return PolicyTypes(policy_type).name
 
 
 def convert_date(datestring):
