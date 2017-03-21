@@ -7,14 +7,16 @@ import Pagers from './pagers';
 import FilterList, { fetchData as fetchKeywords } from './filter-list';
 
 function Requirement({ requirement }) {
-  return <li className="gray-border rounded border p2 my2 clearfix">
-    <span className="inline-block col col-1">
-      {requirement.req_id}
-    </span>
-    <span className="inline-block col col-11">
-      {requirement.req_text}
-    </span>
-  </li>;
+  return (
+    <li className="gray-border rounded border p2 my2 clearfix">
+      <span className="inline-block col col-1">
+        {requirement.req_id}
+      </span>
+      <span className="inline-block col col-11">
+        {requirement.req_text}
+      </span>
+    </li>
+  );
 }
 
 function Requirements({ location: { query }, pagedReqs, keywords }) {
