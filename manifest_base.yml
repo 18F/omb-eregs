@@ -1,6 +1,6 @@
 ---
 stack: cflinuxfs2
 env:
-  DJANGO_SETTINGS_MODULE: omb_eregs.settings_prod
+  DJANGO_SETTINGS_MODULE: omb_eregs.settings
   DISABLE_COLLECTSTATIC: 1
   WEB_CONCURRENCY: 4

@@ -28,15 +28,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.get_credential('DJANGO_SECRET_KEY', get_random_string(50))
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'FALSE').upper() == 'TRUE'
 
 ALLOWED_HOSTS = env.uris
 
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     'reqs.apps.ReqsConfig',
     'taggit',
     'taggit_autosuggest',
@@ -49,9 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+)
+if DEBUG:
+    INSTALLED_APPS += ('debug_toolbar', )
 
-MIDDLEWARE = [
+MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -61,7 +62,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+)
+if DEBUG:
+    MIDDLEWARE = ('debug_toolbar.middleware.DebugToolbarMiddleware',) + \
+                 MIDDLEWARE
 
 # Allow most URLs to be used by any service; do not allow the admin to be
 # accessed this way
@@ -163,8 +167,13 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25,
+}
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': 'omb_eregs.utils.show_toolbar',
 }

@@ -1,7 +1,6 @@
-from django.core.exceptions import FieldError
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
-from rest_framework.exceptions import ParseError
+from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 
 from reqs.models import Keyword, Policy, Requirement
 from reqs.serializers import (KeywordSerializer, PolicySerializer,
@@ -33,6 +32,31 @@ class PolicyViewSet(viewsets.ModelViewSet):
     }
 
 
+class PriorityOrderingFilter(OrderingFilter):
+    """If no ordering is requested, sort based on the number of keywords
+    matched"""
+    def priority_ordering(self, request, queryset):
+        kw_param = request.query_params.get('keywords__name__in', '')
+        keywords = tuple(kw.strip() for kw in kw_param.split(','))
+        sql = """
+            SELECT count(*) FROM reqs_keywordconnect AS con
+            INNER JOIN reqs_keyword kw ON (con.tag_id = kw.id)
+            WHERE kw.name IN %s
+            AND con.content_object_id = reqs_requirement.id
+        """
+        annotated = queryset.annotate(kw_count=RawSQL(sql, (keywords,)))
+        ordered = annotated.order_by('-kw_count', 'req_id')
+        return ordered
+
+    def filter_queryset(self, request, queryset, view):
+        ordering = self.get_ordering(request, queryset, view)
+
+        if ordering:
+            return queryset.order_by(*ordering)
+        else:
+            return self.priority_ordering(request, queryset)
+
+
 class RequirementViewSet(viewsets.ModelViewSet):
     # Distinct to account for multiple tag matches when filtering
     queryset = Requirement.objects.select_related('policy').prefetch_related(
@@ -57,30 +81,5 @@ class RequirementViewSet(viewsets.ModelViewSet):
     filter_fields.update(
         {'keywords__' + key: value
          for key, value in KeywordViewSet.filter_fields.items()})
-
-    def get_queryset(self):
-        """
-        If there is a valid sort parameter, order using it.
-        Otherwise, order by number of matching keywords.
-        """
-        sort_param = self.request.query_params.get('sort', '')
-        sort_keys = [k.strip() for k in sort_param.split(',') if k.strip()]
-        if len(sort_keys):
-            try:
-                ordered = self.queryset.order_by(*sort_keys)
-                list(ordered)  # Have to resolve list to raise field errors.
-                return ordered
-            except FieldError:
-                raise ParseError
-
-        kw_param = self.request.query_params.get('keywords__name__in', '')
-        keywords = tuple(kw.strip() for kw in kw_param.split(','))
-        sql = """
-            SELECT count(*) FROM reqs_keywordconnect AS con
-            INNER JOIN reqs_keyword kw ON (con.tag_id = kw.id)
-            WHERE kw.name IN %s
-            AND con.content_object_id = reqs_requirement.id
-        """
-        annotated = self.queryset.annotate(kw_count=RawSQL(sql, (keywords,)))
-        ordered = annotated.order_by('-kw_count', 'req_id')
-        return ordered
+    filter_backends = (DjangoFilterBackend, PriorityOrderingFilter)
+    ordering_fields = filter_fields.keys()

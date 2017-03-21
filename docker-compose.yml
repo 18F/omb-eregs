@@ -15,7 +15,7 @@ services:
     environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
       PORT: 8001
-      DJANGO_SETTINGS_MODULE: omb_eregs.settings_prod
+      DJANGO_SETTINGS_MODULE: omb_eregs.settings
       TMPDIR: /tmp
       VCAP_APPLICATION: >
         {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api"]}
@@ -38,7 +38,7 @@ services:
     command: ./devops/wait_for_db_then ./devops/dev_api.sh
     environment:
       <<: *API_ENV
-      DJANGO_SETTINGS_MODULE: omb_eregs.settings
+      DEBUG: "true"
 
   prod: &PROD_UI
     image: node:6
