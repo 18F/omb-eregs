@@ -53,7 +53,7 @@ def test_imports_correctly(csv_file):
     # Spot checks
     assert reqs[0].policy.policy_number == 1
     assert reqs[0].policy.omb_policy_id == ''
-    assert reqs[0].policy.policy_type == 'Strategy'
+    assert reqs[0].policy.policy_type == 'strategy'
     assert reqs[0].policy.issuance == date(2010, 12, 9)
     assert reqs[0].policy.sunset is None
     assert reqs[0].req_text == (
@@ -66,7 +66,7 @@ def test_imports_correctly(csv_file):
         'Software', 'Software Development Lifecycle/Agile'}
 
     assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
-    assert reqs[1].policy.policy_type == 'Memorandum'
+    assert reqs[1].policy.policy_type == 'memorandum'
     assert reqs[1].policy.sunset == date(2018, 9, 30)
     assert reqs[1].req_id == '21.44'
     assert reqs[1].verb == 'Will'
@@ -85,7 +85,7 @@ def test_imports_correctly2(csv_file2):
     # Spot checks
     assert reqs[0].policy.policy_number == 1
     assert reqs[0].policy.omb_policy_id == ''
-    assert reqs[0].policy.policy_type == 'Strategy'
+    assert reqs[0].policy.policy_type == 'strategy'
     assert reqs[0].policy.issuance == date(2010, 12, 9)
     assert reqs[0].policy.sunset is None
     assert reqs[0].req_text == (
@@ -98,7 +98,7 @@ def test_imports_correctly2(csv_file2):
         'Software', 'Software Development Lifecycle/Agile'}
 
     assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
-    assert reqs[1].policy.policy_type == 'Memorandum'
+    assert reqs[1].policy.policy_type == 'memorandum'
     assert reqs[1].policy.sunset == date(2018, 9, 30)
     assert reqs[1].req_id == '21.44'
     assert reqs[1].verb == 'Will'
@@ -146,7 +146,7 @@ def test_policy_from_row():
     assert policy.title == 'title 1'
     assert policy.uri == 'http://example.com/a'
     assert policy.omb_policy_id == 'policy'
-    assert PolicyTypes(policy.policy_type) == PolicyTypes.memorandum
+    assert PolicyTypes[policy.policy_type].name == PolicyTypes.memorandum.name
     assert policy.issuance == date(2001, 12, 20)
     assert policy.sunset is None
     assert {123: policy} == policy_proc.policies
