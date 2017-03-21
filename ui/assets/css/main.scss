@@ -12,10 +12,6 @@ and includes any non-semantic helper classes
 @import 'typography';
 @import 'colors';
 
-// Components
-@import 'requirements';
-@import 'req-filter-ui';
-
 // Borders
 .gray-border {
   border-color: $border-gray;
