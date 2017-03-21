@@ -28,15 +28,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.get_credential('DJANGO_SECRET_KEY', get_random_string(50))
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'FALSE').upper() == 'TRUE'
 
 ALLOWED_HOSTS = env.uris
 
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     'reqs.apps.ReqsConfig',
     'taggit',
     'taggit_autosuggest',
@@ -49,9 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+)
 
-MIDDLEWARE = [
+MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -61,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+)
 
 # Allow most URLs to be used by any service; do not allow the admin to be
 # accessed this way
