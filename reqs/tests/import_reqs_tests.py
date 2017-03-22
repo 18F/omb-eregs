@@ -346,7 +346,7 @@ def test_fix_excel_decimals(blank_csv_file, ids, expected):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("requirement_id", ("", "100", "0" "1,000"), ids=repr)
+@pytest.mark.parametrize("requirement_id", ("", "0", "100", "1,000"), ids=repr)
 @pytest.mark.xfail(raises=ValueError)
 def test_bad_requirement_ids_raise_value_error(requirement_id):
     processor = import_reqs.RowProcessor()
