@@ -8,8 +8,9 @@
 
   .req-text {
     color: $color-gray-dark;
-    font-family: "Merriweather Light", serif;
+    font-family: "Merriweather", serif;
     font-size: 1.2em;
+    font-weight: 300;
     letter-spacing: .025em;
   }
 
@@ -18,5 +19,6 @@
     color: $color-gray;
     font-family: "Source Sans Pro", sans-serif;
     font-size: .8em;
+    letter-spacing: 0;
   }
 }
