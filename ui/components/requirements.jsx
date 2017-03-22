@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router';
 
 import { apiUrl } from '../globals';
 import Pagers from './pagers';
-import FilterList, { fetchData as fetchKeywords } from './filter-list';
+import FilterList, { fetchKeywords, fetchPolicies } from './filter-list';
 
 function Requirement({ requirement }) {
   return (
@@ -28,11 +28,12 @@ function Requirement({ requirement }) {
   );
 }
 
-function Requirements({ keywords, pagedReqs, router }) {
+function Requirements({ keywords, pagedReqs, policies, router }) {
   return (
     <div className="clearfix">
       <div className="col col-2 border p2">
-        <FilterList keywords={keywords} router={router} />
+        <FilterList existingFilters={keywords} lookup="keywords" router={router} />
+        <FilterList existingFilters={policies} lookup="policies" router={router} />
       </div>
       <div className="col col-10 pl4 border-left">
         <div>
@@ -55,13 +56,14 @@ function Requirements({ keywords, pagedReqs, router }) {
 }
 
 Requirements.defaultProps = {
-  keywords: FilterList.defaultProps.keywords,
+  keywords: [],
   pagedReqs: { results: [], count: 0 },
+  policies: [],
   router: { location: {} },
 };
 
 Requirements.propTypes = {
-  keywords: FilterList.propTypes.keywords,
+  keywords: FilterList.propTypes.existingFilters,
   pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
       req_text: React.PropTypes.string,
@@ -69,6 +71,7 @@ Requirements.propTypes = {
     })),
     count: React.PropTypes.number,
   }),
+  policies: FilterList.propTypes.existingFilters,
   router: React.PropTypes.shape({
     location: React.PropTypes.shape({}),
   }),
@@ -91,6 +94,7 @@ function fetchRequirements({ location: { query } }) {
 }
 
 export default resolve({
-  pagedReqs: fetchRequirements,
   keywords: fetchKeywords,
+  pagedReqs: fetchRequirements,
+  policies: fetchPolicies,
 })(withRouter(Requirements));

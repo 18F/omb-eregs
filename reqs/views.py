@@ -20,6 +20,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
     queryset = Policy.objects.all()
     serializer_class = PolicySerializer
     filter_fields = {
+        'id': ('exact', 'in'),
         'policy_number': ('exact', 'gt', 'gte', 'lt', 'lte', 'in', 'range'),
         'title': ('exact', 'icontains'),
         'uri': ('exact', 'icontains'),
