@@ -347,7 +347,6 @@ def test_fix_excel_decimals(blank_csv_file, ids, expected):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("requirement_id", ("", "0", "100", "1,000"), ids=repr)
-@pytest.mark.xfail(raises=ValueError)
 def test_bad_requirement_ids_raise_value_error(requirement_id):
     processor = import_reqs.RowProcessor()
     processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})
@@ -359,4 +358,5 @@ def test_bad_requirement_ids_raise_value_error(requirement_id):
         'reqText': 'texttexttext',
         'reqId': requirement_id,
     }
-    processor.add(row)
+    with pytest.raises(ValueError):
+        processor.add(row)
