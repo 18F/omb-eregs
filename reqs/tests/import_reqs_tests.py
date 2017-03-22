@@ -320,9 +320,10 @@ def test_handle_transposed_reqstatus(test_input, expected):
     (["1.01", "1.02"], ["1.01", "1.02"]),
     (["1.09", "1.1"], ["1.09", "1.10"]),
     (["1.59", "1.6"], ["1.59", "1.60"]),
-    (["1.99", "1.1"], ["1.100", "1.99"]),  # Django order_by sort issue.
+    (["1.99", "1.1"], ["1.100", "1.99"]),  # Django order_by sort issue
     (["1.09", "1.2"], ["1.09", "1.2"]),
     (["1.09", "2.1"], ["1.09", "2.1"]),
+    (["1.234569", "1.23"], ["1.23", "1.234569"]),  # Django order_by sort issue
 ), ids=repr)
 def test_fix_excel_decimals(blank_csv_file, ids, expected):
     """
@@ -342,3 +343,20 @@ def test_fix_excel_decimals(blank_csv_file, ids, expected):
     assert len(reqs) == 2
     assert reqs[0].req_id == expected[0]
     assert reqs[1].req_id == expected[1]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("requirement_id", ("", "100", "0" "1,000"), ids=repr)
+@pytest.mark.xfail(raises=ValueError)
+def test_bad_requirement_ids_raise_value_error(requirement_id):
+    processor = import_reqs.RowProcessor()
+    processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})
+    row = {
+        'issuingBody': 'body',
+        'policySection': 'None',
+        'policySubSection': 'None',
+        'reqDeadline': 'N/A',
+        'reqText': 'texttexttext',
+        'reqId': requirement_id,
+    }
+    processor.add(row)
