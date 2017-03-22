@@ -313,3 +313,50 @@ def test_keyword_normalization(blank_csv_file, keyword, expected):
 ), ids=repr)
 def test_handle_transposed_reqstatus(test_input, expected):
     assert import_reqs.handle_transposed_reqstatus(test_input) == expected
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("ids,expected", (
+    (["1.01", "1.02"], ["1.01", "1.02"]),
+    (["1.09", "1.1"], ["1.09", "1.10"]),
+    (["1.59", "1.6"], ["1.59", "1.60"]),
+    (["1.99", "1.1"], ["1.100", "1.99"]),  # Django order_by sort issue
+    (["1.09", "1.2"], ["1.09", "1.2"]),
+    (["1.09", "2.1"], ["1.09", "2.1"]),
+    (["1.234569", "1.23"], ["1.23", "1.234569"]),  # Django order_by sort issue
+), ids=repr)
+def test_fix_excel_decimals(blank_csv_file, ids, expected):
+    """
+    Test the handling of requirement IDs we suspect are wrong due to issues
+    with Excel's treatment of decimals.
+    """
+    csv_str = "\n".join([
+        SAMPLE_CSV2[0],
+        SAMPLE_CSV2[1].replace("1.15", ids[0]),
+        SAMPLE_CSV2[2].replace("21.44", ids[1]),
+    ])
+    blank_csv_file.write(csv_str)
+
+    call_command('import_reqs', str(blank_csv_file))
+
+    reqs = list(Requirement.objects.order_by("req_id"))
+    assert len(reqs) == 2
+    assert reqs[0].req_id == expected[0]
+    assert reqs[1].req_id == expected[1]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("requirement_id", ("", "0", "100", "1,000"), ids=repr)
+def test_bad_requirement_ids_raise_value_error(requirement_id):
+    processor = import_reqs.RowProcessor()
+    processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})
+    row = {
+        'issuingBody': 'body',
+        'policySection': 'None',
+        'policySubSection': 'None',
+        'reqDeadline': 'N/A',
+        'reqText': 'texttexttext',
+        'reqId': requirement_id,
+    }
+    with pytest.raises(ValueError):
+        processor.add(row)
