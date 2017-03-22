@@ -7,78 +7,92 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import { apiUrl } from '../globals';
+import { apiParam } from './lookup-search';
 import SearchAutocomplete from './search-autocomplete';
 
-export function Filter({ keywordIds, keyword, query }) {
-  const remainingKws = keywordIds.filter(v => v !== keyword.id.toString());
-  const queryWithoutKw = Object.assign({}, query, {
-    keywords__id__in: remainingKws.join(','),
+export function Filter({ existingIds, idToRemove, location, name, removeParam }) {
+  const remainingIds = existingIds.filter(v => v !== idToRemove);
+  const { pathname, query } = location;
+  const modifiedQuery = Object.assign({}, query, {
+    [removeParam]: remainingIds.join(','),
   });
-  const destination = { pathname: '/requirements/', query: queryWithoutKw };
+  delete modifiedQuery.page;
 
   return (
     <li>
-      {keyword.name}
+      {name}
       &nbsp;
-      <Link to={destination}>x</Link>
+      <Link to={{ pathname, query: modifiedQuery }}>x</Link>
     </li>
   );
 }
 Filter.defaultProps = {
-  keywordIds: [],
-  keyword: {},
-  query: {},
+  existingIds: [],
+  idToRemove: 0,
+  location: { pathname: '', query: {} },
+  name: '',
+  removeParam: '',
 };
 Filter.propTypes = {
-  keywordIds: React.PropTypes.arrayOf(React.PropTypes.string),
-  keyword: React.PropTypes.shape({
-    id: React.PropTypes.number,
-    name: React.PropTypes.string,
+  existingIds: React.PropTypes.arrayOf(React.PropTypes.number),
+  idToRemove: React.PropTypes.number,
+  location: React.PropTypes.shape({
+    pathname: React.PropTypes.string,
+    query: React.PropTypes.shape({}),
   }),
-  query: React.PropTypes.shape({}),
+  name: React.PropTypes.string,
+  removeParam: React.PropTypes.string,
 };
 
-export default function FilterList({ keywords, router }) {
-  const { location: { query } } = router;
-  const keywordIds = (query.keywords__id__in || '').split(',');
-  const removeQuery = Object.assign({}, query);
-  delete removeQuery.page;
-  delete removeQuery.keywords__id__in;
+/* Mapping between a lookup type (e.g. "keywords") and the query field that
+ * this would need to modify to add/remove lookup values */
+export const searchParam = {
+  keywords: 'keywords__id__in',
+  policies: 'policy_id__in',
+};
+
+export default function FilterList({ existingFilters, lookup, router }) {
+  const filterIds = existingFilters.map(existing => existing.id);
   return (
     <div className="req-filter-ui">
-      <h3>Keywords</h3>
+      <h3>{lookup.charAt(0).toUpperCase() + lookup.substr(1)}</h3>
       <ol className="list-reset">
-        { keywords.map(keyword =>
+        { existingFilters.map(filter =>
           <Filter
-            key={keyword.id} keywordIds={keywordIds} keyword={keyword}
-            query={removeQuery}
+            key={filter.id} existingIds={filterIds} idToRemove={filter.id}
+            location={router.location} name={filter[apiParam[lookup]]}
+            removeParam={searchParam[lookup]}
           />)}
       </ol>
-      <SearchAutocomplete lookup="keywords" insertParam="keywords__id__in" router={router} />
+      <SearchAutocomplete lookup={lookup} insertParam={searchParam[lookup]} router={router} />
     </div>
   );
 }
 FilterList.defaultProps = {
-  keywords: [],
-  router: { location: { query: {} } },
+  existingFilters: [],
+  lookup: 'keywords',
+  router: { location: {} },
 };
 FilterList.propTypes = {
-  keywords: React.PropTypes.arrayOf(React.PropTypes.shape({
+  existingFilters: React.PropTypes.arrayOf(React.PropTypes.shape({
     id: React.PropTypes.number,
-    name: React.PropTypes.string,
   })),
+  lookup: React.PropTypes.oneOf(Object.keys(searchParam)),
   router: React.PropTypes.shape({
-    location: React.PropTypes.shape({
-      query: React.PropTypes.shape({
-        keywords__id__in: React.PropTypes.string,
-      }),
-    }),
+    location: React.PropTypes.shape({}),
   }),
 };
 
-export function fetchData({ location: { query } }) {
+export function fetchKeywords({ location: { query } }) {
   if (query.keywords__id__in) {
     const fetch = axios.get(`${apiUrl()}keywords/`, { params: { id__in: query.keywords__id__in } });
+    return fetch.then(({ data: { results } }) => results);
+  }
+  return Promise.resolve([]);
+}
+export function fetchPolicies({ location: { query } }) {
+  if (query.policy_id__in) {
+    const fetch = axios.get(`${apiUrl()}policies/`, { params: { id__in: query.policy_id__in } });
     return fetch.then(({ data: { results } }) => results);
   }
   return Promise.resolve([]);
