@@ -1,7 +1,20 @@
 .req {
-  border: solid 1px #d6d7d9;
-  margin: 10px 0;
-  list-style: none;
-  padding: 10px 15px;
-  width: 700px;
+  border-color: $color-gray-light;
+
+  .req-id {
+    color: $color-gray;
+    font-family: "Merriweather", serif;
+  }
+
+  .req-text {
+    font-family: "Merriweather Light", serif;
+    font-size: 1.2em;
+  }
+
+  .applies-to,
+  .sunset-date {
+    color: $color-gray;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: .8em;
+  }
 }
