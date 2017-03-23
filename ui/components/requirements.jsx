@@ -20,7 +20,7 @@ function Requirement({ requirement }) {
             Applies to: [not implemented]
           </span>
           <span className="sunset-date">
-            Sunset date by [not implemented]
+            Sunset date by { requirement.policy.sunset || "none" }
           </span>
         </div>
       </div>
@@ -47,7 +47,8 @@ function Requirements({ keywords, pagedReqs, policies, router }) {
         </div>
         <ul className="list-reset">
           { pagedReqs.results.map(requirement =>
-            <Requirement key={requirement.req_id} requirement={requirement} />) }
+            <Requirement key={requirement.req_id} requirement={requirement}
+              sunset={requirement.policy.sunset} />) }
         </ul>
         <Pagers location={router.location} count={pagedReqs.count} />
       </div>
@@ -66,6 +67,9 @@ Requirements.propTypes = {
   keywords: FilterList.propTypes.existingFilters,
   pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
+      policy: React.PropTypes.shape({
+        sunset: React.PropTypes.string,
+      }),
       req_text: React.PropTypes.string,
       req_id: React.PropTypes.string,
     })),
@@ -83,6 +87,7 @@ Requirement.defaultProps = {
 
 Requirement.propTypes = {
   requirement: React.PropTypes.shape({
+    sunset: React.PropTypes.string,
     req_text: React.PropTypes.string,
     req_id: React.PropTypes.string,
   }),
