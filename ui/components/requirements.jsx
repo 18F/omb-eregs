@@ -8,17 +8,34 @@ import Pagers from './pagers';
 import FilterList, { fetchKeywords, fetchPolicies } from './filter-list';
 
 function Requirement({ requirement }) {
-  return <li className="req">{requirement.req_id}: {requirement.req_text}</li>;
+  return (
+    <li className="req border rounded p2 mb2 clearfix max-width-3">
+      <div className="req-id col col-1 mb2">
+        {requirement.req_id}
+      </div>
+      <div className="req-text col col-11">
+        {requirement.req_text}
+        <div className="clearfix mt3">
+          <span className="applies-to mr2">
+            Applies to: [not implemented]
+          </span>
+          <span className="sunset-date">
+            Sunset date by [not implemented]
+          </span>
+        </div>
+      </div>
+    </li>
+  );
 }
 
 function Requirements({ keywords, pagedReqs, policies, router }) {
   return (
     <div className="clearfix">
-      <div className="col col-2 border p2">
+      <div className="col col-2 p2">
         <FilterList existingFilters={keywords} lookup="keywords" router={router} />
         <FilterList existingFilters={policies} lookup="policies" router={router} />
       </div>
-      <div className="col col-10 pl3">
+      <div className="col col-10 pl4 border-left">
         <div>
           <span className="mr4">Organize by</span>
           <ul className="list-reset inline-block">

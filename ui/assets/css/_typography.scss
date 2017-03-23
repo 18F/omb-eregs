@@ -3,7 +3,22 @@ Typograhy styles
  ==========================================================================
 typography.scss contains both global and application specific typography */
 
-body {
-  color: #333333;
+@mixin font-merriweather() {
   font-family: "Merriweather", serif;
 }
+
+@mixin font-merriweather-light() {
+  font-family: "Merriweather", serif;
+  font-weight: 300;
+}
+
+@mixin font-source-sans-pro() {
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+body {
+  @include font-source-sans-pro();
+  color: $color-gray-dark;
+}
+
+
