@@ -2,20 +2,19 @@
   border-color: $color-gray-light;
 
   .req-id {
-    color: $color-gray;
-    @include font-merriweather();
+   @include font-merriweather();
+   color: $color-gray;
   }
 
   .req-text {
-    color: $color-gray-dark;
     @include font-merriweather-light();
+    color: $color-gray-dark;
   }
 
   .applies-to,
   .sunset-date {
+    @include font-source-sans-pro();
     color: $color-gray;
-    font-family: "Source Sans Pro", sans-serif;
     font-size: .8em;
-    letter-spacing: 0;
   }
 }
