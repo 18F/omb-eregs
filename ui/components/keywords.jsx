@@ -43,7 +43,7 @@ Keywords.defaultProps = {
 
 Keywords.propTypes = {
   data: React.PropTypes.shape({
-    results: React.PropTypes.arrayOf(Keyword.propTypes),
+    results: React.PropTypes.arrayOf(Keyword.propTypes.keyword),
     count: React.PropTypes.number,
   }),
   location: React.PropTypes.shape({}),
