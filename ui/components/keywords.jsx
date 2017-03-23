@@ -1,9 +1,8 @@
-import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 
-import { apiUrl } from '../globals';
+import { theApi } from '../globals';
 import Pagers from './pagers';
 
 function Keyword({ keyword }) {
@@ -50,8 +49,9 @@ Keywords.propTypes = {
   location: React.PropTypes.shape({}),
 };
 
+const fetchKeywords = ({ location: { query } }) =>
+  theApi().keywords.fetch(query);
+
 export default resolve(
-  'data',
-  ({ location: { query } }) =>
-    axios.get(`${apiUrl()}keywords/`, { params: query }).then(({ data }) => data),
+  'data', fetchKeywords,
 )(Keywords);

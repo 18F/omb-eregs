@@ -1,11 +1,10 @@
-import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link, withRouter } from 'react-router';
 
-import { apiUrl } from '../globals';
+import { theApi } from '../globals';
 import Pagers from './pagers';
-import FilterList, { fetchKeywords, fetchPolicies } from './filter-list';
+import FilterList from './filter-list';
 
 function Requirement({ requirement }) {
   return (
@@ -88,10 +87,12 @@ Requirement.propTypes = {
   }),
 };
 
-function fetchRequirements({ location: { query } }) {
-  return axios.get(`${apiUrl()}requirements/`, { params: query }).then(
-      ({ data }) => data);
-}
+const fetchRequirements = ({ location: { query } }) =>
+  theApi().requirements.fetch(query);
+const fetchKeywords = ({ location: { query: { keywords__id__in } } }) =>
+  theApi().keywords.withIds(keywords__id__in);
+const fetchPolicies = ({ location: { query: { policy_id__in } } }) =>
+  theApi().policies.withIds(policy_id__in);
 
 export default resolve({
   keywords: fetchKeywords,
