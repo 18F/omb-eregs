@@ -39,6 +39,11 @@
 
  @font-face {
    font-family: 'Merriweather';
+   font-weight: 300;
+   src: url('/static/font/Merriweather-Light.ttf');
+ }
+ @font-face {
+   font-family: 'Merriweather';
    font-style: normal;
    font-weight: 400;
    src: url('/static/font/Merriweather-Regular.ttf');
@@ -49,10 +54,4 @@
    font-style: italic;
    font-weight: 400;
    src: url('/static/font/Merriweather-Italic.ttf');
- }
-
- @font-face {
-   font-family: 'Merriweather';
-   font-weight: 300;
-   src: url('/static/font/Merriweather-Light.ttf');
  }
