@@ -3,13 +3,12 @@
 
   .req-id {
     color: $color-gray;
-    font-family: "Merriweather", serif;
+    @include font-merriweather();
   }
 
   .req-text {
     color: $color-gray-dark;
-    font-family: "Merriweather", serif;
-    font-weight: 300;
+    @include font-merriweather-light();
   }
 
   .applies-to,

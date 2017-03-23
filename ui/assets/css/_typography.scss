@@ -7,3 +7,16 @@ body {
   color: #333333;
   font-family: "Source Sans Pro", sans-serif;
 }
+
+@mixin font-merriweather() {
+  font-family: "Merriweather", serif;
+}
+
+@mixin font-merriweather-light() {
+  font-family: "Merriweather", serif;
+  font-weight: 300;
+}
+
+@mixin font-source-sans-pro() {
+  font-family: "Source Sans Pro", sans-serif;
+}
