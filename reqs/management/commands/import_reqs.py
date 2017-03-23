@@ -219,14 +219,36 @@ class RowProcessor:
         self.keywords = KeywordProcessor(keywords)
         self.connections = []
         self.req_ids = set()
+        self.last_id = "0.0"
+
+    def validate_requirement_id(self, reqid):
+        if reqid in ('None', ''):
+            raise ValueError("Requirement without ID")
+        if "." not in reqid:
+            raise ValueError("Requirement without . separator")
+        reqid = self.fix_excel_decimals(reqid)
+        if reqid in self.req_ids:
+            raise ValueError("Duplicated Req ID: {0}".format(reqid))
+        return reqid
+
+    def fix_excel_decimals(self, reqid):
+        """
+        Excel strips trailing zeroes, so for example what should be 1.20 is 1.2
+        in the data.
+        Since the rows are sequential (or should be!), we should be able to
+        account for this.
+        """
+        policy, requirement = reqid.split(".")
+        last_policy, last_requirement = self.last_id.split(".")
+        if policy == last_policy and last_requirement.endswith("9"):
+            sequential = str(int(last_requirement) + 1)
+            if sequential.rstrip("0") == requirement:
+                return "{0}.{1}".format(policy, sequential)
+        return reqid
 
     def add(self, row):
         req_key = find_key("req_ids", row)
-        req_id = row[req_key]
-        if req_id in ('None', ''):
-            raise ValueError("Requirement without ID")
-        if req_id in self.req_ids:
-            raise ValueError("Duplicated Req ID: {0}".format(req_id))
+        req_id = self.validate_requirement_id(row[req_key])
         row = handle_transposed_reqstatus(row)
         verb_key = find_key("verbs", row)
         impacted_key = find_key("entities", row)
@@ -251,6 +273,7 @@ class RowProcessor:
             req_id=req_id, defaults=params)
         self.connections.extend(self.keywords.connections(row, req.pk))
         self.req_ids.add(req_id)
+        self.last_id = req_id
 
 
 class Command(BaseCommand):
