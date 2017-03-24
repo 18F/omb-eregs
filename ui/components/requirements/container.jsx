@@ -1,11 +1,12 @@
 import React from 'react';
 import { resolve } from 'react-resolver';
-import { Link, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { theApi } from '../../globals';
 import Pagers from '../pagers';
 import FilterList from '../filter-list';
 import Requirement from './requirement';
+import Tabs from './tabs';
 
 function Container({ keywords, pagedReqs, policies, router }) {
   return (
@@ -15,15 +16,7 @@ function Container({ keywords, pagedReqs, policies, router }) {
         <FilterList existingFilters={policies} lookup="policies" router={router} />
       </div>
       <div className="col col-10 pl4 border-left">
-        <div>
-          <span className="mr4">Organize by</span>
-          <ul className="list-reset inline-block">
-            <li className="inline-block mr4 bold">Requirement</li>
-            <li className="inline-block mr4">
-              <Link to="/#not-implemented">Policy</Link>
-            </li>
-          </ul>
-        </div>
+        <Tabs router={router} />
         <ul className="list-reset">
           { pagedReqs.results.map(requirement =>
             <Requirement
