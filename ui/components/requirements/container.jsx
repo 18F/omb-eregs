@@ -2,34 +2,12 @@ import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link, withRouter } from 'react-router';
 
-import { theApi } from '../globals';
-import Pagers from './pagers';
-import FilterList from './filter-list';
+import { theApi } from '../../globals';
+import Pagers from '../pagers';
+import FilterList from '../filter-list';
+import Requirement from './requirement';
 
-function Requirement({ requirement }) {
-  return (
-    <li className="req border rounded p2 mb2 clearfix max-width-3">
-      <div className="req-id col col-1 mb2">
-        { requirement.req_id }
-      </div>
-      <div className="req-text col col-11 pl1">
-        { requirement.req_text.split('\n').map(line => (
-          <span key={line} className="req-text-line mb1">{ line }<br /></span>
-          ))}
-        <div className="clearfix mt3">
-          <span className="applies-to mr2">
-            Applies to: [not implemented]
-          </span>
-          <span className="sunset-date">
-            Sunset date by { requirement.policy.sunset || 'none' }
-          </span>
-        </div>
-      </div>
-    </li>
-  );
-}
-
-function Requirements({ keywords, pagedReqs, policies, router }) {
+function Container({ keywords, pagedReqs, policies, router }) {
   return (
     <div className="clearfix">
       <div className="col col-2 p2">
@@ -60,14 +38,14 @@ function Requirements({ keywords, pagedReqs, policies, router }) {
   );
 }
 
-Requirements.defaultProps = {
+Container.defaultProps = {
   keywords: [],
   pagedReqs: { results: [], count: 0 },
   policies: [],
   router: { location: {} },
 };
 
-Requirements.propTypes = {
+Container.propTypes = {
   keywords: FilterList.propTypes.existingFilters,
   pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
@@ -82,18 +60,6 @@ Requirements.propTypes = {
   }),
 };
 
-Requirement.defaultProps = {
-  requirement: {},
-};
-
-Requirement.propTypes = {
-  requirement: React.PropTypes.shape({
-    sunset: React.PropTypes.string,
-    req_text: React.PropTypes.string,
-    req_id: React.PropTypes.string,
-  }),
-};
-
 const fetchRequirements = ({ location: { query } }) =>
   theApi().requirements.fetch(query);
 const fetchKeywords = ({ location: { query: { keywords__id__in } } }) =>
@@ -105,4 +71,4 @@ export default resolve({
   keywords: fetchKeywords,
   pagedReqs: fetchRequirements,
   policies: fetchPolicies,
-})(withRouter(Requirements));
+})(withRouter(Container));

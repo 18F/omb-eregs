@@ -1,11 +1,11 @@
 import React from 'react';
-import { browserHistory, IndexRoute, Route, Router } from 'react-router';
+import { browserHistory, IndexRedirect, IndexRoute, Route, Router } from 'react-router';
 
 import App from './components/app';
 import Keywords from './components/keywords';
 import Index from './components/index';
 import Policies from './components/policies';
-import Requirements from './components/requirements';
+import Requirements from './components/requirements/container';
 import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
 
 export default <Router history={browserHistory} >
@@ -19,6 +19,9 @@ export default <Router history={browserHistory} >
       <IndexRoute component={Policies} />
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
-    <Route path="requirements" component={Requirements} />
+    <Route path="requirements">
+      <IndexRedirect to="./by-requirement" />
+      <Route path="by-requirement" component={Requirements} />
+    </Route>
   </Route>
 </Router>;
