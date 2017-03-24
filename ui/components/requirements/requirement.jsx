@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Requirement({ requirement }) {
   return (
-    <li className="req border rounded p2 mb2 clearfix max-width-3">
+    <div className="req p2 clearfix">
       <div className="req-id col col-1 mb2">
         {requirement.req_id}
       </div>
@@ -19,7 +19,7 @@ export default function Requirement({ requirement }) {
           </span>
         </div>
       </div>
-    </li>
+    </div>
   );
 }
 

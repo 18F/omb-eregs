@@ -10,7 +10,9 @@ function ByKeyword({ pagedReqs, location }) {
     <div>
       <ul className="list-reset">
         { pagedReqs.results.map(requirement =>
-          <Requirement key={requirement.req_id} requirement={requirement} />) }
+          <li key={requirement.req_id} className="border rounded mb2">
+            <Requirement requirement={requirement} />
+          </li>) }
       </ul>
       <Pagers location={location} count={pagedReqs.count} />
     </div>

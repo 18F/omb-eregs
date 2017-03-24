@@ -13,7 +13,7 @@ function Container({ children, keywords, policies, router }) {
         <FilterList existingFilters={keywords} lookup="keywords" router={router} />
         <FilterList existingFilters={policies} lookup="policies" router={router} />
       </div>
-      <div className="col col-10 pl4 border-left">
+      <div className="col col-10 pl4 border-left max-width-3">
         <Tabs router={router} />
         { children }
       </div>
