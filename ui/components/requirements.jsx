@@ -10,16 +10,18 @@ function Requirement({ requirement }) {
   return (
     <li className="req border rounded p2 mb2 clearfix max-width-3">
       <div className="req-id col col-1 mb2">
-        {requirement.req_id}
+        { requirement.req_id }
       </div>
-      <div className="req-text col col-11">
-        {requirement.req_text}
+      <div className="req-text col col-11 pl1">
+        { requirement.req_text.split('\n').map(line => (
+          <span key={line} className="req-text-line mb1">{ line }<br /></span>
+          ))}
         <div className="clearfix mt3">
           <span className="applies-to mr2">
             Applies to: [not implemented]
           </span>
           <span className="sunset-date">
-            Sunset date by [not implemented]
+            Sunset date by { requirement.policy.sunset || 'none' }
           </span>
         </div>
       </div>
@@ -46,7 +48,11 @@ function Requirements({ keywords, pagedReqs, policies, router }) {
         </div>
         <ul className="list-reset">
           { pagedReqs.results.map(requirement =>
-            <Requirement key={requirement.req_id} requirement={requirement} />) }
+            <Requirement
+              key={requirement.req_id}
+              requirement={requirement}
+            />)
+          }
         </ul>
         <Pagers location={router.location} count={pagedReqs.count} />
       </div>
@@ -82,6 +88,7 @@ Requirement.defaultProps = {
 
 Requirement.propTypes = {
   requirement: React.PropTypes.shape({
+    sunset: React.PropTypes.string,
     req_text: React.PropTypes.string,
     req_id: React.PropTypes.string,
   }),
