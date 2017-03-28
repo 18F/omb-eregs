@@ -1,52 +1,8 @@
-import axios from 'axios';
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import FilterList, { fetchKeywords, fetchPolicies, Filter } from '../../components/filter-list';
+import FilterList, { Filter } from '../../components/filter-list';
 
-jest.mock('axios');
-jest.mock('../../globals', () => ({ apiUrl: jest.fn(() => 'api-start/') }));
-
-
-describe('fetchKeywords()', () => {
-  it('handles an empty query', () => {
-    const props = { location: { query: {} } };
-    return fetchKeywords(props).then(result =>
-      expect(result).toHaveLength(0));
-  });
-  it('hits our API when a keyword is present', () => {
-    const props = { location: { query: { keywords__id__in: 'ids,here' } } };
-    axios.get = jest.fn(
-      () => Promise.resolve({ data: { results: [1, 2, 3] } }),
-    );
-    return fetchKeywords(props).then((result) => {
-      expect(result).toEqual([1, 2, 3]);
-      expect(axios.get).toHaveBeenCalledWith(
-        'api-start/keywords/', { params: { id__in: 'ids,here' } },
-      );
-    });
-  });
-});
-
-describe('fetchPolicies()', () => {
-  it('handles an empty query', () => {
-    const props = { location: { query: {} } };
-    return fetchPolicies(props).then(result =>
-      expect(result).toHaveLength(0));
-  });
-  it('hits our API when a keyword is present', () => {
-    const props = { location: { query: { policy_id__in: 'ids,here' } } };
-    axios.get = jest.fn(
-      () => Promise.resolve({ data: { results: [1, 2, 3] } }),
-    );
-    return fetchPolicies(props).then((result) => {
-      expect(result).toEqual([1, 2, 3]);
-      expect(axios.get).toHaveBeenCalledWith(
-        'api-start/policies/', { params: { id__in: 'ids,here' } },
-      );
-    });
-  });
-});
 
 describe('<FilterList />', () => {
   it('passed transformed args to its Filters', () => {

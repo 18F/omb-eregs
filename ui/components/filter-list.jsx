@@ -2,11 +2,9 @@
  * A container for filters, which can be removed with a click. Currently
  * closely tied to Keywords, but can be generalized in the future
  **/
-import axios from 'axios';
 import React from 'react';
 import { Link } from 'react-router';
 
-import { apiUrl } from '../globals';
 import { apiParam } from './lookup-search';
 import SearchAutocomplete from './search-autocomplete';
 
@@ -82,18 +80,3 @@ FilterList.propTypes = {
     location: React.PropTypes.shape({}),
   }),
 };
-
-export function fetchKeywords({ location: { query } }) {
-  if (query.keywords__id__in) {
-    const fetch = axios.get(`${apiUrl()}keywords/`, { params: { id__in: query.keywords__id__in } });
-    return fetch.then(({ data: { results } }) => results);
-  }
-  return Promise.resolve([]);
-}
-export function fetchPolicies({ location: { query } }) {
-  if (query.policy_id__in) {
-    const fetch = axios.get(`${apiUrl()}policies/`, { params: { id__in: query.policy_id__in } });
-    return fetch.then(({ data: { results } }) => results);
-  }
-  return Promise.resolve([]);
-}
