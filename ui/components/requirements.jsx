@@ -52,7 +52,6 @@ function Requirements({ keywords, pagedReqs, policies, router }) {
             <Requirement
               key={requirement.req_id}
               requirement={requirement}
-              sunset={requirement.policy.sunset}
             />)
           }
         </ul>
@@ -73,9 +72,6 @@ Requirements.propTypes = {
   keywords: FilterList.propTypes.existingFilters,
   pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
-      policy: React.PropTypes.shape({
-        sunset: React.PropTypes.string,
-      }),
       req_text: React.PropTypes.string,
       req_id: React.PropTypes.string,
     })),
