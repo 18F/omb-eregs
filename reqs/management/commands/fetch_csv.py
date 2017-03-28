@@ -9,6 +9,7 @@ CSV_URL_BASE = "https://github.com/ombegov/policy-v2/raw/master/assets/"
 CSV_URLS = (
     "Phase1_CombinedQA_AllPhase1_Nov21.csv",
     "AllPhasesCombinedTaggingTemp_Feb16.csv",
+    "AllPhasesCombinedTaggingTemp_March28_for18f.csv",
 )
 CSV_URL = "{0}{1}".format(CSV_URL_BASE, CSV_URLS[-1])
 FILENAME = 'data.csv'
