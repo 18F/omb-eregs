@@ -22,7 +22,6 @@ from reqs.router import router
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
-    url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
 ]
 
 if settings.DEBUG:

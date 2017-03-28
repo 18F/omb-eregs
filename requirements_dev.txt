@@ -12,7 +12,6 @@ dj-database-url==0.4.2
 django-cors-headers==2.0.2
 django-debug-toolbar==1.7
 django-filter==1.0.1
-django-taggit-autosuggest==0.3.0
 django-taggit-serializer==0.1.5
 django-taggit==0.22.0
 django==1.10.5

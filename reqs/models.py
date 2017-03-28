@@ -2,8 +2,8 @@ from enum import Enum, unique
 
 from django.db import models
 from django.utils.translation import ugettext_lazy
+from taggit.managers import TaggableManager
 from taggit.models import ItemBase, TagBase
-from taggit_autosuggest.managers import TaggableManager
 
 
 # Custom class for name-spacing
