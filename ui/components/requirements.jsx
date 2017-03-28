@@ -15,7 +15,7 @@ function Requirement({ requirement }) {
       </div>
       <div className="req-text col col-11 pl1">
         { requirement.req_text.split('\n').map(line => (
-          <span key={ line } className="req-text-line mb1">{ line }<br /></span>
+          <span key={line} className="req-text-line mb1">{ line }<br /></span>
           ))}
         <div className="clearfix mt3">
           <span className="applies-to mr2">
