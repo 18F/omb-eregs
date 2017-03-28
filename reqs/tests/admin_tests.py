@@ -97,12 +97,18 @@ def test_taggit_widget(tags):
     assert list(sorted(req.keywords.names())) == list(sorted(tags))
 
 
+@pytest.mark.parametrize('tag, expected', [
+    ('This "Has" Quotes', 'This “Has” Quotes'),
+    ('This+"Has"+Quotes', 'This “Has” Quotes'),
+    ('This+Has+No+Quotes', 'This Has No Quotes'),
+    ('This+Has+One"+Quote', 'This Has One Quote'),
+])
 @pytest.mark.django_db
-def test_taggit_widget_doublequotes():
+def test_taggit_widget_doublequotes(tag, expected):
     query_str = req_query_str()
-    data = QueryDict(query_str + '&keywords=This+"Has"+Quotes')
+    data = QueryDict(query_str + '&keywords={0}'.format(tag))
 
     form = RequirementForm(data)
     req = form.save()
 
-    assert list(req.keywords.names()) == ['This Has Quotes']
+    assert list(req.keywords.names()) == [expected]

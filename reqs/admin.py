@@ -8,12 +8,24 @@ admin.site.register(Policy)
 admin.site.register(Keyword)
 
 
+def handle_quotation_marks(value):
+    """Account for commas and quotation marks in tags."""
+    num_marks = value.count('"')
+    if num_marks % 2 != 0:
+        value = value.replace('"', '')
+    else:
+        while '"' in value:
+            marks = ("“", "”")
+            value = value.replace('"', marks[value.count('"') % 2], 1)
+
+    return '"{0}"'.format(value)
+
+
 class TaggitWidget(TaggitSelect2):
     """Account for commas in tags by wrapping each entry in double quotes"""
     def value_from_datadict(self, data, files, name):
         values = data.getlist(name)
-        values = [v.replace('"', '') for v in values]   # remove double quotes
-        values = ['"{0}"'.format(v) for v in values]
+        values = [handle_quotation_marks(v) for v in values]
         return ','.join(values)
 
 
