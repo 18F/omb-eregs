@@ -1,11 +1,15 @@
 @import '~react-select/scss/default';
 
 .req-filter-ui {
-  list-style: none;
 
-  li {
-    /* Handing indent */
-    padding-left: 15px;
-    text-indent: -15px;
+  .active-filter {
+    background-color: $color-gray-warm-light;
+    font-weight: bold;
+
+    .remove-filter-link {
+      background-color: $color-secondary-darkest; 
+      color: $color-white;
+      text-decoration: none;
+    }
   }
 }

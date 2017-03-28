@@ -33,6 +33,7 @@ function Requirements({ keywords, pagedReqs, policies, router }) {
   return (
     <div className="clearfix">
       <div className="col col-2 p2">
+        Search or filter
         <FilterList existingFilters={keywords} lookup="keywords" router={router} />
         <FilterList existingFilters={policies} lookup="policies" router={router} />
       </div>
