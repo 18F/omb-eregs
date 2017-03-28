@@ -1,11 +1,18 @@
-import axios from 'axios';
 import { shallow } from 'enzyme';
 import React from 'react';
 
 import { cleanParams, LookupSearch, redirectIfMatched, redirectQuery } from '../../components/lookup-search';
+import { theApi } from '../../globals';
 
-jest.mock('axios');
-jest.mock('../../globals', () => ({ apiUrl: jest.fn(() => 'api-start/') }));
+jest.mock('../../globals', () => ({ theApi: jest.fn() }));
+
+function mockKeywords(promise) {
+  const fetch = jest.fn(() => promise);
+  theApi.mockImplementationOnce(() => ({
+    keywords: { fetch },
+  }));
+  return fetch;
+}
 
 describe('cleanParams()', () => {
   const query = {
@@ -78,31 +85,28 @@ describe('redirectIfMatched()', () => {
     const params = { routes: [], location: { query: modifiedQuery } };
     const redirect = jest.fn();
     const done = jest.fn();
-    axios.get = jest.fn();
 
     redirectIfMatched(params, redirect, done);
-    expect(axios.get).not.toHaveBeenCalled();
+    expect(theApi).not.toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalled();
     expect(done).toHaveBeenCalledWith();
   });
   it('redirects if there is an exact match', () => {
     const params = { routes: [{ path: 'keywords' }, {}], location: { query } };
     const redirect = jest.fn();
-    axios.get = jest.fn(
-      () => Promise.resolve({ data: { count: 1, results: [{ id: 4 }] } }),
-    );
+    const mockFetch = mockKeywords(
+      Promise.resolve({ count: 1, results: [{ id: 4 }] }));
 
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then(() => {
-      expect(axios.get).toHaveBeenCalledWith(
-        'api-start/keywords/', { params: { name: 'qqq' } });
+      expect(mockFetch).toHaveBeenCalledWith({ name: 'qqq' });
       expect(redirect).toHaveBeenCalled();
     });
   });
   it('passes exceptions up', () => {
     const params = { routes: [{ path: 'keywords' }, {}], location: { query } };
     const redirect = jest.fn();
-    axios.get = jest.fn(() => Promise.reject(Error('oh noes')));
+    mockKeywords(Promise.reject(Error('oh noes')));
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then((error) => {
       expect(error).toEqual(Error('oh noes'));
@@ -112,9 +116,7 @@ describe('redirectIfMatched()', () => {
   it('continues if there is no exact match', () => {
     const params = { routes: [{ path: 'keywords' }, {}], location: { query } };
     const redirect = jest.fn();
-    axios.get = jest.fn(
-      () => Promise.resolve({ data: { count: 0, results: [] } }),
-    );
+    mockKeywords(Promise.resolve({ count: 0, results: [] }));
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then(() => {
       expect(redirect).not.toHaveBeenCalled();

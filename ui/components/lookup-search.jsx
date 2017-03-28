@@ -1,12 +1,11 @@
 import querystring from 'querystring';
 
-import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 import validator from 'validator';
 
-import { apiUrl } from '../globals';
+import { theApi } from '../globals';
 import Pagers from './pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
@@ -84,9 +83,9 @@ export function redirectIfMatched({ routes, location: { query } }, redirect, don
     done();
   } else {
     const lookup = routes[routes.length - 2].path;
-    const apiQuery = { params: { [apiParam[lookup]]: query.q } };
-    axios.get(`${apiUrl()}${lookup}/`, apiQuery)
-      .then(({ data: { count, results } }) => {
+    const apiQuery = { [apiParam[lookup]]: query.q };
+    theApi()[lookup].fetch(apiQuery)
+      .then(({ count, results }) => {
         const params = cleanParams(query);
         if (count > 0) {
           redirect(redirectUrl(params, results[0].id));
@@ -165,7 +164,7 @@ LookupSearch.propTypes = {
 export function search(lookup, q, page = '1') {
   const queryParam = `${apiParam[lookup]}__icontains`;
   const apiQuery = { params: { [queryParam]: q, page } };
-  return axios.get(`${apiUrl()}${lookup}/`, apiQuery).then(({ data }) => data);
+  return theApi()[lookup].fetch(apiQuery);
 }
 
 /**
