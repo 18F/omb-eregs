@@ -17,10 +17,14 @@ export function Filter({ existingIds, idToRemove, location, name, removeParam })
   delete modifiedQuery.page;
 
   return (
-    <li>
-      {name}
-      &nbsp;
-      <Link to={{ pathname, query: modifiedQuery }}>x</Link>
+    <li className="active-filter rounded clearfix mb1 flex relative">
+      <span className="filter-name col col-9 p1 center">{name}</span>
+      <Link
+        to={{ pathname, query: modifiedQuery }}
+        className="remove-filter-link rounded-right col col-3 p1 center flex absolute"
+      >
+        <span className="close-button center block">x</span>
+      </Link>
     </li>
   );
 }
