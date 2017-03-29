@@ -1,15 +1,12 @@
 @import '~react-select/scss/default';
 
-.req-filter-ui {
+.active-filter {
+  background-color: $color-gray-warm-light;
+  font-weight: bold;
 
-  .active-filter {
-    background-color: $color-gray-warm-light;
-    font-weight: bold;
-
-    .remove-filter-link {
-      background-color: $color-secondary-darkest; 
-      color: $color-white;
-      text-decoration: none;
-    }
+  .remove-filter-link {
+    background-color: $color-secondary-darkest; 
+    color: $color-white;
+    text-decoration: none;
   }
 }
