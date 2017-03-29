@@ -1,12 +1,20 @@
 @import '~react-select/scss/default';
 
 .active-filter {
+  align-items: center;
   background-color: $color-gray-warm-light;
   font-weight: bold;
 
   .remove-filter-link {
+    align-items: center;
     background-color: $color-secondary-darkest; 
     color: $color-white;
+    height: 100%;
+    right: 0;
     text-decoration: none;
+  }
+
+  .close-button {
+    width: 100%;
   }
 }
