@@ -1,19 +1,19 @@
 .usa-disclaimer {
-  background-color: #F1F1F1;
-  color: #424C58;
+  background-color: $color-gray-lightest;
+  color: $color-gray-dark;
   font-size: 12px;
-  line-height: 15px;
   padding: 0.25rem 1rem;
+  line-height: 15px;
 }
 
 .navbar {
+  background-color: $color-primary-darkest;
   height: 80px;
-  background-color: #122E51;
 }
 
 .navbar-title {
+  color: $color-white;
   font-size: 28px;
   font-weight: bold;
   line-height: 36px;
-  color: #FFFFFF;
 }
