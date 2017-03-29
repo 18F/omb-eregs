@@ -2,8 +2,8 @@ from enum import Enum, unique
 
 from django.db import models
 from django.utils.translation import ugettext_lazy
+from taggit.managers import TaggableManager
 from taggit.models import ItemBase, TagBase
-from taggit_autosuggest.managers import TaggableManager
 
 
 # Custom class for name-spacing
@@ -67,7 +67,7 @@ class Policy(models.Model):
     )
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
-    policy_status = models.CharField(max_length=32, blank=True)
+    policy_status = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
         text = self.title[:40]
@@ -80,17 +80,16 @@ class Requirement(models.Model):
     class Meta:
         ordering = ['req_id']
 
-    policy = models.ForeignKey(
-        Policy, on_delete=models.CASCADE, blank=True, null=True)
+    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
     req_id = models.CharField(max_length=16, unique=True)
     issuing_body = models.CharField(max_length=512)
-    policy_section = models.CharField(max_length=1024)
-    policy_sub_section = models.CharField(max_length=1024)
+    policy_section = models.CharField(max_length=1024, blank=True)
+    policy_sub_section = models.CharField(max_length=1024, blank=True)
     req_text = models.TextField()
-    verb = models.CharField(max_length=1024)
-    impacted_entity = models.CharField(max_length=8192)
-    req_deadline = models.CharField(max_length=512)
-    citation = models.CharField(max_length=1024)
+    verb = models.CharField(max_length=1024, blank=True)
+    impacted_entity = models.CharField(max_length=8192, blank=True)
+    req_deadline = models.CharField(max_length=512, blank=True)
+    citation = models.CharField(max_length=1024, blank=True)
     keywords = TaggableManager(
         through=KeywordConnect,
         verbose_name=ugettext_lazy('Keywords'),

@@ -109,7 +109,9 @@ def handle_transposed_reqstatus(row):
             dateutil_parser.parse(value)
         except ValueError:
             if warn:
-                logger.warning("Not a valid date: {0}".format(value))
+                req_id = row[find_key("req_ids", row)]
+                logger.warning(
+                    "Not a valid date: {0} ({1})".format(value, req_id))
             return False
 
         return True
@@ -222,13 +224,12 @@ class RowProcessor:
         self.last_id = "0.0"
 
     def validate_requirement_id(self, reqid):
-        if reqid in ('None', ''):
+        if reqid in ('', 'N/A', 'NA', 'None'):
             raise ValueError("Requirement without ID")
-        if "." not in reqid:
-            raise ValueError("Requirement without . separator")
+        reqid = reqid.replace(",", ".")  # Fix stray commas.
         reqid = self.fix_excel_decimals(reqid)
         if reqid in self.req_ids:
-            raise ValueError("Duplicated Req ID: {0}".format(reqid))
+            raise ValueError("Duplicated requirement ID: {0}".format(reqid))
         return reqid
 
     def fix_excel_decimals(self, reqid):
@@ -238,12 +239,22 @@ class RowProcessor:
         Since the rows are sequential (or should be!), we should be able to
         account for this.
         """
+        while reqid.endswith("."):  # Handle a hack around Excel problems
+            reqid = reqid.rstrip(".")
+        if "." not in reqid:
+            raise ValueError(
+                "Requirement ID without . separator: {0}".format(reqid))
         policy, requirement = reqid.split(".")
         last_policy, last_requirement = self.last_id.split(".")
         if policy == last_policy and last_requirement.endswith("9"):
             sequential = str(int(last_requirement) + 1)
             if sequential.rstrip("0") == requirement:
-                return "{0}.{1}".format(policy, sequential)
+                reqid = "{0}.{1}".format(policy, sequential)
+        # The most common Excel failure not addressed above is stripping
+        # zeroes, and we're going to live with possibly assigning 6.10 and
+        # 6.100 to the wrong ones of two "6.1" values in the data.
+        while reqid in self.req_ids:
+            reqid = "{0}0".format(reqid)
         return reqid
 
     def add(self, row):

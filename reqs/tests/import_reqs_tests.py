@@ -81,7 +81,7 @@ def test_imports_correctly2(csv_file2):
     call_command('import_reqs', str(csv_file2))
 
     reqs = list(Requirement.objects.order_by('req_id'))
-    assert len(reqs) == 2
+    assert len(reqs) == 3
     # Spot checks
     assert reqs[0].policy.policy_number == 1
     assert reqs[0].policy.omb_policy_id == ''
@@ -97,13 +97,14 @@ def test_imports_correctly2(csv_file2):
     assert set(reqs[0].keywords.names()) == {
         'Software', 'Software Development Lifecycle/Agile'}
 
-    assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
-    assert reqs[1].policy.policy_type == 'memorandum'
-    assert reqs[1].policy.sunset == date(2018, 9, 30)
-    assert reqs[1].req_id == '21.44'
-    assert reqs[1].verb == 'Will'
-    assert reqs[1].req_deadline == 'Within 30 days'
-    assert set(reqs[1].keywords.names()) == {
+    dcoi = reqs[-1]
+    assert dcoi.policy.title == 'Data Center Optimization Initiative (DCOI)'
+    assert dcoi.policy.policy_type == 'memorandum'
+    assert dcoi.policy.sunset == date(2018, 9, 30)
+    assert dcoi.req_id == '21.44'
+    assert dcoi.verb == 'Will'
+    assert dcoi.req_deadline == 'Within 30 days'
+    assert set(dcoi.keywords.names()) == {
         'Governance - Org Structure', 'Financial Systems',
         'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
 
@@ -170,6 +171,8 @@ def test_policy_from_row_duplicate():
 
 
 @pytest.mark.django_db
+@pytest.mark.skip(
+    reason="We now add zeroes to requirement IDs rather than rejecting them")
 def test_repeat_row():
     """If the same requirement id is present twice, raise an exception"""
     assert Requirement.objects.count() == 0
@@ -304,12 +307,12 @@ def test_keyword_normalization(blank_csv_file, keyword, expected):
 
 
 @pytest.mark.parametrize("test_input,expected", (
-    ({"reqStatus": "Active", "policySunset": "12/23/2010"},
-     {"reqStatus": "Active", "policySunset": "12/23/2010"}),
-    ({"reqStatus": "12/23/2010", "policySunset": "Active"},
-     {"reqStatus": "Active", "policySunset": "12/23/2010"}),
-    ({"reqStatus": "2010-12-23", "policySunset": "Active"},
-     {"reqStatus": "Active", "policySunset": "2010-12-23"}),
+    ({"reqStatus": "Active", "policySunset": "12/23/2010", "reqID": "1"},
+     {"reqStatus": "Active", "policySunset": "12/23/2010", "reqID": "1"}),
+    ({"reqStatus": "12/23/2010", "policySunset": "Active", "reqID": "1"},
+     {"reqStatus": "Active", "policySunset": "12/23/2010", "reqID": "1"}),
+    ({"reqStatus": "2010-12-23", "policySunset": "Active", "reqID": "1"},
+     {"reqStatus": "Active", "policySunset": "2010-12-23", "reqID": "1"}),
 ), ids=repr)
 def test_handle_transposed_reqstatus(test_input, expected):
     assert import_reqs.handle_transposed_reqstatus(test_input) == expected
@@ -324,6 +327,11 @@ def test_handle_transposed_reqstatus(test_input, expected):
     (["1.09", "1.2"], ["1.09", "1.2"]),
     (["1.09", "2.1"], ["1.09", "2.1"]),
     (["1.234569", "1.23"], ["1.23", "1.234569"]),  # Django order_by sort issue
+    (["1,09", "2.1"], ["1.09", "2.1"]),
+    (["1,59", "1.6"], ["1.59", "1.60"]),
+    (["1.59.", "1.60."], ["1.59", "1.60"]),
+    (["1.59...", "1.6"], ["1.59", "1.60"]),
+    (["6.1", "6.1"], ["6.1", "6.10"]),
 ), ids=repr)
 def test_fix_excel_decimals(blank_csv_file, ids, expected):
     """
@@ -332,8 +340,8 @@ def test_fix_excel_decimals(blank_csv_file, ids, expected):
     """
     csv_str = "\n".join([
         SAMPLE_CSV2[0],
-        SAMPLE_CSV2[1].replace("1.15", ids[0]),
-        SAMPLE_CSV2[2].replace("21.44", ids[1]),
+        SAMPLE_CSV2[1].replace("1.15", '"{0}"'.format(ids[0])),
+        SAMPLE_CSV2[2].replace("21.44", '"{0}"'.format(ids[1])),
     ])
     blank_csv_file.write(csv_str)
 
@@ -346,7 +354,8 @@ def test_fix_excel_decimals(blank_csv_file, ids, expected):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("requirement_id", ("", "0", "100", "1,000"), ids=repr)
+@pytest.mark.parametrize("requirement_id",
+                         ("", "0", "100", "N/A", "NA", "None"), ids=repr)
 def test_bad_requirement_ids_raise_value_error(requirement_id):
     processor = import_reqs.RowProcessor()
     processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})

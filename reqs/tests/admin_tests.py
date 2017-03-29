@@ -1,5 +1,8 @@
+import pytest
+from django.http import QueryDict
 from model_mommy import mommy
 
+from reqs.admin import RequirementForm
 from reqs.models import Keyword, Policy, Requirement
 
 
@@ -64,3 +67,48 @@ def test_reqs_in_policy(admin_client):
     assert req1.req_id not in result
     assert req2.req_id not in result
     assert req3.req_id not in result
+
+
+def req_query_str():
+    """Create a requirement and generate the query string associated with
+    it"""
+    req = mommy.prepare(Requirement, policy=mommy.make(Policy))
+    fields = {f.name: getattr(req, f.name) for f in req._meta.fields}
+    fields['policy'] = req.policy_id
+    return '&'.join('{0}={1}'.format(k, v) for k, v in fields.items())
+
+
+@pytest.mark.parametrize('tags', [
+    [],
+    ["one"],
+    ["has space"],
+    ["has, commas", "more things"],
+    ["a", "b", "c", "d"],
+])
+@pytest.mark.django_db
+def test_taggit_widget(tags):
+    query_str = req_query_str()
+    for tag in tags:
+        query_str += '&keywords=' + tag
+    data = QueryDict(query_str)
+    form = RequirementForm(data)
+    req = form.save()
+
+    assert list(sorted(req.keywords.names())) == list(sorted(tags))
+
+
+@pytest.mark.parametrize('tag, expected', [
+    ('This "Has" Quotes', 'This “Has” Quotes'),
+    ('This+"Has"+Quotes', 'This “Has” Quotes'),
+    ('This+Has+No+Quotes', 'This Has No Quotes'),
+    ('This+Has+One"+Quote', 'This Has One Quote'),
+])
+@pytest.mark.django_db
+def test_taggit_widget_doublequotes(tag, expected):
+    query_str = req_query_str()
+    data = QueryDict(query_str + '&keywords={0}'.format(tag))
+
+    form = RequirementForm(data)
+    req = form.save()
+
+    assert list(req.keywords.names()) == [expected]

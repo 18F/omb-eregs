@@ -1,9 +1,8 @@
-import axios from 'axios';
 import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 
-import { apiUrl } from '../globals';
+import { theApi } from '../globals';
 import Pagers from './pagers';
 
 function Policy({ policy }) {
@@ -49,9 +48,10 @@ Policies.propTypes = {
   location: React.PropTypes.shape({}),
 };
 
+const fetchPolicies = ({ location: { query } }) =>
+  theApi().policies.fetch(query);
+
 export default resolve(
-  'data',
-  ({ location: { query } }) =>
-    axios.get(`${apiUrl()}policies/`, { params: query }).then(({ data }) => data),
+  'data', fetchPolicies,
 )(Policies);
 
