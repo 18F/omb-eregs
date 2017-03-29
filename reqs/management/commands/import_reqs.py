@@ -240,7 +240,7 @@ class RowProcessor:
         account for this.
         """
         while reqid.endswith("."):  # Handle a hack around Excel problems
-            reqid = reqid[:-1]
+            reqid = reqid.rstrip(".")
         if "." not in reqid:
             raise ValueError(
                 "Requirement ID without . separator: {0}".format(reqid))
