@@ -1,21 +1,21 @@
 import React from 'react';
 
 
-const navbar = () => (
+const Navbar = () => (
   <div className="overflow-auto">
-    <div className="flex table navbar">
+    <div className="flex items-center navbar">
       <img
-        className="pr1 table-cell align-middle"
+        className="pl2 pr1"
         alt="US flag"
-        width="20"
-        height="13"
-        src="/static/img/usa-flag.png"
+        width="50"
+        height="50"
+        src="/static/img/omb-logo.png"
       />
-      <div className="table-cell align-middle navbar-title">
+      <div className="navbar-title">
           OMB Policy
       </div>
     </div>
   </div>
 );
 
-export default navbar;
+export default Navbar;
