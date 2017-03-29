@@ -8,7 +8,7 @@ import { Async } from 'react-select';
 
 import { apiParam, redirectQuery, search } from './lookup-search';
 
-export default class SearchAutocomplete extends React.PureComponent {
+export default class SearchAutocomplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = { autocomplete: false };
