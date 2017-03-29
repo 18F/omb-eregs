@@ -15,6 +15,7 @@ django==1.10.5
 djangorestframework==3.5.4
 furl==0.5.7               # via cfenv
 gunicorn==19.6.0
+newrelic==2.82.0.62
 orderedmultidict==0.7.11  # via furl
 psycopg2==2.6.2
 python-dateutil==2.6.0

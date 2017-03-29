@@ -8,6 +8,7 @@ django-taggit-serializer
 djangorestframework
 dj-database-url
 gunicorn
+newrelic
 psycopg2
 python-dateutil
 requests
