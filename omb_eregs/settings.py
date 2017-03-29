@@ -38,7 +38,8 @@ ALLOWED_HOSTS = env.uris
 INSTALLED_APPS = (
     'reqs.apps.ReqsConfig',
     'taggit',
-    'taggit_autosuggest',
+    'dal',
+    'dal_select2',
     'corsheaders',
     'rest_framework',
     'taggit_serializer',
