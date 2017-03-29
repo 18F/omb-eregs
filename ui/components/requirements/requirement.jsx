@@ -3,10 +3,10 @@ import React from 'react';
 export default function Requirement({ requirement }) {
   return (
     <div className="req border rounded p2 mb2 clearfix max-width-3">
-      <div className="req-id col col-1 mb2">
+      <div className="req-id col col-2 mb2">
         {requirement.req_id}
       </div>
-      <div className="req-text col col-11">
+      <div className="req-text col col-10 mxn1">
         { requirement.req_text.split('\n').map(line => (
           <span key={line} className="req-text-line mb1">{ line }<br /></span>
           ))}
