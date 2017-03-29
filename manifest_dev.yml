@@ -8,15 +8,18 @@ applications:
     buildpack: python_buildpack
     services:
       - database  # aws-rds medium-psql
-      - config    # user-provided service w/ DJANGO_SECRET_KEY defined
+      - config    # user-provided service w/ DJANGO_SECRET_KEY and NEW_RELIC_LICENSE_KEY
     command: ./devops/prod_api.sh
     host: omb-eregs-api-demo
+    env:
+      NEW_RELIC_APP_NAME: 'OMB Demo API/Admin'
   - name: ui
     buildpack: nodejs_buildpack
     command: node ui-dist/server.js
     host: omb-eregs-demo
     services:
-      - config    # user-provided service w/ UI_BASIC_AUTH defined
+      - config    # user-provided service w/ UI_BASIC_AUTH and NEW_RELIC_LICENSE_KEY
     env:
       INTERNAL_API: https://omb-eregs-api-demo.app.cloud.gov/
       PUBLIC_API: https://omb-eregs-api-demo.app.cloud.gov/
+      NEW_RELIC_APP_NAME: 'OMB Demo UI'
