@@ -80,17 +80,16 @@ class Requirement(models.Model):
     class Meta:
         ordering = ['req_id']
 
-    policy = models.ForeignKey(
-        Policy, on_delete=models.CASCADE, blank=True, null=True)
+    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
     req_id = models.CharField(max_length=16, unique=True)
     issuing_body = models.CharField(max_length=512)
-    policy_section = models.CharField(max_length=1024)
-    policy_sub_section = models.CharField(max_length=1024)
+    policy_section = models.CharField(max_length=1024, blank=True)
+    policy_sub_section = models.CharField(max_length=1024, blank=True)
     req_text = models.TextField()
-    verb = models.CharField(max_length=1024)
-    impacted_entity = models.CharField(max_length=8192)
-    req_deadline = models.CharField(max_length=512)
-    citation = models.CharField(max_length=1024)
+    verb = models.CharField(max_length=1024, blank=True)
+    impacted_entity = models.CharField(max_length=8192, blank=True)
+    req_deadline = models.CharField(max_length=512, blank=True)
+    citation = models.CharField(max_length=1024, blank=True)
     keywords = TaggableManager(
         through=KeywordConnect,
         verbose_name=ugettext_lazy('Keywords'),
