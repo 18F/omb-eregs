@@ -18,11 +18,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from reqs.router import router
+from reqs.views import KeywordAdminAutocomplete
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^admin/ajax/keywords/$', KeywordAdminAutocomplete.as_view()),
     url(r'^admin/', admin.site.urls),
-    url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
 ]
 
 if settings.DEBUG:
