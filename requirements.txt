@@ -6,15 +6,16 @@
 #
 cfenv==0.5.2
 dj-database-url==0.4.2
+django-autocomplete-light==3.2.1
 django-cors-headers==2.0.2
 django-filter==1.0.1
-django-taggit-autosuggest==0.3.0
 django-taggit-serializer==0.1.5
 django-taggit==0.22.0
 django==1.10.5
 djangorestframework==3.5.4
 furl==0.5.7               # via cfenv
 gunicorn==19.6.0
+newrelic==2.82.0.62
 orderedmultidict==0.7.11  # via furl
 psycopg2==2.6.2
 python-dateutil==2.6.0
