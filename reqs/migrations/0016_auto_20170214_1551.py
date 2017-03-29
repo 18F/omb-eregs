@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import taggit_autosuggest.managers
+import taggit.managers
 
 
 class Migration(migrations.Migration):
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='requirement',
             name='keywords',
-            field=taggit_autosuggest.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='reqs.KeywordConnect', to='reqs.Keyword', verbose_name='Keywords'),
+            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='reqs.KeywordConnect', to='reqs.Keyword', verbose_name='Keywords'),
         ),
         migrations.AlterField(
             model_name='requirement',

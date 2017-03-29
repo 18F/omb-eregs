@@ -1,12 +1,14 @@
-let staticApiUrl = null;
+import makeApi from './api';
+
+let api = null;
 
 export function setApiUrl(value) {
-  staticApiUrl = value;
+  api = makeApi(value);
 }
 
-export function apiUrl() {
-  if (staticApiUrl) {
-    return staticApiUrl;
+export function theApi() {
+  if (api) {
+    return api;
   }
   throw new Error('API Url not set');
 }

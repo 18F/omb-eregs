@@ -2,8 +2,8 @@ from enum import Enum, unique
 
 from django.db import models
 from django.utils.translation import ugettext_lazy
+from taggit.managers import TaggableManager
 from taggit.models import ItemBase, TagBase
-from taggit_autosuggest.managers import TaggableManager
 
 
 # Custom class for name-spacing
@@ -67,7 +67,7 @@ class Policy(models.Model):
     )
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
-    policy_status = models.CharField(max_length=32, blank=True)
+    policy_status = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
         text = self.title[:40]

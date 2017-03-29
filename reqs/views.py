@@ -1,3 +1,4 @@
+from dal.autocomplete import Select2QuerySetView
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
@@ -14,6 +15,12 @@ class KeywordViewSet(viewsets.ModelViewSet):
         'id': ('exact', 'in'),
         'name': ('exact', 'icontains', 'in')
     }
+
+
+class KeywordAdminAutocomplete(Select2QuerySetView):
+    """Very similar to the KeywordViewSet, except in a format the Select2
+    widget expects"""
+    model = Keyword
 
 
 class PolicyViewSet(viewsets.ModelViewSet):
