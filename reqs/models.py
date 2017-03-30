@@ -73,6 +73,9 @@ class Policy(models.Model):
         text = self.title[:40]
         if len(self.title) > 40:
             text += '...'
+        if self.omb_policy_id:
+            return '{0}: ({1}) {2}'.format(
+                self.policy_number, self.omb_policy_id, text)
         return '{0}: {1}'.format(self.policy_number, text)
 
 
