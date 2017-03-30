@@ -1,11 +1,9 @@
 from dal_select2_taggit.widgets import TaggitSelect2
 from django import forms
 from django.contrib import admin
+from reversion.admin import VersionAdmin
 
 from reqs.models import Keyword, Policy, Requirement
-
-admin.site.register(Policy)
-admin.site.register(Keyword)
 
 
 def handle_quotation_marks(value):
@@ -39,5 +37,15 @@ class RequirementForm(forms.ModelForm):
 
 
 @admin.register(Requirement)
-class RequirementAdmin(admin.ModelAdmin):
+class RequirementAdmin(VersionAdmin):
     form = RequirementForm
+
+
+@admin.register(Policy)
+class PolicyAdmin(VersionAdmin):
+    pass
+
+
+@admin.register(Keyword)
+class KeywordAdmin(VersionAdmin):
+    pass
