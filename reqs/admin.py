@@ -1,11 +1,14 @@
 from dal_select2_taggit.widgets import TaggitSelect2
 from django import forms
 from django.contrib import admin
+from taggit.models import Tag
 
 from reqs.models import Keyword, Policy, Requirement
 
 admin.site.register(Policy)
 admin.site.register(Keyword)
+# We have our own tag type; best to hide the taggit Tags from end users
+admin.site.unregister(Tag)
 
 
 def handle_quotation_marks(value):
