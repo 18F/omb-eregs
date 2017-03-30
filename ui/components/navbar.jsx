@@ -11,9 +11,9 @@ const Navbar = () => (
         height="50"
         src="/static/img/omb-logo.png"
       />
-      <div className="navbar-title">
+      <h1 className="navbar-title">
           OMB Policy
-      </div>
+      </h1>
     </div>
   </div>
 );

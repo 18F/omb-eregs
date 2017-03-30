@@ -16,9 +16,22 @@ typography.scss contains both global and application specific typography */
   font-family: "Source Sans Pro", sans-serif;
 }
 
+@mixin font-source-sans-pro-semibold() {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 500;
+}
+
 body {
   @include font-source-sans-pro();
   color: $color-gray-dark;
+  font-size: 0.938em;
+  line-height: 1.25em;
 }
 
+h1 {
+  font-size: 1.750em;
+}
 
+h2 {
+  font-size: 1.125em;
+}

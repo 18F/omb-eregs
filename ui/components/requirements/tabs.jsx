@@ -51,7 +51,7 @@ export default function Tabs({ router }) {
   return (
     <div>
       <span className="mr4">Organize by</span>
-      <ul className="list-reset inline-block">
+      <ul className="organize-tabs list-reset inline-block">
         { tabs.map(tab => <Tab {...tab} />) }
       </ul>
     </div>

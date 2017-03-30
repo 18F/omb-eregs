@@ -2,12 +2,11 @@
   border-color: $color-gray-light;
 
   .req-id {
-   @include font-merriweather();
-   color: $color-gray;
+    @include font-source-sans-pro-semibold();
+    color: $color-gray;
   }
 
   .req-text {
-    @include font-merriweather-light();
     color: $color-gray-dark;
   }
 
@@ -17,4 +16,8 @@
     color: $color-gray;
     font-size: .8em;
   }
+}
+
+.organize-tabs {
+  font-size: 1.125em;
 }
