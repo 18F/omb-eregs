@@ -17,6 +17,19 @@ export default function Requirement({ requirement }) {
           <div className="sunset-date">
             Sunset date by { requirement.policy.sunset || 'none' }
           </div>
+          <div className="topics">
+            <ul className="topics-list list-reset">
+              <li className="inline">Topics: </li>
+              { requirement.keywords.map((keyword, index, keywords) => (
+                <li className="inline">
+                  { keyword }
+                  { index !== keywords.length - 1 &&
+                  <span>, </span>
+                  }
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -25,6 +38,7 @@ export default function Requirement({ requirement }) {
 
 Requirement.defaultProps = {
   requirement: {
+    keywords: [],
     policy: {},
     req_text: '',
     req_id: '',
@@ -33,6 +47,7 @@ Requirement.defaultProps = {
 
 Requirement.propTypes = {
   requirement: React.PropTypes.shape({
+    keywords: React.PropTypes.array,
     policy: React.PropTypes.shape({
       sunset: React.PropTypes.string,
     }),
