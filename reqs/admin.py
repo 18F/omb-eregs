@@ -1,11 +1,22 @@
 from dal_select2_taggit.widgets import TaggitSelect2
 from django import forms
 from django.contrib import admin
+from taggit.models import Tag
 
 from reqs.models import Keyword, Policy, Requirement
 
-admin.site.register(Policy)
-admin.site.register(Keyword)
+# We have our own tag type; best to hide the taggit Tags from end users
+admin.site.unregister(Tag)
+
+
+@admin.register(Policy)
+class PolicyAdmin(admin.ModelAdmin):
+    search_fields = ['title', 'omb_policy_id']
+
+
+@admin.register(Keyword)
+class KeywordAdmin(admin.ModelAdmin):
+    search_fields = ['name']
 
 
 def handle_quotation_marks(value):
@@ -41,3 +52,4 @@ class RequirementForm(forms.ModelForm):
 @admin.register(Requirement)
 class RequirementAdmin(admin.ModelAdmin):
     form = RequirementForm
+    search_fields = ['req_id', 'req_text']
