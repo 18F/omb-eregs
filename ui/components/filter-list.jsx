@@ -56,8 +56,10 @@ export const searchParam = {
 export default function FilterList({ existingFilters, lookup, router }) {
   const filterIds = existingFilters.map(existing => existing.id);
   return (
-    <div className="req-filter-ui">
-      <h3>{lookup.charAt(0).toUpperCase() + lookup.substr(1)}</h3>
+    <div className="req-filter-ui my2">
+      <div className="filter-section-header bold">
+        {lookup.charAt(0).toUpperCase() + lookup.substr(1)}
+      </div>
       <ol className="list-reset">
         { existingFilters.map(filter =>
           <Filter

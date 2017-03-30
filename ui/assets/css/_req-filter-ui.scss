@@ -3,7 +3,8 @@
 .active-filter {
   align-items: center;
   background-color: $color-gray-warm-light;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 0.875em;
 
   .remove-filter-link {
     align-items: center;
@@ -18,3 +19,12 @@
     width: 100%;
   }
 }
+
+.req-filter-ui {
+
+  .select {
+    border-color: $color-gray-light;
+    color: $color-gray-dark;
+  }
+}
+
