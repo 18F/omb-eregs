@@ -1,9 +1,12 @@
 import React from 'react';
+import Disclaimer from './disclaimer';
+import Navbar from './navbar';
 
 function App(props) {
   return (
     <div>
-      <h1>OMB Policy</h1>
+      <Disclaimer />
+      <Navbar />
       {props.children}
     </div>
   );

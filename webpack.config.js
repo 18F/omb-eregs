@@ -29,6 +29,7 @@ module.exports = [
       new ExtractTextPlugin('styles.css'),
       new CopyWebpackPlugin([
           { from: 'ui/assets/font/*', to: 'font', flatten: true },
+          { from: 'ui/assets/img/*', to: 'img', flatten: true },
       ]),
     ],
   },
