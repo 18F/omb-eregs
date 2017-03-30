@@ -5,11 +5,15 @@ main.scss imports all supporting scss files
 and includes any non-semantic helper classes
 */
 
+// Third Party
 @import '~basscss-sass/scss/basscss';
 
+// App-wide
 @import 'colors';
+@import 'layout';
 @import 'fonts';
 @import 'typography';
+@import 'header';
 
 // Components
 @import 'requirements';
