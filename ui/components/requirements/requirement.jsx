@@ -38,7 +38,6 @@ export default function Requirement({ requirement }) {
 
 Requirement.defaultProps = {
   requirement: {
-    keywords: [],
     policy: {},
     req_text: '',
     req_id: '',
@@ -47,7 +46,6 @@ Requirement.defaultProps = {
 
 Requirement.propTypes = {
   requirement: React.PropTypes.shape({
-    keywords: React.PropTypes.array,
     policy: React.PropTypes.shape({
       sunset: React.PropTypes.string,
     }),
