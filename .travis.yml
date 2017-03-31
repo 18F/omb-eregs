@@ -25,6 +25,7 @@ before_deploy:
   - cf install-plugin -f ~/autopilot-linux
 deploy:
   provider: script
-  script: devops/deploy.sh
+  script: devops/deploy.sh dev
+  skip_cleanup: true
   on:
     branch: master
