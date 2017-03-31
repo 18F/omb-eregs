@@ -20,7 +20,7 @@ export default function Requirement({ requirement }) {
           <div className="topics">
             <span>Topics: </span>
             <ul className="topics-list list-reset inline">
-              { requirement.keywords.map((keyword, index, keywords) => (
+              { requirement.keywords.map(keyword => (
                 <li key={keyword} className="inline">
                   { keyword }
                 </li>
