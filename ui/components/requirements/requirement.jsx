@@ -18,14 +18,11 @@ export default function Requirement({ requirement }) {
             Sunset date by { requirement.policy.sunset || 'none' }
           </div>
           <div className="topics">
-            <ul className="topics-list list-reset">
-              <li className="inline">Topics: </li>
+            <span>Topics: </span>
+            <ul className="topics-list list-reset inline">
               { requirement.keywords.map((keyword, index, keywords) => (
-                <li className="inline">
+                <li key={keyword} className="inline">
                   { keyword }
-                  { index !== keywords.length - 1 &&
-                  <span>, </span>
-                  }
                 </li>
               ))}
             </ul>

@@ -17,6 +17,16 @@
     color: $color-gray;
     font-size: .8em;
   }
+
+  .topics {
+    li:after {
+      content: ', ';
+    }
+
+    li:last-child:after {
+      content: '';
+    }
+  }
 }
 
 .organize-tabs {
