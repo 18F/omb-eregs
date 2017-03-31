@@ -17,6 +17,16 @@ export default function Requirement({ requirement }) {
           <div className="sunset-date">
             Sunset date by { requirement.policy.sunset || 'none' }
           </div>
+          <div className="topics">
+            <span>Topics: </span>
+            <ul className="topics-list list-reset inline">
+              { requirement.keywords.map(keyword => (
+                <li key={keyword} className="inline">
+                  { keyword }
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
