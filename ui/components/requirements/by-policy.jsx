@@ -12,11 +12,11 @@ export function Group({ group }) {
 
   const policy = group[0].policy;
   return (
-    <div className="border mb2 p2 rounded">
+    <div className="gray-border border mb2 p2 rounded">
       <h4>{policy.title}</h4>
-      <ol className="list-reset border-top">
+      <ol className="gray-border list-reset border-top">
         { group.map(req =>
-          <li key={req.req_id} className="border-bottom">
+          <li key={req.req_id} className="gray-border border-bottom">
             <Requirement requirement={req} />
           </li>) }
       </ol>
