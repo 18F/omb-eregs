@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { cleanParams, LookupSearch, redirectIfMatched, redirectQuery } from '../../components/lookup-search';
+import { cleanParams, LookupSearch, redirectIfMatched, redirectQuery, search } from '../../components/lookup-search';
 import { theApi } from '../../globals';
 
 jest.mock('../../globals', () => ({ theApi: jest.fn() }));
@@ -151,6 +151,33 @@ describe('<LookupSearch />', () => {
     expect(link.prop('to')).toEqual({
       pathname: '/some/path/here/',
       query: { some: 'field', page: '4' },
+    });
+  });
+});
+
+
+describe('search()', () => {
+  it('uses the correct parameters for keywords', () => {
+    const fetch = jest.fn();
+    theApi.mockImplementationOnce(() => ({
+      keywords: { fetch },
+    }));
+
+    search('keywords', 'some query here');
+    expect(fetch).toHaveBeenCalledWith({
+      name__icontains: 'some query here', page: '1',
+    });
+  });
+
+  it('uses the correct parameters for policies', () => {
+    const fetch = jest.fn();
+    theApi.mockImplementationOnce(() => ({
+      policies: { fetch },
+    }));
+
+    search('policies', 'some query here', '3');
+    expect(fetch).toHaveBeenCalledWith({
+      title__icontains: 'some query here', page: '3',
     });
   });
 });

@@ -15,16 +15,15 @@ script:
 - docker-compose run --rm manage.py migrate --noinput
 - docker-compose run --rm manage.py fetch_csv
 - docker-compose run --rm manage.py import_reqs data.csv
+before_deploy:
+  - export $PATH=$HOME:$PATH
+  - travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
+  - travis_retry wget "https://github.com/contraband/autopilot/releases/download/0.0.2/autopilot-linux"
+  - mv cf $HOME
+  - mv autopilot-linux $HOME
+  - cf install-plugin -f ~/autopilot-linux
 deploy:
-  edge: true
-  provider: cloudfoundry
-  api: https://api.fr.cloud.gov
-  organization: omb-eregs
-  space: dev
-  manifest: manifest_dev.yml
+  provider: script
+  script: devops/deploy.sh
   on:
     branch: master
-  username:
-    secure: OT5p4N2siCxRNJ/FY20bB0fou9jjyUDIbn3LCxVaYT6kzj2SxpI0W+Ccbg4TjZzEwA62ZpSR3U8w9oy7NOjJe9yeRPqPBOBSe1gaLbf3rvDdAXQ1W9GOvO6RixyzI16l+3vr6O/8wJL/iDk0CU2Bq5VYloYmoXZLuMSDptwxfBXy9Oni+jBySB6HkdAiYwF3yaciC38/fdCz5A0FrYDNAg5M8QvQkuvh2AL3U78z5X8reCvWFWQlhK/pWyyUkNSbDprhSvfrI/XorY4pPxGWEffowhoZBfhJfcqXN7RO+Q7LG3xJbZW//BEsmkNvBzyDw7Colr26Y9RuxRrc1AFSqmoKDwDLNxZW6WilmJVofbSb3GnSrsiXIcbSuCwh1ykpPcE9e+N2tf2VXEHwUIxUjQZ3LAzrSJcU8wwLgypihCE3k0rM+fb32vG/oCdwSeDG1DPrP8/YWB7dy4teLPUno+rtekGlNXQhNyh/mMPYtS4CfmbJKPevePXoohsJnEuINxa0d8x+j0aciFntF5OF2uszEVyi291cpfJJlhHdbJicVetPdUmESJVxtJr/n5NEvf0ltAADJE/6zWdXHDkM1IzuBdITZV0ulNIIO7q6urvzUKhrHZw9Bt0OM0xDwsHlhhlu/XTC43LBczzNw7ZH/fYjc9lAE+6o+62jUj5opXs=
-  password:
-    secure: Jj7Kz9Jfub3I05C7onkJoxWFrdjbZqb0NCU0TlxGNpK03JB4WzuH2FaNETQH3YgNzEzEEVv9TSTcMoWVS035sS1zxsrHhKil1pzpGbvxNqyal1Mss9klgZKMR7lyFDcI/a1AH9qgnzOxjlMWlVk6j/ToduulVV3Govywqd1YwBIFHLDfCWvkRUoM5QJj7MuJ89zLjk/WCx6BKJEn36erYi0pAVXtZ9kQNJWJjCh/nrKYwZ9H20X7G/4xwmVPhPFgXFoL50rVZg9ynacEcVe29LpJV6Go0adzllL+q0yjaPv3z/q7Ih3wbdo488mC3YyVH8Y8V4oZZN5a4V2WFlOnfNiZeU/FzpKT2Dhj3lwDBVDzW8AR8aOprVMfmuMUo0DmllpQBRjVKXGxQfxVpDdFyNmtGt5xLlBt/ZZW7krChKmmn9Uc4nKlgnmQFA0sBW1U7GMaz3CZNYrJYgEu871OJCWBI9wQ2WRH0nC9AJQnXvmEQQlEbij8AYITqu8ySrG9s8kx+EwNk7Mx/4AcDMDZsmlLigZV2eyYCo5ln1fioc7hBCvks6akZW0ixGqiTUFBkeDTuG465LOCXmBXGvHtrfdmzRNXEnle//yZmi0UOyv1AuVTciKW2c5loD+fRE6nCpx8prnpHKvLq/3boG8RAHMXhpNQqzgYySiK2REr0x8=
