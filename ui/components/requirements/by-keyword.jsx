@@ -10,7 +10,7 @@ function ByKeyword({ pagedReqs, location }) {
     <div>
       <ul className="list-reset">
         { pagedReqs.results.map(requirement =>
-          <li key={requirement.req_id} className="border rounded mb2">
+          <li key={requirement.req_id} className="gray-border border rounded mb2">
             <Requirement requirement={requirement} />
           </li>) }
       </ul>
