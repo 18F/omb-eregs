@@ -16,7 +16,7 @@ script:
 - docker-compose run --rm manage.py fetch_csv
 - docker-compose run --rm manage.py import_reqs data.csv
 before_deploy:
-  - export $PATH=$HOME:$PATH
+  - export PATH=$HOME:$PATH
   - travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
   - travis_retry wget "https://github.com/contraband/autopilot/releases/download/0.0.2/autopilot-linux"
   - mv cf $HOME
