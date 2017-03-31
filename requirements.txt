@@ -9,6 +9,7 @@ dj-database-url==0.4.2
 django-autocomplete-light==3.2.1
 django-cors-headers==2.0.2
 django-filter==1.0.1
+django-reversion==2.0.8
 django-taggit-serializer==0.1.5
 django-taggit==0.22.0
 django==1.10.5

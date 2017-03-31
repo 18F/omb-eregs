@@ -173,6 +173,31 @@ docker-compose run --rm webpack       # lints (and builds)
 
 See our `.travis.yml` test for a list of the exact commands we run in CI.
 
+## Deploying
+
+We deploy to our dev/demo environment via Travis after every merge to master.
+To deploy manually (or to prod), you will need to install the `cf` command
+line tool and an associated plugin:
+
+1. [Install/setup `cf` for
+    cloud.gov](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line)
+    (our Org name is `omb-eregs`)
+1. [Install the autopilot
+    plugin](https://github.com/contraband/autopilot#installation)
+
+Then, make sure you've built the frontend:
+
+```sh
+docker-compose run --rm npm install
+docker-compose run --rm webpack
+```
+
+And deploy!
+
+```sh
+./devops/deploy.sh dev  # replace "dev" with "prod" if desired
+```
+
 ## Documentation and contributing
 
 See the [eRegulations overview](https://eregs.github.io/) for context about eRegulations, which is a multi-agency project.

@@ -1,6 +1,7 @@
 from dal_select2_taggit.widgets import TaggitSelect2
 from django import forms
 from django.contrib import admin
+from reversion.admin import VersionAdmin
 from taggit.models import Tag
 
 from reqs.models import Keyword, Policy, Requirement
@@ -10,12 +11,12 @@ admin.site.unregister(Tag)
 
 
 @admin.register(Policy)
-class PolicyAdmin(admin.ModelAdmin):
+class PolicyAdmin(VersionAdmin):
     search_fields = ['title', 'omb_policy_id']
 
 
 @admin.register(Keyword)
-class KeywordAdmin(admin.ModelAdmin):
+class KeywordAdmin(VersionAdmin):
     search_fields = ['name']
 
 
@@ -50,6 +51,6 @@ class RequirementForm(forms.ModelForm):
 
 
 @admin.register(Requirement)
-class RequirementAdmin(admin.ModelAdmin):
+class RequirementAdmin(VersionAdmin):
     form = RequirementForm
     search_fields = ['req_id', 'req_text']

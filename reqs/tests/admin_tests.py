@@ -1,6 +1,8 @@
 import pytest
+import reversion
 from django.http import QueryDict
 from model_mommy import mommy
+from reversion.models import Version
 
 from reqs.admin import RequirementForm
 from reqs.models import Keyword, Policy, Requirement
@@ -112,3 +114,30 @@ def test_taggit_widget_doublequotes(tag, expected):
     req = form.save()
 
     assert list(req.keywords.names()) == [expected]
+
+
+@pytest.mark.django_db
+def test_reversion(admin_client):
+    with reversion.create_revision():
+        key = mommy.make(Keyword, name="key1")
+
+    key_from_db = Keyword.objects.get(pk=key.pk)
+    assert key.name == key_from_db.name
+
+    with reversion.create_revision():
+        key_from_db.name = "new name"
+        key_from_db.save()
+
+    key.refresh_from_db()
+    assert key.name == "new name"
+    assert key_from_db.name == "new name"
+
+    versions = Version.objects.get_for_model(Keyword)
+    assert len(versions) == 2
+    assert versions[1].field_dict["name"] == "key1"
+    assert versions[0].field_dict["name"] == "new name"
+
+    versions[1].revision.revert()
+
+    key.refresh_from_db()
+    assert key.name == "key1"
