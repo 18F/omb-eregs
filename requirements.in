@@ -3,6 +3,7 @@ django>=1.10,<1.11
 django-autocomplete-light
 django-cors-headers
 django-filter
+django-reversion
 django-taggit
 django-taggit-serializer
 djangorestframework
