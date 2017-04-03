@@ -3,29 +3,33 @@ sudo: required
 services:
 - docker
 script:
-# JS tests
 - docker-compose run --rm npm install --quiet
 - docker-compose run --rm npm test
-# Smoke test and lint
 - docker-compose run --rm webpack
-# Python tests and linting
 - docker-compose run --rm py.test
 - docker-compose run --rm flake8
-# Smoke test for loading data
 - docker-compose run --rm manage.py migrate --noinput
 - docker-compose run --rm manage.py fetch_csv
 - docker-compose run --rm manage.py import_reqs data.csv
 before_deploy:
-  - export PATH=$HOME:$PATH
-  - travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
-  - travis_retry wget "https://github.com/contraband/autopilot/releases/download/0.0.3/autopilot-linux"
-  - chmod a+x autopilot-linux
-  - mv cf $HOME
-  - mv autopilot-linux $HOME
-  - cf install-plugin -f ~/autopilot-linux
+- export PATH=$HOME:$PATH
+- travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github"
+  | tar -zx
+- travis_retry wget "https://github.com/contraband/autopilot/releases/download/0.0.3/autopilot-linux"
+- chmod a+x autopilot-linux
+- mv cf $HOME
+- mv autopilot-linux $HOME
+- cf install-plugin -f ~/autopilot-linux
 deploy:
   provider: script
   script: devops/deploy.sh dev
   skip_cleanup: true
   on:
     branch: master
+after_success:
+  - npm install -g codeclimate-test-reporter
+  - codeclimate-test-reporter < lcov.info
+addons:
+  code_climate:
+    repo_token:
+      secure: XRFGEPqhZCLXw1mflsRvHmH1lbfW739nbd6dtiGxK6aZ+qWJV9XmULCDlpJn7tqbYj+MniGNd9rFz/NQOLGWo+ReDzh5gzMNpTvPRSbq5pGRA5XPFD6zfq70fa55p3dTJCDUkhMzHOjSBAn7kPPW8Ul+SJH+3KVtyWrgCRNjvBNHRnDlM81jkPFr+PMs4iGcGE1ltWV9TjYOnAhjsh28KtssngL5UCen4Z6Gcw53NeestDp55HLrptPf5mK67J9lm8fhQDjRN2HE3Nbh9yCUmIgyrbABatRzdvCq3qRD7Jr0GVUatBfPpbHTarqJzGfZu679QvVcgsqqTykGGx/s+Hsklp38D36b4cYmmhmZ4XhuqQmKPQ8Sge21GkixmEjDCjHz/vT1jOQM+v7VHPbJAoHv4u6K70KFRBZP9wPe+VVzARS2DTnoOh1bp36vMt+LEJ9C0GPHaHMp8egcB960APP3HINILoC7acO6kBSK380vARpOndWw9tvS0U4r7QAf0H0D8Omn+j6KjYcN++r+qldx1GPzrUKEXbf43cf4bQKGFvb7qk2Az8anT08gGn6q5kN7NNvIaFLSPl5AjJ9r2JIuzxykTpgEJi23Y0DfwhPB/lYQdCde+NMpHJlNotAIcdK5ax112Mjxunr6CW629UsGiDSM0G8X5txjCC71Er8=
