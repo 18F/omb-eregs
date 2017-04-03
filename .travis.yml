@@ -18,7 +18,7 @@ script:
 before_deploy:
   - export PATH=$HOME:$PATH
   - travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
-  - travis_retry wget "https://github.com/contraband/autopilot/releases/download/0.0.2/autopilot-linux"
+  - travis_retry wget "https://github.com/contraband/autopilot/releases/download/0.0.3/autopilot-linux"
   - chmod a+x autopilot-linux
   - mv cf $HOME
   - mv autopilot-linux $HOME
