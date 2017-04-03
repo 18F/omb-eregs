@@ -51,7 +51,7 @@ export function groupReqs(requirements) {
   return groups;
 }
 
-function ByPolicy({ pagedReqs, router }) {
+function ByPolicy({ pagedReqs }) {
   const groups = groupReqs(pagedReqs.results);
   return (
     <div>
@@ -59,13 +59,12 @@ function ByPolicy({ pagedReqs, router }) {
         { groups.map(group =>
           <li key={group[0].policy.id}><Group group={group} /></li>)}
       </ul>
-      <Pagers location={router.location} count={pagedReqs.count} />
+      <Pagers count={pagedReqs.count} />
     </div>
   );
 }
 ByPolicy.defaultProps = {
   pagedReqs: { results: [], count: 0 },
-  router: { location: {} },
 };
 
 ByPolicy.propTypes = {
@@ -75,9 +74,6 @@ ByPolicy.propTypes = {
       req_id: React.PropTypes.string,
     })),
     count: React.PropTypes.number,
-  }),
-  router: React.PropTypes.shape({
-    location: React.PropTypes.shape({}),
   }),
 };
 

@@ -25,7 +25,7 @@ Tab.propTypes = {
   tabName: React.PropTypes.string,
 };
 
-export default function Tabs({ router }) {
+export default function Tabs(_, { router }) {
   if (router.routes.length < 2) {
     return null;
   }
@@ -57,10 +57,7 @@ export default function Tabs({ router }) {
     </div>
   );
 }
-Tabs.defaultProps = {
-  router: { routes: [], location: { query: {} } },
-};
-Tabs.propTypes = {
+Tabs.contextTypes = {
   router: React.PropTypes.shape({
     routes: React.PropTypes.arrayOf(React.PropTypes.shape({})),
     location: React.PropTypes.shape({
