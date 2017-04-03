@@ -10,6 +10,7 @@ cfenv==0.5.2
 coverage==4.3.4           # via pytest-cov
 dj-database-url==0.4.2
 django-autocomplete-light==3.2.1
+django-cas-ng==3.5.7
 django-cors-headers==2.0.2
 django-debug-toolbar==1.7
 django-filter==1.0.1
@@ -46,6 +47,7 @@ pyparsing==2.1.10         # via packaging
 pytest-cov==2.4.0
 pytest-django==3.1.2
 pytest==3.0.6
+python-cas==1.2.0
 python-dateutil==2.6.0
 requests==2.13.0
 six==1.10.0

@@ -13,7 +13,8 @@ applications:
     command: ./devops/prod_api.sh
     host: omb-eregs-api
     env:
-      NEW_RELIC_APP_NAME: 'OMB Prod API/Admin'
+      NEW_RELIC_APP_NAME: OMB Prod API/Admin
+      MAX_URL: https://login.max.gov/cas/login
   - name: ui
     buildpack: nodejs_buildpack
     command: node ui-dist/server.js
@@ -23,4 +24,4 @@ applications:
     env:
       INTERNAL_API: https://omb-eregs-api.app.cloud.gov/
       PUBLIC_API: https://omb-eregs-api.app.cloud.gov/
-      NEW_RELIC_APP_NAME: 'OMB Prod UI'
+      NEW_RELIC_APP_NAME: OMB Prod UI

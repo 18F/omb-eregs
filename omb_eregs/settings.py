@@ -37,7 +37,7 @@ ALLOWED_HOSTS = env.uris
 
 INSTALLED_APPS = (
     'taggit',
-    'reqs.apps.ReqsConfig',
+    'reqs.apps.ReqsConfig',     # must be after taggit
     'dal',
     'dal_select2',
     'corsheaders',
@@ -114,6 +114,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'CommonPasswordValidator', 'NumericPasswordValidator')
 ]
 
+MAX_URL = os.environ.get('MAX_URL')
+
+if MAX_URL:
+    INSTALLED_APPS += ('django_cas_ng',)
+    AUTHENTICATION_BACKENDS = ['omb_eregs.max_backend.MAXBackend']
+    CAS_SERVER_URL = MAX_URL
+    CAS_REDIRECT_URL = '/admin/'
+    # The following attributes are ignored in our implementation, including
+    # as documentation
+    CAS_CREATE_USER = False
+    CAS_USERNAME_ATTRIBUTE = 'Email-Address'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/

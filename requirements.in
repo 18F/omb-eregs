@@ -1,6 +1,7 @@
 cfenv
 django>=1.10,<1.11
 django-autocomplete-light
+django-cas-ng
 django-cors-headers
 django-filter
 django-reversion
