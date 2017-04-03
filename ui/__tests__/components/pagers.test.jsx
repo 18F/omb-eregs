@@ -2,22 +2,27 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Pagers from '../../components/pagers';
+import mockRouter from '../util/mockRouter';
+
 
 describe('<Pagers />', () => {
   it('shows zero pages when there are no results', () => {
-    const result = shallow(<Pagers count={0} />);
+    const context = { router: mockRouter() };
+    const result = shallow(<Pagers count={0} />, { context });
     expect(result.text()).toMatch(/0 of 0/);
     expect(result.find('Link').length).toEqual(0);
   });
 
   it('shows one page when there are less than 25 results', () => {
-    const result = shallow(<Pagers count={10} />);
+    const context = { router: mockRouter() };
+    const result = shallow(<Pagers count={10} />, { context });
     expect(result.text()).toMatch(/1 of 1/);
     expect(result.find('Link').length).toEqual(0);
   });
 
   it('shows a right arrow but no left arrow when on page 1', () => {
-    const result = shallow(<Pagers count={100} location={{ query: { page: '1' } }} />);
+    const context = { router: mockRouter({ query: { page: '1' } }) };
+    const result = shallow(<Pagers count={100} />, { context });
     expect(result.text()).toMatch(/1 of 4/);
     expect(result.find('Link').length).toEqual(1);
     expect(result.childAt(0).name()).toBeNull();
@@ -25,7 +30,8 @@ describe('<Pagers />', () => {
   });
 
   it('shows a left arrow but no right arrow when on final page', () => {
-    const result = shallow(<Pagers count={100} location={{ query: { page: '4' } }} />);
+    const context = { router: mockRouter({ query: { page: '4' } }) };
+    const result = shallow(<Pagers count={100} />, { context });
     expect(result.text()).toMatch(/4 of 4/);
     expect(result.find('Link').length).toEqual(1);
     expect(result.childAt(0).name()).toEqual('Link');
@@ -33,7 +39,8 @@ describe('<Pagers />', () => {
   });
 
   it('shows both arrows if on an intermediary page', () => {
-    const result = shallow(<Pagers count={100} location={{ query: { page: '2' } }} />);
+    const context = { router: mockRouter({ query: { page: '2' } }) };
+    const result = shallow(<Pagers count={100} />, { context });
     expect(result.text()).toMatch(/2 of 4/);
     expect(result.find('Link').length).toEqual(2);
     expect(result.childAt(0).name()).toEqual('Link');
@@ -42,23 +49,26 @@ describe('<Pagers />', () => {
   });
 
   it('handles corner cases around entry count', () => {
-    let text = shallow(<Pagers count={49} />).text();
+    const context = { router: mockRouter() };
+    let text = shallow(<Pagers count={49} />, { context }).text();
     expect(text).toMatch(/1 of 2/);
 
-    text = shallow(<Pagers count={50} />).text();
+    text = shallow(<Pagers count={50} />, { context }).text();
     expect(text).toMatch(/1 of 2/);
 
-    text = shallow(<Pagers count={51} />).text();
+    text = shallow(<Pagers count={51} />, { context }).text();
     expect(text).toMatch(/1 of 3/);
   });
 
   it('defaults to 1 for bad page numbers', () => {
-    const text = shallow(<Pagers count={100} location={{ query: { page: 'abcd' } }} />).text();
+    const context = { router: mockRouter({ query: { page: 'abcd' } }) };
+    const text = shallow(<Pagers count={100} />, { context }).text();
     expect(text).toMatch(/1 of 4/);
   });
 
   it('links to one page less and one more than the current', () => {
-    const component = shallow(<Pagers count={125} location={{ query: { page: '3' } }} />);
+    const context = { router: mockRouter({ query: { page: '3' } }) };
+    const component = shallow(<Pagers count={125} />, { context });
     expect(component.childAt(0).prop('to').query.page).toEqual(2);
     expect(component.childAt(2).prop('to').query.page).toEqual(4);
   });

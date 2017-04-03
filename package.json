@@ -66,6 +66,7 @@
     "node": "6.9.x"
   },
   "jest": {
-    "rootDir": "ui"
+    "rootDir": "ui",
+    "testPathIgnorePatterns": ["<rootDir>/__tests__/util/"]
   }
 }

@@ -8,9 +8,9 @@ import { Link } from 'react-router';
 import { apiParam } from './lookup-search';
 import SearchAutocomplete from './search-autocomplete';
 
-export function Filter({ existingIds, idToRemove, location, name, removeParam }) {
+export function Filter({ existingIds, idToRemove, name, removeParam }, { router }) {
   const remainingIds = existingIds.filter(v => v !== idToRemove);
-  const { pathname, query } = location;
+  const { location: { pathname, query } } = router;
   const modifiedQuery = Object.assign({}, query, {
     [removeParam]: remainingIds.join(','),
   });
@@ -31,19 +31,22 @@ export function Filter({ existingIds, idToRemove, location, name, removeParam })
 Filter.defaultProps = {
   existingIds: [],
   idToRemove: 0,
-  location: { pathname: '', query: {} },
   name: '',
   removeParam: '',
 };
 Filter.propTypes = {
   existingIds: React.PropTypes.arrayOf(React.PropTypes.number),
   idToRemove: React.PropTypes.number,
-  location: React.PropTypes.shape({
-    pathname: React.PropTypes.string,
-    query: React.PropTypes.shape({}),
-  }),
   name: React.PropTypes.string,
   removeParam: React.PropTypes.string,
+};
+Filter.contextTypes = {
+  router: React.PropTypes.shape({
+    location: React.PropTypes.shape({
+      pathname: React.PropTypes.string,
+      query: React.PropTypes.shape({}),
+    }),
+  }),
 };
 
 /* Mapping between a lookup type (e.g. "keywords") and the query field that
@@ -53,7 +56,7 @@ export const searchParam = {
   policies: 'policy_id__in',
 };
 
-export default function FilterList({ existingFilters, lookup, router }) {
+export default function FilterList({ existingFilters, lookup }) {
   const filterIds = existingFilters.map(existing => existing.id);
   return (
     <div className="req-filter-ui my2">
@@ -64,25 +67,20 @@ export default function FilterList({ existingFilters, lookup, router }) {
         { existingFilters.map(filter =>
           <Filter
             key={filter.id} existingIds={filterIds} idToRemove={filter.id}
-            location={router.location} name={filter[apiParam[lookup]]}
-            removeParam={searchParam[lookup]}
+            name={filter[apiParam[lookup]]} removeParam={searchParam[lookup]}
           />)}
       </ol>
-      <SearchAutocomplete lookup={lookup} insertParam={searchParam[lookup]} router={router} />
+      <SearchAutocomplete lookup={lookup} insertParam={searchParam[lookup]} />
     </div>
   );
 }
 FilterList.defaultProps = {
   existingFilters: [],
   lookup: 'keywords',
-  router: { location: {} },
 };
 FilterList.propTypes = {
   existingFilters: React.PropTypes.arrayOf(React.PropTypes.shape({
     id: React.PropTypes.number,
   })),
   lookup: React.PropTypes.oneOf(Object.keys(searchParam)),
-  router: React.PropTypes.shape({
-    location: React.PropTypes.shape({}),
-  }),
 };

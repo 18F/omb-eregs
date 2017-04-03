@@ -2,12 +2,12 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import FilterList, { Filter } from '../../components/filter-list';
+import mockRouter from '../util/mockRouter';
 
 
 describe('<FilterList />', () => {
   it('passed transformed args to its Filters', () => {
     const params = {
-      router: { location: { query: { some: 'field', page: '5' } } },
       lookup: 'keywords',
       existingFilters: [
         { id: 1, name: 'a' }, { id: 7, name: 'b' }, { id: 10, name: 'c' },
@@ -17,11 +17,9 @@ describe('<FilterList />', () => {
     expect(filter.prop('existingIds')).toEqual([1, 7, 10]);
     expect(filter.prop('idToRemove')).toEqual(1);
     expect(filter.prop('name')).toEqual('a');
-    expect(filter.prop('location')).toEqual(params.router.location);
   });
   it('contains the correct number of Filters', () => {
     const params = {
-      router: { location: { query: {} } },
       lookup: 'keywords',
       existingFilters: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
     };
@@ -34,7 +32,6 @@ describe('<FilterList />', () => {
   });
   it('contains an AddKeyword', () => {
     const params = {
-      router: { location: { query: {} } },
       lookup: 'keywords',
       existingFilters: [],
     };
@@ -45,14 +42,16 @@ describe('<FilterList />', () => {
 });
 
 describe('<Filter />', () => {
+  const context = {
+    router: mockRouter({ pathname: '/path/', query: { some: 'stuff' } }),
+  };
   const params = {
     existingIds: [3, 5, 7],
     idToRemove: 5,
-    location: { pathname: '/path/', query: { some: 'stuff' } },
     name: 'AkeyWord',
     removeParam: 'someStr',
   };
-  const result = shallow(<Filter {...params} />);
+  const result = shallow(<Filter {...params} />, { context });
 
   it('contains the keyword name', () => {
     expect(result.text()).toMatch(/AkeyWord/);
