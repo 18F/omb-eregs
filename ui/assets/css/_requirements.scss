@@ -10,10 +10,21 @@
   }
 
   .applies-to,
-  .sunset-date {
+  .sunset-date,
+  .topics {
     @include font-source-sans-pro();
     color: $color-gray;
     font-size: .8em;
+  }
+
+  .topics {
+    li:after {
+      content: ', ';
+    }
+
+    li:last-child:after {
+      content: '';
+    }
   }
 }
 
