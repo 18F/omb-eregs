@@ -11,7 +11,6 @@ script:
 - docker-compose run --rm manage.py migrate --noinput
 - docker-compose run --rm manage.py fetch_csv
 - docker-compose run --rm manage.py import_reqs data.csv
-- npm install -g codeclimate-test-reporter
 before_deploy:
 - export PATH=$HOME:$PATH
 - travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github"
@@ -28,7 +27,8 @@ deploy:
   on:
     branch: master
 after_success:
-  - codeclimate-test-reporter < lcov.info
+  - docker-compose run --rm npm install -g codeclimate-test-reporter
+  - docker-compose run --rm codeclimate-test-reporter < lcov.info
 addons:
   code_climate:
     repo_token:
