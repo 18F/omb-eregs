@@ -2,24 +2,22 @@ import { mount } from 'enzyme';
 import React from 'react';
 
 import Tabs from '../../../components/requirements/tabs';
+import mockRouter from '../../util/mockRouter';
 
 describe('<Tabs />', () => {
-  const params = {
-    router: {
-      routes: [
-        {}, { path: '/' },
-        { path: 'parent',
-          childRoutes: [
-          { path: 'child1', tabName: 'Tab 1' },
-          { path: 'childB', tabName: 'Tab B' },
-          { path: 'other', tabName: 'Other' },
-          { path: 'one-more', tabName: 'Yet Another' }] },
-        { path: 'childB' },
-      ],
-      location: { query: { some: 'value', another: 'here', page: '5' } },
-    },
-  };
-  const tabs = mount(<Tabs {...params} />).find('Tab');
+  const location = { query: { some: 'value', another: 'here', page: '5' } };
+  const routes = [
+    {}, { path: '/' },
+    { path: 'parent',
+      childRoutes: [
+        { path: 'child1', tabName: 'Tab 1' },
+        { path: 'childB', tabName: 'Tab B' },
+        { path: 'other', tabName: 'Other' },
+        { path: 'one-more', tabName: 'Yet Another' }] },
+    { path: 'childB' },
+  ];
+  const context = { router: mockRouter(location, routes) };
+  const tabs = mount(<Tabs />, { context }).find('Tab');
 
   it('includes all peer routes', () => {
     expect(tabs).toHaveLength(4);
