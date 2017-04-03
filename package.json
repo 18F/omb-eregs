@@ -4,7 +4,7 @@
   "description": "This repository contains code necessary to run the White House Office of Management and Budget (OMB) instance of [eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer).",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "start": "node ui-dist/server.js"
   },
   "repository": {
@@ -66,6 +66,8 @@
     "node": "6.9.x"
   },
   "jest": {
-    "rootDir": "ui"
+    "rootDir": "ui",
+    "coverageDirectory": "./",
+    "coverageReporters": ["lcov"]
   }
 }
