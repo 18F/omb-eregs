@@ -13,12 +13,12 @@ django-autocomplete-light==3.2.1
 django-cas-ng==3.5.7
 django-cors-headers==2.0.2
 django-debug-toolbar==1.7
-django-filter==1.0.1
+django-filter==1.0.2
 django-reversion==2.0.8
 django-taggit-serializer==0.1.5
 django-taggit==0.22.0
-django==1.10.5
-djangorestframework==3.5.4
+django==1.10.7
+djangorestframework==3.6.2
 flake8-bugbear==16.12.2
 flake8-builtins==0.2
 flake8-comprehensions==1.2.1
@@ -29,8 +29,8 @@ flake8-print==2.0.2
 flake8-string-format==0.2.3
 flake8-tuple==0.2.12
 flake8==3.3.0
-furl==0.5.7
-gunicorn==19.6.0
+furl==1.0.0
+gunicorn==19.7.1
 isort==4.2.5              # via flake8-isort
 jedi==0.10.0
 mccabe==0.6.1             # via flake8
@@ -39,7 +39,7 @@ newrelic==2.82.0.62
 orderedmultidict==0.7.11
 packaging==16.8           # via setuptools
 pep8-naming==0.4.1
-psycopg2==2.6.2
+psycopg2==2.7.1
 py==1.4.32                # via pytest
 pycodestyle==2.3.1        # via flake8
 pyflakes==1.5.0           # via flake8
