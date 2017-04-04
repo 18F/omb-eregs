@@ -63,7 +63,7 @@
     "validator": "^7.0.0"
   },
   "engines": {
-    "node": "6.9.x"
+    "node": "6.x"
   },
   "jest": {
     "rootDir": "ui",
