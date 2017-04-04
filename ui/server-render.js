@@ -8,6 +8,7 @@ import { match, RouterContext } from 'react-router';
 import routes from './routes';
 import Html from './components/html';
 
+
 export default function (req, res) {
   match({ routes, location: req.url }, (error, redirectCtx, renderProps) => {
     if (error) {
@@ -15,9 +16,13 @@ export default function (req, res) {
     } else if (redirectCtx) {
       res.redirect(302, redirectCtx.pathname + redirectCtx.search);
     } else if (renderProps) {
-      Resolver.resolve(() => <RouterContext {...renderProps} />).then(({ Resolved, data }) => {
-        res.status(200).send(renderToStaticMarkup(<Html contents={<Resolved />} data={data} />));
-      });
+      Resolver
+        .resolve(() => React.createElement(RouterContext, renderProps))
+        .then(({ Resolved, data }) => {
+          const contents = React.createElement(Resolved);
+          const html = React.createElement(Html, { contents, data });
+          res.status(200).send(renderToStaticMarkup(html));
+        });
     } else {
       res.status(404).send('Not found');
     }
