@@ -9,7 +9,7 @@ import morgan from 'morgan';
 
 import basicAuth from './basic-auth';
 import { setApiUrl } from './globals';
-import routerEndpoint from './endpoints/router';
+import serverRender from './server-render';
 
 const app = express();
 const env = cfenv.getAppEnv();
@@ -25,8 +25,7 @@ if (auth) {
   app.use(auth);
 }
 
-/* Endpoints */
-app.get('*', routerEndpoint);
+app.get('*', serverRender);
 
 /* Start */
 app.listen(env.port, () => {

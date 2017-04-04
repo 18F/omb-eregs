@@ -5,7 +5,7 @@ import { renderToString } from 'react-dom/server';
 import { Resolver } from 'react-resolver';
 import { match, RouterContext } from 'react-router';
 
-import routes from '../routes';
+import routes from './routes';
 
 export default function (req, res) {
   match({ routes, location: req.url }, (error, redirectCtx, renderProps) => {
