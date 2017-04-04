@@ -17,6 +17,8 @@ services:
       PORT: 8001
       DJANGO_SETTINGS_MODULE: omb_eregs.settings
       TMPDIR: /tmp
+      # Uncomment the following line for MAX logins
+      # MAX_URL: https://login.max.gov/cas/login
       VCAP_APPLICATION: >
         {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api"]}
       VCAP_SERVICES: >
@@ -39,6 +41,8 @@ services:
     environment:
       <<: *API_ENV
       DEBUG: "true"
+      # Uncomment the following line for MAX logins
+      # MAX_URL: https://login.test.max.gov/cas/login
 
   prod: &PROD_UI
     image: node:6

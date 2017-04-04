@@ -136,6 +136,20 @@ services:
         }}}]}
 ```
 
+### Running w/ MAX Authentication
+
+In production, we always run with [MAX](https://max.gov/) authentication, but
+for local development, we've opted for Django's password-based authentication.
+If you would prefer to test MAX authentication, uncomment the appropriate
+environment variable in docker-compose.yml:
+
+```yml
+services:
+  dev-api:
+    environment:
+      MAX_URL: https://example.com/etc
+```
+
 
 ## API Endpoints
 

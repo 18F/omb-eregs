@@ -29,3 +29,7 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns.insert(0, url(r'^__debug__/', include(debug_toolbar.urls)))
+
+if settings.MAX_URL:
+    from django_cas_ng.views import login as cas_login
+    urlpatterns.insert(0, url(r'^admin/login/$', cas_login))
