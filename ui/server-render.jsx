@@ -1,11 +1,12 @@
 /* Primary application entrypoint; uses our react-routes to resolve the
  * requested URL and then renders it */
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { Resolver } from 'react-resolver';
 import { match, RouterContext } from 'react-router';
 
 import routes from './routes';
+import Html from './components/html';
 
 export default function (req, res) {
   match({ routes, location: req.url }, (error, redirectCtx, renderProps) => {
@@ -15,16 +16,7 @@ export default function (req, res) {
       res.redirect(302, redirectCtx.pathname + redirectCtx.search);
     } else if (renderProps) {
       Resolver.resolve(() => <RouterContext {...renderProps} />).then(({ Resolved, data }) => {
-        res.status(200).send(
-          `<html>
-            <head><link rel="stylesheet" href="/static/styles.css" /></head>
-            <body>
-              <div id="app">${renderToString(<Resolved />)}</div>
-              <script>window.__REACT_RESOLVER_PAYLOAD__ = ${JSON.stringify(data)}</script>
-              <script>window.API_URL = "${process.env.PUBLIC_API}";</script>
-              <script src="/static/browser.js"></script>
-            </body>
-          </html>`);
+        res.status(200).send(renderToStaticMarkup(<Html contents={<Resolved />} data={data} />));
       });
     } else {
       res.status(404).send('Not found');
