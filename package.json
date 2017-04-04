@@ -67,6 +67,7 @@
   },
   "jest": {
     "rootDir": "ui",
+    "collectCoverage": true,
     "coverageDirectory": "./",
     "coverageReporters": ["lcov"]
   }
