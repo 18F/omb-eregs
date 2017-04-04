@@ -5,7 +5,7 @@ import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 import validator from 'validator';
 
-import { theApi } from '../globals';
+import api from '../api';
 import Pagers from './pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
@@ -84,7 +84,7 @@ export function redirectIfMatched({ routes, location: { query } }, redirect, don
   } else {
     const lookup = routes[routes.length - 2].path;
     const apiQuery = { [apiParam[lookup]]: query.q };
-    theApi()[lookup].fetch(apiQuery)
+    api[lookup].fetch(apiQuery)
       .then(({ count, results }) => {
         const params = cleanParams(query);
         if (count > 0) {
@@ -164,7 +164,7 @@ LookupSearch.propTypes = {
 export function search(lookup, q, page = '1') {
   const queryParam = `${apiParam[lookup]}__icontains`;
   const apiQuery = { [queryParam]: q, page };
-  return theApi()[lookup].fetch(apiQuery);
+  return api[lookup].fetch(apiQuery);
 }
 
 /**

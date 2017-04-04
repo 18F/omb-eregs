@@ -2,17 +2,10 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import { cleanParams, LookupSearch, redirectIfMatched, redirectQuery, search } from '../../components/lookup-search';
-import { theApi } from '../../globals';
+import api from '../../api';
 
-jest.mock('../../globals', () => ({ theApi: jest.fn() }));
+jest.mock('../../api');
 
-function mockKeywords(promise) {
-  const fetch = jest.fn(() => promise);
-  theApi.mockImplementationOnce(() => ({
-    keywords: { fetch },
-  }));
-  return fetch;
-}
 
 describe('cleanParams()', () => {
   const query = {
@@ -80,33 +73,35 @@ describe('redirectIfMatched()', () => {
     insertParam: 'ins',
     redirectPathname: '/somewhere/',
   };
+  const routes = [{ path: 'keywords' }, {}];
   it('does not hit the api if a page number is present', () => {
     const modifiedQuery = Object.assign({}, query, { page: '5' });
-    const params = { routes: [], location: { query: modifiedQuery } };
+    const params = { routes, location: { query: modifiedQuery } };
     const redirect = jest.fn();
     const done = jest.fn();
 
     redirectIfMatched(params, redirect, done);
-    expect(theApi).not.toHaveBeenCalled();
+    expect(api.keywords.fetch).not.toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalled();
     expect(done).toHaveBeenCalledWith();
   });
   it('redirects if there is an exact match', () => {
-    const params = { routes: [{ path: 'keywords' }, {}], location: { query } };
+    const params = { routes, location: { query } };
     const redirect = jest.fn();
-    const mockFetch = mockKeywords(
+    api.keywords.fetch.mockImplementationOnce(() =>
       Promise.resolve({ count: 1, results: [{ id: 4 }] }));
 
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then(() => {
-      expect(mockFetch).toHaveBeenCalledWith({ name: 'qqq' });
+      expect(api.keywords.fetch).toHaveBeenCalledWith({ name: 'qqq' });
       expect(redirect).toHaveBeenCalled();
     });
   });
   it('passes exceptions up', () => {
-    const params = { routes: [{ path: 'keywords' }, {}], location: { query } };
+    const params = { routes, location: { query } };
     const redirect = jest.fn();
-    mockKeywords(Promise.reject(Error('oh noes')));
+    api.keywords.fetch.mockImplementationOnce(() =>
+      Promise.reject(Error('oh noes')));
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then((error) => {
       expect(error).toEqual(Error('oh noes'));
@@ -114,9 +109,10 @@ describe('redirectIfMatched()', () => {
     });
   });
   it('continues if there is no exact match', () => {
-    const params = { routes: [{ path: 'keywords' }, {}], location: { query } };
+    const params = { routes, location: { query } };
     const redirect = jest.fn();
-    mockKeywords(Promise.resolve({ count: 0, results: [] }));
+    api.keywords.fetch.mockImplementationOnce(() =>
+      Promise.resolve({ count: 0, results: [] }));
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then(() => {
       expect(redirect).not.toHaveBeenCalled();
@@ -158,25 +154,15 @@ describe('<LookupSearch />', () => {
 
 describe('search()', () => {
   it('uses the correct parameters for keywords', () => {
-    const fetch = jest.fn();
-    theApi.mockImplementationOnce(() => ({
-      keywords: { fetch },
-    }));
-
     search('keywords', 'some query here');
-    expect(fetch).toHaveBeenCalledWith({
+    expect(api.keywords.fetch).toHaveBeenCalledWith({
       name__icontains: 'some query here', page: '1',
     });
   });
 
   it('uses the correct parameters for policies', () => {
-    const fetch = jest.fn();
-    theApi.mockImplementationOnce(() => ({
-      policies: { fetch },
-    }));
-
     search('policies', 'some query here', '3');
-    expect(fetch).toHaveBeenCalledWith({
+    expect(api.policies.fetch).toHaveBeenCalledWith({
       title__icontains: 'some query here', page: '3',
     });
   });

@@ -1,13 +1,15 @@
 import axios from 'axios';
 
+import config from './config';
+
 export class Endpoint {
-  constructor(baseUrl, endpoint) {
-    this.baseUrl = baseUrl;
+  constructor(endpoint) {
+    this.client = axios.create({ baseURL: config.apiRoot });
     this.endpoint = endpoint;
   }
 
   fetch(params = {}) {
-    const query = axios.get(`${this.baseUrl}${this.endpoint}/`, { params });
+    const query = this.client.get(this.endpoint, { params });
     return query.then(({ data }) => data);
   }
 
@@ -23,10 +25,8 @@ export class Endpoint {
   }
 }
 
-export default function makeApi(baseUrl) {
-  return {
-    keywords: new Endpoint(baseUrl, 'keywords'),
-    policies: new Endpoint(baseUrl, 'policies'),
-    requirements: new Endpoint(baseUrl, 'requirements'),
-  };
-}
+export default {
+  keywords: new Endpoint('keywords/'),
+  policies: new Endpoint('policies/'),
+  requirements: new Endpoint('requirements/'),
+};

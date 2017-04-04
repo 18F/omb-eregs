@@ -1,10 +1,16 @@
 import React from 'react';
 
+import config from '../config';
+
 
 export default function Html({ contents, data }) {
+  const browserConfig = Object.assign({}, config, {
+    // Public API endpoint might not match private version
+    apiRoot: process.env.PUBLIC_API,
+  });
   const jsStr = `
     window.__REACT_RESOLVER_PAYLOAD__ = ${JSON.stringify(data)};
-    window.API_URL = "${process.env.PUBLIC_API}";
+    window.APP_CONFIG = ${JSON.stringify(browserConfig)};
   `;
   // Avoid escaping the JS
   /* eslint-disable react/no-danger */

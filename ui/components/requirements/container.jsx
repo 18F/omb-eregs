@@ -1,7 +1,7 @@
 import React from 'react';
 import { resolve } from 'react-resolver';
 
-import { theApi } from '../../globals';
+import api from '../../api';
 import FilterList from '../filter-list';
 import Tabs from './tabs';
 
@@ -34,9 +34,9 @@ Container.propTypes = {
 };
 
 const fetchKeywords = ({ location: { query: { keywords__id__in } } }) =>
-  theApi().keywords.withIds(keywords__id__in);
+  api.keywords.withIds(keywords__id__in);
 const fetchPolicies = ({ location: { query: { policy_id__in } } }) =>
-  theApi().policies.withIds(policy_id__in);
+  api.policies.withIds(policy_id__in);
 
 export default resolve({
   keywords: fetchKeywords,

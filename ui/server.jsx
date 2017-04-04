@@ -8,15 +8,11 @@ import express from 'express';
 import morgan from 'morgan';
 
 import basicAuth from './basic-auth';
-import { setApiUrl } from './globals';
 import serverRender from './server-render';
 
 const app = express();
 const env = cfenv.getAppEnv();
 const auth = basicAuth(env.getServiceCreds('config'));
-
-/* Global State */
-setApiUrl(process.env.INTERNAL_API);
 
 /* Middleware */
 app.use(morgan('combined'));

@@ -2,7 +2,7 @@ import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 
-import { theApi } from '../globals';
+import api from '../api';
 import Pagers from './pagers';
 
 function Keyword({ keyword }) {
@@ -50,7 +50,7 @@ Keywords.propTypes = {
 };
 
 const fetchKeywords = ({ location: { query } }) =>
-  theApi().keywords.fetch(query);
+  api.keywords.fetch(query);
 
 export default resolve(
   'data', fetchKeywords,
