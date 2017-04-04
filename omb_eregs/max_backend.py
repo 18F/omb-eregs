@@ -16,6 +16,7 @@ class MAXBackend(CASBackend):
 
         user = User.objects.filter(username=email).first()
         if user:
+            # Trim to thirty chars to match Django User max lengths
             user.first_name = attributes.get('First-Name', '')[:30]
             user.last_name = attributes.get('Last-Name', '')[:30]
             user.email = email
