@@ -9,8 +9,8 @@ import { Async } from 'react-select';
 import { apiParam, redirectQuery, search } from './lookup-search';
 
 export default class SearchAutocomplete extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.state = { autocomplete: false };
     // See https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-bind.md#es6-classes
     this.loadOptions = this.loadOptions.bind(this);
@@ -27,10 +27,10 @@ export default class SearchAutocomplete extends React.Component {
   }
 
   onChange(entry) {
-    const { location } = this.props.router;
+    const { location } = this.context.router;
     const query = redirectQuery(location.query, this.props.insertParam, entry.value);
     const paramStr = querystring.stringify(query);
-    this.props.router.push(`${location.pathname}?${paramStr}`);
+    this.context.router.push(`${location.pathname}?${paramStr}`);
   }
 
   loadOptions(inputStr) {
@@ -47,7 +47,7 @@ export default class SearchAutocomplete extends React.Component {
 
   render() {
     const { insertParam, lookup } = this.props;
-    const { pathname, query } = this.props.router.location;
+    const { pathname, query } = this.context.router.location;
     if (this.state.autocomplete) {
       return <Async loadOptions={this.loadOptions} onChange={this.onChange} />;
     }
@@ -66,14 +66,12 @@ export default class SearchAutocomplete extends React.Component {
 SearchAutocomplete.defaultProps = {
   lookup: '',
   insertParam: '',
-  router: {
-    location: { query: {}, pathname: '' },
-    push: null,
-  },
 };
 SearchAutocomplete.propTypes = {
   lookup: React.PropTypes.string,
   insertParam: React.PropTypes.string,
+};
+SearchAutocomplete.contextTypes = {
   router: React.PropTypes.shape({
     location: React.PropTypes.shape({
       query: React.PropTypes.shape({}),

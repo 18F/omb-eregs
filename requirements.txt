@@ -7,19 +7,21 @@
 cfenv==0.5.2
 dj-database-url==0.4.2
 django-autocomplete-light==3.2.1
+django-cas-ng==3.5.7
 django-cors-headers==2.0.2
-django-filter==1.0.1
+django-filter==1.0.2
 django-reversion==2.0.8
 django-taggit-serializer==0.1.5
 django-taggit==0.22.0
-django==1.10.5
-djangorestframework==3.5.4
-furl==0.5.7               # via cfenv
-gunicorn==19.6.0
+django==1.10.7
+djangorestframework==3.6.2
+furl==1.0.0               # via cfenv
+gunicorn==19.7.1
 newrelic==2.82.0.62
 orderedmultidict==0.7.11  # via furl
-psycopg2==2.6.2
+psycopg2==2.7.1
+python-cas==1.2.0         # via django-cas-ng
 python-dateutil==2.6.0
 requests==2.13.0
-six==1.10.0               # via furl, orderedmultidict, python-dateutil
+six==1.10.0               # via furl, orderedmultidict, python-cas, python-dateutil
 whitenoise==3.3.0
