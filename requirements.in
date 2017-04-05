@@ -6,7 +6,6 @@ django-cors-headers
 django-filter
 django-reversion
 django-taggit
-django-taggit-serializer
 djangorestframework
 dj-database-url
 gunicorn
