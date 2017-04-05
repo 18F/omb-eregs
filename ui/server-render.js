@@ -5,26 +5,37 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { Resolver } from 'react-resolver';
 import { match, RouterContext } from 'react-router';
 
+import handleError from './error-handling';
 import routes from './routes';
+import FourOhFour from './components/fourOhFour';
 import Html from './components/html';
+
+
+function resolveAndRender(renderProps, res) {
+  Resolver
+    .resolve(() => React.createElement(RouterContext, renderProps))
+    .then(({ Resolved, data }) => {
+      const contents = React.createElement(Resolved);
+      const html = React.createElement(Html, { contents, data });
+      res.status(200).send(renderToStaticMarkup(html));
+    })
+    .catch((err) => {
+      handleError(err, null, res);
+    });
+}
 
 
 export default function (req, res) {
   match({ routes, location: req.url }, (error, redirectCtx, renderProps) => {
     if (error) {
-      res.status(500).send(error.message);
+      handleError(error, null, res);
     } else if (redirectCtx) {
       res.redirect(302, redirectCtx.pathname + redirectCtx.search);
     } else if (renderProps) {
-      Resolver
-        .resolve(() => React.createElement(RouterContext, renderProps))
-        .then(({ Resolved, data }) => {
-          const contents = React.createElement(Resolved);
-          const html = React.createElement(Html, { contents, data });
-          res.status(200).send(renderToStaticMarkup(html));
-        });
+      resolveAndRender(renderProps, res);
     } else {
-      res.status(404).send('Not found');
+      const fourOhFour = React.createElement(FourOhFour);
+      res.status(404).send(renderToStaticMarkup(fourOhFour));
     }
   });
 }

@@ -8,6 +8,7 @@ import express from 'express';
 import morgan from 'morgan';
 
 import basicAuth from './basic-auth';
+import errorHandler from './error-handling';
 import serverRender from './server-render';
 
 const app = express();
@@ -20,6 +21,7 @@ app.use('/static', express.static(path.join('ui-dist', 'static')));
 if (auth) {
   app.use(auth);
 }
+app.use(errorHandler);
 
 app.get('*', serverRender);
 
