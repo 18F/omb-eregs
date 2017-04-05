@@ -15,7 +15,6 @@ django-cors-headers==2.0.2
 django-debug-toolbar==1.7
 django-filter==1.0.2
 django-reversion==2.0.8
-django-taggit-serializer==0.1.5
 django-taggit==0.22.0
 django==1.10.7
 djangorestframework==3.6.2
