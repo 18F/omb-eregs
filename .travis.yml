@@ -28,7 +28,7 @@ deploy:
     branch: master
 after_success:
   - docker-compose run --rm dev npm install -g codeclimate-test-reporter
-  - docker-compose run --rm dev codeclimate-test-reporter < ui/lcov.info
+  - docker-compose run --rm dev ./node_modules/.bin/codeclimate-test-reporter < ui/lcov.info
 addons:
   code_climate:
     repo_token:
