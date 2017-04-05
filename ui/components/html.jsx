@@ -1,4 +1,5 @@
 import React from 'react';
+import serialize from 'serialize-javascript';
 
 import config from '../config';
 
@@ -9,8 +10,8 @@ export default function Html({ contents, data }) {
     apiRoot: process.env.PUBLIC_API,
   });
   const jsStr = `
-    window.__REACT_RESOLVER_PAYLOAD__ = ${JSON.stringify(data)};
-    window.APP_CONFIG = ${JSON.stringify(browserConfig)};
+    window.__REACT_RESOLVER_PAYLOAD__ = ${serialize(data)};
+    window.APP_CONFIG = ${serialize(browserConfig)};
   `;
   // Avoid escaping the JS
   /* eslint-disable react/no-danger */
