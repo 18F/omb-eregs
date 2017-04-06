@@ -35,7 +35,7 @@ module.exports = [
   },
   {
     name: 'browser-js',
-    entry: path.join(__dirname, 'ui', 'browser.js'),
+    entry: ['babel-polyfill', path.join(__dirname, 'ui', 'browser.js')],
     output: {
       path: path.join(__dirname, 'ui-dist', 'static'),
       filename: 'browser.js',
