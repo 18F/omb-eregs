@@ -56,10 +56,18 @@ export default class SearchAutocomplete extends React.Component {
         <input type="hidden" name="insertParam" value={insertParam} />
         <input type="hidden" name="redirectPathname" value={pathname} />
         <div className="flex clearfix relative">
-          <input type="text" name="q" className="filter-lookup-field rounded-left p1 border col col-9" />
+          <input
+            type="text"
+            name="q"
+            className="filter-lookup-field rounded-left p1 border col col-9"
+          />
           { Object.keys(query).map(key =>
             <input key={key} type="hidden" name={`redirectQuery__${key}`} value={query[key]} />)}
-          <input type="submit" value="" className="add-filter-button border rounded-right p1 col col-3" />
+          <input
+            type="submit"
+            value=""
+            className="add-filter-button border rounded-right p1 col col-3"
+          />
         </div>
       </form>
     );
