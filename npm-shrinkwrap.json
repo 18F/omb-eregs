@@ -37,6 +37,30 @@
       "from": "axios@>=0.15.3 <0.16.0",
       "resolved": "https://registry.npmjs.org/axios/-/axios-0.15.3.tgz"
     },
+    "babel-polyfill": {
+      "version": "6.23.0",
+      "from": "babel-polyfill@>=6.23.0 <7.0.0",
+      "resolved": "https://registry.npmjs.org/babel-polyfill/-/babel-polyfill-6.23.0.tgz",
+      "dependencies": {
+        "core-js": {
+          "version": "2.4.1",
+          "from": "core-js@>=2.4.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.4.1.tgz"
+        }
+      }
+    },
+    "babel-runtime": {
+      "version": "6.23.0",
+      "from": "babel-runtime@>=6.22.0 <7.0.0",
+      "resolved": "https://registry.npmjs.org/babel-runtime/-/babel-runtime-6.23.0.tgz",
+      "dependencies": {
+        "core-js": {
+          "version": "2.4.1",
+          "from": "core-js@^2.4.0",
+          "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.4.1.tgz"
+        }
+      }
+    },
     "basic-auth": {
       "version": "1.1.0",
       "from": "basic-auth@>=1.1.0 <1.2.0",
@@ -551,6 +575,11 @@
       "version": "2.2.3",
       "from": "readable-stream@>=2.2.2 <3.0.0",
       "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.3.tgz"
+    },
+    "regenerator-runtime": {
+      "version": "0.10.3",
+      "from": "regenerator-runtime@>=0.10.0 <0.11.0",
+      "resolved": "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.10.3.tgz"
     },
     "send": {
       "version": "0.15.1",
