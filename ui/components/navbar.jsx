@@ -3,7 +3,7 @@ import React from 'react';
 
 const Navbar = () => (
   <div className="overflow-auto">
-    <div className="flex items-center navbar">
+    <div className="flex items-center navbar p1">
       <img
         className="pl2 pr1"
         alt="US flag"
