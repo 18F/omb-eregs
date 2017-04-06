@@ -65,7 +65,7 @@ export default class SearchAutocomplete extends React.Component {
             <input key={key} type="hidden" name={`redirectQuery__${key}`} value={query[key]} />)}
           <input
             type="submit"
-            value=""
+            value="Add"
             className="add-filter-button border rounded-right p1 col col-3"
           />
         </div>
