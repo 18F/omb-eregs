@@ -9,7 +9,7 @@ applications:
     services:
       - database  # aws-rds medium-psql
       - config    # user-provided service w/ DJANGO_SECRET_KEY and NEW_RELIC_LICENSE_KEY
-    command: ./devops/prod_api.sh
+    command: ./devops/run_api.sh
     host: omb-eregs-api-demo
     env:
       NEW_RELIC_APP_NAME: OMB Demo API/Admin

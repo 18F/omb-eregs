@@ -7,7 +7,7 @@ services:
 
   prod-api: &PROD_API
     image: python:3.5.3
-    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/prod_api.sh
+    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
     ports:
       - 9001:9001
     environment: &API_ENV
@@ -31,7 +31,7 @@ services:
 
   dev-api: &DEV_API
     <<: *PROD_API
-    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/dev_api.sh
+    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
     ports:
       - 8001:8001
     environment:
