@@ -28,4 +28,4 @@ deploy:
     branch: master
 after_success:
   - docker-compose run --rm dev npm install codeclimate-test-reporter
-  - docker-compose run --rm dev ./node_modules/.bin/codeclimate-test-reporter < ui/lcov.info
+  - docker-compose run --rm -e CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN dev ./node_modules/.bin/codeclimate-test-reporter < ui/lcov.info
