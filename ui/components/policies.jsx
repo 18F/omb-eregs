@@ -2,7 +2,7 @@ import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 
-import { theApi } from '../globals';
+import api from '../api';
 import Pagers from './pagers';
 
 function Policy({ policy }) {
@@ -49,7 +49,7 @@ Policies.propTypes = {
 };
 
 const fetchPolicies = ({ location: { query } }) =>
-  theApi().policies.fetch(query);
+  api.policies.fetch(query);
 
 export default resolve(
   'data', fetchPolicies,

@@ -25,8 +25,8 @@ export default function Requirement({ requirement }) {
             <span>Topics: </span>
             <ul className="topics-list list-reset inline">
               { requirement.keywords.map(keyword => (
-                <li key={keyword} className="inline">
-                  { keyword }
+                <li key={keyword.id} className="inline">
+                  { keyword.name }
                 </li>
               ))}
             </ul>
@@ -39,6 +39,7 @@ export default function Requirement({ requirement }) {
 
 Requirement.defaultProps = {
   requirement: {
+    keywords: [],
     policy: {},
     req_text: '',
     req_id: '',
@@ -47,6 +48,10 @@ Requirement.defaultProps = {
 
 Requirement.propTypes = {
   requirement: React.PropTypes.shape({
+    keywords: React.PropTypes.arrayOf(React.PropTypes.shape({
+      id: React.PropTypes.number,
+      name: React.PropTypes.string,
+    })),
     policy: React.PropTypes.shape({
       sunset: React.PropTypes.string,
     }),

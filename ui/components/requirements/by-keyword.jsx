@@ -1,7 +1,7 @@
 import React from 'react';
 import { resolve } from 'react-resolver';
 
-import { theApi } from '../../globals';
+import api from '../../api';
 import Pagers from '../pagers';
 import Requirement from './requirement';
 
@@ -34,7 +34,7 @@ ByKeyword.propTypes = {
 };
 
 const fetchRequirements = ({ location: { query } }) =>
-  theApi().requirements.fetch(query);
+  api.requirements.fetch(query);
 
 export default resolve(
   'pagedReqs', fetchRequirements,
