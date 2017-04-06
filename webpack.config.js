@@ -61,7 +61,7 @@ module.exports = [
   {
     name: 'server-js',
     target: 'node',
-    entry: path.join(__dirname, 'ui', 'server.jsx'),
+    entry: path.join(__dirname, 'ui', 'server.js'),
     output: {
       path: path.join(__dirname, 'ui-dist'),
       filename: 'server.js',

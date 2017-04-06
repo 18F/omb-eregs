@@ -8,15 +8,12 @@ import express from 'express';
 import morgan from 'morgan';
 
 import basicAuth from './basic-auth';
-import { setApiUrl } from './globals';
-import routerEndpoint from './endpoints/router';
+import errorHandler from './error-handling';
+import serverRender from './server-render';
 
 const app = express();
 const env = cfenv.getAppEnv();
 const auth = basicAuth(env.getServiceCreds('config'));
-
-/* Global State */
-setApiUrl(process.env.INTERNAL_API);
 
 /* Middleware */
 app.use(morgan('combined'));
@@ -24,9 +21,9 @@ app.use('/static', express.static(path.join('ui-dist', 'static')));
 if (auth) {
   app.use(auth);
 }
+app.use(errorHandler);
 
-/* Endpoints */
-app.get('*', routerEndpoint);
+app.get('*', serverRender);
 
 /* Start */
 app.listen(env.port, () => {

@@ -557,6 +557,11 @@
       "from": "send@0.15.1",
       "resolved": "https://registry.npmjs.org/send/-/send-0.15.1.tgz"
     },
+    "serialize-javascript": {
+      "version": "1.3.0",
+      "from": "serialize-javascript@>=1.3.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-1.3.0.tgz"
+    },
     "serve-static": {
       "version": "1.12.1",
       "from": "serve-static@1.12.1",

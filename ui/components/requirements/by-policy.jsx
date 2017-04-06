@@ -1,7 +1,7 @@
 import React from 'react';
 import { resolve } from 'react-resolver';
 
-import { theApi } from '../../globals';
+import api from '../../api';
 import Pagers from '../pagers';
 import Requirement from './requirement';
 
@@ -79,7 +79,7 @@ ByPolicy.propTypes = {
 
 const fetchRequirements = ({ location: { query } }) => {
   const params = Object.assign({}, query, { ordering: 'policy__policy_number' });
-  return theApi().requirements.fetch(params);
+  return api.requirements.fetch(params);
 };
 
 export default resolve(
