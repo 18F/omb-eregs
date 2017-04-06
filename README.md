@@ -30,7 +30,7 @@ Let's start by adding an admin user.
 docker-compose run --rm manage.py migrate  # set up database
 docker-compose run --rm manage.py createsuperuser
 # [fill out information]
-docker-compose up prod-api
+docker-compose up dev-api
 # Ctrl-c to kill
 ```
 
@@ -55,6 +55,8 @@ docker-compose run --rm webpack  # to build the server JS
 docker-compose up prod
 ```
 
+Then navigate to http://localhost:9000/ (prod and dev run on separate ports).
+
 ### Data
 
 Let's also load the requirements data from OMB:
@@ -74,13 +76,13 @@ There are two types of entry points:
 1. Services which will run until you press `ctrl-c`. These are activated via
   `docker-compose up`
   * `prod-api` - Build the admin/API app and run it in "production" mode on
-    port 8001
+    port 9001
   * `dev-api` - Build the admin/API app and run it in "development" mode on
     port 8001
   * `dev` - Build and run the UI and API app in "development" mode (port 8000
     for UI, 8001 for API).
-  * `prod` - Run the UI and API apps in "production" mode (port 8000 for UI,
-    8001 for API). Note that this requires the JS be compiled already.
+  * `prod` - Run the UI and API apps in "production" mode (port 9000 for UI,
+    9001 for API). Note that this requires the JS be compiled already.
 1. One use commands which run until complete. These are ran via
   `docker-compose run --rm` (the `--rm` just deletes the images after running;
   it's not strictly required)

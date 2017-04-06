@@ -11,10 +11,10 @@ services:
       context: .
     command: ./devops/wait_for_db_then ./devops/prod_api.sh
     ports:
-      - "8001:8001"
+      - 9001:9001
     environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
-      PORT: 8001
+      PORT: 9001
       DJANGO_SETTINGS_MODULE: omb_eregs.settings
       TMPDIR: /tmp
       # Uncomment the following line for MAX logins
@@ -38,8 +38,11 @@ services:
       args:
         DEV_MODE: "true"
     command: ./devops/wait_for_db_then ./devops/dev_api.sh
+    ports:
+      - 8001:8001
     environment:
       <<: *API_ENV
+      PORT: 8001
       DEBUG: "true"
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
@@ -51,12 +54,12 @@ services:
     working_dir: /usr/src/app
     command: npm start
     ports:
-      - "8000:8000"
+      - 9000:9000
     environment: &UI_ENV
-      PORT: 8000
+      PORT: 9000
       NODE_ENV: production
-      INTERNAL_API: 'http://prod-api:8001/'
-      PUBLIC_API: 'http://0.0.0.0:8001/'
+      INTERNAL_API: 'http://prod-api:9001/'
+      PUBLIC_API: 'http://0.0.0.0:9001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
@@ -66,8 +69,11 @@ services:
   dev: &DEV_UI
     <<: *PROD_UI
     command: ./devops/dev_ui.sh
+    ports:
+      - 8000:8000
     environment:
       <<: *UI_ENV
+      PORT: 8000
       NODE_ENV: ''
       INTERNAL_API: 'http://dev-api:8001/'
       PUBLIC_API: 'http://0.0.0.0:8001/'
