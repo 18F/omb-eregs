@@ -4,6 +4,16 @@ services:
     image: postgres:9.4
     volumes:
       - database_data:/var/lib/postgresql/data
+  selenium_chrome:
+    image: selenium/standalone-chrome:3
+    depends_on:
+      - prod
+      - prod-api
+  selenium_firefox:
+    image: selenium/standalone-firefox:3
+    depends_on:
+      - prod
+      - prod-api
 
   prod-api: &PROD_API
     image: python:3.5.3
@@ -90,6 +100,9 @@ services:
     entrypoint: ./devops/wait_for_db_then ./devops/activate_then py.test
     command: ''
     ports: []
+    external_links:
+      - selenium_chrome
+      - selenium_firefox
 
   flake8:
     <<: *DEV_API

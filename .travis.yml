@@ -2,6 +2,10 @@ language: generic
 sudo: required
 services:
 - docker
+before_install:
+- sudo apt-get update
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
+- docker --version
 script:
 # JS tests
 - docker-compose run --rm npm install --quiet
@@ -11,10 +15,8 @@ script:
 # Python tests and linting
 - docker-compose run --rm py.test
 - docker-compose run --rm flake8
-# Smoke test for loading data
-- docker-compose run --rm manage.py migrate --noinput
-- docker-compose run --rm manage.py fetch_csv
-- docker-compose run --rm manage.py import_reqs data.csv
+# Integration tests
+- ./devops/integration-tests.sh
 before_deploy:
 - export PATH=$HOME:$PATH
 - travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github"
