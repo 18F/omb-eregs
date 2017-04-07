@@ -56,7 +56,7 @@ services:
     volumes:
       - $PWD:/usr/src/app:cached
     working_dir: /usr/src/app
-    command: npm start
+    command: ./devops/deps_ok_then npm start
     ports:
       - 9000:9000
     environment: &UI_ENV
@@ -72,7 +72,7 @@ services:
 
   dev: &DEV_UI
     <<: *PROD_UI
-    command: ./devops/dev_ui.sh
+    command: ./devops/deps_ok_then ./devops/dev_ui.sh
     ports:
       - 8000:8000
     environment:
@@ -120,15 +120,17 @@ services:
 
   npm:
     <<: *DEV_UI
-    entrypoint: npm
+    entrypoint: ./devops/deps_ok_then npm
     command: ''
     ports: []
+    depends_on: []
 
   webpack:
     <<: *DEV_UI
-    entrypoint: ./node_modules/.bin/webpack
+    entrypoint: ./devops/deps_ok_then ./node_modules/.bin/webpack
     command: ''
     ports: []
+    depends_on: []
 
   psql:
     image: postgres:9.4

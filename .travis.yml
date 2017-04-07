@@ -8,7 +8,6 @@ before_install:
 - docker --version
 script:
 # JS tests
-- docker-compose run --rm npm install --quiet
 - docker-compose run --rm npm test
 # Smoke test and lint
 - docker-compose run --rm webpack

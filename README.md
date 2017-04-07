@@ -96,17 +96,6 @@ There are two types of entry points:
 
 ### Resolving common container issues
 
-If a Javascript dependency has been added (indicated by an error within
-`node_modules`), run
-```sh
-docker-compose run --rm npm install
-```
-
-If a Python dependency has been added, run
-```sh
-docker-compose build  # rebuilds images, which include Python libs
-```
-
 If you see an error about a conflicting port, try spinning down the running
 services
 ```sh
@@ -115,9 +104,7 @@ docker-compose down
 
 If all it lost and you want to start from scratch, run
 ```sh
-docker-compose down
-docker volume rm omberegs_database_data   # remove database data
-docker-compose build
+docker-compose down -v      # also removes database data
 ```
 
 ### Running w/ Credentials
@@ -185,7 +172,6 @@ docker-compose run --rm flake8  # linting
 
 For JS, run:
 ```sh
-docker-compose run --rm npm install   # not always needed
 docker-compose run --rm npm test
 docker-compose run --rm webpack       # lints (and builds)
 ```
@@ -207,7 +193,6 @@ line tool and an associated plugin:
 Then, make sure you've built the frontend:
 
 ```sh
-docker-compose run --rm npm install
 docker-compose run --rm webpack
 ```
 
