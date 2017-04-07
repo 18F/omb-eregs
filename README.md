@@ -97,14 +97,16 @@ There are two types of entry points:
 ### Resolving common container issues
 
 If you see an error about a conflicting port, try spinning down the running
-services
+services (including those associated with integration tests).
 ```sh
 docker-compose down
+docker-compose -p integration_tests down
 ```
 
 If all it lost and you want to start from scratch, run
 ```sh
 docker-compose down -v      # also removes database data
+docker-compose -p integration_tests down -v
 ```
 
 ### Running w/ Credentials
@@ -164,17 +166,25 @@ filters](reqs/views.py).
 We have unit tests for the API/admin (Python) and for the React-based frontend
 (JS), which are executed in different ways.
 
-For Python, run:
+For Python unit tests, run:
 ```sh
 docker-compose run --rm py.test
 docker-compose run --rm flake8  # linting
 ```
 
-For JS, run:
+For JS unit tests, run:
 ```sh
 docker-compose run --rm npm test
 docker-compose run --rm webpack       # lints (and builds)
 ```
+
+We also have a suite of integration tests, which are relatively complicated to
+set up, so we've wrapped them in a script:
+```sh
+./devops/integration-tests.sh
+```
+If your environment does not have a bash-like shell, inspect that file to
+implement something similar.
 
 See our `.travis.yml` test for a list of the exact commands we run in CI.
 
