@@ -14,7 +14,7 @@
   .topics {
     @include font-source-sans-pro();
     color: $color-gray;
-    font-size: .8em;
+    font-size: 0.8125rem;
   }
 
   .topics {
@@ -29,5 +29,5 @@
 }
 
 .organize-tabs {
-  font-size: 1.125em;
+  font-size: 1.125rem;
 }

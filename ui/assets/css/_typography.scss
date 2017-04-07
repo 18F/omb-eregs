@@ -24,14 +24,14 @@ typography.scss contains both global and application specific typography */
 body {
   @include font-source-sans-pro();
   color: $color-gray-dark;
-  font-size: 0.938em;
-  line-height: 1.25em;
+  font-size: 0.9375rem;
+  line-height: 1.25rem;
 }
 
 h1 {
-  font-size: 1.750em;
+  font-size: 1.75rem;
 }
 
 h2 {
-  font-size: 1.125em;
+  font-size: 1.125rem;
 }
