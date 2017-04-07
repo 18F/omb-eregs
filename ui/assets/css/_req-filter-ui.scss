@@ -8,6 +8,7 @@
 
   .remove-filter-link {
     align-items: center;
+    background: url('/static/img/close-icon.svg') no-repeat center;
     background-color: $color-secondary-darkest; 
     color: $color-white;
     height: 100%;

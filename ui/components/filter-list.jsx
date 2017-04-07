@@ -23,7 +23,7 @@ export function Filter({ existingIds, idToRemove, name, removeParam }, { router 
         to={{ pathname, query: modifiedQuery }}
         className="remove-filter-link rounded-right col col-3 p1 center flex absolute"
       >
-        <span className="close-button center block">x</span>
+        <span className="close-button center block" />
       </Link>
     </li>
   );
