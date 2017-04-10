@@ -7,6 +7,7 @@ export default function Requirement({ requirement }) {
     <span key={idx} className="req-text-line mb1">{ line }<br /></span>
   ));
   /* eslint-enable react/no-array-index-key */
+  const sunsetString = requirement.policy.sunset ? 'Sunset date by $requirement.policy.sunset' : 'Sunset date: none';
   return (
     <div className="req p2 clearfix max-width-3">
       <div className="req-id col col-1 mb2 mr1">
@@ -15,13 +16,37 @@ export default function Requirement({ requirement }) {
       <div className="req-text col col-10">
         { reqTexts }
         <div className="clearfix mt3">
-          <div className="applies-to mr2">
+          <div className="applies-to mr2 metadata">
             Applies to: [not implemented]
           </div>
-          <div className="sunset-date">
-            Sunset date by { requirement.policy.sunset || 'none' }
+          { requirement.issuing_body ? (
+            <div className="issuing-body metadata">
+              Issuing body: { requirement.issuing_body }
+            </div>
+          ) : (
+            ''
+          ) }
+          <div className="sunset-date metadata">
+            { sunsetString }
           </div>
-          <div className="topics">
+          <div className="policy-title metadata">
+            Policy title: { requirement.policy.title || 'none' }
+          </div>
+          { requirement.policy.issuance ? (
+            <div className="issuance metadata">
+              Policy issuance: { requirement.policy.issuance }
+            </div>
+          ) : (
+            ''
+          ) }
+          { requirement.policy.omb_policy_id ? (
+            <div className="omb-policy-id metadata">
+              OMB Policy ID: { requirement.policy.omb_policy_id }
+            </div>
+          ) : (
+            ''
+          ) }
+          <div className="topics metadata">
             <span>Topics: </span>
             <ul className="topics-list list-reset inline">
               { requirement.keywords.map(keyword => (
