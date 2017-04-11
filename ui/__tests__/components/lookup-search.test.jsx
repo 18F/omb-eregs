@@ -3,6 +3,7 @@ import React from 'react';
 
 import { cleanParams, LookupSearch, redirectIfMatched, redirectQuery, search } from '../../components/lookup-search';
 import api from '../../api';
+import { UserError } from '../../error-handling';
 
 jest.mock('../../api');
 
@@ -36,7 +37,7 @@ describe('cleanParams()', () => {
     const queryCopy = Object.assign({}, query, {
       redirectPathname: 'https://example.com/',
     });
-    expect(() => cleanParams(queryCopy)).toThrow();
+    expect(() => cleanParams(queryCopy)).toThrow(UserError);
   });
 
   it('gives cleans the parameter values', () => {

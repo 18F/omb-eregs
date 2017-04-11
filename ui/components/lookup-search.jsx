@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 import validator from 'validator';
 
 import api from '../api';
+import { UserError } from '../error-handling';
 import Pagers from './pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
@@ -35,13 +36,13 @@ export function cleanParams(query) {
   });
 
   if (validator.isEmpty(clean.q)) {
-    throw Error('Needs a "q" parameter');
+    throw new UserError('Needs a "q" parameter');
   } else if (validator.isEmpty(clean.insertParam)) {
-    throw Error('Needs an "insertParam" parameter');
+    throw new UserError('Needs an "insertParam" parameter');
   } else if (validator.isEmpty(clean.redirect.pathname)) {
-    throw Error('Needs a "redirectPathname" parameter');
+    throw new UserError('Needs a "redirectPathname" parameter');
   } else if (!clean.redirect.pathname.startsWith('/')) {
-    throw Error('Invalid "redirectPathname" parameter');
+    throw new UserError('Invalid "redirectPathname" parameter');
   }
 
   return clean;
