@@ -38,9 +38,10 @@ ALLOWED_HOSTS = env.uris
 INSTALLED_APPS = (
     'taggit',
     'reqs.apps.ReqsConfig',     # must be after taggit
+    'corsheaders',
     'dal',
     'dal_select2',
-    'corsheaders',
+    'django_filters',
     'rest_framework',
     'reversion',
     'django.contrib.admin',
