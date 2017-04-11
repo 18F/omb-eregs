@@ -1,5 +1,39 @@
 import React from 'react';
 
+export function Metadata({ className, name, value, nullValue, separator }) {
+  /**
+   * Returns a div element that has className equal to the argument plus 'metadata', and content
+   * that is either <name><separator><value> or, if value is null and nullValue is not, the content
+   * is the nullValue argument.
+   *
+   * If value and nullValue are both null, returns null.
+   */
+  if (!value && !nullValue) {
+    return null;
+  }
+  const classes = className.split(' ');
+  const classString = classes.includes('metadata') ? className : `${classes.join(' ')} metadata`;
+  const content = value ? `${name}${separator}${value}` : nullValue;
+  return (
+    <div className={classString}>
+      {`${content}`}
+    </div>);
+}
+
+Metadata.propTypes = {
+  className: React.PropTypes.string.isRequired,
+  name: React.PropTypes.string.isRequired,
+  value: React.PropTypes.string.isRequired,
+  nullValue: React.PropTypes.string,
+  separator: React.PropTypes.string,
+};
+
+Metadata.defaultProps = {
+  nullValue: '',
+  separator: ': ',
+};
+
+
 export default function Requirement({ requirement }) {
   // We could have multiple lines with the same text, so can't use a stable ID
   /* eslint-disable react/no-array-index-key */
@@ -7,7 +41,6 @@ export default function Requirement({ requirement }) {
     <span key={idx} className="req-text-line mb1">{ line }<br /></span>
   ));
   /* eslint-enable react/no-array-index-key */
-  const sunsetString = requirement.policy.sunset ? 'Sunset date by $requirement.policy.sunset' : 'Sunset date: none';
   return (
     <div className="req p2 clearfix max-width-3">
       <div className="req-id col col-1 mb2 mr1">
@@ -16,36 +49,40 @@ export default function Requirement({ requirement }) {
       <div className="req-text col col-10">
         { reqTexts }
         <div className="clearfix mt3">
-          <div className="applies-to mr2 metadata">
-            Applies to: [not implemented]
-          </div>
-          { requirement.issuing_body ? (
-            <div className="issuing-body metadata">
-              Issuing body: { requirement.issuing_body }
-            </div>
-          ) : (
-            ''
-          ) }
-          <div className="sunset-date metadata">
-            { sunsetString }
-          </div>
-          <div className="policy-title metadata">
-            Policy title: { requirement.policy.title || 'none' }
-          </div>
-          { requirement.policy.issuance ? (
-            <div className="issuance metadata">
-              Policy issuance: { requirement.policy.issuance }
-            </div>
-          ) : (
-            ''
-          ) }
-          { requirement.policy.omb_policy_id ? (
-            <div className="omb-policy-id metadata">
-              OMB Policy ID: { requirement.policy.omb_policy_id }
-            </div>
-          ) : (
-            ''
-          ) }
+          <Metadata
+            className="applies-to mr2"
+            name="Applies to"
+            value=""
+            nullValue="Applies to: [not implemented]"
+          />
+          <Metadata
+            className="issuing-body"
+            name="Issuing body"
+            value={requirement.issuing_body}
+          />
+          <Metadata
+            className="sunset-date"
+            name="Sunset date"
+            value={requirement.policy.sunset}
+            nullValue="Sunset date: none"
+            separator=" by "
+          />
+          <Metadata
+            className="policy-title"
+            name="Policy title"
+            value={requirement.policy.title}
+            nullValue="Policy title: none"
+          />
+          <Metadata
+            className="issuance"
+            name="Policy issuance"
+            value={requirement.policy.issuance}
+          />
+          <Metadata
+            className="omb-policy-id"
+            name="OMB Policy ID"
+            value={requirement.policy.omb_policy_id}
+          />
           <div className="topics metadata">
             <span>Topics: </span>
             <ul className="topics-list list-reset inline">
