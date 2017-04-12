@@ -61,17 +61,15 @@ export default function Requirement({ requirement }) {
             value={requirement.issuing_body}
           />
           <Metadata
-            className="sunset-date"
-            name="Sunset date"
-            value={requirement.policy.sunset}
-            nullValue="Sunset date: none"
-            separator=" by "
-          />
-          <Metadata
             className="policy-title"
             name="Policy title"
             value={requirement.policy.title}
             nullValue="Policy title: none"
+          />
+          <Metadata
+            className="omb-policy-id"
+            name="OMB Policy ID"
+            value={requirement.policy.omb_policy_id}
           />
           <Metadata
             className="issuance"
@@ -79,9 +77,11 @@ export default function Requirement({ requirement }) {
             value={requirement.policy.issuance}
           />
           <Metadata
-            className="omb-policy-id"
-            name="OMB Policy ID"
-            value={requirement.policy.omb_policy_id}
+            className="sunset-date"
+            name="Sunset date"
+            value={requirement.policy.sunset}
+            nullValue="Sunset date: none"
+            separator=" by "
           />
           <div className="topics metadata">
             <span>Topics: </span>
