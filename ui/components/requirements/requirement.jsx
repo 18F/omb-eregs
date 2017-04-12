@@ -52,8 +52,8 @@ export default function Requirement({ requirement }) {
           <Metadata
             className="applies-to mr2"
             name="Applies to"
-            value=""
-            nullValue="Applies to: [not implemented]"
+            value={requirement.impacted_entity}
+            nullValue="Applies to: unknown"
           />
           <Metadata
             className="issuing-body"
