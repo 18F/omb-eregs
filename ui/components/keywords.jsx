@@ -8,7 +8,7 @@ import Pagers from './pagers';
 function Keyword({ keyword }) {
   return (
     <li>
-      <Link to={{ pathname: '/requirements/', query: { keywords__id__in: keyword.id } }} >{ keyword.name }</Link>
+      <Link to={{ pathname: '/requirements/by-keyword', query: { keywords__id__in: keyword.id } }} >{ keyword.name }</Link>
     </li>
   );
 }

@@ -22,7 +22,7 @@ export default <Router history={browserHistory} >
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
     <Route path="requirements" component={Requirements} >
-      <IndexRedirect to="./by-keyword" />
+      <IndexRedirect to="/requirements/by-keyword" />
       <Route path="by-keyword" tabName="Requirement" component={ReqsByKeyword} />
       <Route path="by-policy" tabName="Policy" component={ReqsByPolicy} />
     </Route>
