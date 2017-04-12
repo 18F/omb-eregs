@@ -1,9 +1,9 @@
 import React from 'react';
 
-import config from '../config';
+import config from '../../config';
 
 
-export default function Error({ err }) {
+export default function FiveHundred({ err }) {
   const title = 'Server Error';
   let debugInfo = null;
   if (config.debug) {
@@ -32,10 +32,10 @@ export default function Error({ err }) {
     </html>
   );
 }
-Error.defaultProps = {
+FiveHundred.defaultProps = {
   err: { stack: '' },
 };
-Error.propTypes = {
+FiveHundred.propTypes = {
   err: React.PropTypes.shape({
     stack: React.PropTypes.string,
   }),

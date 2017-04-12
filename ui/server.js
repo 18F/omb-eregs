@@ -5,6 +5,7 @@ import path from 'path';
 
 import cfenv from 'cfenv';
 import express from 'express';
+import helmet from 'helmet';
 import morgan from 'morgan';
 
 import basicAuth from './basic-auth';
@@ -16,6 +17,10 @@ const env = cfenv.getAppEnv();
 const auth = basicAuth(env.getServiceCreds('config'));
 
 /* Middleware */
+// security headers. See docs around setOnOldIE: moral of the story is that
+// ZAP masquerades as IE6 which triggers a different policy within helmet
+app.use(helmet({ xssFilter: { setOnOldIE: true } }));
+// logging
 app.use(morgan('combined'));
 app.use('/static', express.static(path.join('ui-dist', 'static')));
 if (auth) {

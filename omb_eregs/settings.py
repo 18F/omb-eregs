@@ -38,9 +38,10 @@ ALLOWED_HOSTS = env.uris
 INSTALLED_APPS = (
     'taggit',
     'reqs.apps.ReqsConfig',     # must be after taggit
+    'corsheaders',
     'dal',
     'dal_select2',
-    'corsheaders',
+    'django_filters',
     'rest_framework',
     'reversion',
     'django.contrib.admin',
@@ -55,6 +56,7 @@ if DEBUG:
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,6 +74,14 @@ if DEBUG:
 # accessed this way
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/(?!admin).*$'
+
+# Request the browser not allow the CSRF cookie to be used in JS (not: this
+# means we can't have AJAX forms)
+CSRF_COOKIE_HTTPONLY = True
+# Request browsers block XSS attacks when they can
+SECURE_BROWSER_XSS_FILTER = True
+# Request browsers not guess at mimetypes
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 ROOT_URLCONF = 'omb_eregs.urls'
 

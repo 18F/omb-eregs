@@ -3,6 +3,7 @@ import React from 'react';
 
 import { cleanParams, LookupSearch, redirectIfMatched, redirectQuery, search } from '../../components/lookup-search';
 import api from '../../api';
+import { UserError } from '../../error-handling';
 
 jest.mock('../../api');
 
@@ -11,7 +12,7 @@ describe('cleanParams()', () => {
   const query = {
     q: 'something',
     insertParam: 'ins',
-    redirectPathname: '/some/path',
+    redirectPathname: '/requirements/by-keyword',
     redirectQuery__param: 'value',
     redirectQuery__et: 'c',
   };
@@ -36,7 +37,7 @@ describe('cleanParams()', () => {
     const queryCopy = Object.assign({}, query, {
       redirectPathname: 'https://example.com/',
     });
-    expect(() => cleanParams(queryCopy)).toThrow();
+    expect(() => cleanParams(queryCopy)).toThrow(UserError);
   });
 
   it('gives cleans the parameter values', () => {
@@ -44,7 +45,7 @@ describe('cleanParams()', () => {
       q: 'something',
       insertParam: 'ins',
       redirect: {
-        pathname: '/some/path',
+        pathname: '/requirements/by-keyword',
         query: {
           param: 'value',
           et: 'c',
@@ -71,7 +72,7 @@ describe('redirectIfMatched()', () => {
   const query = {
     q: 'qqq',
     insertParam: 'ins',
-    redirectPathname: '/somewhere/',
+    redirectPathname: '/requirements/by-keyword',
   };
   const routes = [{ path: 'keywords' }, {}];
   it('does not hit the api if a page number is present', () => {
@@ -127,7 +128,7 @@ describe('<LookupSearch />', () => {
       query: {
         q: 'searchTerm',
         insertParam: 'ins',
-        redirectPathname: '/some/path/here/',
+        redirectPathname: '/requirements/by-keyword',
         redirectQuery__some: 'field',
         redirectQuery__page: '4',
       },
@@ -145,7 +146,7 @@ describe('<LookupSearch />', () => {
   it('has a "back" link', () => {
     const link = shallow(<LookupSearch {...params} />).find('Link').first();
     expect(link.prop('to')).toEqual({
-      pathname: '/some/path/here/',
+      pathname: '/requirements/by-keyword',
       query: { some: 'field', page: '4' },
     });
   });

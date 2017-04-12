@@ -7,7 +7,7 @@ import { match, RouterContext } from 'react-router';
 
 import handleError from './error-handling';
 import routes from './routes';
-import FourOhFour from './components/fourOhFour';
+import FourOhFour from './components/errors/fourOhFour';
 import Html from './components/html';
 
 

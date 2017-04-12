@@ -8,7 +8,7 @@ import Pagers from './pagers';
 function Policy({ policy }) {
   return (
     <li>
-      <Link to={{ pathname: '/requirements/', query: { policy_id: policy.id } }} >{ policy.policy_number }: { policy.title }</Link>
+      <Link to={{ pathname: '/requirements/by-policy', query: { policy_id: policy.id } }} >{ policy.policy_number }: { policy.title }</Link>
     </li>
   );
 }

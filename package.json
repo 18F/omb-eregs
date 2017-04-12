@@ -51,6 +51,7 @@
     "buffer-equal-constant-time": "^1.0.1",
     "cfenv": "^1.0.4",
     "express": "^4.14.1",
+    "helmet": "^3.5.0",
     "http-auth": "^3.1.1",
     "morgan": "^1.8.1",
     "newrelic": "^1.38.1",
@@ -71,7 +72,9 @@
     "rootDir": "ui",
     "collectCoverage": true,
     "coverageDirectory": "./",
-    "coverageReporters": ["lcov"],
+    "coverageReporters": [
+      "lcov"
+    ],
     "testPathIgnorePatterns": [
       "<rootDir>/__tests__/util/"
     ]
