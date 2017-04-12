@@ -1,5 +1,5 @@
 ---
-name: OMB eRegs
+name: OMB eReqs
 uniqueID: MB18F15ATF01
 version: 1.0.0
 phase: beta
@@ -19,23 +19,23 @@ staff:
         unit: TTS
         email: devops@gsa.gov
     system-owner: 
-        name: TBD
-        title: 
-        org: General Services Administration
-        unit: 
-        email: 
-    system-management:
-        name: Joe Hoyt
-        title: TODO
-        org: General Services Administration
-        unit: 
-        email: 
-    system-security-officer:
-        name: Randy Bator
-        title: TODO
+        name: Theresa Summa
+        title: Innovation Specialist
         org: General Services Administration
         unit: TTS
-        email: 
+        email: theresa.summa@gsa.gov
+    system-management:
+        name: Joe Hoyt
+        title: ISSM
+        org: General Services Administration
+        unit: TTS
+        email: joseph.hoyt@gsa.gov
+    system-security-officer:
+        name: Randy Bator
+        title: ISSO
+        org: General Services Administration
+        unit: TTS
+        email: randy.bator@gsa.gov
     technical-lead:
         name: CM Lubinski
         title: Technical Lead
