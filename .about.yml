@@ -3,16 +3,16 @@
 
 # This is a short name of your project that can be used as a URL slug.
 # (required)
-name: omb-eregs
+name: omb-ereqs
 
 # This is the display name of your project. (required)
-full_name: OMB eRegulations
+full_name: OMB eRequirements
 
 # What is the problem your project solves? What is the solution? (required)
-description: The Office of Management and Budget (OMB) has policy documents they would like to be in a more usable and reference-able form. We are implementing an instance of eRegulations and expanding the platform to support additional document types.
+description: The Office of Management and Budget (OMB) has policy documents they wanted to be in a more usable and reference-able form. They are also looking at new ways to manage their policy requirement content. Our tool provides an admin interface where OMB employees can update requirement content as authorized, and also a public-facing tool for people to view and filter requirements.
 
 # What is the measurable impact of your project? (required)
-impact: The application makes it easier for employees at OMB to understand, reference and use policy better, enabling them to work more effectively.
+impact: We are making it easier to find, view and comply with OMB requirements, as well as making it easier for OMB to maintain their requirements.
 
 # What kind of team owns the repository? (required)
 # values: guild, working-group, project
@@ -20,7 +20,7 @@ owner_type: project
 
 # What is your project's current status? (required)
 # values: discovery, alpha, beta, live
-stage: discovery
+stage: beta
 
 # Should this repo have automated tests? If so, set to `true`. (required)
 # values: true, false
@@ -33,7 +33,7 @@ testable: true
 #     name: Name of the license from the Software Package Data Exchange (SPDX): https://spdx.org/licenses/
 #     url: URL for the text of the license
 licenses:
-  omb-eregs:
+  omb-ereqs:
     name: CC0-1.0
     url: https://github.com/18F/omb-eregs/blob/master/LICENSE.md
 
@@ -63,8 +63,10 @@ team:
   role: Engineer
 - github: donjo
   role: Designer
-- github: jehlers
-  role: User Experience Designer
+- github: micahtaylor
+  role: Designer
+- github: nicoleslaw
+  role: Content Designer
 - github: tadhg-ohiggins
   role: Engineer
 - github: theresaanna
@@ -92,7 +94,7 @@ type: app
 #   category: Type of the link
 links:
 - url: https://omb-eregs.apps.cloud.gov/
-  text: OMB eRegulations website
+  text: OMB eRequirements website
 
 # What tags does your organization's blog associate with your project? You can
 # find a list of 18F blog tags here: https://18f.gsa.gov/tags/
@@ -100,8 +102,12 @@ links:
 #- 
 
 # What technologies are used in this project?
-#stack:
-#- 
+stack:
+- Django
+- Python
+- Node
+- React
+- JavaScript
 
 # What are the services used to supply project status information?
 # Items:
