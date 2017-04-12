@@ -1,6 +1,9 @@
-# OMB eRegulations
-This repository contains code necessary to run the White House Office of Management and Budget (OMB) instance of
-[eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer). 
+# OMB eRequirements
+This repository contains a tool to make White House Office of Management and Budget (OMB) policy requirements easier to view, comply with, and maintain.
+
+The repository contains a Django application where requirements are maintained by the OMB team. The Django application also serves an API. The repo also contains an agency- and public-facing tool to view and filter the requirements, and see related information about them. The public-facing tool is comprised of an isomorphic Node and React application.
+
+Brought to you by the 18F [eRegulations](https://eregs.github.io) team. 
 
 See our bi-weekly demos [on
 YouTube](https://www.youtube.com/playlist?list=PLd9b-GuOJ3nEJsDD5BZ5qlVkr9RZ0PivQ).
