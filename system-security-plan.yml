@@ -55,7 +55,4 @@ user-types:
         functions: 
         - deployment
         - engineering
-controls: 
-- TODO:REPLACE http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
-- https://github.com/eregs/regulations-core#security
 ---
