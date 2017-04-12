@@ -10,6 +10,11 @@ import { UserError } from '../error-handling';
 import Pagers from './pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
+const redirectWhitelist = [
+  '/requirements/by-keyword',
+  '/requirements/by-policy',
+];
+
 
 /**
  * We expect a query like
@@ -39,9 +44,7 @@ export function cleanParams(query) {
     throw new UserError('Needs a "q" parameter');
   } else if (validator.isEmpty(clean.insertParam)) {
     throw new UserError('Needs an "insertParam" parameter');
-  } else if (validator.isEmpty(clean.redirect.pathname)) {
-    throw new UserError('Needs a "redirectPathname" parameter');
-  } else if (!clean.redirect.pathname.startsWith('/')) {
+  } else if (!validator.isIn(clean.redirect.pathname, redirectWhitelist)) {
     throw new UserError('Invalid "redirectPathname" parameter');
   }
 
@@ -85,9 +88,10 @@ export function redirectIfMatched({ routes, location: { query } }, redirect, don
   } else {
     const lookup = routes[routes.length - 2].path;
     const apiQuery = { [apiParam[lookup]]: query.q };
-    api[lookup].fetch(apiQuery)
-      .then(({ count, results }) => {
-        const params = cleanParams(query);
+    new Promise(success => success(cleanParams(query)))
+      .then(params => Promise.all(
+        [Promise.resolve(params), api[lookup].fetch(apiQuery)]))
+      .then(([params, { count, results }]) => {
         if (count > 0) {
           redirect(redirectUrl(params, results[0].id));
         }
