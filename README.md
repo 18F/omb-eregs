@@ -215,6 +215,9 @@ And deploy!
 ./devops/deploy.sh dev  # replace "dev" with "prod" if desired
 ```
 
+## System diagram
+![System diagram](https://cloud.githubusercontent.com/assets/326918/24920823/a66a1ce2-1eb6-11e7-843d-2f39630925cf.png)
+
 ## Documentation and contributing
 
 See the [eRegulations overview](https://eregs.github.io/) for context about eRegulations, which is a multi-agency project.
