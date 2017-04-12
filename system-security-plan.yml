@@ -20,7 +20,7 @@ staff:
         email: devops@gsa.gov
     system-owner: 
         name: Theresa Summa
-        title: Innovation Specialist
+        title: System Owner
         org: General Services Administration
         unit: TTS
         email: theresa.summa@gsa.gov
@@ -45,10 +45,7 @@ staff:
 leveraged-authorizations: 
 - https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
 purpose: https://github.com/18F/omb-eregs
-components: 
-- https://github.com/eregs/regulations-core
-- https://github.com/eregs/regulations-site
-diagram: TODO:REPLACE http://atf-eregs.readthedocs.io/en/latest/production_setup.html#architecture
+diagram: https://github.com/18F/omb-eregs/issues/172#issuecomment-293328098
 network-architecture: TODO:REPLACE http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
 environments:
 - Cloud Foundry
