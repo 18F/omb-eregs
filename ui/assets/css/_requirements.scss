@@ -9,9 +9,7 @@
     color: $color-gray-dark;
   }
 
-  .applies-to,
-  .sunset-date,
-  .topics {
+  .metadata {
     @include font-source-sans-pro();
     color: $color-gray;
     font-size: 0.8125rem;
