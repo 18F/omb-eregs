@@ -46,7 +46,7 @@ leveraged-authorizations:
 - https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
 purpose: https://github.com/18F/omb-eregs
 diagram: https://github.com/18F/omb-eregs/issues/172#issuecomment-293328098
-network-architecture: TODO:REPLACE http://atf-eregs.readthedocs.io/en/latest/production_setup.html#updating-data
+network-architecture: https://github.com/18F/omb-eregs/issues/172#issuecomment-293328098
 environments:
 - Cloud Foundry
 - Amazon Web Services East / West
