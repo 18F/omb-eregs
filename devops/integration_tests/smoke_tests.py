@@ -23,3 +23,10 @@ def test_admin_lists_models(selenium, admin_login):
     assert selenium.find_element_by_link_text('Keywords') is not None
     assert selenium.find_element_by_link_text('Policies') is not None
     assert selenium.find_element_by_link_text('Requirements') is not None
+
+
+def test_ui_proxies_404(selenium, app_urls):
+    selenium.get(app_urls.ui + 'requirements/by-keyword?page=9999')
+    html = selenium.find_element_by_tag_name('html')
+    assert 'Server Error' not in html.text
+    assert 'Page not found' in html.text

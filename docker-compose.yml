@@ -30,7 +30,9 @@ services:
       VCAP_APPLICATION: >
         {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api"]}
       VCAP_SERVICES: >
-        {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}]}
+        {"config": [{"credentials":
+          {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
+        }]}
     volumes:
       - $PWD:/usr/src/app
     working_dir: /usr/src/app
