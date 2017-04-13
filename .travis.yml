@@ -15,7 +15,7 @@ script:
 - docker-compose run --rm py.test
 - docker-compose run --rm flake8
 # Integration tests
-- ./devops/integration-tests.sh
+# - ./devops/integration-tests.sh
 before_deploy:
 - export PATH=$HOME:$PATH
 - travis_retry curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github"
