@@ -11,6 +11,11 @@ import FourOhFour from './components/errors/fourOhFour';
 import Html from './components/html';
 
 
+function render404(res) {
+  const fourOhFour = React.createElement(FourOhFour);
+  res.status(404).send(renderToStaticMarkup(fourOhFour));
+}
+
 function resolveAndRender(renderProps, res) {
   Resolver
     .resolve(() => React.createElement(RouterContext, renderProps))
@@ -20,7 +25,11 @@ function resolveAndRender(renderProps, res) {
       res.status(200).send(renderToStaticMarkup(html));
     })
     .catch((err) => {
-      handleError(err, null, res);
+      if (err.response && err.response.status === 404) {
+        render404(res);
+      } else {
+        handleError(err, null, res);
+      }
     });
 }
 
@@ -34,8 +43,7 @@ export default function (req, res) {
     } else if (renderProps) {
       resolveAndRender(renderProps, res);
     } else {
-      const fourOhFour = React.createElement(FourOhFour);
-      res.status(404).send(renderToStaticMarkup(fourOhFour));
+      render404(res);
     }
   });
 }
