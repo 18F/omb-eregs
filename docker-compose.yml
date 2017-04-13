@@ -32,7 +32,7 @@ services:
       VCAP_SERVICES: >
         {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}]}
     volumes:
-      - $PWD:/usr/src/app:cached
+      - $PWD:/usr/src/app
     working_dir: /usr/src/app
     depends_on:
       - persistent_db
@@ -54,7 +54,7 @@ services:
   prod: &PROD_UI
     image: node:6
     volumes:
-      - $PWD:/usr/src/app:cached
+      - $PWD:/usr/src/app
     working_dir: /usr/src/app
     command: ./devops/deps_ok_then npm start
     ports:
