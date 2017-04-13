@@ -43,12 +43,18 @@ py==1.4.32                # via pytest
 pycodestyle==2.3.1        # via flake8
 pyflakes==1.5.0           # via flake8
 pyparsing==2.1.10         # via packaging
+pytest-base-url==1.3.0    # via pytest-selenium
 pytest-cov==2.4.0
 pytest-django==3.1.2
+pytest-html==1.14.2       # via pytest-selenium
+pytest-metadata==1.3.0    # via pytest-html
+pytest-selenium==1.9.1
+pytest-variables==1.5.1   # via pytest-selenium
 pytest==3.0.6
 python-cas==1.2.0
 python-dateutil==2.6.0
 requests==2.13.0
+selenium==3.3.3           # via pytest-selenium
 six==1.10.0
 sqlparse==0.2.3           # via django-debug-toolbar
 testfixtures==4.13.4      # via flake8-isort

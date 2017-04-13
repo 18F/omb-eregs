@@ -4,17 +4,25 @@ services:
     image: postgres:9.4
     volumes:
       - database_data:/var/lib/postgresql/data
+  selenium_chrome:
+    image: selenium/standalone-chrome:3
+    depends_on:
+      - prod
+      - prod-api
+  selenium_firefox:
+    image: selenium/standalone-firefox:3
+    depends_on:
+      - prod
+      - prod-api
 
   prod-api: &PROD_API
-    image: omb-eregs:prod
-    build:
-      context: .
-    command: ./devops/wait_for_db_then ./devops/prod_api.sh
+    image: python:3.5.3
+    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
     ports:
-      - "8001:8001"
+      - 9001:9001
     environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
-      PORT: 8001
+      PORT: 9001
       DJANGO_SETTINGS_MODULE: omb_eregs.settings
       TMPDIR: /tmp
       # Uncomment the following line for MAX logins
@@ -24,7 +32,8 @@ services:
       VCAP_SERVICES: >
         {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}]}
     volumes:
-      - $PWD:/code    # override to source the current directory
+      - $PWD:/usr/src/app:cached
+    working_dir: /usr/src/app
     depends_on:
       - persistent_db
     stdin_open: true
@@ -32,14 +41,12 @@ services:
 
   dev-api: &DEV_API
     <<: *PROD_API
-    image: omb-eregs:debug
-    build:
-      context: .
-      args:
-        DEV_MODE: "true"
-    command: ./devops/wait_for_db_then ./devops/dev_api.sh
+    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
+    ports:
+      - 8001:8001
     environment:
       <<: *API_ENV
+      PORT: 8001
       DEBUG: "true"
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
@@ -47,16 +54,16 @@ services:
   prod: &PROD_UI
     image: node:6
     volumes:
-      - $PWD:/usr/src/app
+      - $PWD:/usr/src/app:cached
     working_dir: /usr/src/app
-    command: npm start
+    command: ./devops/deps_ok_then npm start
     ports:
-      - "8000:8000"
+      - 9000:9000
     environment: &UI_ENV
-      PORT: 8000
+      PORT: 9000
       NODE_ENV: production
-      INTERNAL_API: 'http://prod-api:8001/'
-      PUBLIC_API: 'http://0.0.0.0:8001/'
+      INTERNAL_API: 'http://prod-api:9001/'
+      PUBLIC_API: 'http://0.0.0.0:9001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
@@ -65,9 +72,12 @@ services:
 
   dev: &DEV_UI
     <<: *PROD_UI
-    command: ./devops/dev_ui.sh
+    command: ./devops/deps_ok_then ./devops/dev_ui.sh
+    ports:
+      - 8000:8000
     environment:
       <<: *UI_ENV
+      PORT: 8000
       NODE_ENV: ''
       INTERNAL_API: 'http://dev-api:8001/'
       PUBLIC_API: 'http://0.0.0.0:8001/'
@@ -80,42 +90,47 @@ services:
 
   #---- Commands ----
   manage.py:
-    <<: *PROD_API
-    entrypoint: ./devops/wait_for_db_then ./manage.py
+    <<: *DEV_API
+    entrypoint: ./devops/wait_for_db_then ./devops/activate_then ./manage.py
     command: ''
     ports: []
 
   py.test:
     <<: *DEV_API
-    entrypoint: ./devops/wait_for_db_then py.test
+    entrypoint: ./devops/wait_for_db_then ./devops/activate_then py.test
     command: ''
     ports: []
+    external_links:
+      - selenium_chrome
+      - selenium_firefox
 
   flake8:
     <<: *DEV_API
-    entrypoint: flake8
+    entrypoint: ./devops/activate_then flake8
     depends_on: []
     command: ''
     ports: []
 
   pip-compile:
     <<: *DEV_API
-    entrypoint: pip-compile
+    entrypoint: ./devops/activate_then pip-compile
     depends_on: []
     command: ''
     ports: []
 
   npm:
     <<: *DEV_UI
-    entrypoint: npm
+    entrypoint: ./devops/deps_ok_then npm
     command: ''
     ports: []
+    depends_on: []
 
   webpack:
     <<: *DEV_UI
-    entrypoint: ./node_modules/.bin/webpack
+    entrypoint: ./devops/deps_ok_then ./node_modules/.bin/webpack
     command: ''
     ports: []
+    depends_on: []
 
   psql:
     image: postgres:9.4

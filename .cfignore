@@ -91,6 +91,8 @@ celerybeat-schedule
 
 # virtualenv
 .venv/
+.venv-dev/
+.venv-prod/
 venv/
 ENV/
 

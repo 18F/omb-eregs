@@ -30,7 +30,7 @@ Let's start by adding an admin user.
 docker-compose run --rm manage.py migrate  # set up database
 docker-compose run --rm manage.py createsuperuser
 # [fill out information]
-docker-compose up prod-api
+docker-compose up dev-api
 # Ctrl-c to kill
 ```
 
@@ -55,6 +55,8 @@ docker-compose run --rm webpack  # to build the server JS
 docker-compose up prod
 ```
 
+Then navigate to http://localhost:9000/ (prod and dev run on separate ports).
+
 ### Data
 
 Let's also load the requirements data from OMB:
@@ -74,13 +76,13 @@ There are two types of entry points:
 1. Services which will run until you press `ctrl-c`. These are activated via
   `docker-compose up`
   * `prod-api` - Build the admin/API app and run it in "production" mode on
-    port 8001
+    port 9001
   * `dev-api` - Build the admin/API app and run it in "development" mode on
     port 8001
   * `dev` - Build and run the UI and API app in "development" mode (port 8000
     for UI, 8001 for API).
-  * `prod` - Run the UI and API apps in "production" mode (port 8000 for UI,
-    8001 for API). Note that this requires the JS be compiled already.
+  * `prod` - Run the UI and API apps in "production" mode (port 9000 for UI,
+    9001 for API). Note that this requires the JS be compiled already.
 1. One use commands which run until complete. These are ran via
   `docker-compose run --rm` (the `--rm` just deletes the images after running;
   it's not strictly required)
@@ -94,28 +96,17 @@ There are two types of entry points:
 
 ### Resolving common container issues
 
-If a Javascript dependency has been added (indicated by an error within
-`node_modules`), run
-```sh
-docker-compose run --rm npm install
-```
-
-If a Python dependency has been added, run
-```sh
-docker-compose build  # rebuilds images, which include Python libs
-```
-
 If you see an error about a conflicting port, try spinning down the running
-services
+services (including those associated with integration tests).
 ```sh
 docker-compose down
+docker-compose -p integration_tests down
 ```
 
 If all it lost and you want to start from scratch, run
 ```sh
-docker-compose down
-docker volume rm omberegs_database_data   # remove database data
-docker-compose build
+docker-compose down -v      # also removes database data
+docker-compose -p integration_tests down -v
 ```
 
 ### Running w/ Credentials
@@ -175,18 +166,25 @@ filters](reqs/views.py).
 We have unit tests for the API/admin (Python) and for the React-based frontend
 (JS), which are executed in different ways.
 
-For Python, run:
+For Python unit tests, run:
 ```sh
 docker-compose run --rm py.test
 docker-compose run --rm flake8  # linting
 ```
 
-For JS, run:
+For JS unit tests, run:
 ```sh
-docker-compose run --rm npm install   # not always needed
 docker-compose run --rm npm test
 docker-compose run --rm webpack       # lints (and builds)
 ```
+
+We also have a suite of integration tests, which are relatively complicated to
+set up, so we've wrapped them in a script:
+```sh
+./devops/integration-tests.sh
+```
+If your environment does not have a bash-like shell, inspect that file to
+implement something similar.
 
 See our `.travis.yml` test for a list of the exact commands we run in CI.
 
@@ -205,7 +203,6 @@ line tool and an associated plugin:
 Then, make sure you've built the frontend:
 
 ```sh
-docker-compose run --rm npm install
 docker-compose run --rm webpack
 ```
 
