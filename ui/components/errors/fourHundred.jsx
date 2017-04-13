@@ -1,5 +1,7 @@
 import React from 'react';
 
+import DAP from '../dap';
+
 
 export default function FourHundred({ message }) {
   const title = 'Invalid Request';
@@ -7,6 +9,7 @@ export default function FourHundred({ message }) {
     <html lang="en-US">
       <head>
         <title>{ title }</title>
+        <DAP />
       </head>
       <body>
         <h1>{ title }</h1>
