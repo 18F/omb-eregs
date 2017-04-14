@@ -1,6 +1,7 @@
 import React from 'react';
 
 import config from '../../config';
+import DAP from '../dap';
 
 
 export default function FiveHundred({ err }) {
@@ -23,6 +24,7 @@ export default function FiveHundred({ err }) {
     <html lang="en-US">
       <head>
         <title>{ title }</title>
+        <DAP />
       </head>
       <body>
         <h1>{ title }</h1>

@@ -2,6 +2,7 @@ import React from 'react';
 import serialize from 'serialize-javascript';
 
 import config from '../config';
+import DAP from './dap';
 
 
 export default function Html({ contents, data }) {
@@ -21,6 +22,7 @@ export default function Html({ contents, data }) {
     <html lang="en-US">
       <head>
         <link rel="stylesheet" href="/static/styles.css" />
+        <DAP />
       </head>
       <body>
         <div id="app">
