@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 export function Metadata({ className, name, value, nullValue, separator }) {
   /**
@@ -23,14 +24,34 @@ export function Metadata({ className, name, value, nullValue, separator }) {
 Metadata.propTypes = {
   className: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
-  value: React.PropTypes.string.isRequired,
+  value: React.PropTypes.string,
   nullValue: React.PropTypes.string,
   separator: React.PropTypes.string,
 };
 
 Metadata.defaultProps = {
+  value: '',
   nullValue: '',
   separator: ': ',
+};
+
+
+function KeywordLink({ keyword }) {
+  const linkTo = {
+    pathname: '/requirements/by-keyword',
+    query: { keywords__id__in: keyword.id },
+  };
+  return (
+    <li className="inline">
+      <Link to={linkTo}>{ keyword.name }</Link>
+    </li>
+  );
+}
+KeywordLink.propTypes = {
+  keyword: React.PropTypes.shape({
+    id: React.PropTypes.number,
+    name: React.PropTypes.string,
+  }).isRequired,
 };
 
 
@@ -86,11 +107,8 @@ export default function Requirement({ requirement }) {
           <div className="topics metadata">
             <span>Topics: </span>
             <ul className="topics-list list-reset inline">
-              { requirement.keywords.map(keyword => (
-                <li key={keyword.id} className="inline">
-                  { keyword.name }
-                </li>
-              ))}
+              { requirement.keywords.map(keyword =>
+                <KeywordLink key={keyword.id} keyword={keyword} />) }
             </ul>
           </div>
         </div>
@@ -98,15 +116,6 @@ export default function Requirement({ requirement }) {
     </div>
   );
 }
-
-Requirement.defaultProps = {
-  requirement: {
-    keywords: [],
-    policy: {},
-    req_text: '',
-    req_id: '',
-  },
-};
 
 Requirement.propTypes = {
   requirement: React.PropTypes.shape({
@@ -119,5 +128,5 @@ Requirement.propTypes = {
     }),
     req_text: React.PropTypes.string,
     req_id: React.PropTypes.string,
-  }),
+  }).isRequired,
 };
