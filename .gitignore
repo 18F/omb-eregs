@@ -5,6 +5,9 @@
 node_modules
 reqs/static/js/bundle.js
 ui-dist
+jest
+ui/lcov-report/
+ui/lcov.info
 
 # Data
 *.csv

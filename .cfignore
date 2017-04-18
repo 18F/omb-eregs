@@ -3,6 +3,9 @@
 
 # Javascript
 node_modules/
+jest
+ui/lcov-report/
+ui/lcov.info
 
 # Data
 *.csv
