@@ -36,9 +36,6 @@ export default class SearchAutocomplete extends React.Component {
   loadOptions(inputStr) {
     const { lookup } = this.props;
     const textField = apiParam[lookup];
-    if (inputStr.trim().length === 0) {
-      return Promise.resolve({ options: [] });
-    }
     return search(lookup, inputStr).then(data => ({
       options: data.results.map(
         entry => ({ value: entry.id, label: entry[textField] })),

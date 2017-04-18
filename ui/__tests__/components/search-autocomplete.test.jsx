@@ -35,16 +35,10 @@ describe('<SearchAutocomplete /> form', () => {
 describe('<SearchAutocomplete /> autocompleter', () => {
   it('renders differently when we do the full componentDidMount', () => {
     const context = { router: mockRouter() };
+    lookupSearch.search = jest.fn(() => Promise.resolve({ results: [] }));
+
     expect(shallow(<SearchAutocomplete />, { context }).name()).toEqual('form');
     expect(mount(<SearchAutocomplete />, { context }).name()).not.toEqual('form');
-  });
-
-  it('returns no results when given empty input', () => {
-    const component = new SearchAutocomplete(
-      { lookup: 'keywords' }, { router: mockRouter() });
-    return component.loadOptions('    ').then((result) => {
-      expect(result.options).toHaveLength(0);
-    });
   });
 
   it('queries the API for suggestions', () => {
