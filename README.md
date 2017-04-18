@@ -213,10 +213,7 @@ And deploy!
 ```
 
 ## System diagram
-OMB eRegs Diagram Agency/Public
-![System diagram](https://cloud.githubusercontent.com/assets/326918/24920820/a1946358-1eb6-11e7-8b65-ce7f150f2e6e.png)
-OMB eRegs Diagram OMB User
-![System diagram](https://cloud.githubusercontent.com/assets/326918/24920823/a66a1ce2-1eb6-11e7-843d-2f39630925cf.png)
+![System diagram](https://cloud.githubusercontent.com/assets/326918/25196365/6e84c9cc-250e-11e7-96ac-aa9657997a3d.png)
 
 ## Documentation and contributing
 
