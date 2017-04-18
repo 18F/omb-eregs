@@ -11,7 +11,7 @@ class Keyword(TagBase):
     class Meta:
         ordering = ['name']
         verbose_name = ugettext_lazy('Keyword')
-        verbose_name_plural = ugettext_lazy('Topics')
+        verbose_name_plural = ugettext_lazy('Keywords')
 
     @property
     def requirements(self):
@@ -95,7 +95,7 @@ class Requirement(models.Model):
     citation = models.CharField(max_length=1024, blank=True)
     keywords = TaggableManager(
         through=KeywordConnect,
-        verbose_name=ugettext_lazy('Topics'),
+        verbose_name=ugettext_lazy('Keywords'),
         blank=True
     )
     req_status = models.CharField(max_length=32, blank=True)

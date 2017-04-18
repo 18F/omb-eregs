@@ -40,6 +40,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='requirement',
             name='keywords',
-            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='reqs.KeywordConnect', to='reqs.Keyword', verbose_name='Topics'),
+            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='reqs.KeywordConnect', to='reqs.Keyword', verbose_name='Keywords'),
         ),
     ]

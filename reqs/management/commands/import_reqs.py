@@ -171,7 +171,7 @@ class KeywordProcessor:
     def normalize_keywords(self, values):
         """
         Executive decisions:
-        +   Topics cannot contain whitespace at the start or end.
+        +   Keywords cannot contain whitespace at the start or end.
         +   All whitespace will be converted to a single space.
         +   Keyword values must be init-caps.
         +   Use of hyphens/ampersands as separators requires a single space
@@ -194,12 +194,12 @@ class KeywordProcessor:
         to_return = []
         for field in self.fields:
             value = row.get(field)
-            if field in ('Other', 'Other (Topics)'):
+            if field in ('Other', 'Other (Keywords)'):
                 values = self.normalize_keywords(
                     priority_split(value, ';', ','))
                 to_return.extend(values)
             elif value:
-                to_return.append(field.replace("(Topics)", "").strip())
+                to_return.append(field.replace("(Keywords)", "").strip())
         return to_return
 
     def connections(self, row, req_pk):
