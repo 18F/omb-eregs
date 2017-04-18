@@ -11,17 +11,21 @@ applications:
       - database  # aws-rds medium-psql
       - config    # user-provided service w/ DJANGO_SECRET_KEY and NEW_RELIC_LICENSE_KEY
     command: ./devops/run_api.sh
-    host: omb-eregs-api
+    routes:
+      - route: omb-eregs-api.app.cloud.gov
+      - route: policy-api.cio.gov
     env:
       NEW_RELIC_APP_NAME: OMB Prod API/Admin
       MAX_URL: https://login.max.gov/cas/login
   - name: ui
     buildpack: nodejs_buildpack
     command: node ui-dist/server.js
-    host: omb-eregs
+    routes:
+      - route: omb-eregs.app.cloud.gov
+      - route: policy-beta.cio.gov
     services:
       - config    # user-provided service w/ UI_BASIC_AUTH and NEW_RELIC_LICENSE_KEY
     env:
-      INTERNAL_API: https://omb-eregs-api.app.cloud.gov/
-      PUBLIC_API: https://omb-eregs-api.app.cloud.gov/
+      INTERNAL_API: https://policy-api.cio.gov/
+      PUBLIC_API: https://policy-api.cio.gov/
       NEW_RELIC_APP_NAME: OMB Prod UI

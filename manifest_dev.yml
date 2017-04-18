@@ -10,14 +10,16 @@ applications:
       - database  # aws-rds medium-psql
       - config    # user-provided service w/ DJANGO_SECRET_KEY and NEW_RELIC_LICENSE_KEY
     command: ./devops/run_api.sh
-    host: omb-eregs-api-demo
+    routes:
+      - route: omb-eregs-api-demo.app.cloud.gov
     env:
       NEW_RELIC_APP_NAME: OMB Demo API/Admin
       MAX_URL: https://login.test.max.gov/cas/login
   - name: ui
     buildpack: nodejs_buildpack
     command: node ui-dist/server.js
-    host: omb-eregs-demo
+    routes:
+      - route: omb-eregs-demo.app.cloud.gov
     services:
       - config    # user-provided service w/ UI_BASIC_AUTH and NEW_RELIC_LICENSE_KEY
     env:
