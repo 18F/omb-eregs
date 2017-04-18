@@ -2,7 +2,7 @@ import React from 'react';
 import { browserHistory, IndexRedirect, IndexRoute, Route, Router } from 'react-router';
 
 import App from './components/app';
-import Keywords from './components/keywords';
+import Topics from './components/keywords';
 import Index from './components/index';
 import Policies from './components/policies';
 import Requirements from './components/requirements/container';
@@ -24,7 +24,7 @@ export default <Router history={browserHistory} >
   <Route path="/" component={App}>
     <IndexRoute component={Index} />
     <Route path="keywords">
-      <IndexRoute component={Keywords} />
+      <IndexRoute component={Topics} />
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
     <Route path="policies">

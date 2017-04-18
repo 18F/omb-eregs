@@ -33,12 +33,12 @@ Container.propTypes = {
   policies: FilterList.propTypes.existingFilters,
 };
 
-const fetchKeywords = ({ location: { query: { keywords__id__in } } }) =>
+const fetchTopics = ({ location: { query: { keywords__id__in } } }) =>
   api.keywords.withIds(keywords__id__in);
 const fetchPolicies = ({ location: { query: { policy_id__in } } }) =>
   api.policies.withIds(policy_id__in);
 
 export default resolve({
-  keywords: fetchKeywords,
+  keywords: fetchTopics,
   policies: fetchPolicies,
 })(Container);

@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='keyword',
-            options={'ordering': ['name'], 'verbose_name': 'Keyword', 'verbose_name_plural': 'Keywords'},
+            options={'ordering': ['name'], 'verbose_name': 'Keyword', 'verbose_name_plural': 'Topics'},
         ),
     ]

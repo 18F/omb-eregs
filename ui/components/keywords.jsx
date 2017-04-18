@@ -24,10 +24,10 @@ Keyword.propTypes = {
 };
 
 
-function Keywords({ location, data }) {
+function Topics({ location, data }) {
   return (
     <div>
-      <h1>Keywords</h1>
+      <h1>Topics</h1>
       <ul>
         { data.results.map(keyword => <Keyword key={keyword.id} keyword={keyword} />) }
       </ul>
@@ -36,12 +36,12 @@ function Keywords({ location, data }) {
   );
 }
 
-Keywords.defaultProps = {
+Topics.defaultProps = {
   data: { results: [], count: 0 },
   location: {},
 };
 
-Keywords.propTypes = {
+Topics.propTypes = {
   data: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(Keyword.propTypes.keyword),
     count: React.PropTypes.number,
@@ -49,9 +49,9 @@ Keywords.propTypes = {
   location: React.PropTypes.shape({}),
 };
 
-const fetchKeywords = ({ location: { query } }) =>
+const fetchTopics = ({ location: { query } }) =>
   api.keywords.fetch(query);
 
 export default resolve(
-  'data', fetchKeywords,
-)(Keywords);
+  'data', fetchTopics,
+)(Topics);

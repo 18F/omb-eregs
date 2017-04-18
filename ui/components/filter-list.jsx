@@ -1,6 +1,6 @@
 /**
  * A container for filters, which can be removed with a click. Currently
- * closely tied to Keywords, but can be generalized in the future
+ * closely tied to Topics, but can be generalized in the future
  **/
 import React from 'react';
 import { Link } from 'react-router';

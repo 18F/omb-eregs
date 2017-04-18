@@ -6,7 +6,7 @@ export default function Index() {
     <div>
       <h2>Index</h2>
       <ul>
-        <li><Link to="/keywords">Keywords</Link></li>
+        <li><Link to="/keywords">Topics</Link></li>
         <li><Link to="/policies">Policies</Link></li>
         <li><Link to="/requirements/by-keyword">Requirements</Link></li>
       </ul>
