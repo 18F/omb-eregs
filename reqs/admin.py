@@ -4,7 +4,7 @@ from django.contrib import admin
 from reversion.admin import VersionAdmin
 from taggit.models import Tag
 
-from reqs.models import Keyword, Policy, Requirement
+from reqs.models import Policy, Requirement, Topic
 
 # We have our own tag type; best to hide the taggit Tags from end users
 admin.site.unregister(Tag)
@@ -15,8 +15,8 @@ class PolicyAdmin(VersionAdmin):
     search_fields = ['title', 'omb_policy_id']
 
 
-@admin.register(Keyword)
-class KeywordAdmin(VersionAdmin):
+@admin.register(Topic)
+class TopicAdmin(VersionAdmin):
     search_fields = ['name']
 
 
@@ -46,7 +46,7 @@ class RequirementForm(forms.ModelForm):
         model = Requirement
         fields = '__all__'
         widgets = {
-            'keywords': TaggitWidget('/admin/ajax/keywords/')
+            'topics': TaggitWidget('/admin/ajax/topics/')
         }
 
 

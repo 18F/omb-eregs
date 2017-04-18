@@ -7,22 +7,22 @@ from taggit.models import ItemBase, TagBase
 
 
 # Custom class for name-spacing
-class Keyword(TagBase):
+class Topic(TagBase):
     class Meta:
         ordering = ['name']
-        verbose_name = ugettext_lazy('Keyword')
-        verbose_name_plural = ugettext_lazy('Keywords')
+        verbose_name = ugettext_lazy('Topic')
+        verbose_name_plural = ugettext_lazy('Topics')
 
     @property
     def requirements(self):
         """Taggit isn't creating a backwards relation as we'd expect, so
         simulate it here"""
-        return Requirement.objects.filter(keywords=self.pk)
+        return Requirement.objects.filter(topics=self.pk)
 
 
-class KeywordConnect(ItemBase):
-    tag = models.ForeignKey(Keyword, on_delete=models.CASCADE,
-                            related_name='keyword')
+class TopicConnect(ItemBase):
+    tag = models.ForeignKey(Topic, on_delete=models.CASCADE,
+                            related_name='topic')
     content_object = models.ForeignKey('Requirement', on_delete=models.CASCADE)
 
     @classmethod
@@ -33,7 +33,7 @@ class KeywordConnect(ItemBase):
             kwargs[key] = instance.pk
         else:
             kwargs[key + '__isnull'] = False
-        return Keyword.objects.filter(**kwargs).distinct()
+        return Topic.objects.filter(**kwargs).distinct()
 
 
 @unique
@@ -93,9 +93,9 @@ class Requirement(models.Model):
     impacted_entity = models.CharField(max_length=8192, blank=True)
     req_deadline = models.CharField(max_length=512, blank=True)
     citation = models.CharField(max_length=1024, blank=True)
-    keywords = TaggableManager(
-        through=KeywordConnect,
-        verbose_name=ugettext_lazy('Keywords'),
+    topics = TaggableManager(
+        through=TopicConnect,
+        verbose_name=ugettext_lazy('Topics'),
         blank=True
     )
     req_status = models.CharField(max_length=32, blank=True)
