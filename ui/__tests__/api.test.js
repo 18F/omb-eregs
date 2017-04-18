@@ -5,6 +5,16 @@ import { Endpoint } from '../api';
 jest.mock('axios');
 jest.mock('../config', () => ({ apiRoot: 'http://example.com/root/' }));
 
+
+function mockAxios(...resultSets) {
+  const get = jest.fn();
+  resultSets.forEach(results =>
+    get.mockImplementationOnce(() => Promise.resolve({ data: { results } })));
+  axios.create.mockImplementationOnce(() => ({ get }));
+  return get;
+}
+
+
 describe('Endpoint', () => {
   describe('withIds', () => {
     it('handles an empty query', () => {
@@ -31,9 +41,7 @@ describe('Endpoint', () => {
 
   describe('fetchResults', () => {
     it('hits the correct api and transforms the results', () => {
-      const getFn = jest.fn(() => Promise.resolve(
-        { data: { results: [2, 4, 6] } }));
-      axios.create.mockImplementationOnce(() => ({ get: getFn }));
+      const getFn = mockAxios([2, 4, 6]);
       const endpoint = new Endpoint('some/path');
 
       return endpoint.fetchResults({ some: 'param' }).then((result) => {
@@ -43,6 +51,29 @@ describe('Endpoint', () => {
         expect(getFn).toHaveBeenCalledWith(
           'some/path', { params: { some: 'param' } });
       });
+    });
+  });
+
+  describe('caching', () => {
+    it('caches query results', () => {
+      mockAxios([1, 3, 5], [2, 4, 6]);
+      const sameParams = { some: 'param' };
+      const differentParams = { other: 'params' };
+      const endpoint = new Endpoint('some/path');
+
+      return endpoint.fetchResults(sameParams)
+        .then((result) => {
+          expect(result).toEqual([1, 3, 5]);
+          return endpoint.fetchResults(sameParams);
+        })
+        .then((result) => {
+          // Same result after second call
+          expect(result).toEqual([1, 3, 5]);
+          return endpoint.fetchResults(differentParams);
+        })
+        .then((result) => {
+          expect(result).toEqual([2, 4, 6]);
+        });
     });
   });
 });
