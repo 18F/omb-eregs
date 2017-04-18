@@ -26,7 +26,7 @@ export class Endpoint {
 }
 
 export default {
-  keywords: new Endpoint('keywords/'),
+  topics: new Endpoint('topics/'),
   policies: new Endpoint('policies/'),
   requirements: new Endpoint('requirements/'),
 };

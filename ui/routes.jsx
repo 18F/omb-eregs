@@ -1,12 +1,12 @@
 import React from 'react';
-import { browserHistory, IndexRedirect, IndexRoute, Route, Router } from 'react-router';
+import { browserHistory, IndexRedirect, IndexRoute, Redirect, Route, Router } from 'react-router';
 
 import App from './components/app';
-import Topics from './components/keywords';
+import Topics from './components/topics';
 import Index from './components/index';
 import Policies from './components/policies';
 import Requirements from './components/requirements/container';
-import ReqsByKeyword from './components/requirements/by-keyword';
+import ReqsByTopic from './components/requirements/by-topic';
 import ReqsByPolicy from './components/requirements/by-policy';
 import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
 
@@ -23,7 +23,8 @@ if (browserHistory && typeof gas !== 'undefined') {
 export default <Router history={browserHistory} >
   <Route path="/" component={App}>
     <IndexRoute component={Index} />
-    <Route path="keywords">
+    <Redirect from="keywords" to="topics" />
+    <Route path="topics">
       <IndexRoute component={Topics} />
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
@@ -32,8 +33,9 @@ export default <Router history={browserHistory} >
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
     <Route path="requirements" component={Requirements} >
-      <IndexRedirect to="/requirements/by-keyword" />
-      <Route path="by-keyword" tabName="Requirement" component={ReqsByKeyword} />
+      <IndexRedirect to="/requirements/by-topic" />
+      <Redirect from="by-keywords" to="by-topic" />
+      <Route path="by-topic" tabName="Requirement" component={ReqsByTopic} />
       <Route path="by-policy" tabName="Policy" component={ReqsByPolicy} />
     </Route>
   </Route>

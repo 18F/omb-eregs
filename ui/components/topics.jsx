@@ -5,19 +5,19 @@ import { Link } from 'react-router';
 import api from '../api';
 import Pagers from './pagers';
 
-function Keyword({ keyword }) {
+function Topic({ topic }) {
   return (
     <li>
-      <Link to={{ pathname: '/requirements/by-keyword', query: { keywords__id__in: keyword.id } }} >{ keyword.name }</Link>
+      <Link to={{ pathname: '/requirements/by-topic', query: { topics__id__in: topic.id } }} >{ topic.name }</Link>
     </li>
   );
 }
 
-Keyword.defaultProps = {
-  keyword: {},
+Topic.defaultProps = {
+  topic: {},
 };
-Keyword.propTypes = {
-  keyword: React.PropTypes.shape({
+Topic.propTypes = {
+  topic: React.PropTypes.shape({
     id: React.PropTypes.number,
     name: React.PropTypes.string,
   }),
@@ -29,7 +29,7 @@ function Topics({ location, data }) {
     <div>
       <h1>Topics</h1>
       <ul>
-        { data.results.map(keyword => <Keyword key={keyword.id} keyword={keyword} />) }
+        { data.results.map(topic => <Topic key={topic.id} topic={topic} />) }
       </ul>
       <Pagers location={location} count={data.count} />
     </div>
@@ -43,14 +43,14 @@ Topics.defaultProps = {
 
 Topics.propTypes = {
   data: React.PropTypes.shape({
-    results: React.PropTypes.arrayOf(Keyword.propTypes.keyword),
+    results: React.PropTypes.arrayOf(Topic.propTypes.topic),
     count: React.PropTypes.number,
   }),
   location: React.PropTypes.shape({}),
 };
 
 const fetchTopics = ({ location: { query } }) =>
-  api.keywords.fetch(query);
+  api.topics.fetch(query);
 
 export default resolve(
   'data', fetchTopics,
