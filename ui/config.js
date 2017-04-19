@@ -1,6 +1,10 @@
 const config = {
   apiRoot: 'https://example.com/',
   debug: false,
+  cacheConfig: {
+    max: 32,
+    maxAge: 1000 * 60 * 60,   // 1 hour
+  },
 };
 
 if (typeof process !== 'undefined') {
