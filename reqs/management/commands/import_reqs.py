@@ -7,8 +7,7 @@ import sys
 from dateutil import parser as dateutil_parser
 from django.core.management.base import BaseCommand
 
-from reqs.models import (Keyword, KeywordConnect, Policy, PolicyTypes,
-                         Requirement)
+from reqs.models import Policy, PolicyTypes, Requirement, Topic, TopicConnect
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +24,15 @@ FIELDS = {
     "omb_policy_ids": ("ombPolicyID", "ombPolicyId")
 }
 """
-The same appears to be true for keywords.
-See ``KeywordProcessor.normalize_keywords`` for some decisions about keywords
+The same appears to be true for topics.
+See ``TopicProcessor.normalize_topics`` for some decisions about topics
 formatting.
 
 Here we're listing the problematic values as dictionary keys, and what they
 should be as values (each value is a list, since some inputs should result in
-multiple keywords).
+multiple topics).
 """
-KEYWORDS = {
+TOPICS = {
     "Commodity It": ["Commodity IT"],  # This one is due to str.title()
     "Data Management/Standards. Reporting": [
         "Data Management/Standards",
@@ -162,18 +161,18 @@ def priority_split(text, *splitters):
     return [seg.strip() for seg in text.split(splitter) if seg.strip()]
 
 
-class KeywordProcessor:
-    """Creates or retrieves Keyword models"""
+class TopicProcessor:
+    """Creates or retrieves Topic models"""
     def __init__(self, fields):
         self.cache = {}
         self.fields = fields
 
-    def normalize_keywords(self, values):
+    def normalize_topics(self, values):
         """
         Executive decisions:
-        +   Keywords cannot contain whitespace at the start or end.
+        +   Topics cannot contain whitespace at the start or end.
         +   All whitespace will be converted to a single space.
-        +   Keyword values must be init-caps.
+        +   Topic values must be init-caps.
         +   Use of hyphens/ampersands as separators requires a single space
             around the separator.
         """
@@ -184,18 +183,18 @@ class KeywordProcessor:
             value = value.replace("&", " & ")
             value = re.sub("\s+", " ", value).strip()
             value = value.title()
-            if value in KEYWORDS:
-                normalized.extend(KEYWORDS[value])
+            if value in TOPICS:
+                normalized.extend(TOPICS[value])
             else:
                 normalized.append(value)
         return normalized
 
-    def keywords(self, row):
+    def topics(self, row):
         to_return = []
         for field in self.fields:
             value = row.get(field)
             if field in ('Other', 'Other (Keywords)'):
-                values = self.normalize_keywords(
+                values = self.normalize_topics(
                     priority_split(value, ';', ','))
                 to_return.extend(values)
             elif value:
@@ -203,22 +202,22 @@ class KeywordProcessor:
         return to_return
 
     def connections(self, row, req_pk):
-        for keyword in self.keywords(row):
-            if keyword not in self.cache:
-                self.cache[keyword] = Keyword.objects.get_or_create(
-                    name=keyword)[0].pk
-            yield KeywordConnect(tag_id=self.cache[keyword],
-                                 content_object_id=req_pk)
+        for topic in self.topics(row):
+            if topic not in self.cache:
+                self.cache[topic] = Topic.objects.get_or_create(
+                    name=topic)[0].pk
+            yield TopicConnect(tag_id=self.cache[topic],
+                               content_object_id=req_pk)
 
 
 class RowProcessor:
-    """Creates Requirement objects, Policies, and Keyword connections,
+    """Creates Requirement objects, Policies, and Topic connections,
     raising exceptions if something goes wrong with the process."""
-    def __init__(self, keywords=None):
+    def __init__(self, topics=None):
         self.policies = PolicyProcessor()
-        if keywords is None:
-            keywords = []
-        self.keywords = KeywordProcessor(keywords)
+        if topics is None:
+            topics = []
+        self.topics = TopicProcessor(topics)
         self.connections = []
         self.req_ids = set()
         self.last_id = "0.0"
@@ -282,7 +281,7 @@ class RowProcessor:
         )
         req, _ = Requirement.objects.update_or_create(
             req_id=req_id, defaults=params)
-        self.connections.extend(self.keywords.connections(row, req.pk))
+        self.connections.extend(self.topics.connections(row, req.pk))
         self.req_ids.add(req_id)
         self.last_id = req_id
 
@@ -299,10 +298,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data = csv.DictReader(options['input_file'])
-        # We think that any columns after "Citation " will be keyword columns.
+        # We think that any columns after "Citation " will be topic columns.
         citation_key = find_key("citations", {k: "" for k in data.fieldnames})
-        keywords = data.fieldnames[data.fieldnames.index(citation_key) + 1:]
-        rows = RowProcessor(keywords)
+        topics = data.fieldnames[data.fieldnames.index(citation_key) + 1:]
+        rows = RowProcessor(topics)
         for idx, row in enumerate(data):
             if options['status'] and idx % options['status'] == 0:
                 logger.info('Processed %s rows', idx)
@@ -310,7 +309,7 @@ class Command(BaseCommand):
                 rows.add(row)
             except ValueError as err:
                 logger.warning("Problem with row %s: %s", idx + 1, err)
-        # Delete all keyword connections which may exist in the DB
-        KeywordConnect.objects.filter(
+        # Delete all topic connections which may exist in the DB
+        TopicConnect.objects.filter(
             content_object__req_id__in=rows.req_ids).delete()
-        KeywordConnect.objects.bulk_create(rows.connections)
+        TopicConnect.objects.bulk_create(rows.connections)

@@ -8,7 +8,7 @@ import mockRouter from '../util/mockRouter';
 describe('<FilterList />', () => {
   it('passed transformed args to its Filters', () => {
     const params = {
-      lookup: 'keywords',
+      lookup: 'topics',
       existingFilters: [
         { id: 1, name: 'a' }, { id: 7, name: 'b' }, { id: 10, name: 'c' },
       ],
@@ -20,7 +20,7 @@ describe('<FilterList />', () => {
   });
   it('contains the correct number of Filters', () => {
     const params = {
-      lookup: 'keywords',
+      lookup: 'topics',
       existingFilters: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
     };
     let result = shallow(<FilterList {...params} />);
@@ -30,9 +30,9 @@ describe('<FilterList />', () => {
     result = shallow(<FilterList {...params} />);
     expect(result.find('Filter')).toHaveLength(3);
   });
-  it('contains an AddKeyword', () => {
+  it('contains an AddTopic', () => {
     const params = {
-      lookup: 'keywords',
+      lookup: 'topics',
       existingFilters: [],
     };
     const result = shallow(<FilterList {...params} />);
@@ -53,7 +53,7 @@ describe('<Filter />', () => {
   };
   const result = shallow(<Filter {...params} />, { context });
 
-  it('contains the keyword name', () => {
+  it('contains the topic name', () => {
     expect(result.text()).toMatch(/AkeyWord/);
   });
   it('links to the proper destination', () => {

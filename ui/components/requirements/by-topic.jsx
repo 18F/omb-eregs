@@ -5,7 +5,7 @@ import api from '../../api';
 import Pagers from '../pagers';
 import Requirement from './requirement';
 
-function ByKeyword({ pagedReqs, location }) {
+function ByTopic({ pagedReqs, location }) {
   return (
     <div>
       <ul className="list-reset">
@@ -18,11 +18,11 @@ function ByKeyword({ pagedReqs, location }) {
     </div>
   );
 }
-ByKeyword.defaultProps = {
+ByTopic.defaultProps = {
   pagedReqs: { results: [], count: 0 },
   location: {},
 };
-ByKeyword.propTypes = {
+ByTopic.propTypes = {
   location: React.PropTypes.shape({}),
   pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
@@ -38,4 +38,4 @@ const fetchRequirements = ({ location: { query } }) =>
 
 export default resolve(
   'pagedReqs', fetchRequirements,
-)(ByKeyword);
+)(ByTopic);

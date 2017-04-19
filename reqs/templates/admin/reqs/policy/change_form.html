@@ -14,7 +14,7 @@
             <th>Requirement</th>
             <th>Policy Section</th>
             <th>Policy Sub-Section</th>
-            <th>Keywords</th>
+            <th>Topics</th>
           </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
             </td>
             <td>{{ req.policy_section | truncatechars:40}}</td>
             <td>{{ req.policy_sub_section | truncatechars:40 }}</td>
-            <td>{{ req.keywords.names | join:", " }}</td>
+            <td>{{ req.topics.names | join:", " }}</td>
           </tr>
           {% endfor %}
         </tbody>

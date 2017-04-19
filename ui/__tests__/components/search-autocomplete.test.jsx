@@ -11,8 +11,8 @@ jest.mock('../../components/lookup-search');
 describe('<SearchAutocomplete /> form', () => {
   it('creates a form with the correct url', () => {
     const context = { router: mockRouter() };
-    const result = shallow(<SearchAutocomplete lookup="keywords" />, { context });
-    expect(result.prop('action')).toEqual('/keywords/search-redirect/');
+    const result = shallow(<SearchAutocomplete lookup="topics" />, { context });
+    expect(result.prop('action')).toEqual('/topics/search-redirect/');
     expect(result.prop('method')).toEqual('GET');
   });
   it('contains a hidden element for each param', () => {
@@ -41,7 +41,7 @@ describe('<SearchAutocomplete /> autocompleter', () => {
 
   it('returns no results when given empty input', () => {
     const component = new SearchAutocomplete(
-      { lookup: 'keywords' }, { router: mockRouter() });
+      { lookup: 'topics' }, { router: mockRouter() });
     return component.loadOptions('    ').then((result) => {
       expect(result.options).toHaveLength(0);
     });
@@ -49,13 +49,13 @@ describe('<SearchAutocomplete /> autocompleter', () => {
 
   it('queries the API for suggestions', () => {
     const component = new SearchAutocomplete(
-      { lookup: 'keywords' }, { router: mockRouter() });
+      { lookup: 'topics' }, { router: mockRouter() });
     lookupSearch.search = jest.fn(() => Promise.resolve({ results: [
       { id: 4, name: 'four' }, { id: 9, name: 'nine' },
     ] }));
 
     return component.loadOptions('term-here').then((result) => {
-      expect(lookupSearch.search).toHaveBeenCalledWith('keywords', 'term-here');
+      expect(lookupSearch.search).toHaveBeenCalledWith('topics', 'term-here');
       expect(result).toEqual({
         options: [{ value: 4, label: 'four' }, { value: 9, label: 'nine' }],
       });

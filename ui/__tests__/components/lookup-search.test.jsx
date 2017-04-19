@@ -12,7 +12,7 @@ describe('cleanParams()', () => {
   const query = {
     q: 'something',
     insertParam: 'ins',
-    redirectPathname: '/requirements/by-keyword',
+    redirectPathname: '/requirements/by-topic',
     redirectQuery__param: 'value',
     redirectQuery__et: 'c',
   };
@@ -45,7 +45,7 @@ describe('cleanParams()', () => {
       q: 'something',
       insertParam: 'ins',
       redirect: {
-        pathname: '/requirements/by-keyword',
+        pathname: '/requirements/by-topic',
         query: {
           param: 'value',
           et: 'c',
@@ -72,9 +72,9 @@ describe('redirectIfMatched()', () => {
   const query = {
     q: 'qqq',
     insertParam: 'ins',
-    redirectPathname: '/requirements/by-keyword',
+    redirectPathname: '/requirements/by-topic',
   };
-  const routes = [{ path: 'keywords' }, {}];
+  const routes = [{ path: 'topics' }, {}];
   it('does not hit the api if a page number is present', () => {
     const modifiedQuery = Object.assign({}, query, { page: '5' });
     const params = { routes, location: { query: modifiedQuery } };
@@ -82,26 +82,26 @@ describe('redirectIfMatched()', () => {
     const done = jest.fn();
 
     redirectIfMatched(params, redirect, done);
-    expect(api.keywords.fetch).not.toHaveBeenCalled();
+    expect(api.topics.fetch).not.toHaveBeenCalled();
     expect(redirect).not.toHaveBeenCalled();
     expect(done).toHaveBeenCalledWith();
   });
   it('redirects if there is an exact match', () => {
     const params = { routes, location: { query } };
     const redirect = jest.fn();
-    api.keywords.fetch.mockImplementationOnce(() =>
+    api.topics.fetch.mockImplementationOnce(() =>
       Promise.resolve({ count: 1, results: [{ id: 4 }] }));
 
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then(() => {
-      expect(api.keywords.fetch).toHaveBeenCalledWith({ name: 'qqq' });
+      expect(api.topics.fetch).toHaveBeenCalledWith({ name: 'qqq' });
       expect(redirect).toHaveBeenCalled();
     });
   });
   it('passes exceptions up', () => {
     const params = { routes, location: { query } };
     const redirect = jest.fn();
-    api.keywords.fetch.mockImplementationOnce(() =>
+    api.topics.fetch.mockImplementationOnce(() =>
       Promise.reject(Error('oh noes')));
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then((error) => {
@@ -112,7 +112,7 @@ describe('redirectIfMatched()', () => {
   it('continues if there is no exact match', () => {
     const params = { routes, location: { query } };
     const redirect = jest.fn();
-    api.keywords.fetch.mockImplementationOnce(() =>
+    api.topics.fetch.mockImplementationOnce(() =>
       Promise.resolve({ count: 0, results: [] }));
     const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
     return asyncCall.then(() => {
@@ -123,12 +123,12 @@ describe('redirectIfMatched()', () => {
 
 describe('<LookupSearch />', () => {
   const params = {
-    routes: [{ path: 'keywords' }, {}],
+    routes: [{ path: 'topics' }, {}],
     location: {
       query: {
         q: 'searchTerm',
         insertParam: 'ins',
-        redirectPathname: '/requirements/by-keyword',
+        redirectPathname: '/requirements/by-topic',
         redirectQuery__some: 'field',
         redirectQuery__page: '4',
       },
@@ -146,7 +146,7 @@ describe('<LookupSearch />', () => {
   it('has a "back" link', () => {
     const link = shallow(<LookupSearch {...params} />).find('Link').first();
     expect(link.prop('to')).toEqual({
-      pathname: '/requirements/by-keyword',
+      pathname: '/requirements/by-topic',
       query: { some: 'field', page: '4' },
     });
   });
@@ -154,9 +154,9 @@ describe('<LookupSearch />', () => {
 
 
 describe('search()', () => {
-  it('uses the correct parameters for keywords', () => {
-    search('keywords', 'some query here');
-    expect(api.keywords.fetch).toHaveBeenCalledWith({
+  it('uses the correct parameters for topics', () => {
+    search('topics', 'some query here');
+    expect(api.topics.fetch).toHaveBeenCalledWith({
       name__icontains: 'some query here', page: '1',
     });
   });

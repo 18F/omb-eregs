@@ -1,6 +1,6 @@
 /**
  * A container for filters, which can be removed with a click. Currently
- * closely tied to Keywords, but can be generalized in the future
+ * closely tied to Topics, but can be generalized in the future
  **/
 import React from 'react';
 import { Link } from 'react-router';
@@ -49,10 +49,10 @@ Filter.contextTypes = {
   }),
 };
 
-/* Mapping between a lookup type (e.g. "keywords") and the query field that
+/* Mapping between a lookup type (e.g. "topics") and the query field that
  * this would need to modify to add/remove lookup values */
 export const searchParam = {
-  keywords: 'keywords__id__in',
+  topics: 'topics__id__in',
   policies: 'policy_id__in',
 };
 
@@ -76,7 +76,7 @@ export default function FilterList({ existingFilters, lookup }) {
 }
 FilterList.defaultProps = {
   existingFilters: [],
-  lookup: 'keywords',
+  lookup: 'topics',
 };
 FilterList.propTypes = {
   existingFilters: React.PropTypes.arrayOf(React.PropTypes.shape({
