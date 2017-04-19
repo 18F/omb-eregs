@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from reqs.models import Keyword, Policy, Requirement
+from reqs.models import Policy, Requirement, Topic
 
 
 class PolicySerializer(serializers.ModelSerializer):
@@ -12,20 +12,20 @@ class PolicySerializer(serializers.ModelSerializer):
         )
 
 
-class KeywordSerializer(serializers.ModelSerializer):
+class TopicSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Keyword
+        model = Topic
         fields = ('id', 'name')
 
 
 class RequirementSerializer(serializers.ModelSerializer):
     policy = PolicySerializer(read_only=True)
-    keywords = KeywordSerializer(read_only=True, many=True)
+    topics = TopicSerializer(read_only=True, many=True)
 
     class Meta:
         model = Requirement
         fields = (
             'policy', 'req_id', 'issuing_body', 'policy_section',
             'policy_sub_section', 'req_text', 'verb', 'impacted_entity',
-            'req_deadline', 'citation', 'keywords',
+            'req_deadline', 'citation', 'topics',
         )

@@ -11,7 +11,7 @@ import Pagers from './pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
 const redirectWhitelist = [
-  '/requirements/by-keyword',
+  '/requirements/by-topic',
   '/requirements/by-policy',
 ];
 
@@ -73,10 +73,10 @@ function redirectUrl(params, idToInsert) {
   return `${params.redirect.pathname}?${paramStr}`;
 }
 
-/* Mapping between a lookup type (e.g. "keywords") and the field in the API we
+/* Mapping between a lookup type (e.g. "topic") and the field in the API we
  * should search against/display */
 export const apiParam = {
-  keywords: 'name',
+  topics: 'name',
   policies: 'title',
 };
 
@@ -116,7 +116,7 @@ function Entry({ entry, location, lookup }) {
 Entry.defaultProps = {
   entry: { name: '' },
   location: { query: {} },
-  lookup: 'keywords',
+  lookup: 'topics',
 };
 Entry.propTypes = {
   entry: React.PropTypes.shape({
@@ -147,7 +147,7 @@ export function LookupSearch({ routes, location, pagedEntries }) {
   );
 }
 LookupSearch.defaultProps = {
-  routes: [{ path: 'keywords' }, {}],
+  routes: [{ path: 'topics' }, {}],
   location: { query: {} },
   pagedEntries: { count: 0, entries: [] },
 };

@@ -5,22 +5,22 @@ from model_mommy import mommy
 from reversion.models import Version
 
 from reqs.admin import RequirementForm
-from reqs.models import Keyword, Policy, Requirement
+from reqs.models import Policy, Requirement, Topic
 
 
-def test_reqs_in_keywords(admin_client):
-    """We can see a listing of requirements within the keyword edit screen"""
+def test_reqs_in_topics(admin_client):
+    """We can see a listing of requirements within the topic edit screen"""
     req1, req2, req3 = mommy.make(Requirement, _quantity=3)
-    key1 = mommy.make(Keyword, name='key1')
-    key2 = mommy.make(Keyword, name='key2')
-    key3 = mommy.make(Keyword, name='key3')
-    key4 = mommy.make(Keyword, name='key4')
-    req1.keywords.add('key1', 'key2')
-    req2.keywords.add('key2', 'key3')
-    req3.keywords.add('key3', 'key4')
+    key1 = mommy.make(Topic, name='key1')
+    key2 = mommy.make(Topic, name='key2')
+    key3 = mommy.make(Topic, name='key3')
+    key4 = mommy.make(Topic, name='key4')
+    req1.topics.add('key1', 'key2')
+    req2.topics.add('key2', 'key3')
+    req3.topics.add('key3', 'key4')
 
     def admin_text(pk):
-        resp = admin_client.get('/admin/reqs/keyword/{0}/change/'.format(pk))
+        resp = admin_client.get('/admin/reqs/topic/{0}/change/'.format(pk))
         return resp.content.decode('utf-8')
 
     result = admin_text(key1.pk)
@@ -91,12 +91,12 @@ def req_query_str():
 def test_taggit_widget(tags):
     query_str = req_query_str()
     for tag in tags:
-        query_str += '&keywords=' + tag
+        query_str += '&topics=' + tag
     data = QueryDict(query_str)
     form = RequirementForm(data)
     req = form.save()
 
-    assert list(sorted(req.keywords.names())) == list(sorted(tags))
+    assert list(sorted(req.topics.names())) == list(sorted(tags))
 
 
 @pytest.mark.parametrize('tag, expected', [
@@ -108,20 +108,20 @@ def test_taggit_widget(tags):
 @pytest.mark.django_db
 def test_taggit_widget_doublequotes(tag, expected):
     query_str = req_query_str()
-    data = QueryDict(query_str + '&keywords={0}'.format(tag))
+    data = QueryDict(query_str + '&topics={0}'.format(tag))
 
     form = RequirementForm(data)
     req = form.save()
 
-    assert list(req.keywords.names()) == [expected]
+    assert list(req.topics.names()) == [expected]
 
 
 @pytest.mark.django_db
 def test_reversion(admin_client):
     with reversion.create_revision():
-        key = mommy.make(Keyword, name="key1")
+        key = mommy.make(Topic, name="key1")
 
-    key_from_db = Keyword.objects.get(pk=key.pk)
+    key_from_db = Topic.objects.get(pk=key.pk)
     assert key.name == key_from_db.name
 
     with reversion.create_revision():
@@ -132,7 +132,7 @@ def test_reversion(admin_client):
     assert key.name == "new name"
     assert key_from_db.name == "new name"
 
-    versions = Version.objects.get_for_model(Keyword)
+    versions = Version.objects.get_for_model(Topic)
     assert len(versions) == 2
     assert versions[1].field_dict["name"] == "key1"
     assert versions[0].field_dict["name"] == "new name"

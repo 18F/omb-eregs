@@ -18,11 +18,11 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from reqs.router import router
-from reqs.views import KeywordAdminAutocomplete
+from reqs.views import TopicAdminAutocomplete
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^admin/ajax/keywords/$', KeywordAdminAutocomplete.as_view()),
+    url(r'^admin/ajax/topics/$', TopicAdminAutocomplete.as_view()),
     url(r'^admin/', admin.site.urls),
 ]
 

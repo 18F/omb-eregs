@@ -3,24 +3,24 @@ from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 
-from reqs.models import Keyword, Policy, Requirement
-from reqs.serializers import (KeywordSerializer, PolicySerializer,
-                              RequirementSerializer)
+from reqs.models import Policy, Requirement, Topic
+from reqs.serializers import (PolicySerializer, RequirementSerializer,
+                              TopicSerializer)
 
 
-class KeywordViewSet(viewsets.ModelViewSet):
-    queryset = Keyword.objects.all()
-    serializer_class = KeywordSerializer
+class TopicViewSet(viewsets.ModelViewSet):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
     filter_fields = {
         'id': ('exact', 'in'),
         'name': ('exact', 'icontains', 'in')
     }
 
 
-class KeywordAdminAutocomplete(Select2QuerySetView):
-    """Very similar to the KeywordViewSet, except in a format the Select2
+class TopicAdminAutocomplete(Select2QuerySetView):
+    """Very similar to the TopicViewSet, except in a format the Select2
     widget expects"""
-    model = Keyword
+    model = Topic
 
 
 class PolicyViewSet(viewsets.ModelViewSet):
@@ -41,18 +41,18 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
 
 class PriorityOrderingFilter(OrderingFilter):
-    """If no ordering is requested, sort based on the number of keywords
+    """If no ordering is requested, sort based on the number of topics
     matched"""
     def priority_ordering(self, request, queryset):
-        kw_param = request.query_params.get('keywords__name__in', '')
-        keywords = tuple(kw.strip() for kw in kw_param.split(','))
+        kw_param = request.query_params.get('topics__name__in', '')
+        topics = tuple(kw.strip() for kw in kw_param.split(','))
         sql = """
-            SELECT count(*) FROM reqs_keywordconnect AS con
-            INNER JOIN reqs_keyword kw ON (con.tag_id = kw.id)
+            SELECT count(*) FROM reqs_topicconnect AS con
+            INNER JOIN reqs_topic kw ON (con.tag_id = kw.id)
             WHERE kw.name IN %s
             AND con.content_object_id = reqs_requirement.id
         """
-        annotated = queryset.annotate(kw_count=RawSQL(sql, (keywords,)))
+        annotated = queryset.annotate(kw_count=RawSQL(sql, (topics,)))
         ordered = annotated.order_by('-kw_count', 'req_id')
         return ordered
 
@@ -68,7 +68,7 @@ class PriorityOrderingFilter(OrderingFilter):
 class RequirementViewSet(viewsets.ModelViewSet):
     # Distinct to account for multiple tag matches when filtering
     queryset = Requirement.objects.select_related('policy').prefetch_related(
-        'keywords').distinct()
+        'topics').distinct()
     serializer_class = RequirementSerializer
     filter_fields = {
         'req_id': ('exact',),
@@ -87,7 +87,7 @@ class RequirementViewSet(viewsets.ModelViewSet):
         {'policy__' + key: value
          for key, value in PolicyViewSet.filter_fields.items()})
     filter_fields.update(
-        {'keywords__' + key: value
-         for key, value in KeywordViewSet.filter_fields.items()})
+        {'topics__' + key: value
+         for key, value in TopicViewSet.filter_fields.items()})
     filter_backends = (DjangoFilterBackend, PriorityOrderingFilter)
     ordering_fields = filter_fields.keys()

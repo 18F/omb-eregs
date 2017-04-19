@@ -36,19 +36,19 @@ Metadata.defaultProps = {
 };
 
 
-function KeywordLink({ keyword }) {
+function TopicLink({ topic }) {
   const linkTo = {
-    pathname: '/requirements/by-keyword',
-    query: { keywords__id__in: keyword.id },
+    pathname: '/requirements/by-topic',
+    query: { topics__id__in: topic.id },
   };
   return (
     <li className="inline">
-      <Link to={linkTo}>{ keyword.name }</Link>
+      <Link to={linkTo}>{ topic.name }</Link>
     </li>
   );
 }
-KeywordLink.propTypes = {
-  keyword: React.PropTypes.shape({
+TopicLink.propTypes = {
+  topic: React.PropTypes.shape({
     id: React.PropTypes.number,
     name: React.PropTypes.string,
   }).isRequired,
@@ -107,8 +107,8 @@ export default function Requirement({ requirement }) {
           <div className="topics metadata">
             <span>Topics: </span>
             <ul className="topics-list list-reset inline">
-              { requirement.keywords.map(keyword =>
-                <KeywordLink key={keyword.id} keyword={keyword} />) }
+              { requirement.topics.map(topic =>
+                <TopicLink key={topic.id} topic={topic} />) }
             </ul>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function Requirement({ requirement }) {
 
 Requirement.propTypes = {
   requirement: React.PropTypes.shape({
-    keywords: React.PropTypes.arrayOf(React.PropTypes.shape({
+    topics: React.PropTypes.arrayOf(React.PropTypes.shape({
       id: React.PropTypes.number,
       name: React.PropTypes.string,
     })),
