@@ -36,8 +36,8 @@ ALLOWED_HOSTS = env.uris
 # Application definition
 
 INSTALLED_APPS = (
+    'reqs.apps.ReqsConfig',
     'taggit',
-    'reqs.apps.ReqsConfig',     # must be after taggit
     'corsheaders',
     'dal',
     'dal_select2',
@@ -50,6 +50,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # must be after taggit, auth, contenttypes, etc.
+    'ereqs_admin.apps.EreqsAdminConfig',
 )
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', )
@@ -131,7 +133,7 @@ MAX_URL = os.environ.get('MAX_URL')
 
 if MAX_URL:
     INSTALLED_APPS += ('django_cas_ng',)
-    AUTHENTICATION_BACKENDS = ['omb_eregs.max_backend.MAXBackend']
+    AUTHENTICATION_BACKENDS = ['ereqs_admin.max_backend.MAXBackend']
     CAS_SERVER_URL = MAX_URL
     CAS_REDIRECT_URL = '/admin/'
     # The following attributes are ignored in our implementation, including
