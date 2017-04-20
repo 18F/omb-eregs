@@ -4,7 +4,7 @@ import pytest
 from django.contrib.auth.models import User
 from model_mommy import mommy
 
-from omb_eregs import max_backend
+from ereqs_admin import max_backend
 
 
 @pytest.fixture
