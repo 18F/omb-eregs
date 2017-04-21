@@ -57,6 +57,7 @@ if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', )
 
 MIDDLEWARE = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -67,6 +68,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 if DEBUG:
     MIDDLEWARE = ('debug_toolbar.middleware.DebugToolbarMiddleware',) + \
@@ -88,6 +90,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 USING_SSL = env.get_credential('USING_SSL', 'TRUE').upper() == 'TRUE'
 SESSION_COOKIE_SECURE = USING_SSL
 CSRF_COOKIE_SECURE = USING_SSL
+
+# For the time being, tell downstream (notably CloudFront) to avoid caching
+# content rather than guessing.
+CACHE_MIDDLEWARE_SECONDS = 0
 
 ROOT_URLCONF = 'omb_eregs.urls'
 
