@@ -3,7 +3,7 @@ import { resolve } from 'react-resolver';
 
 import api from '../../api';
 import Pagers from '../pagers';
-import Requirement from './requirement';
+import RequirementsList from './requirements-list';
 
 export function Group({ group }) {
   if (group.length === 0) {
@@ -14,12 +14,7 @@ export function Group({ group }) {
   return (
     <div className="gray-border border mb2 p2 rounded">
       <h4>{policy.title}</h4>
-      <ol className="gray-border list-reset border-top">
-        { group.map(req =>
-          <li key={req.req_id} className="gray-border border-bottom">
-            <Requirement requirement={req} />
-          </li>) }
-      </ol>
+      <RequirementsList group={group} />
       <div className="clearfix">
         <a href={policy.uri} className="center block">Read the whole policy</a>
       </div>
@@ -63,6 +58,7 @@ function ByPolicy({ pagedReqs }) {
     </div>
   );
 }
+
 ByPolicy.defaultProps = {
   pagedReqs: { results: [], count: 0 },
 };
