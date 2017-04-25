@@ -9,6 +9,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import basicAuth from './basic-auth';
+import doNotCache from './do-not-cache';
 import errorHandler from './error-handling';
 import serverRender from './server-render';
 
@@ -20,6 +21,7 @@ const auth = basicAuth(env.getServiceCreds('config'));
 // security headers. See docs around setOnOldIE: moral of the story is that
 // ZAP masquerades as IE6 which triggers a different policy within helmet
 app.use(helmet({ xssFilter: { setOnOldIE: true } }));
+app.use(doNotCache);
 // logging
 app.use(morgan('combined'));
 app.use('/static', express.static(path.join('ui-dist', 'static')));
