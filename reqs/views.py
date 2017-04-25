@@ -1,4 +1,6 @@
+import django_filters
 from dal.autocomplete import Select2QuerySetView
+from django.db.models import Count, IntegerField, OuterRef, Subquery
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
@@ -8,13 +10,54 @@ from reqs.serializers import (PolicySerializer, RequirementSerializer,
                               TopicSerializer)
 
 
+class PolicyFilter(django_filters.FilterSet):
+    class Meta:
+        model = Policy
+        fields = {
+            'id': ('exact', 'in'),
+            'policy_number': ('exact', 'gt', 'gte', 'lt', 'lte', 'in',
+                              'range'),
+            'title': ('exact', 'icontains'),
+            'uri': ('exact', 'icontains'),
+            'omb_policy_id': ('exact', 'icontains'),
+            'policy_type': ('exact', 'in'),
+            'issuance': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
+                         'month', 'day'),
+            'sunset': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
+                       'month', 'day', 'isnull'),
+        }
+
+
+class RequirementFilter(django_filters.FilterSet):
+    class Meta:
+        model = Requirement
+        fields = {
+            'req_id': ('exact',),
+            'issuing_body': ('exact', 'icontains'),
+            'policy_section': ('exact', 'icontains'),
+            'policy_sub_section': ('exact', 'icontains'),
+            'req_text': ('icontains',),
+            'verb': ('icontains',),
+            'impacted_entity': ('icontains',),
+            'req_deadline': ('icontains',),
+            'citation': ('icontains',),
+            'policy_id': ('exact', 'in'),
+        }
+
+
+class TopicFilter(django_filters.FilterSet):
+    class Meta:
+        model = Topic
+        fields = {
+            'id': ('exact', 'in'),
+            'name': ('exact', 'icontains', 'in'),
+        }
+
+
 class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
-    filter_fields = {
-        'id': ('exact', 'in'),
-        'name': ('exact', 'icontains', 'in')
-    }
+    filter_fields = TopicFilter.get_fields()
 
 
 class TopicAdminAutocomplete(Select2QuerySetView):
@@ -23,21 +66,50 @@ class TopicAdminAutocomplete(Select2QuerySetView):
     model = Topic
 
 
+def subfilter_params(params, subfield):
+    """Return parameters which are part of a subfield, when making nested
+    queries"""
+    prefix = subfield + '__'
+    offset = len(prefix)
+    return {key[offset:]: value for key, value in params.items()
+            if key.startswith(prefix)}
+
+
+def relevant_reqs_count(params):
+    """Create a subquery of the count of requirements relevant to the provided
+    query parameters"""
+    subquery = Requirement.objects.filter(policy=OuterRef('pk'))
+
+    params = subfilter_params(params, 'requirements')
+    subquery = RequirementFilter(params, queryset=subquery).qs
+
+    params = subfilter_params(params, 'topics')
+
+    if params:
+        subsubquery = Topic.objects.all()
+        subsubquery = TopicFilter(params, queryset=subsubquery).qs
+        subsubquery = subsubquery.values('topic__content_object')
+        subquery = subquery.filter(pk__in=subsubquery)
+
+    subquery = subquery.values('policy').\
+        annotate(count=Count('policy')).values('count').\
+        order_by()  # clear default order
+
+    return Subquery(subquery, output_field=IntegerField())
+
+
 class PolicyViewSet(viewsets.ModelViewSet):
     queryset = Policy.objects.all()
     serializer_class = PolicySerializer
-    filter_fields = {
-        'id': ('exact', 'in'),
-        'policy_number': ('exact', 'gt', 'gte', 'lt', 'lte', 'in', 'range'),
-        'title': ('exact', 'icontains'),
-        'uri': ('exact', 'icontains'),
-        'omb_policy_id': ('exact', 'icontains'),
-        'policy_type': ('exact', 'in'),
-        'issuance': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
-                     'month', 'day'),
-        'sunset': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
-                   'month', 'day', 'isnull')
-    }
+    filter_fields = PolicyFilter.get_fields()
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.annotate(
+            total_reqs=relevant_reqs_count({}),
+            relevant_reqs=relevant_reqs_count(self.request.GET),
+        ).filter(relevant_reqs__gt=0)
+        return queryset
 
 
 class PriorityOrderingFilter(OrderingFilter):
@@ -71,27 +143,16 @@ class PriorityOrderingFilter(OrderingFilter):
 
 class RequirementViewSet(viewsets.ModelViewSet):
     # Distinct to account for multiple tag matches when filtering
-    queryset = Requirement.objects.select_related('policy').prefetch_related(
-        'topics').distinct()
+    queryset = Requirement.objects.select_related('policy').\
+        prefetch_related('topics').distinct()
     serializer_class = RequirementSerializer
-    filter_fields = {
-        'req_id': ('exact',),
-        'issuing_body': ('exact', 'icontains'),
-        'policy_section': ('exact', 'icontains'),
-        'policy_sub_section': ('exact', 'icontains'),
-        'req_text': ('icontains',),
-        'verb': ('icontains',),
-        'impacted_entity': ('icontains',),
-        'req_deadline': ('icontains',),
-        'citation': ('icontains',),
-        'policy_id': ('exact', 'in'),
-    }
+    filter_fields = RequirementFilter.get_fields()
     # Allow filtering by related objects
-    filter_fields.update(
-        {'policy__' + key: value
-         for key, value in PolicyViewSet.filter_fields.items()})
-    filter_fields.update(
-        {'topics__' + key: value
-         for key, value in TopicViewSet.filter_fields.items()})
+    filter_fields.update({
+        'policy__' + key: value
+        for key, value in PolicyFilter.get_fields().items()})
+    filter_fields.update({
+        'topics__' + key: value
+        for key, value in TopicFilter.get_fields().items()})
     filter_backends = (DjangoFilterBackend, PriorityOrderingFilter)
     ordering_fields = filter_fields.keys()
