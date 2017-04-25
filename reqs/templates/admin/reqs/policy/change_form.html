@@ -18,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for req in original.requirement_set.all %}
+          {% for req in original.requirements.all %}
           <tr class="form-row {% cycle "row1" "row2" %}">
             {% comment %}
               We'll let the req text be a bit longer in this view.

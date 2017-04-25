@@ -83,7 +83,8 @@ class Requirement(models.Model):
     class Meta:
         ordering = ['req_id']
 
-    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
+    policy = models.ForeignKey(Policy, on_delete=models.CASCADE,
+                               related_name='requirements')
     req_id = models.CharField(max_length=16, unique=True)
     issuing_body = models.CharField(max_length=512)
     policy_section = models.CharField(max_length=1024, blank=True)
