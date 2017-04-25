@@ -1,5 +1,5 @@
 cfenv
-django>=1.10,<1.11
+django>=1.11,<1.12
 django-autocomplete-light
 django-cas-ng
 django-cors-headers

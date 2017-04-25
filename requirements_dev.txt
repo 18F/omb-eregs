@@ -16,7 +16,7 @@ django-debug-toolbar==1.7
 django-filter==1.0.2
 django-reversion==2.0.8
 django-taggit==0.22.0
-django==1.10.7
+django==1.11
 djangorestframework==3.6.2
 flake8-bugbear==16.12.2
 flake8-builtins==0.2
@@ -53,6 +53,7 @@ pytest-variables==1.5.1   # via pytest-selenium
 pytest==3.0.6
 python-cas==1.2.0
 python-dateutil==2.6.0
+pytz==2017.2
 requests==2.13.0
 selenium==3.3.3           # via pytest-selenium
 six==1.10.0

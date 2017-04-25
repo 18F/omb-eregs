@@ -12,7 +12,7 @@ django-cors-headers==2.0.2
 django-filter==1.0.2
 django-reversion==2.0.8
 django-taggit==0.22.0
-django==1.10.7
+django==1.11
 djangorestframework==3.6.2
 furl==1.0.0               # via cfenv
 gunicorn==19.7.1
@@ -21,6 +21,7 @@ orderedmultidict==0.7.11  # via furl
 psycopg2==2.7.1
 python-cas==1.2.0         # via django-cas-ng
 python-dateutil==2.6.0
+pytz==2017.2              # via django
 requests==2.13.0
 six==1.10.0               # via furl, orderedmultidict, python-cas, python-dateutil
 whitenoise==3.3.0
