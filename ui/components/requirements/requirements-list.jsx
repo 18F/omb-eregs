@@ -19,10 +19,7 @@ export default class RequirementsList extends React.Component {
   render() {
     return (
       <div>
-        <button
-          onClick={this.handleClick}
-          role="presentation"
-        >
+        <button onClick={this.handleClick}>
           {this.state.isListOpen ? 'Collapse' : 'Expand'}
         </button>
         <ToggleDisplay if={this.state.isListOpen}>
