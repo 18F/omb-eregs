@@ -44,17 +44,21 @@ class PriorityOrderingFilter(OrderingFilter):
     """If no ordering is requested, sort based on the number of topics
     matched"""
     def priority_ordering(self, request, queryset):
-        kw_param = request.query_params.get('topics__name__in', '')
-        topics = tuple(kw.strip() for kw in kw_param.split(','))
-        sql = """
-            SELECT count(*) FROM reqs_topicconnect AS con
-            INNER JOIN reqs_topic kw ON (con.tag_id = kw.id)
-            WHERE kw.name IN %s
-            AND con.content_object_id = reqs_requirement.id
-        """
-        annotated = queryset.annotate(kw_count=RawSQL(sql, (topics,)))
-        ordered = annotated.order_by('-kw_count', 'req_id')
-        return ordered
+        kw_param = request.query_params.get('topics__id__in', '')
+        topics = tuple(int(kw) for kw in kw_param.split(',')
+                       if kw.isdigit())
+        if topics:
+            sql = """
+                SELECT count(*) FROM (
+                    SELECT tag_id FROM reqs_topicconnect
+                    WHERE tag_id IN %s
+                    AND content_object_id = reqs_requirement.id
+                    GROUP BY tag_id
+                ) AS subq
+            """
+            queryset = queryset.annotate(kw_count=RawSQL(sql, (topics,)))
+            queryset = queryset.order_by('-kw_count', 'req_id')
+        return queryset
 
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request, queryset, view)
