@@ -70,8 +70,8 @@ class Policy(models.Model):
     policy_status = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
-        text = self.title[:40]
-        if len(self.title) > 40:
+        text = self.title[:100]
+        if len(self.title) > 100:
             text += '...'
         if self.omb_policy_id:
             return '{0}: ({1}) {2}'.format(

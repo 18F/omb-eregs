@@ -172,10 +172,16 @@ TAGGIT_CASE_INSENSITIVE = True
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '%(levelname)s %(asctime)s %(name)-20s %(message)s',
+        }
+    },
     'handlers': {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
+            'formatter': 'default',
         }
     },
     'loggers': {
