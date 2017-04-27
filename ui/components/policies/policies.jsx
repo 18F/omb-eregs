@@ -4,7 +4,7 @@ import { resolve } from 'react-resolver';
 import api from '../../api';
 import Pagers from '../pagers';
 
-function ByPolicy({ pagedReqs }) {
+function Policies({ pagedReqs }) {
   const policies = pagedReqs.results;
   return (
     <div>
@@ -16,11 +16,11 @@ function ByPolicy({ pagedReqs }) {
     </div>
   );
 }
-ByPolicy.defaultProps = {
+Policies.defaultProps = {
   pagedReqs: { results: [], count: 0 },
 };
 
-ByPolicy.propTypes = {
+Policies.propTypes = {
   pagedReqs: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
       req_text: React.PropTypes.string,
@@ -31,10 +31,10 @@ ByPolicy.propTypes = {
 };
 
 const fetchRequirements = ({ location: { query } }) => {
-  const params = Object.assign({}, query, { ordering: 'requirements__topics__id__in' });
+  const params = Object.assign({}, query, { ordering: 'policy__policy_number' });
   return api.policies.fetch(params);
 };
 
 export default resolve(
   'pagedReqs', fetchRequirements,
-)(ByPolicy);
+)(Policies);

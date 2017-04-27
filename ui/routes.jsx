@@ -4,10 +4,10 @@ import { browserHistory, IndexRedirect, IndexRoute, Redirect, Route, Router } fr
 import App from './components/app';
 import Topics from './components/topics';
 import Index from './components/index';
-import Policies from './components/policies';
-import Requirements from './components/requirements/container';
+import Container from './components/container';
 import ReqsByTopic from './components/requirements/by-topic';
 import ReqsByPolicy from './components/requirements/by-policy';
+import Policy from './components/policies/policies';
 import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
 
 // Trigger DAP pageviews when our history changes (for single-page-app users)
@@ -28,11 +28,11 @@ export default <Router history={browserHistory} >
       <IndexRoute component={Topics} />
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
-    <Route path="policies">
-      <IndexRoute component={Policies} />
+    <Route path="policies" component={Container} tabName="Policy" search="policyList">
+      <IndexRoute component={Policy} />
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
-    <Route path="requirements" component={Requirements} >
+    <Route path="requirements" component={Container} >
       <IndexRedirect to="/requirements/by-topic" />
       <Redirect from="by-keywords" to="by-topic" />
       <Route path="by-topic" tabName="Requirement" component={ReqsByTopic} />
