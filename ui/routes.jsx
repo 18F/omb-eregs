@@ -6,7 +6,6 @@ import Topics from './components/topics';
 import Index from './components/index';
 import Container from './components/container';
 import ReqsByTopic from './components/requirements/by-topic';
-import ReqsByPolicy from './components/requirements/by-policy';
 import Policy from './components/policies/policies';
 import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
 
@@ -36,7 +35,6 @@ export default <Router history={browserHistory} >
       <IndexRedirect to="/requirements/by-topic" />
       <Redirect from="by-keywords" to="by-topic" />
       <Route path="by-topic" tabName="Requirement" component={ReqsByTopic} />
-      <Route path="by-policy" tabName="Policy" component={ReqsByPolicy} />
     </Route>
   </Route>
 </Router>;
