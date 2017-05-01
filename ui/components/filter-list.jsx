@@ -68,7 +68,7 @@ export default function FilterList({ existingFilters, lookup, search }) {
         { existingFilters.map(filter =>
           <Filter
             key={filter.id} existingIds={filterIds} idToRemove={filter.id}
-            name={filter[apiParam[lookup]]} removeParam={searchParam[lookup]}
+            name={filter[apiParam[lookup]]} removeParam={searchParam[search]}
           />)}
       </ol>
       <SearchAutocomplete lookup={lookup} insertParam={searchParam[search]} />

@@ -33,8 +33,10 @@ Container.propTypes = {
   policies: FilterList.propTypes.existingFilters,
 };
 
-const fetchTopics = ({ location: { query: { topics__id__in } } }) =>
-  api.topics.withIds(topics__id__in);
+const fetchTopics = ({ location: { query } }) => {
+  const ids = query.topics__id__in || query.requirements__topics__id__in;
+  return api.topics.withIds(ids);
+};
 const fetchPolicies = ({ location: { query: { policy_id__in } } }) =>
   api.policies.withIds(policy_id__in);
 
