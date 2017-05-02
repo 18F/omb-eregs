@@ -1,12 +1,8 @@
 import React from 'react';
-import { browserHistory, IndexRedirect, IndexRoute, Redirect, Route, Router } from 'react-router';
+import { browserHistory, IndexRedirect, Route, Router } from 'react-router';
 
 import App from './components/app';
-import Topics from './components/topics';
-import Index from './components/index';
-import Container from './components/container';
-import ReqsByTopic from './components/requirements/by-topic';
-import Policy from './components/policies/policies';
+import PolicyContainer from './components/policies/container';
 import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
 
 // Trigger DAP pageviews when our history changes (for single-page-app users)
@@ -26,7 +22,6 @@ export default <Router history={browserHistory} >
       <Route path="topics" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
       <Route path="policies" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
-    <Route path="policies" component={Policies} tabName="Policy" />
-    <Route path="requirements" component={Requirements} tabName="Requirement" />
+    <Route path="policies" component={PolicyContainer} />
   </Route>
 </Router>;
