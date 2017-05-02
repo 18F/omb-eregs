@@ -25,12 +25,16 @@ Container.defaultProps = {
   children: null,
   topics: [],
   policies: [],
+  route: {},
 };
 
 Container.propTypes = {
   children: React.PropTypes.element,
   topics: FilterList.propTypes.existingFilters,
   policies: FilterList.propTypes.existingFilters,
+  route: React.PropTypes.shape({
+    search: React.PropTypes.string,
+  }),
 };
 
 const fetchTopics = ({ location: { query } }) => {
