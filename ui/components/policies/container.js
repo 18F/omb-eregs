@@ -19,7 +19,7 @@ function PoliciesContainer({ location: { query }, pagedPolicies }) {
   const filters = [
     React.createElement(
       TopicFilterContainer,
-      { query, paramName: 'requirements__topics__ids__in', key: 'topic' }),
+      { query, paramName: 'requirements__topics__id__in', key: 'topic' }),
   ];
   const tabs = [
     requirementsTab(),
