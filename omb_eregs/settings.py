@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'reversion',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
@@ -118,7 +119,6 @@ WSGI_APPLICATION = 'omb_eregs.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
@@ -166,6 +166,25 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.environ.get('TMPDIR', '.') + '/static/'
+
+# File storage
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+s3service = env.get_service(label="storage-s3")
+if s3service is not None:
+    AWS_ACCESS_KEY_ID = s3service.get_credential("access_key_id")
+    AWS_SECRET_ACCESS_KEY = s3service.get_credential("secret_access_key")
+    AWS_STORAGE_BUCKET_NAME = s3service.get_credential("bucket")
+    AWS_S3_REGION_NAME = "us-gov-west-1"
+else:
+    # Assume that we're in local development and thus using Minio
+    AWS_ACCESS_KEY_ID = "LOCAL_ID"
+    AWS_SECRET_ACCESS_KEY = "LOCAL_KEY"
+    AWS_STORAGE_BUCKET_NAME = "pdfs"
+    AWS_AUTO_CREATE_BUCKET = True
+    AWS_S3_ENDPOINT_URL = "http://minio:9000"
 
 TAGGIT_CASE_INSENSITIVE = True
 

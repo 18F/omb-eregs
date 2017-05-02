@@ -14,7 +14,14 @@ services:
     depends_on:
       - prod
       - prod-api
-
+  minio:
+    image: minio/minio
+    environment:
+        - MINIO_ACCESS_KEY=LOCAL_ID
+        - MINIO_SECRET_KEY=LOCAL_KEY
+    command: server --address 'minio:9000' minio-test
+    ports:
+        - 9000:9000
   prod-api: &PROD_API
     image: python:3.5.3
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
@@ -46,10 +53,17 @@ services:
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
     ports:
       - 8001:8001
+    depends_on:
+      - persistent_db
+      - minio
     environment:
       <<: *API_ENV
       PORT: 8001
       DEBUG: "true"
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      AWS_STORAGE_BUCKET_NAME:
+      AWS_S3_ENDPOINT_URL:
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
 
