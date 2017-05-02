@@ -1,8 +1,10 @@
 import pathlib
+
 import pytest
 import requests
 from django.contrib.auth.models import User
 from model_mommy import mommy
+
 from reqs.models import Policy
 
 
