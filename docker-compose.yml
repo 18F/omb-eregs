@@ -34,12 +34,29 @@ services:
       TMPDIR: /tmp
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.max.gov/cas/login
+      # The following settings are to maintain environment parity between the
+      # docker-compose configuration for local development and the cloud.gov
+      # staging and production configurations.
       VCAP_APPLICATION: >
         {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api"]}
       VCAP_SERVICES: >
         {"config": [{"credentials":
           {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
-        }]}
+        }],
+          "s3": [
+           {
+            "credentials": {
+             "access_key_id": "LOCAL_ID",
+             "bucket": "pdfs",
+             "secret_access_key": "LOCAL_KEY",
+             "region": "irrelevant fake region",
+             "endpoint": "http://minio:9100"
+            },
+            "label": "s3",
+            "name": "storage-s3"
+            }
+           ]
+        }
     volumes:
       - $PWD:/usr/src/app
     working_dir: /usr/src/app
@@ -58,10 +75,6 @@ services:
       <<: *API_ENV
       PORT: 8001
       DEBUG: "true"
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      AWS_STORAGE_BUCKET_NAME:
-      AWS_S3_ENDPOINT_URL:
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
 
@@ -79,8 +92,8 @@ services:
       INTERNAL_API: 'http://prod-api:9001/'
       PUBLIC_API: 'http://0.0.0.0:9001/'
       VCAP_SERVICES: >
-        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
-        }}}]}
+        {"config": [{"name":
+            "config", "credentials": {"UI_BASIC_AUTH": { }}}]}
     depends_on:
       - prod-api
 
