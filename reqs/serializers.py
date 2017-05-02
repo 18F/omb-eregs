@@ -22,7 +22,6 @@ class PolicySerializer(serializers.ModelSerializer):
             'relevant_reqs',
             'document_source',
         )
-        document_source = serializers.FileField(use_url=True)
 
 
 class TopicSerializer(serializers.ModelSerializer):
