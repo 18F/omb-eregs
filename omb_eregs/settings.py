@@ -38,6 +38,9 @@ ALLOWED_HOSTS = env.uris
 INSTALLED_APPS = (
     'reqs.apps.ReqsConfig',
     'taggit',
+    'django.contrib.contenttypes',
+    # must be after taggit and contenttypes, but before auth
+    'ereqs_admin.apps.EreqsAdminConfig',
     'corsheaders',
     'dal',
     'dal_select2',
@@ -46,12 +49,9 @@ INSTALLED_APPS = (
     'reversion',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # must be after taggit, auth, contenttypes, etc.
-    'ereqs_admin.apps.EreqsAdminConfig',
 )
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', )
