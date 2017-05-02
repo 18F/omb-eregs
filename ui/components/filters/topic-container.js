@@ -23,7 +23,7 @@ function removeLinks(existingTopics, paramName, pathname, query) {
   });
 }
 
-function TopicContainer({ existingTopics, paramName }, { router }) {
+export function TopicContainer({ existingTopics, paramName }, { router }) {
   const { location: { pathname, query } } = router;
   const autocompleter = React.createElement(
     Autocompleter, { insertParam: paramName, lookup: 'topics' });
