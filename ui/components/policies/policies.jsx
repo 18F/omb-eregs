@@ -1,40 +1,27 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 
-import api from '../../api';
 import Pagers from '../pagers';
 
-function Policies({ pagedReqs }) {
-  const policies = pagedReqs.results;
+export default function PoliciesView({ policies, count }) {
   return (
     <div>
       <ul className="list-reset">
         { policies.map(policy =>
           <li key={policy.id}>{policy.title} {policy.relevant_reqs}</li>)}
       </ul>
-      <Pagers count={pagedReqs.count} />
+      <Pagers count={count} />
     </div>
   );
 }
-Policies.defaultProps = {
-  pagedReqs: { results: [], count: 0 },
+PoliciesView.propTypes = {
+  policies: React.PropTypes.arrayOf(React.PropTypes.shape({
+    id: React.PropTypes.number,
+    title: React.PropTypes.string,
+    relevant_reqs: React.PropTypes.number,
+  })),
+  count: React.PropTypes.number,
 };
-
-Policies.propTypes = {
-  pagedReqs: React.PropTypes.shape({
-    results: React.PropTypes.arrayOf(React.PropTypes.shape({
-      req_text: React.PropTypes.string,
-      req_id: React.PropTypes.string,
-    })),
-    count: React.PropTypes.number,
-  }),
+PoliciesView.defaultProps = {
+  policies: [],
+  count: 0,
 };
-
-const fetchRequirements = ({ location: { query } }) => {
-  const params = Object.assign({}, query, { ordering: 'policy__policy_number' });
-  return api.policies.fetch(params);
-};
-
-export default resolve(
-  'pagedReqs', fetchRequirements,
-)(Policies);

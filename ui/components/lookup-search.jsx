@@ -10,9 +10,9 @@ import { UserError } from '../error-handling';
 import Pagers from './pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
-const redirectWhitelist = [
-  '/requirements/by-topic',
-  '/requirements/by-policy',
+export const redirectWhitelist = [
+  '/policies',
+  '/requirements',
 ];
 
 
