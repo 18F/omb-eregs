@@ -57,7 +57,7 @@ export const searchParam = {
   policyList: 'requirements__topics__id__in',
 };
 
-export default function FilterList({ existingFilters, lookup, search }) {
+export default function FilterList({ existingFilters, lookup, apiFilterLookup }) {
   const filterIds = existingFilters.map(existing => existing.id);
   return (
     <div className="req-filter-ui my2">
@@ -68,22 +68,22 @@ export default function FilterList({ existingFilters, lookup, search }) {
         { existingFilters.map(filter =>
           <Filter
             key={filter.id} existingIds={filterIds} idToRemove={filter.id}
-            name={filter[apiParam[lookup]]} removeParam={searchParam[search]}
+            name={filter[apiParam[lookup]]} removeParam={searchParam[apiFilterLookup]}
           />)}
       </ol>
-      <SearchAutocomplete lookup={lookup} insertParam={searchParam[search]} />
+      <SearchAutocomplete lookup={lookup} insertParam={searchParam[apiFilterLookup]} />
     </div>
   );
 }
 FilterList.defaultProps = {
   existingFilters: [],
   lookup: 'topics',
-  search: 'topics',
+  apiFilterLookup: 'topics',
 };
 FilterList.propTypes = {
   existingFilters: React.PropTypes.arrayOf(React.PropTypes.shape({
     id: React.PropTypes.number,
   })),
   lookup: React.PropTypes.oneOf(Object.keys(searchParam)),
-  search: React.PropTypes.oneOf(Object.keys(searchParam)),
+  apiFilterLookup: React.PropTypes.oneOf(Object.keys(searchParam)),
 };

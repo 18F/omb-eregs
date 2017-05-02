@@ -27,7 +27,7 @@ export default <Router history={browserHistory} >
       <IndexRoute component={Topics} />
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
-    <Route path="policies" component={Container} tabName="Policy" search="policyList">
+    <Route path="policies" component={Container} apiFilterLookup="policyList">
       <IndexRoute component={Policy} />
       <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>

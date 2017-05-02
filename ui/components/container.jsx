@@ -10,7 +10,11 @@ function Container({ children, route, topics, policies }) {
     <div className="clearfix">
       <div className="col col-2 p2">
         Search and filter
-        <FilterList existingFilters={topics} lookup="topics" search={route.search} />
+        <FilterList
+          existingFilters={topics}
+          lookup="topics"
+          apiFilterLookup={route.apiFilterLookup}
+        />
         <FilterList existingFilters={policies} lookup="policies" />
       </div>
       <div className="col col-10 pl4 border-left max-width-3">
@@ -33,7 +37,7 @@ Container.propTypes = {
   topics: FilterList.propTypes.existingFilters,
   policies: FilterList.propTypes.existingFilters,
   route: React.PropTypes.shape({
-    search: React.PropTypes.string,
+    apiFilterLookup: React.PropTypes.string,
   }),
 };
 
