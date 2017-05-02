@@ -5,7 +5,7 @@
 node_modules
 reqs/static/js/bundle.js
 ui-dist
-jest
+jest*
 ui/lcov-report/
 ui/lcov.info
 
