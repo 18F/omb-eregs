@@ -21,20 +21,12 @@ if (browserHistory && typeof gas !== 'undefined') {
 
 export default <Router history={browserHistory} >
   <Route path="/" component={App}>
-    <IndexRoute component={Index} />
-    <Redirect from="keywords" to="topics" />
-    <Route path="topics">
-      <IndexRoute component={Topics} />
-      <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
+    <IndexRedirect to="/requirements" />
+    <Route path="search-redirect">
+      <Route path="topics" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
+      <Route path="policies" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
     </Route>
-    <Route path="policies" component={Container} apiFilterLookup="policyList">
-      <IndexRoute component={Policy} />
-      <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
-    </Route>
-    <Route path="requirements" component={Container} >
-      <IndexRedirect to="/requirements/by-topic" />
-      <Redirect from="by-keywords" to="by-topic" />
-      <Route path="by-topic" tabName="Requirement" component={ReqsByTopic} />
-    </Route>
+    <Route path="policies" component={Policies} tabName="Policy" />
+    <Route path="requirements" component={Requirements} tabName="Requirement" />
   </Route>
 </Router>;
