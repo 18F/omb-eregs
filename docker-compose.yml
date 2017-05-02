@@ -45,6 +45,7 @@ services:
     working_dir: /usr/src/app
     depends_on:
       - persistent_db
+      - minio
     stdin_open: true
     tty: true
 
@@ -53,9 +54,6 @@ services:
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
     ports:
       - 8001:8001
-    depends_on:
-      - persistent_db
-      - minio
     environment:
       <<: *API_ENV
       PORT: 8001
