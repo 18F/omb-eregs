@@ -19,9 +19,9 @@ services:
     environment:
         - MINIO_ACCESS_KEY=LOCAL_ID
         - MINIO_SECRET_KEY=LOCAL_KEY
-    command: server --address 'minio:9000' minio-test
+    command: server --address 'minio:9100' minio-test
     ports:
-        - 9000:9000
+        - 9100:9100
   prod-api: &PROD_API
     image: python:3.5.3
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
