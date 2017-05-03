@@ -16,9 +16,6 @@ applications:
     env:
       NEW_RELIC_APP_NAME: OMB Demo API/Admin
       MAX_URL: https://login.test.max.gov/cas/login
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      AWS_STORAGE_BUCKET_NAME:
   - name: ui
     buildpack: nodejs_buildpack
     command: node ui-dist/server.js

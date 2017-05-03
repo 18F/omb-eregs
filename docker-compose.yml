@@ -43,19 +43,11 @@ services:
         {"config": [{"credentials":
           {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
         }],
-          "s3": [
-           {
-            "credentials": {
-             "access_key_id": "LOCAL_ID",
-             "bucket": "pdfs",
-             "secret_access_key": "LOCAL_KEY",
-             "region": "irrelevant fake region",
-             "endpoint": "http://minio:9100"
-            },
-            "label": "s3",
-            "name": "storage-s3"
-            }
-           ]
+          "s3": [{"credentials":
+          {"access_key_id": "LOCAL_ID", "bucket": "pdfs", "secret_access_key": "LOCAL_KEY", "region": "irrelevant fake region", "endpoint": "http://minio:9100"},
+          "label": "s3",
+          "name": "storage-s3"
+        }]
         }
     volumes:
       - $PWD:/usr/src/app
