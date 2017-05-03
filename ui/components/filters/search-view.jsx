@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { redirectWhitelist } from '../lookup-search';
+import redirectWhiteList from '../redirectWhiteList';
 
 export default function SearchView({ insertParam, lookup, pathname, query }) {
   return (
@@ -27,7 +27,7 @@ export default function SearchView({ insertParam, lookup, pathname, query }) {
 SearchView.propTypes = {
   insertParam: React.PropTypes.string,
   lookup: React.PropTypes.string.isRequired,
-  pathname: React.PropTypes.oneOf(redirectWhitelist).isRequired,
+  pathname: React.PropTypes.oneOf(redirectWhiteList).isRequired,
   query: React.PropTypes.shape({}),
 };
 SearchView.defaultProps = {

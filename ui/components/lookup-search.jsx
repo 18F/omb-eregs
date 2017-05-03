@@ -8,12 +8,9 @@ import validator from 'validator';
 import api from '../api';
 import { UserError } from '../error-handling';
 import Pagers from './pagers';
+import redirectWhiteList from './redirectWhiteList';
 
 const redirectQueryPrefix = 'redirectQuery__';
-export const redirectWhitelist = [
-  '/policies',
-  '/requirements',
-];
 
 
 /**
@@ -44,7 +41,7 @@ export function cleanParams(query) {
     throw new UserError('Needs a "q" parameter');
   } else if (validator.isEmpty(clean.insertParam)) {
     throw new UserError('Needs an "insertParam" parameter');
-  } else if (!validator.isIn(clean.redirect.pathname, redirectWhitelist)) {
+  } else if (!validator.isIn(clean.redirect.pathname, redirectWhiteList)) {
     throw new UserError('Invalid "redirectPathname" parameter');
   }
 
