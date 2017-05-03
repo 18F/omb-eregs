@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 )
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', )
+    INSTALLED_APPS += ('debug_toolbar', 'pympler')
 
 MIDDLEWARE = (
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -74,6 +74,23 @@ MIDDLEWARE = (
 if DEBUG:
     MIDDLEWARE = ('debug_toolbar.middleware.DebugToolbarMiddleware',) + \
                  MIDDLEWARE
+    DEBUG_TOOLBAR_PANELS = (
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        # Disabled due to poor performance on Django 1.11
+        # https://github.com/jazzband/django-debug-toolbar/issues/910
+        # 'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+        'pympler.panels.MemoryPanel',
+    )
 
 # Allow most URLs to be used by any service; do not allow the admin to be
 # accessed this way
