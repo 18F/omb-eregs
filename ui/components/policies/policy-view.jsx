@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-export default function Policy({ policy, query }) {
+export default function Policy({ policy, topicsIds }) {
   const allReqs = {
     pathname: '/requirements',
     query: { policy_id: policy.id },
@@ -10,7 +10,7 @@ export default function Policy({ policy, query }) {
     pathname: '/requirements',
     query: {
       policy_id: policy.id,
-      topics__id__in: query.requirements__topics__id__in,
+      topics__id__in: topicsIds,
     },
   };
   return (
@@ -39,10 +39,10 @@ Policy.propTypes = {
     relevant_reqs: React.PropTypes.number,
     total_reqs: React.PropTypes.number,
   }),
-  query: React.PropTypes.shape({}),
+  topicsIds: React.PropTypes.string,
 };
 
 Policy.defaultProps = {
-  policy: [],
-  query: {},
+  policy: {},
+  topicsIds: '',
 };

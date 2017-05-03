@@ -3,12 +3,12 @@ import React from 'react';
 import Pagers from '../pagers';
 import Policy from './policy-view';
 
-export default function PoliciesView({ policies, count, query }) {
+export default function PoliciesView({ policies, count, topicsIds }) {
   return (
     <div>
       <ul className="list-reset">
         { policies.map(policy =>
-          <Policy key={policy.id} policy={policy} query={query} />,
+          <Policy key={policy.id} policy={policy} topicsIds={topicsIds} />,
         )}
       </ul>
       <Pagers count={count} />
@@ -20,10 +20,10 @@ PoliciesView.propTypes = {
     id: React.PropTypes.number,
   })),
   count: React.PropTypes.number,
-  query: React.PropTypes.shape({}),
+  topicsIds: React.PropTypes.string,
 };
 PoliciesView.defaultProps = {
   policies: [],
   count: 0,
-  query: {},
+  topicsIds: '',
 };
