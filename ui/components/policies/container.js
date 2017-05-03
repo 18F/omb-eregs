@@ -36,7 +36,7 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
   ];
   const pageContent = React.createElement(
     PoliciesView,
-    { policies: pagedPolicies.results, count: pagedPolicies.count },
+    { policies: pagedPolicies.results, count: pagedPolicies.count, query },
   );
   return React.createElement(SearchFilterView, { filters, tabs, pageContent });
 }
