@@ -6,7 +6,7 @@ import Policy from './policy-view';
 export default function PoliciesView({ policies, count, topicsIds }) {
   return (
     <div>
-      <ul className="list-reset">
+      <ul className="policy-list list-reset">
         { policies.map(policy =>
           <Policy key={policy.id} policy={policy} topicsIds={topicsIds} />,
         )}
