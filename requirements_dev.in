@@ -12,6 +12,8 @@ flake8-tuple
 jedi
 model_mommy
 pep8-naming
+pyinotify
+pympler
 pytest
 pytest-cov
 pytest-django
