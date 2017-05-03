@@ -4,24 +4,30 @@ import { resolve } from 'react-resolver';
 import api from '../../api';
 import Pagers from '../pagers';
 
-function Policies({ pagedReqs }) {
-  const policies = pagedReqs.results;
+function Policies({ policiesResponse }) {
+  const policies = policiesResponse.results;
   return (
     <div>
       <ul className="list-reset">
         { policies.map(policy =>
-          <li key={policy.id}>{policy.title} {policy.relevant_reqs}</li>)}
+          <li key={policy.id}>
+            <h3>{policy.title}</h3>
+            {policy.relevant_reqs} of {policy.total_reqs} match your search
+            <span className="download-policy-link">Download policy PDF</span>
+            <span className="view-requirements-link">View all requirements</span>
+          </li>
+        )}
       </ul>
-      <Pagers count={pagedReqs.count} />
+      <Pagers count={policies.count} />
     </div>
   );
 }
 Policies.defaultProps = {
-  pagedReqs: { results: [], count: 0 },
+  policies: { results: [], count: 0 },
 };
 
 Policies.propTypes = {
-  pagedReqs: React.PropTypes.shape({
+  policies: React.PropTypes.shape({
     results: React.PropTypes.arrayOf(React.PropTypes.shape({
       req_text: React.PropTypes.string,
       req_id: React.PropTypes.string,
@@ -30,11 +36,11 @@ Policies.propTypes = {
   }),
 };
 
-const fetchRequirements = ({ location: { query } }) => {
+const fetchPolicies = ({ location: { query } }) => {
   const params = Object.assign({}, query, { ordering: 'policy__policy_number' });
   return api.policies.fetch(params);
 };
 
 export default resolve(
-  'pagedReqs', fetchRequirements,
+  'policies', fetchPolicies,
 )(Policies);
