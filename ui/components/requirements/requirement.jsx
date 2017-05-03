@@ -64,23 +64,9 @@ export default function Requirement({ requirement }) {
   /* eslint-enable react/no-array-index-key */
   return (
     <div className="req p2 clearfix max-width-3">
-      <div className="req-id col col-1 mb2 mr1">
-        {requirement.req_id}
-      </div>
-      <div className="req-text col col-10">
+      <div className="req-text col col-12">
         { reqTexts }
         <div className="clearfix mt3">
-          <Metadata
-            className="applies-to mr2"
-            name="Applies to"
-            value={requirement.impacted_entity}
-            nullValue="Applies to: unknown"
-          />
-          <Metadata
-            className="issuing-body"
-            name="Issuing body"
-            value={requirement.issuing_body}
-          />
           <Metadata
             className="policy-title"
             name="Policy title"
@@ -96,6 +82,22 @@ export default function Requirement({ requirement }) {
             className="issuance"
             name="Policy issuance"
             value={requirement.policy.issuance}
+          />
+          <Metadata
+            className="requirement-id"
+            name="Requirement ID"
+            value={requirement.req_id}
+          />
+          <Metadata
+            className="applies-to mr2"
+            name="Applies to"
+            value={requirement.impacted_entity}
+            nullValue="Applies to: unknown"
+          />
+          <Metadata
+            className="issuing-body"
+            name="Issuing body"
+            value={requirement.issuing_body}
           />
           <Metadata
             className="sunset-date"
