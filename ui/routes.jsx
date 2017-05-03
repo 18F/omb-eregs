@@ -1,13 +1,10 @@
 import React from 'react';
-import { browserHistory, IndexRedirect, IndexRoute, Redirect, Route, Router } from 'react-router';
+import { browserHistory, IndexRoute, IndexRedirect, Redirect, Route, Router } from 'react-router';
 
 import App from './components/app';
-import Topics from './components/topics';
-import Index from './components/index';
-import Container from './components/container';
-import ReqsByTopic from './components/requirements/by-topic';
-import Policy from './components/policies/policies';
-import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
+import PolicyContainerResolver from './components/policies/container';
+import RequirementsContainerResolver from './components/requirements/container';
+import LookupSearchResolver, { redirectIfMatched } from './components/lookup-search';
 
 // Trigger DAP pageviews when our history changes (for single-page-app users)
 if (browserHistory && typeof gas !== 'undefined') {
@@ -21,20 +18,16 @@ if (browserHistory && typeof gas !== 'undefined') {
 
 export default <Router history={browserHistory} >
   <Route path="/" component={App}>
-    <IndexRoute component={Index} />
-    <Redirect from="keywords" to="topics" />
-    <Route path="topics">
-      <IndexRoute component={Topics} />
-      <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
+    <IndexRedirect to="/requirements" />
+    <Route path="search-redirect">
+      <Route path="topics" component={LookupSearchResolver} onEnter={redirectIfMatched} />
+      <Route path="policies" component={LookupSearchResolver} onEnter={redirectIfMatched} />
     </Route>
-    <Route path="policies" component={Container} apiFilterLookup="policyList">
-      <IndexRoute component={Policy} />
-      <Route path="search-redirect" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
-    </Route>
-    <Route path="requirements" component={Container} >
-      <IndexRedirect to="/requirements/by-topic" />
-      <Redirect from="by-keywords" to="by-topic" />
-      <Route path="by-topic" tabName="Requirement" component={ReqsByTopic} />
+    <Route path="policies" component={PolicyContainerResolver} />
+    <Route path="requirements">
+      <IndexRoute component={RequirementsContainerResolver} />
+      <Redirect from="by-topic" to="/requirements" />
+      <Redirect from="by-policy" to="/requirements" />
     </Route>
   </Route>
 </Router>;

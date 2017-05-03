@@ -6,9 +6,10 @@ import querystring from 'querystring';
 import React from 'react';
 import { Async } from 'react-select';
 
-import { apiParam, redirectQuery, search } from './lookup-search';
+import SearchView from './search-view';
+import { apiParam, redirectQuery, search } from '../lookup-search';
 
-export default class SearchAutocomplete extends React.Component {
+export default class Autocompleter extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = { autocomplete: false };
@@ -46,39 +47,18 @@ export default class SearchAutocomplete extends React.Component {
     const { insertParam, lookup } = this.props;
     const { pathname, query } = this.context.router.location;
     if (this.state.autocomplete) {
-      return <Async loadOptions={this.loadOptions} onChange={this.onChange} />;
+      return React.createElement(
+        Async, { loadOptions: this.loadOptions, onChange: this.onChange });
     }
-    return (
-      <form action={`/${lookup}/search-redirect/`} method="GET">
-        <input type="hidden" name="insertParam" value={insertParam} />
-        <input type="hidden" name="redirectPathname" value={pathname} />
-        <div className="flex clearfix relative">
-          <input
-            type="text"
-            name="q"
-            className="filter-lookup-field rounded-left p1 border col col-9"
-          />
-          { Object.keys(query).map(key =>
-            <input key={key} type="hidden" name={`redirectQuery__${key}`} value={query[key]} />)}
-          <input
-            type="submit"
-            value="Add"
-            className="add-filter-button border rounded-right p1 col col-3"
-          />
-        </div>
-      </form>
-    );
+    return React.createElement(
+      SearchView, { insertParam, lookup, pathname, query });
   }
 }
-SearchAutocomplete.defaultProps = {
-  lookup: '',
-  insertParam: '',
+Autocompleter.propTypes = {
+  lookup: React.PropTypes.oneOf(Object.keys(apiParam)).isRequired,
+  insertParam: React.PropTypes.string.isRequired,
 };
-SearchAutocomplete.propTypes = {
-  lookup: React.PropTypes.string,
-  insertParam: React.PropTypes.string,
-};
-SearchAutocomplete.contextTypes = {
+Autocompleter.contextTypes = {
   router: React.PropTypes.shape({
     location: React.PropTypes.shape({
       query: React.PropTypes.shape({}),
@@ -87,3 +67,4 @@ SearchAutocomplete.contextTypes = {
     push: React.PropTypes.func,
   }),
 };
+
