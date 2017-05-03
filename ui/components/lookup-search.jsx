@@ -83,7 +83,7 @@ export function redirectIfMatched({ routes, location: { query } }, redirect, don
      * to find an exact match */
     done();
   } else {
-    const lookup = routes[routes.length - 2].path;
+    const lookup = routes[routes.length - 1].path;
     const apiQuery = { [apiParam[lookup]]: query.q };
     new Promise(success => success(cleanParams(query)))
       .then(params => Promise.all(
@@ -127,7 +127,7 @@ Entry.propTypes = {
 
 
 export function LookupSearch({ routes, location, pagedEntries }) {
-  const lookup = routes[routes.length - 2].path;
+  const lookup = routes[routes.length - 1].path;
   const params = cleanParams(location.query);
 
   return (
@@ -144,7 +144,7 @@ export function LookupSearch({ routes, location, pagedEntries }) {
   );
 }
 LookupSearch.defaultProps = {
-  routes: [{ path: 'topics' }, {}],
+  routes: [{ path: 'topics' }],
   location: { query: {} },
   pagedEntries: { count: 0, entries: [] },
 };
@@ -175,7 +175,7 @@ export function search(lookup, q, page = '1') {
  * failed)
  **/
 function fetchData({ routes, location: { query } }) {
-  const lookup = routes[routes.length - 2].path;
+  const lookup = routes[routes.length - 1].path;
   const userParams = cleanParams(query);
   return search(lookup, userParams.q, userParams.page);
 }

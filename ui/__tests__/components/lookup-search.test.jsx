@@ -74,7 +74,7 @@ describe('redirectIfMatched()', () => {
     insertParam: 'ins',
     redirectPathname: '/requirements',
   };
-  const routes = [{ path: 'topics' }, {}];
+  const routes = [{ path: 'search-redirect' }, { path: 'topics' }];
   it('does not hit the api if a page number is present', () => {
     const modifiedQuery = Object.assign({}, query, { page: '5' });
     const params = { routes, location: { query: modifiedQuery } };
@@ -123,7 +123,7 @@ describe('redirectIfMatched()', () => {
 
 describe('<LookupSearch />', () => {
   const params = {
-    routes: [{ path: 'topics' }, {}],
+    routes: [{ path: 'search-redirect' }, { path: 'topics' }],
     location: {
       query: {
         q: 'searchTerm',

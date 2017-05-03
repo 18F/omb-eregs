@@ -4,7 +4,7 @@ import { browserHistory, IndexRoute, IndexRedirect, Redirect, Route, Router } fr
 import App from './components/app';
 import PolicyContainerResolver from './components/policies/container';
 import RequirementsContainerResolver from './components/requirements/container';
-import AsyncLookupSearch, { redirectIfMatched } from './components/lookup-search';
+import LookupSearchResolver, { redirectIfMatched } from './components/lookup-search';
 
 // Trigger DAP pageviews when our history changes (for single-page-app users)
 if (browserHistory && typeof gas !== 'undefined') {
@@ -20,8 +20,8 @@ export default <Router history={browserHistory} >
   <Route path="/" component={App}>
     <IndexRedirect to="/requirements" />
     <Route path="search-redirect">
-      <Route path="topics" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
-      <Route path="policies" component={AsyncLookupSearch} onEnter={redirectIfMatched} />
+      <Route path="topics" component={LookupSearchResolver} onEnter={redirectIfMatched} />
+      <Route path="policies" component={LookupSearchResolver} onEnter={redirectIfMatched} />
     </Route>
     <Route path="policies" component={PolicyContainerResolver} />
     <Route path="requirements">
