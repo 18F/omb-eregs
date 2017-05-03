@@ -68,6 +68,7 @@ class Policy(models.Model):
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
     policy_status = models.CharField(max_length=256, blank=True)
+    document_source = models.FileField(blank=True)
 
     def __str__(self):
         text = self.title[:100]
