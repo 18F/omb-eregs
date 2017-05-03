@@ -71,6 +71,19 @@ def test_reqs_in_policy(admin_client):
     assert req3.req_id not in result
 
 
+def test_topics_displayed(admin_client):
+    """Existing topics should be in the markup of a requirement edit page"""
+    topics = mommy.make(Topic, _quantity=4)
+    req = mommy.make(Requirement)
+    req.topics.add(*[topic.name for topic in topics])
+
+    resp = admin_client.get('/admin/reqs/requirement/{0}/change/'.format(
+        req.pk))
+    markup = resp.content.decode('utf-8')
+    for topic in topics:
+        assert topic.name in markup
+
+
 def req_query_str():
     """Create a requirement and generate the query string associated with
     it"""
