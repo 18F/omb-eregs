@@ -15,7 +15,7 @@ function requirementsTab() {
     { active: false, tabName: 'Requirements', key: 'Requirements', link });
 }
 
-function PoliciesContainer({ location: { query }, pagedPolicies }) {
+export function PoliciesContainer({ location: { query }, pagedPolicies }) {
   const filters = [
     React.createElement(
       TopicFilterContainer,
