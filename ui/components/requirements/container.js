@@ -7,9 +7,17 @@ import TabView from '../tab-view';
 import TopicFilterContainer from '../filters/topic-container';
 import api from '../../api';
 
-function policiesTab() {
-  // This will be dynamic soon
-  const link = { pathname: '/policies' };
+function policiesTab(reqQuery) {
+  // Transform filter keys into the format expected by policies
+  const policyQuery = {};
+  Object.keys(reqQuery).forEach((key) => {
+    if (key.startsWith('policy__')) {
+      policyQuery[key.slice('policy__'.length)] = reqQuery[key];
+    } else if (!['page', 'ordering', 'format'].includes(key)) {
+      policyQuery[`requirements__${key}`] = reqQuery[key];
+    }
+  });
+  const link = { pathname: '/policies', query: policyQuery };
   return React.createElement(
     TabView,
     { active: false, tabName: 'Policies', key: 'Policies', link });
@@ -24,7 +32,7 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
   const tabs = [
     React.createElement(
       TabView, { active: true, tabName: 'Requirements', key: 'Requirements' }),
-    policiesTab(),
+    policiesTab(query),
   ];
   const pageContent = React.createElement(
     RequirementsView,
