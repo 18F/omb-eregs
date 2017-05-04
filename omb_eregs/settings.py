@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 )
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', 'pympler')
+    INSTALLED_APPS += ('debug_toolbar',)
 
 MIDDLEWARE = (
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -89,7 +89,6 @@ if DEBUG:
         'debug_toolbar.panels.signals.SignalsPanel',
         'debug_toolbar.panels.logging.LoggingPanel',
         'debug_toolbar.panels.redirects.RedirectsPanel',
-        'pympler.panels.MemoryPanel',
     )
 
 # Allow most URLs to be used by any service; do not allow the admin to be
