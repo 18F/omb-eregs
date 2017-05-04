@@ -11,7 +11,7 @@ botocore==1.5.39
 cfenv==0.5.2
 coverage==4.3.4           # via pytest-cov
 dj-database-url==0.4.2
-django-autocomplete-light==3.2.1
+django-autocomplete-light==3.2.7
 django-cas-ng==3.5.7
 django-cors-headers==2.0.2
 django-debug-toolbar==1.7
