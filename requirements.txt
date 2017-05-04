@@ -6,7 +6,7 @@
 #
 cfenv==0.5.2
 dj-database-url==0.4.2
-django-autocomplete-light==3.2.1
+django-autocomplete-light==3.2.7
 django-cas-ng==3.5.7
 django-cors-headers==2.0.2
 django-filter==1.0.2
