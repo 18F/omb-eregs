@@ -92,6 +92,7 @@ def test_pdf_upload(admin_client):
     form_text = form.content.decode('utf-8')
     assert 'id_document_source' in form_text
     assert 'First Policy' in form_text
+    assert not policy.document_source
     data = {
         'policy_number': policy.policy_number,
         'title': 'First Policy Edited',
@@ -112,7 +113,37 @@ def test_pdf_upload(admin_client):
     assert 'First Policy Edited' in updated_text
     assert 'oge-450-a.pdf' in updated_text
     updated_policy = Policy.objects.get(id=policy.id)
+    assert updated_policy.document_source
     pdf = requests.get(updated_policy.document_source.url)
     assert pdf.status_code == 200
     with open(pdf_path, 'rb') as f:
         assert pdf.content == f.read()
+
+
+def test_not_pdf_upload(admin_client):
+    policy = mommy.make(Policy, title='First Policy')
+    policy_url = '/admin/reqs/policy/{0}/change/'.format(policy.id)
+    form = admin_client.get(policy_url)
+    form_text = form.content.decode('utf-8')
+    assert 'id_document_source' in form_text
+    assert 'First Policy' in form_text
+    assert not policy.document_source
+    data = {
+        'policy_number': policy.policy_number,
+        'title': 'First Policy Edited',
+        'uri': policy.uri,
+        'omb_policy_id': policy.omb_policy_id,
+        'policy_type': policy.policy_type,
+        'issuance': policy.issuance,
+        'sunset': '2015-01-01',
+        'policy_status': policy.policy_status,
+    }
+    not_pdf_path = '{0}/not-a-pdf.txt'.format(pathlib.Path(__file__).parent)
+    with open(not_pdf_path, 'rb') as f:
+        data['document_source'] = f
+        resp = admin_client.post(policy_url, data)
+    resp_text = resp.content.decode('utf-8')
+    assert 'The file must be a PDF.' in resp_text
+    updated_policy = Policy.objects.get(id=policy.id)
+    assert updated_policy.title == 'First Policy'
+    assert not policy.document_source
