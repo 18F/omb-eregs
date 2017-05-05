@@ -26,4 +26,10 @@ exports.config = {
     level: 'info',
   },
   agent_enabled: !!(process.env.NEW_RELIC_APP_NAME && creds.NEW_RELIC_LICENSE_KEY),
+  error_collector: {
+    enabled: true, // default
+    ignore_status_codes: [401, 404],  // added 401 to the default: [404]
+    capture_events: true, // default
+    max_event_samples_stored: 100, // default
+  },
 };
