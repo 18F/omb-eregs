@@ -1,9 +1,17 @@
-def test_ui_loads(selenium, app_urls):
-    selenium.get(app_urls.ui)
-    reqs_link = selenium.find_element_by_link_text('Requirements')
-    reqs_link.click()
+def test_policies_tab(selenium, app_urls):
+    selenium.get(app_urls.ui + 'requirements')
+    link = selenium.find_element_by_link_text('Policies')
+    link.click()
 
-    assert 'requirements/by-topic' in selenium.current_url
+    assert selenium.current_url == app_urls.ui + 'policies'
+
+
+def test_requirements_tab(selenium, app_urls):
+    selenium.get(app_urls.ui + 'policies')
+    link = selenium.find_element_by_link_text('Requirements')
+    link.click()
+
+    assert selenium.current_url == app_urls.ui + 'requirements'
 
 
 def test_html_api_loads(selenium, app_urls):
@@ -26,7 +34,7 @@ def test_admin_lists_models(selenium, admin_login):
 
 
 def test_ui_proxies_404(selenium, app_urls):
-    selenium.get(app_urls.ui + 'requirements/by-topic?page=9999')
+    selenium.get(app_urls.ui + 'requirements?page=9999')
     html = selenium.find_element_by_tag_name('html')
     assert 'Server Error' not in html.text
     assert 'Page not found' in html.text
