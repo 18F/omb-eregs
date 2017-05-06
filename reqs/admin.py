@@ -15,6 +15,10 @@ def is_extension_pdf(uploaded_file):
 class PolicyForm(forms.ModelForm):
     document_source = forms.FileField(validators=[is_extension_pdf])
 
+    def __init__(self, *args, **kwargs):
+        super(PolicyForm, self).__init__(*args, **kwargs)
+        self.fields['document_source'].required = False
+
     class Meta:
         model = Policy
         fields = '__all__'
