@@ -3,11 +3,13 @@ from dal.autocomplete import Select2QuerySetView
 from django.db.models import Count, IntegerField, OuterRef, Subquery
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
-from rest_framework.filters import DjangoFilterBackend, OrderingFilter
+from rest_framework.filters import BaseFilterBackend, DjangoFilterBackend, OrderingFilter
 
 from reqs.models import Policy, Requirement, Topic
 from reqs.serializers import (PolicySerializer, RequirementSerializer,
                               TopicSerializer)
+
+
 
 
 class PolicyFilter(django_filters.FilterSet):
@@ -105,6 +107,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.exclude(nonpublic=True)
         queryset = queryset.annotate(
             total_reqs=relevant_reqs_count({}),
             relevant_reqs=relevant_reqs_count(self.request.GET),
@@ -141,6 +144,12 @@ class PriorityOrderingFilter(OrderingFilter):
             return self.priority_ordering(request, queryset)
 
 
+class HiddenPolicyFilter(BaseFilterBackend):
+
+    def filter_queryset(self, request, queryset, view):
+        return queryset.exclude(policy__nonpublic=True)
+
+
 class RequirementViewSet(viewsets.ModelViewSet):
     # Distinct to account for multiple tag matches when filtering
     queryset = Requirement.objects.select_related('policy').\
@@ -154,5 +163,6 @@ class RequirementViewSet(viewsets.ModelViewSet):
     filter_fields.update({
         'topics__' + key: value
         for key, value in TopicFilter.get_fields().items()})
-    filter_backends = (DjangoFilterBackend, PriorityOrderingFilter)
+    filter_backends = (DjangoFilterBackend, HiddenPolicyFilter,
+                       PriorityOrderingFilter)
     ordering_fields = filter_fields.keys()

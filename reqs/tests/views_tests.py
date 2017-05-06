@@ -210,3 +210,37 @@ def test_policies_counts_filter_by_multiple_topics(policy_setup):
     assert response['results'][1]['total_reqs'] == len(reqs[1])
     # reqs[1][1]
     assert response['results'][1]['relevant_reqs'] == 1
+
+
+@pytest.mark.django_db
+def test_excludes_nonpublic():
+    """The API endpoint should not include policies flagged as nonpublic"""
+    policies = [mommy.make(Policy, policy_number='0'),
+                mommy.make(Policy, policy_number='1', nonpublic=True)]
+    reqs = [mommy.make(Requirement, policy=policies[0], _quantity=3),
+            mommy.make(Requirement, policy=policies[1], _quantity=4)]
+    client = APIClient()
+
+    path = "/policies/"
+    response = client.get(path).json()
+    assert response['count'] == 1
+
+    public_path = "/policies/?id={0}".format(policies[0].id)
+    public_response = client.get(public_path).json()
+    assert public_response['count'] == 1
+
+    nonpublic_path = "/policies/?id={0}".format(policies[1].id)
+    nonpublic_response = client.get(nonpublic_path).json()
+    assert nonpublic_response['count'] == 0
+
+    req_path = "/requirements/"
+    req_response = client.get(req_path).json()
+    assert req_response['count'] == 3
+
+    id_path = "/requirements/?req_id=" + reqs[0][1].req_id
+    id_response = client.get(id_path).json()
+    assert id_response['count'] == 1
+
+    id_nonpublic_path = "/requirements/?req_id=" + reqs[1][1].req_id
+    id_nonpublic_response = client.get(id_nonpublic_path).json()
+    assert id_nonpublic_response['count'] == 0
