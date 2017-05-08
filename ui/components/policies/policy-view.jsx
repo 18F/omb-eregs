@@ -16,7 +16,7 @@ export default function Policy({ policy, topicsIds }) {
   return (
     <li key={policy.id} className="py1">
       <section className="border rounded gray-border p2">
-        <h2 className="mt0 mb3">{policy.title}</h2>
+        <h2 className="mt0 mb3">{policy.title_with_number}</h2>
         <div className="clearfix">
           <span className="requirements-links col col-6">
             <span className="circle-bg border gray-border p1">
@@ -40,7 +40,7 @@ export default function Policy({ policy, topicsIds }) {
 Policy.propTypes = {
   policy: React.PropTypes.shape({
     id: React.PropTypes.number,
-    title: React.PropTypes.string,
+    title_with_number: React.PropTypes.string,
     relevant_reqs: React.PropTypes.number,
     total_reqs: React.PropTypes.number,
   }),
