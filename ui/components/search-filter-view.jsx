@@ -1,11 +1,12 @@
 import React from 'react';
 
-export default function SearchFilterView({ filters, tabs, pageContent }) {
+export default function SearchFilterView(
+  { filterControls, pageContent, selectedFilters, tabs }) {
   return (
     <div className="clearfix">
       <div className="col col-2 p2">
         Search and filter
-        {filters}
+        {filterControls}
       </div>
       <div className="col col-10 pl4 border-left max-width-3">
         <div>
@@ -14,7 +15,7 @@ export default function SearchFilterView({ filters, tabs, pageContent }) {
             {tabs}
           </ul>
         </div>
-        {/* selected filter display here */}
+        { selectedFilters }
         {/* page counts here */}
         { pageContent }
       </div>
@@ -23,12 +24,14 @@ export default function SearchFilterView({ filters, tabs, pageContent }) {
 }
 
 SearchFilterView.propTypes = {
-  filters: React.PropTypes.arrayOf(React.PropTypes.node),
-  tabs: React.PropTypes.arrayOf(React.PropTypes.node),
+  filterControls: React.PropTypes.arrayOf(React.PropTypes.node),
   pageContent: React.PropTypes.node,
+  selectedFilters: React.PropTypes.node,
+  tabs: React.PropTypes.arrayOf(React.PropTypes.node),
 };
 SearchFilterView.defaultProps = {
-  filters: [],
-  tabs: [],
+  filterControls: [],
   pageContent: null,
+  selectedFilters: null,
+  tabs: [],
 };

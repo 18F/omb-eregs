@@ -24,7 +24,7 @@ function policiesTab(reqQuery) {
 }
 
 export function RequirementsContainer({ location: { query }, pagedReqs }) {
-  const filters = [
+  const filterControls = [
     React.createElement(
       TopicFilterContainer,
       { query, paramName: 'topics__id__in', key: 'topic' }),
@@ -38,7 +38,9 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
     RequirementsView,
     { requirements: pagedReqs.results, count: pagedReqs.count },
   );
-  return React.createElement(SearchFilterView, { filters, tabs, pageContent });
+  const selectedFilters = [];
+  return React.createElement(
+    SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
 RequirementsContainer.propTypes = {
   location: React.PropTypes.shape({ query: React.PropTypes.shape({}) }),

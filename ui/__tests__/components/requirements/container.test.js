@@ -17,12 +17,12 @@ describe('<RequirementsContainer />', () => {
   const result = shallow(React.createElement(
     RequirementsContainer, { location, pagedReqs }));
 
-  it('has a topics filter', () => {
-    const filters = result.prop('filters');
-    expect(filters).toHaveLength(1);
+  it('has a topics filter controls', () => {
+    const controls = result.prop('filterControls');
+    expect(controls).toHaveLength(1);
 
-    expect(filters[0].props.query).toEqual(location.query);
-    expect(filters[0].props.paramName).toEqual('topics__id__in');
+    expect(controls[0].props.query).toEqual(location.query);
+    expect(controls[0].props.paramName).toEqual('topics__id__in');
   });
 
   describe('its tabs', () => {
