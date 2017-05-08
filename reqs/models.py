@@ -70,14 +70,17 @@ class Policy(models.Model):
     policy_status = models.CharField(max_length=256, blank=True)
     document_source = models.FileField(blank=True)
 
-    def __str__(self):
-        text = self.title[:100]
-        if len(self.title) > 100:
-            text += '...'
+    @property
+    def title_with_number(self):
         if self.omb_policy_id:
-            return '{0}: ({1}) {2}'.format(
-                self.policy_number, self.omb_policy_id, text)
-        return '{0}: {1}'.format(self.policy_number, text)
+            return '{0}: {1}'.format(self.omb_policy_id, self.title)
+        return self.title
+
+    def __str__(self):
+        text = self.title_with_number
+        if len(text) > 100:
+            text = text[:100] + '...'
+        return '({0}) {1}'.format(self.policy_number, text)
 
 
 class Requirement(models.Model):
