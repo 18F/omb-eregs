@@ -3,8 +3,7 @@ from dal.autocomplete import Select2QuerySetView
 from django.db.models import Count, IntegerField, OuterRef, Subquery
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
-from rest_framework.filters import (BaseFilterBackend, DjangoFilterBackend,
-                                    OrderingFilter)
+from rest_framework.filters import (DjangoFilterBackend, OrderingFilter)
 
 from reqs.models import Policy, Requirement, Topic
 from reqs.serializers import (PolicySerializer, RequirementSerializer,
@@ -141,12 +140,6 @@ class PriorityOrderingFilter(OrderingFilter):
             return queryset.order_by(*ordering)
         else:
             return self.priority_ordering(request, queryset)
-
-
-class HiddenPolicyFilter(BaseFilterBackend):
-
-    def filter_queryset(self, request, queryset, view):
-        return queryset.exclude(policy__nonpublic=True)
 
 
 class RequirementViewSet(viewsets.ModelViewSet):
