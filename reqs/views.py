@@ -3,7 +3,7 @@ from dal.autocomplete import Select2QuerySetView
 from django.db.models import Count, IntegerField, OuterRef, Subquery
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
-from rest_framework.filters import (DjangoFilterBackend, OrderingFilter)
+from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 
 from reqs.models import Policy, Requirement, Topic
 from reqs.serializers import (PolicySerializer, RequirementSerializer,
