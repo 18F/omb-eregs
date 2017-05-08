@@ -162,6 +162,10 @@ class RequirementViewSet(viewsets.ModelViewSet):
     filter_fields.update({
         'topics__' + key: value
         for key, value in TopicFilter.get_fields().items()})
-    filter_backends = (DjangoFilterBackend, HiddenPolicyFilter,
-                       PriorityOrderingFilter)
+    filter_backends = (DjangoFilterBackend, PriorityOrderingFilter)
     ordering_fields = filter_fields.keys()
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.exclude(policy__nonpublic=True)
+        return queryset
