@@ -217,6 +217,7 @@ def test_excludes_nonpublic():
     """The API endpoint should not include policies flagged as nonpublic"""
     public_policy = mommy.make(Policy, policy_number='0')
     nonpublic_policy = mommy.make(Policy, policy_number='1', nonpublic=True)
+    assert public_policy.nonpublic is False  # The default should be False.
     public_reqs = mommy.make(Requirement, policy=public_policy, _quantity=3)
     nonpublic_reqs = mommy.make(Requirement,
                                 policy=nonpublic_policy, _quantity=4)
