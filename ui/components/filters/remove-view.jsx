@@ -3,15 +3,15 @@ import { Link } from 'react-router';
 
 export default function FilterRemoveView({ heading, linkToRemove, name }) {
   return (
-    <li className="active-filter rounded clearfix mb1 mr1 relative inline-block">
-      <span className="filter-name col col-9 p1 pr4 center">
+    <li className="active-filter rounded mb1 mr1 inline-block">
+      <div className="filter-name left">
         {heading}:&nbsp;<strong>{name}</strong>
-      </span>
+      </div>
       <Link
         to={linkToRemove}
-        className="remove-filter-link rounded-right col col-3 p1 center flex absolute"
+        className="remove-filter-link block left"
       >
-        <span className="close-button center block" />
+      Remove filter
       </Link>
     </li>
   );

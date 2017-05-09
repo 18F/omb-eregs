@@ -1,23 +1,18 @@
 @import '~react-select/scss/default';
 
 .active-filter {
-  align-items: center;
   background-color: $color-gray-warm-light;
   font-weight: 500;
   font-size: 0.875rem;
+  padding: 0.25rem;
 
   .remove-filter-link {
-    align-items: center;
-    background: url('/static/img/close-icon.svg') no-repeat center;
-    background-color: $color-secondary-darkest; 
+    background: url('/static/img/remove-btn.svg') no-repeat center;
     color: $color-white;
-    height: 100%;
-    right: 0;
+    padding: 0 0.25rem;
     text-decoration: none;
-  }
-
-  .close-button {
-    width: 100%;
+    text-indent: -9999px;
+    width: 0.9375rem;
   }
 }
 
