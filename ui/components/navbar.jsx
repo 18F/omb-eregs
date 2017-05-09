@@ -12,7 +12,7 @@ const Navbar = () => (
         src="/static/img/omb-logo.png"
       />
       <h1 className="navbar-title">
-          OMB Policy<sup>BETA</sup>
+          OMB Policy Library <sup>BETA</sup>
       </h1>
     </div>
   </div>
