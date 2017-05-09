@@ -20,9 +20,11 @@ describe('<PoliciesContainer />', () => {
   it('has a topics filter controls', () => {
     const controls = result.prop('filterControls');
     expect(controls).toHaveLength(1);
+    expect(controls[0].props.heading).toEqual('Topics');
 
-    expect(controls[0].props.query).toEqual(location.query);
-    expect(controls[0].props.paramName).toEqual('requirements__topics__id__in');
+    const autocompleter = controls[0].props.autocompleter;
+    expect(autocompleter.props.insertParam).toEqual('requirements__topics__id__in');
+    expect(autocompleter.props.lookup).toEqual('topics');
   });
 
 
@@ -59,5 +61,13 @@ describe('<PoliciesContainer />', () => {
 
     expect(pageContent.props.policies).toEqual(pagedPolicies.results);
     expect(pageContent.props.count).toEqual(pagedPolicies.count);
+  });
+
+  it('has configured selectedFilters', () => {
+    const selectedFilters = result.prop('selectedFilters');
+
+    expect(selectedFilters.props.fieldNames).toHaveProperty('policies');
+    expect(selectedFilters.props.fieldNames).toHaveProperty('topics');
+    expect(selectedFilters.props.query).toEqual(location.query);
   });
 });
