@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-export default function FilterRemoveView({ name, linkToRemove }) {
+export default function FilterRemoveView({ heading, linkToRemove, name }) {
   return (
     <li className="active-filter rounded clearfix mb1 flex relative">
-      <span className="filter-name col col-9 p1 center">{name}</span>
+      <span className="filter-name col col-9 p1 center">{heading}:<strong>{name}</strong></span>
       <Link
         to={linkToRemove}
         className="remove-filter-link rounded-right col col-3 p1 center flex absolute"
@@ -15,11 +15,11 @@ export default function FilterRemoveView({ name, linkToRemove }) {
   );
 }
 FilterRemoveView.propTypes = {
+  heading: React.PropTypes.string,
+  linkToRemove: React.PropTypes.shape({ pathname: React.PropTypes.string }),
   name: React.PropTypes.string.isRequired,
-  linkToRemove: React.PropTypes.shape({
-    pathname: React.PropTypes.string,
-  }),
 };
 FilterRemoveView.defaultProps = {
+  heading: '',
   linkToRemove: { pathname: '/' },
 };
