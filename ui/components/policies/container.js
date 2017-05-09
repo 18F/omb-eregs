@@ -5,6 +5,7 @@ import PoliciesView from './policies-view';
 import SearchFilterView from '../search-filter-view';
 import TabView from '../tab-view';
 import TopicFilterContainer from '../filters/topic-container';
+import ExistingFilters from '../filters/existing-container';
 import api from '../../api';
 
 function requirementsTab(policyQuery) {
@@ -42,7 +43,10 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
       topicsIds: query.requirements__topics__id__in,
     },
   );
-  const selectedFilters = [];
+  const selectedFilters = React.createElement(ExistingFilters, {
+    fieldNames: { policies: 'id__in', topics: 'requirements__topics__id__in' },
+    query,
+  });
   return React.createElement(
     SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
