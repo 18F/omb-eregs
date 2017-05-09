@@ -105,6 +105,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.exclude(nonpublic=True)
         queryset = queryset.annotate(
             total_reqs=relevant_reqs_count({}),
             relevant_reqs=relevant_reqs_count(self.request.GET),
@@ -156,3 +157,8 @@ class RequirementViewSet(viewsets.ModelViewSet):
         for key, value in TopicFilter.get_fields().items()})
     filter_backends = (DjangoFilterBackend, PriorityOrderingFilter)
     ordering_fields = filter_fields.keys()
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.exclude(policy__nonpublic=True)
+        return queryset
