@@ -4,7 +4,9 @@ import { resolve } from 'react-resolver';
 import RequirementsView from './requirements-view';
 import SearchFilterView from '../search-filter-view';
 import TabView from '../tab-view';
-import TopicFilterContainer from '../filters/topic-container';
+import ExistingFilters from '../filters/existing-container';
+import FilterListView from '../filters/list-view';
+import Autocompleter from '../filters/autocompleter';
 import api from '../../api';
 
 function policiesTab(reqQuery) {
@@ -24,10 +26,13 @@ function policiesTab(reqQuery) {
 }
 
 export function RequirementsContainer({ location: { query }, pagedReqs }) {
-  const filters = [
-    React.createElement(
-      TopicFilterContainer,
-      { query, paramName: 'topics__id__in', key: 'topic' }),
+  const filterControls = [
+    React.createElement(FilterListView, {
+      autocompleter: React.createElement(Autocompleter, {
+        insertParam: 'topics__id__in', lookup: 'topics' }),
+      heading: 'Topics',
+      key: 'topic',
+    }),
   ];
   const tabs = [
     React.createElement(
@@ -38,7 +43,12 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
     RequirementsView,
     { requirements: pagedReqs.results, count: pagedReqs.count },
   );
-  return React.createElement(SearchFilterView, { filters, tabs, pageContent });
+  const selectedFilters = React.createElement(ExistingFilters, {
+    fieldNames: { policies: 'policy__id__in', topics: 'topics__id__in' },
+    query,
+  });
+  return React.createElement(
+    SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
 RequirementsContainer.propTypes = {
   location: React.PropTypes.shape({ query: React.PropTypes.shape({}) }),

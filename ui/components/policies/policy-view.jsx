@@ -4,12 +4,12 @@ import { Link } from 'react-router';
 export default function Policy({ policy, topicsIds }) {
   const allReqs = {
     pathname: '/requirements',
-    query: { policy_id: policy.id },
+    query: { policy__id__in: policy.id },
   };
   const relevantReqs = {
     pathname: '/requirements',
     query: {
-      policy_id: policy.id,
+      policy__id__in: policy.id,
       topics__id__in: topicsIds,
     },
   };
