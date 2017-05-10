@@ -17,7 +17,7 @@ import serverRender from './server-render';
 const app = express();
 const env = cfenv.getAppEnv();
 
-setupAuth(env.getServiceCreds('config'));
+setupAuth(env.getServiceCreds('config') || {});
 
 /* Middleware */
 // security headers. See docs around setOnOldIE: moral of the story is that
@@ -30,7 +30,7 @@ app.use('/static', express.static(path.join('ui-dist', 'static')));
 app.use(passport.initialize());
 app.use(errorHandler);
 
-app.get('*', passport.authenticate('basic', { session: false }), serverRender);
+app.get('*', passport.authenticate(['ip', 'basic'], { session: false }), serverRender);
 
 /* Start */
 app.listen(env.port, () => {

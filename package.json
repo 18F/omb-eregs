@@ -61,6 +61,7 @@
     "passport": "^0.3.2",
     "passport-custom": "^1.0.5",
     "passport-http": "^0.3.0",
+    "range_check": "^1.4.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-resolver": "^3.1.0",
