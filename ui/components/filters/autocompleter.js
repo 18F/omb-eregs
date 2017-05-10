@@ -47,8 +47,11 @@ export default class Autocompleter extends React.Component {
     const { insertParam, lookup } = this.props;
     const { pathname, query } = this.context.router.location;
     if (this.state.autocomplete) {
-      return React.createElement(
-        Async, { loadOptions: this.loadOptions, onChange: this.onChange });
+      return React.createElement(Async, {
+        loadOptions: this.loadOptions,
+        onChange: this.onChange,
+        tabIndex: '0',
+      });
     }
     return React.createElement(
       SearchView, { insertParam, lookup, pathname, query });
