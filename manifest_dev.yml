@@ -18,6 +18,8 @@ applications:
       MAX_URL: https://login.test.max.gov/cas/login
   - name: ui
     buildpack: nodejs_buildpack
+    instances: 4
+    memory: 128M
     command: node ui-dist/server.js
     routes:
       - route: omb-eregs-demo.app.cloud.gov
