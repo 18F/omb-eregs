@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import ExternalLink from '../external-link';
+
 export default function Policy({ policy, topicsIds }) {
   const allReqs = {
     pathname: '/requirements',
@@ -27,7 +29,11 @@ export default function Policy({ policy, topicsIds }) {
               {policy.total_reqs} requirements
             </Link> match your search
           </span>
-          <span className="download-policy-link icon-links col col-3">Download policy PDF</span>
+          <span className="external-link icon-links col col-3">
+            <ExternalLink href={policy.original_url}>
+              View original
+            </ExternalLink>
+          </span>
           <span className="view-requirements-link icon-links col col-3">
             <Link to={allReqs}>View all requirements</Link>
           </span>
