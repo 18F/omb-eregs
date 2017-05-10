@@ -7,15 +7,17 @@ import cfenv from 'cfenv';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import passport from 'passport';
 
-import basicAuth from './basic-auth';
+import setupAuth from './auth';
 import doNotCache from './do-not-cache';
 import errorHandler from './error-handling';
 import serverRender from './server-render';
 
 const app = express();
 const env = cfenv.getAppEnv();
-const auth = basicAuth(env.getServiceCreds('config'));
+
+setupAuth(env.getServiceCreds('config'));
 
 /* Middleware */
 // security headers. See docs around setOnOldIE: moral of the story is that
@@ -25,12 +27,10 @@ app.use(doNotCache);
 // logging
 app.use(morgan('combined'));
 app.use('/static', express.static(path.join('ui-dist', 'static')));
-if (auth) {
-  app.use(auth);
-}
+app.use(passport.initialize());
 app.use(errorHandler);
 
-app.get('*', serverRender);
+app.get('*', passport.authenticate('basic', { session: false }), serverRender);
 
 /* Start */
 app.listen(env.port, () => {
