@@ -7,6 +7,7 @@ class PolicySerializer(serializers.ModelSerializer):
     total_reqs = serializers.IntegerField(read_only=True)
     relevant_reqs = serializers.IntegerField(read_only=True)
     title_with_number = serializers.CharField(read_only=True)
+    original_url = serializers.CharField(read_only=True)
 
     class Meta:
         model = Policy
@@ -23,6 +24,7 @@ class PolicySerializer(serializers.ModelSerializer):
             'relevant_reqs',
             'document_source',
             'title_with_number',
+            'original_url',
         )
 
 

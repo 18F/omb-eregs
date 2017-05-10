@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 from reqs import models
 
 
@@ -17,3 +19,12 @@ def test_policy_str():
 
     policy.title = "Long"*100
     assert str(policy) == "(5) ID: {0}...".format("Long"*24)
+
+
+def test_original_url():
+    """Should display document_source, if present"""
+    policy = models.Policy(uri='http://example.com/original')
+    assert policy.original_url == 'http://example.com/original'
+
+    policy.document_source = Mock(url='http://example.com/uploaded')
+    assert policy.original_url == 'http://example.com/uploaded'

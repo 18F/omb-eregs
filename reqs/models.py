@@ -77,6 +77,12 @@ class Policy(models.Model):
             return '{0}: {1}'.format(self.omb_policy_id, self.title)
         return self.title
 
+    @property
+    def original_url(self):
+        if self.document_source:
+            return self.document_source.url
+        return self.uri
+
     def __str__(self):
         text = self.title_with_number
         if len(text) > 100:
