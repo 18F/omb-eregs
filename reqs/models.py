@@ -83,6 +83,10 @@ class Policy(models.Model):
             return self.document_source.url
         return self.uri
 
+    @property
+    def requirements_with_topics(self):
+        return self.requirements.prefetch_related('topics').distinct()
+
     def __str__(self):
         text = self.title_with_number
         if len(text) > 100:
@@ -120,3 +124,9 @@ class Requirement(models.Model):
         if len(self.req_text) > 40:
             text += '...'
         return '{0}: {1}'.format(self.req_id, text)
+
+    @property
+    def prefetched_topic_names(self):
+        """Using self.topics.names will result in a new query. That's very
+        inefficient if we've already prefetched that data."""
+        return [topic.name for topic in self.topics.all()]
