@@ -25,9 +25,9 @@ export default function Policy({ policy, topicsIds }) {
               <Link to={relevantReqs}>
                 {policy.relevant_reqs}
               </Link>
-            </span> of <Link to={allReqs}>
-              {policy.total_reqs} requirements
-            </Link> match your search
+            </span> of&nbsp;
+            {policy.total_reqs} requirements
+             match your search
           </span>
           <span className="external-link icon-links col col-3">
             <ExternalLink href={policy.original_url}>
