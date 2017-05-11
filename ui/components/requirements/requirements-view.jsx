@@ -2,10 +2,15 @@ import React from 'react';
 
 import Requirement from './requirement';
 import Pagers from '../pagers';
+import ThingCounter from '../thing-counters';
 
 export default function RequirementsView({ requirements, count }) {
+  const chunk = 25;
+  const singular = 'Requirement';
+  const plural = 'Requirements';
   return (
     <div>
+      <ThingCounter count={count} chunk={chunk} singular={singular} plural={plural} />
       <ul className="list-reset">
         { requirements.map(requirement =>
           <li key={requirement.req_id} className="gray-border border rounded mb2">
@@ -28,4 +33,3 @@ RequirementsView.defaultProps = {
   requirements: [],
   count: 0,
 };
-
