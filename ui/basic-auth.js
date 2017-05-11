@@ -13,7 +13,10 @@ export default function (envCreds) {
           && bufferEq(new Buffer(authCreds[key]), new Buffer(password)));
       callback(hasMatch);
     });
+    // False positive
+    /* eslint-disable scanjs-rules/call_connect */
     return httpAuth.connect(auther);
+    /* eslint-enable scanjs-rules/call_connect */
   }
   return null;
 }
