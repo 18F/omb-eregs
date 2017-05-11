@@ -6,6 +6,7 @@
   h2 {
     font-weight: normal;
     font-size: 1.375rem;
+    line-height: 1.8rem;
   }
 
   .requirements-links {
@@ -28,5 +29,14 @@
 
   .circle-bg {
     border-radius: 50%;
+    width: 1.2rem;
+    height: 1.2rem;
+    float: left;
+    line-height: 1.2rem;
+    margin-top: -.5rem;
+    margin-right: .2rem;
+    a {
+       text-align: center;
+    }
   }
 }
