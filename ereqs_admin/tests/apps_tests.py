@@ -13,7 +13,7 @@ def test_create_editors_creates():
 
     assert Group.objects.count() == 1
     # three permissions per model
-    assert Group.objects.first().permissions.count() == 3*4
+    assert Group.objects.first().permissions.count() == 3*6
 
 
 @pytest.mark.django_db
@@ -27,7 +27,7 @@ def test_create_editors_once():
 
     assert Group.objects.count() == 1
     # three permissions per model
-    assert Group.objects.first().permissions.count() == 3*4
+    assert Group.objects.first().permissions.count() == 3*6
 
 
 class MockLogger():
