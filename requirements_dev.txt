@@ -6,6 +6,7 @@
 #
 appdirs==1.4.0            # via setuptools
 attrs==16.3.0             # via flake8-bugbear
+bandit==1.4.0
 boto3==1.4.4
 botocore==1.5.39
 cfenv==0.5.2
@@ -33,6 +34,8 @@ flake8-string-format==0.2.3
 flake8-tuple==0.2.12
 flake8==3.3.0
 furl==1.0.0
+gitdb2==2.0.0             # via gitpython
+gitpython==2.1.3          # via bandit
 gunicorn==19.7.1
 isort==4.2.5              # via flake8-isort
 jedi==0.10.0
@@ -42,6 +45,7 @@ model-mommy==1.3.2
 newrelic==2.82.0.62
 orderedmultidict==0.7.11
 packaging==16.8           # via setuptools
+pbr==3.0.0                # via stevedore
 pep8-naming==0.4.1
 psycopg2==2.7.1
 py==1.4.32                # via pytest
@@ -60,11 +64,14 @@ pytest==3.0.6
 python-cas==1.2.0
 python-dateutil==2.6.0
 pytz==2017.2
+pyyaml==3.12              # via bandit
 requests==2.13.0
 s3transfer==0.1.10
 selenium==3.3.3           # via pytest-selenium
 six==1.10.0
+smmap2==2.0.1             # via gitdb2
 sqlparse==0.2.3           # via django-debug-toolbar
+stevedore==1.21.0         # via bandit
 testfixtures==4.13.4      # via flake8-isort
 whitenoise==3.3.0
 
