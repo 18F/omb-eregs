@@ -107,6 +107,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 USING_SSL = env.get_credential('USING_SSL', 'TRUE').upper() == 'TRUE'
 SESSION_COOKIE_SECURE = USING_SSL
 CSRF_COOKIE_SECURE = USING_SSL
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 8*60*60  # 8 hrs
 CAS_RENEW = True
 
 # For the time being, tell downstream (notably CloudFront) to avoid caching
