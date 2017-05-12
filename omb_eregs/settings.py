@@ -96,7 +96,7 @@ if DEBUG:
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/(?!admin).*$'
 
-# Request the browser not allow the CSRF cookie to be used in JS (not: this
+# Request the browser not allow the CSRF cookie to be used in JS (note: this
 # means we can't have AJAX forms)
 CSRF_COOKIE_HTTPONLY = True
 # Request browsers block XSS attacks when they can
