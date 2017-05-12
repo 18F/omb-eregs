@@ -137,6 +137,13 @@ services:
     command: ''
     ports: []
 
+  bandit:
+    <<: *DEV_API
+    entrypoint: ./devops/activate_then bandit
+    depends_on: []
+    command: ''
+    ports: []
+
   npm:
     <<: *DEV_UI
     entrypoint: ./devops/deps_ok_then npm
