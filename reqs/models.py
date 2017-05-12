@@ -68,15 +68,30 @@ class Policy(models.Model):
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
     policy_status = models.CharField(max_length=256, blank=True)
+    document_source = models.FileField(blank=True)
+    nonpublic = models.BooleanField(default=False)
+
+    @property
+    def title_with_number(self):
+        if self.omb_policy_id:
+            return '{0}: {1}'.format(self.omb_policy_id, self.title)
+        return self.title
+
+    @property
+    def original_url(self):
+        if self.document_source:
+            return self.document_source.url
+        return self.uri
+
+    @property
+    def requirements_with_topics(self):
+        return self.requirements.prefetch_related('topics').distinct()
 
     def __str__(self):
-        text = self.title[:100]
-        if len(self.title) > 100:
-            text += '...'
-        if self.omb_policy_id:
-            return '{0}: ({1}) {2}'.format(
-                self.policy_number, self.omb_policy_id, text)
-        return '{0}: {1}'.format(self.policy_number, text)
+        text = self.title_with_number
+        if len(text) > 100:
+            text = text[:100] + '...'
+        return '({0}) {1}'.format(self.policy_number, text)
 
 
 class Requirement(models.Model):
@@ -109,3 +124,9 @@ class Requirement(models.Model):
         if len(self.req_text) > 40:
             text += '...'
         return '{0}: {1}'.format(self.req_id, text)
+
+    @property
+    def prefetched_topic_names(self):
+        """Using self.topics.names will result in a new query. That's very
+        inefficient if we've already prefetched that data."""
+        return [topic.name for topic in self.topics.all()]

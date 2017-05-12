@@ -6,12 +6,25 @@ from reqs.models import Policy, Requirement, Topic
 class PolicySerializer(serializers.ModelSerializer):
     total_reqs = serializers.IntegerField(read_only=True)
     relevant_reqs = serializers.IntegerField(read_only=True)
+    title_with_number = serializers.CharField(read_only=True)
+    original_url = serializers.CharField(read_only=True)
 
     class Meta:
         model = Policy
         fields = (
-            'policy_number', 'title', 'uri', 'omb_policy_id', 'policy_type',
-            'issuance', 'sunset', 'id', 'total_reqs', 'relevant_reqs',
+            'policy_number',
+            'title',
+            'uri',
+            'omb_policy_id',
+            'policy_type',
+            'issuance',
+            'sunset',
+            'id',
+            'total_reqs',
+            'relevant_reqs',
+            'document_source',
+            'title_with_number',
+            'original_url',
         )
 
 

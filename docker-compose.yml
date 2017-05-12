@@ -14,7 +14,14 @@ services:
     depends_on:
       - prod
       - prod-api
-
+  minio:
+    image: minio/minio
+    environment:
+        - MINIO_ACCESS_KEY=LOCAL_ID
+        - MINIO_SECRET_KEY=LOCAL_KEY
+    command: server --address 'minio:9100' minio-test
+    ports:
+        - 9100:9100
   prod-api: &PROD_API
     image: python:3.5.3
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
@@ -27,17 +34,27 @@ services:
       TMPDIR: /tmp
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.max.gov/cas/login
+      # The following settings are to maintain environment parity between the
+      # docker-compose configuration for local development and the cloud.gov
+      # staging and production configurations.
       VCAP_APPLICATION: >
         {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api"]}
       VCAP_SERVICES: >
         {"config": [{"credentials":
           {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
-        }]}
+        }],
+          "s3": [{"credentials":
+          {"access_key_id": "LOCAL_ID", "bucket": "pdfs", "secret_access_key": "LOCAL_KEY", "region": "irrelevant fake region", "endpoint": "http://minio:9100"},
+          "label": "s3",
+          "name": "storage-s3"
+        }]
+        }
     volumes:
       - $PWD:/usr/src/app
     working_dir: /usr/src/app
     depends_on:
       - persistent_db
+      - minio
     stdin_open: true
     tty: true
 

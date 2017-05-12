@@ -1,15 +1,16 @@
 ---
 inherit: manifest_base.yml
-instances: 2
 
 # Unfortunately, these configs needs to be repeated across dev/prod. Can be
 # fixed by using different domains
 applications:
   - name: api
     buildpack: python_buildpack
+    instances: 2
     services:
       - database  # aws-rds medium-psql
       - config    # user-provided service w/ DJANGO_SECRET_KEY and NEW_RELIC_LICENSE_KEY
+      - storage-s3  # S3 basic service
     command: ./devops/run_api.sh
     routes:
       - route: omb-eregs-api.app.cloud.gov
@@ -19,6 +20,8 @@ applications:
       MAX_URL: https://login.max.gov/cas/login
   - name: ui
     buildpack: nodejs_buildpack
+    instances: 4
+    memory: 128M
     command: node ui-dist/server.js
     routes:
       - route: omb-eregs.app.cloud.gov

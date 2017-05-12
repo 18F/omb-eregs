@@ -1,14 +1,31 @@
 from dal_select2_taggit.widgets import TaggitSelect2
 from django import forms
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from reversion.admin import VersionAdmin
 
 from reqs.models import Policy, Requirement, Topic
 
 
+def is_extension_pdf(uploaded_file):
+    if not uploaded_file.name.endswith('pdf'):
+        raise ValidationError('The file must be a PDF.')
+
+
+class PolicyForm(forms.ModelForm):
+    document_source = forms.FileField(required=False,
+                                      validators=[is_extension_pdf])
+
+    class Meta:
+        model = Policy
+        fields = '__all__'
+
+
 @admin.register(Policy)
 class PolicyAdmin(VersionAdmin):
+    form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
+    list_filter = ['policy_type', 'policy_status', 'nonpublic']
 
 
 @admin.register(Topic)
