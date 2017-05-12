@@ -25,6 +25,7 @@ class PolicyForm(forms.ModelForm):
 class PolicyAdmin(VersionAdmin):
     form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
+    list_filter = ['policy_type', 'policy_status', 'nonpublic']
 
 
 @admin.register(Topic)
