@@ -84,8 +84,8 @@ services:
       INTERNAL_API: 'http://prod-api:9001/'
       PUBLIC_API: 'http://0.0.0.0:9001/'
       VCAP_SERVICES: >
-        {"config": [{"name":
-            "config", "credentials": {"UI_BASIC_AUTH": { }}}]}
+        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
+        }}}]}
     depends_on:
       - prod-api
 
