@@ -94,7 +94,7 @@ if DEBUG:
 # Allow most URLs to be used by any service; do not allow the admin to be
 # accessed this way
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_URLS_REGEX = r'^/(?!admin).*$'
+CORS_URLS_REGEX = r'^/(?!admin)(?!static).*$'
 
 # Request the browser not allow the CSRF cookie to be used in JS (not: this
 # means we can't have AJAX forms)
