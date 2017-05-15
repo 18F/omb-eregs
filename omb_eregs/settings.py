@@ -206,6 +206,9 @@ else:
     # On cloud.gov, we need region and we want django-storages to infer the
     # correct URL for us rather than setting an endpoint ourselves.
     AWS_S3_REGION_NAME = s3service.credentials["region"]
+AWS_S3_OBJECT_PARAMETERS = {
+    'ContentDisposition': 'attachment',     # Browsers should download files
+}
 
 TAGGIT_CASE_INSENSITIVE = True
 
