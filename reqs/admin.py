@@ -8,7 +8,8 @@ from reqs.models import Policy, Requirement, Topic
 
 
 def is_extension_pdf(uploaded_file):
-    if not uploaded_file.name.endswith('pdf'):
+    if (not uploaded_file.name.endswith('pdf')
+            or uploaded_file.content_type != 'application/pdf'):
         raise ValidationError('The file must be a PDF.')
 
 
