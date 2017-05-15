@@ -96,7 +96,7 @@ if DEBUG:
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/(?!admin).*$'
 
-# Request the browser not allow the CSRF cookie to be used in JS (not: this
+# Request the browser not allow the CSRF cookie to be used in JS (note: this
 # means we can't have AJAX forms)
 CSRF_COOKIE_HTTPONLY = True
 # Request browsers block XSS attacks when they can
@@ -107,6 +107,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 USING_SSL = env.get_credential('USING_SSL', 'TRUE').upper() == 'TRUE'
 SESSION_COOKIE_SECURE = USING_SSL
 CSRF_COOKIE_SECURE = USING_SSL
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 8*60*60  # 8 hrs
+CAS_RENEW = True    # Don't auto-login. Max.gov should require login each time
 
 # For the time being, tell downstream (notably CloudFront) to avoid caching
 # content rather than guessing.
@@ -205,6 +208,9 @@ else:
     # On cloud.gov, we need region and we want django-storages to infer the
     # correct URL for us rather than setting an endpoint ourselves.
     AWS_S3_REGION_NAME = s3service.credentials["region"]
+AWS_S3_OBJECT_PARAMETERS = {
+    'ContentDisposition': 'attachment',     # Browsers should download files
+}
 
 TAGGIT_CASE_INSENSITIVE = True
 
