@@ -15,6 +15,8 @@ export default function Policy({ policy, topicsIds }) {
       topics__id__in: topicsIds,
     },
   };
+  const relevantReqCount = policy.relevant_reqs >= 100 ? '99+' : policy.relevant_reqs;
+  const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
   return (
     <li key={policy.id} className="my2">
       <section className="border rounded gray-border p2">
@@ -22,8 +24,8 @@ export default function Policy({ policy, topicsIds }) {
         <div className="clearfix">
           <span className="requirements-links col col-6">
             <div className="circle-bg border gray-border center p1">
-              <Link to={relevantReqs}>
-                {policy.relevant_reqs}
+              <Link to={relevantReqs} className={countClass}>
+                {relevantReqCount}
               </Link>
             </div> of&nbsp;
             {policy.total_reqs} requirements
