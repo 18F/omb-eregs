@@ -14,6 +14,7 @@ script:
 # Python tests and linting
 - docker-compose run --rm py.test
 - docker-compose run --rm flake8
+- docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101  # skip asserts
 # Integration tests
 # - ./devops/integration-tests.sh
 before_deploy:
