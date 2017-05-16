@@ -16,7 +16,8 @@ class Agency(models.Model):
 class AgencyGroup(models.Model):
     name = models.CharField(max_length=256)
     slug = models.CharField(max_length=64, blank=True)
-    agencies = models.ManyToManyField(Agency, related_name='groups')
+    agencies = models.ManyToManyField(Agency, related_name='groups',
+                                      blank=True)
 
 
 # Custom class for name-spacing
@@ -131,6 +132,8 @@ class Requirement(models.Model):
     precedent = models.CharField(max_length=1024, blank=True)
     related_reqs = models.CharField(max_length=1024, blank=True)
     omb_data_collection = models.CharField(max_length=1024, blank=True)
+    agencies = models.ManyToManyField(Agency, blank=True)
+    agency_groups = models.ManyToManyField(AgencyGroup, blank=True)
 
     def __str__(self):
         text = self.req_text[:40]
