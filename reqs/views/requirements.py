@@ -1,9 +1,11 @@
+from django.db.models import Prefetch
 from django.db.models.expressions import RawSQL
 from rest_framework import viewsets
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 
-from reqs.filtersets import PolicyFilter, RequirementFilter, TopicFilter
-from reqs.models import Requirement
+from reqs.filtersets import (AgencyFilter, AgencyGroupFilter, PolicyFilter,
+                             RequirementFilter, TopicFilter)
+from reqs.models import Agency, Requirement
 from reqs.serializers import RequirementSerializer
 
 
@@ -39,10 +41,20 @@ class PriorityOrderingFilter(OrderingFilter):
 class RequirementViewSet(viewsets.ModelViewSet):
     # Distinct to account for multiple tag matches when filtering
     queryset = Requirement.objects.select_related('policy').\
-        prefetch_related('topics').distinct()
+        prefetch_related(
+            Prefetch('agencies', Agency.objects.filter(nonpublic=False)),
+            'agency_groups',
+            'topics'
+        ).distinct()
     serializer_class = RequirementSerializer
     filter_fields = RequirementFilter.get_fields()
     # Allow filtering by related objects
+    filter_fields.update({
+        'agencies__' + key: value
+        for key, value in AgencyFilter.get_fields().items()})
+    filter_fields.update({
+        'agency_groups__' + key: value
+        for key, value in AgencyGroupFilter.get_fields().items()})
     filter_fields.update({
         'policy__' + key: value
         for key, value in PolicyFilter.get_fields().items()})

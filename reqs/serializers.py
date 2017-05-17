@@ -16,8 +16,7 @@ class AgencyGroupSerializer(serializers.ModelSerializer):
 
 
 class GroupWithAgenciesSerializer(serializers.ModelSerializer):
-    agencies = AgencySerializer(read_only=True, many=True,
-                                source='public_agencies')
+    agencies = AgencySerializer(read_only=True, many=True)
 
     class Meta:
         model = AgencyGroup
@@ -56,13 +55,25 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class RequirementSerializer(serializers.ModelSerializer):
+    agencies = AgencySerializer(read_only=True, many=True)
+    agency_groups = AgencyGroupSerializer(read_only=True, many=True)
     policy = PolicySerializer(read_only=True)
     topics = TopicSerializer(read_only=True, many=True)
 
     class Meta:
         model = Requirement
         fields = (
-            'policy', 'req_id', 'issuing_body', 'policy_section',
-            'policy_sub_section', 'req_text', 'verb', 'impacted_entity',
-            'req_deadline', 'citation', 'topics',
+            'agencies',
+            'agency_groups',
+            'citation',
+            'impacted_entity',
+            'issuing_body',
+            'policy',
+            'policy_section',
+            'policy_sub_section',
+            'req_deadline',
+            'req_id',
+            'req_text',
+            'topics',
+            'verb',
         )
