@@ -19,14 +19,15 @@ services:
     environment:
         - MINIO_ACCESS_KEY=LOCAL_ID
         - MINIO_SECRET_KEY=LOCAL_KEY
-    command: server --address 'minio:9100' minio-test
+    command: server --address ':9100' minio-test
     ports:
         - 9100:9100
+        # port forward the prod-api and dev-api ports
+        - 8001:8001
+        - 9001:9001
   prod-api: &PROD_API
     image: python:3.5.3
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
-    ports:
-      - 9001:9001
     environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
       PORT: 9001
@@ -44,7 +45,7 @@ services:
           {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
         }],
           "s3": [{"credentials":
-          {"access_key_id": "LOCAL_ID", "bucket": "pdfs", "secret_access_key": "LOCAL_KEY", "region": "irrelevant fake region", "endpoint": "http://minio:9100"},
+          {"access_key_id": "LOCAL_ID", "bucket": "pdfs", "secret_access_key": "LOCAL_KEY", "region": "irrelevant fake region", "endpoint": "http://localhost:9100"},
           "label": "s3",
           "name": "storage-s3"
         }]
@@ -57,12 +58,13 @@ services:
       - minio
     stdin_open: true
     tty: true
+    # We want to use `localhost` when referring to our minio endpoint, so put
+    # ourselves on minio's network
+    network_mode: service:minio
 
   dev-api: &DEV_API
     <<: *PROD_API
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
-    ports:
-      - 8001:8001
     environment:
       <<: *API_ENV
       PORT: 8001
