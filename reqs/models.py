@@ -12,12 +12,20 @@ class Agency(models.Model):
     omb_agency_code = models.CharField(max_length=8, blank=True)
     nonpublic = models.BooleanField(default=False)
 
+    def __str__(self):
+        if self.abbr:
+            return '{0} ({1})'.format(self.name, self.abbr)
+        return self.name
+
 
 class AgencyGroup(models.Model):
     name = models.CharField(max_length=256)
     slug = models.CharField(max_length=64, blank=True)
     agencies = models.ManyToManyField(Agency, related_name='groups',
                                       blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 # Custom class for name-spacing
