@@ -1,0 +1,25 @@
+version: '2'
+services:
+  selenium_chrome:
+    image: selenium/standalone-chrome:3
+    depends_on:
+      - prod
+      - prod-api
+  selenium_firefox:
+    image: selenium/standalone-firefox:3
+    depends_on:
+      - prod
+      - prod-api
+  selenium-py.test:
+    image: python:3.5.3
+    volumes:
+      - $PWD:/usr/src/app
+    working_dir: /usr/src/app
+    stdin_open: true
+    tty: true
+    entrypoint: ./devops/wait_for_db_then ./devops/activate_then py.test
+    external_links:
+      - selenium_chrome
+      - selenium_firefox
+    environment:
+      DEBUG: "true"
