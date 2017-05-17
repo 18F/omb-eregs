@@ -5,11 +5,13 @@ services:
     depends_on:
       - prod
       - prod-api
+      - proxy
   selenium_firefox:
     image: selenium/standalone-firefox:3
     depends_on:
       - prod
       - prod-api
+      - proxy
   selenium-py.test:
     image: python:3.5.3
     volumes:

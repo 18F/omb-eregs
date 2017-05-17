@@ -45,7 +45,7 @@ services:
       # docker-compose configuration for local development and the cloud.gov
       # staging and production configurations.
       VCAP_APPLICATION: >
-        {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api"]}
+        {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api", "proxy"]}
       VCAP_SERVICES: >
         {"config": [{"credentials":
           {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
