@@ -146,19 +146,6 @@ services:
       MAX_URL: https://example.com/etc
 ```
 
-### Running w/ Local PDF Upload
-
-The default configuration includes a [Minio](https://www.minio.io/) server
-that we use to mock S3 for local development.
-Uploading PDFs should work without requiring any tweaks, and the web UI for
-the Minio interface should be available at http://localhost:9100 (the username
-and password are in the `minio` section of `docker-compose.yml`).
-However, PDF download links will be broken unless you add:
-```hosts
-127.0.0.1       minio
-```
-to your `hosts` file.
-
 ## API Endpoints
 
 We provide access to JSON-serialized versions of each of our data types via a
