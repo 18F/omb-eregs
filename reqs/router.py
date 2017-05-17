@@ -1,6 +1,8 @@
 from rest_framework import routers
 
-from reqs.views import PolicyViewSet, RequirementViewSet, TopicViewSet
+from reqs.views.policies import PolicyViewSet
+from reqs.views.requirements import RequirementViewSet
+from reqs.views.simple import TopicViewSet
 
 router = routers.DefaultRouter()
 router.register(r'topics', TopicViewSet)
