@@ -1,6 +1,25 @@
 import django_filters
 
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
+
+
+class AgencyFilter(django_filters.FilterSet):
+    class Meta:
+        model = Agency
+        fields = {
+            'id': ('exact', 'in'),
+            'name': ('exact', 'in', 'icontains'),
+            'abbr': ('exact', 'in'),
+        }
+
+
+class AgencyGroupFilter(django_filters.FilterSet):
+    class Meta:
+        model = AgencyGroup
+        fields = {
+            'id': ('exact', 'in'),
+            'name': ('exact', 'in', 'icontains'),
+        }
 
 
 class PolicyFilter(django_filters.FilterSet):

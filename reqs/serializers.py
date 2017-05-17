@@ -1,6 +1,27 @@
 from rest_framework import serializers
 
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
+
+
+class AgencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agency
+        fields = ('id', 'name', 'abbr')
+
+
+class AgencyGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AgencyGroup
+        fields = ('id', 'name')
+
+
+class GroupWithAgenciesSerializer(serializers.ModelSerializer):
+    agencies = AgencySerializer(read_only=True, many=True,
+                                source='public_agencies')
+
+    class Meta:
+        model = AgencyGroup
+        fields = ('id', 'name', 'agencies')
 
 
 class PolicySerializer(serializers.ModelSerializer):

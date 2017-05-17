@@ -7,6 +7,11 @@ from taggit.models import ItemBase, TagBase
 
 
 class Agency(models.Model):
+    class Meta:
+        ordering = ['name']
+        verbose_name = ugettext_lazy('Agency')
+        verbose_name_plural = ugettext_lazy('Agencies')
+
     name = models.CharField(max_length=256)
     abbr = models.CharField(max_length=64, blank=True)
     omb_agency_code = models.CharField(max_length=8, blank=True)
@@ -19,6 +24,11 @@ class Agency(models.Model):
 
 
 class AgencyGroup(models.Model):
+    class Meta:
+        ordering = ['name']
+        verbose_name = ugettext_lazy('Agency Group')
+        verbose_name_plural = ugettext_lazy('Agency Groups')
+
     name = models.CharField(max_length=256)
     slug = models.CharField(max_length=64, blank=True)
     agencies = models.ManyToManyField(Agency, related_name='groups',
