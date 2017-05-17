@@ -6,13 +6,9 @@ import DAP from './dap';
 
 
 export default function Html({ contents, data }) {
-  const browserConfig = Object.assign({}, config, {
-    // Public API endpoint might not match private version
-    apiRoot: process.env.PUBLIC_API,
-  });
   const jsStr = `
     window.__REACT_RESOLVER_PAYLOAD__ = ${serialize(data)};
-    window.APP_CONFIG = ${serialize(browserConfig)};
+    window.APP_CONFIG = ${serialize(config)};
   `;
   // Avoid escaping the JS
   /* eslint-disable react/no-danger */

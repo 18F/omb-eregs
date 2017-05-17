@@ -85,8 +85,7 @@ services:
     environment: &UI_ENV
       PORT: 9002
       NODE_ENV: production
-      INTERNAL_API: 'http://0.0.0.0:9001/'
-      PUBLIC_API: 'http://0.0.0.0:9001/'
+      API_URL: 'http://0.0.0.0:9001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
@@ -101,8 +100,7 @@ services:
       <<: *UI_ENV
       PORT: 8002
       NODE_ENV: ''
-      INTERNAL_API: 'http://0.0.0.0:8001/'
-      PUBLIC_API: 'http://0.0.0.0:8001/'
+      API_URL: 'http://0.0.0.0:8001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
