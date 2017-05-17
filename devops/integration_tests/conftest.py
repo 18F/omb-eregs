@@ -14,7 +14,7 @@ def selenium(selenium):
 
 
 def pytest_addoption(parser):
-    parser.addoption('--ui-baseurl', default='http://prod:9000/',
+    parser.addoption('--ui-baseurl', default='http://prod:9002/',
                      help='base url for the agency UI')
     parser.addoption('--api-baseurl', default='http://prod-api:9001/',
                      help='base url for the API')

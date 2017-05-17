@@ -1,5 +1,18 @@
 version: '2'
 services:
+  # This service is a shared network stack (i.e. shared "localhost") for all
+  # external-facing services. It allows "localhost" links to work correctly
+  # outside of Docker.
+  proxy:
+    image: busybox
+    command: sleep 100d   # do nothing
+    ports:  # forwarded
+      - 8001:8001   # dev-api
+      - 8002:8002   # dev
+      - 9001:9001   # prod-api
+      - 9002:9002   # prod
+      - 9100:9100   # minio
+
   persistent_db:
     image: postgres:9.4
     volumes:
@@ -17,11 +30,7 @@ services:
         - MINIO_ACCESS_KEY=LOCAL_ID
         - MINIO_SECRET_KEY=LOCAL_KEY
     command: server --address ':9100' minio-test
-    ports:
-        - 9100:9100
-        # port forward the prod-api and dev-api ports
-        - 8001:8001
-        - 9001:9001
+    network_mode: service:proxy
   prod-api: &PROD_API
     <<: *PYTHON
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
@@ -42,17 +51,15 @@ services:
           {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
         }],
           "s3": [{"credentials":
-          {"access_key_id": "LOCAL_ID", "bucket": "pdfs", "secret_access_key": "LOCAL_KEY", "region": "irrelevant fake region", "endpoint": "http://localhost:9100"},
+          {"access_key_id": "LOCAL_ID", "bucket": "pdfs", "secret_access_key": "LOCAL_KEY", "region": "irrelevant fake region", "endpoint": "http://0.0.0.0:9100"},
           "label": "s3",
           "name": "storage-s3"
         }]
         }
     depends_on:
       - persistent_db
-      # minio's not needed due to the network_mode below
-    # We want to use `localhost` when referring to our minio endpoint, so put
-    # ourselves on minio's network
-    network_mode: service:minio
+      - minio
+    network_mode: service:proxy
 
   dev-api: &DEV_API
     <<: *PROD_API
@@ -70,29 +77,26 @@ services:
       - $PWD:/usr/src/app
     working_dir: /usr/src/app
     command: ./devops/deps_ok_then npm start
-    ports:
-      - 9000:9000
     environment: &UI_ENV
-      PORT: 9000
+      PORT: 9002
       NODE_ENV: production
-      INTERNAL_API: 'http://prod-api:9001/'
+      INTERNAL_API: 'http://0.0.0.0:9001/'
       PUBLIC_API: 'http://0.0.0.0:9001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
     depends_on:
       - prod-api
+    network_mode: service:proxy
 
   dev: &DEV_UI
     <<: *PROD_UI
     command: ./devops/deps_ok_then ./devops/dev_ui.sh
-    ports:
-      - 8000:8000
     environment:
       <<: *UI_ENV
-      PORT: 8000
+      PORT: 8002
       NODE_ENV: ''
-      INTERNAL_API: 'http://dev-api:8001/'
+      INTERNAL_API: 'http://0.0.0.0:8001/'
       PUBLIC_API: 'http://0.0.0.0:8001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
