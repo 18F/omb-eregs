@@ -106,6 +106,14 @@ class Policy(models.Model):
             text = text[:100] + '...'
         return '({0}) {1}'.format(self.policy_number, text)
 
+    def save(self, *args, **kwargs):
+        try:
+            print(self.document_source.url)
+        except ValueError:
+            pass
+
+        super(Policy, self).save(*args, **kwargs)
+
 
 class Requirement(models.Model):
     class Meta:

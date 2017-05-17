@@ -188,7 +188,8 @@ STATIC_ROOT = os.environ.get('TMPDIR', '.') + '/static/'
 
 # File storage
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'reqs.backends.S3Override'
 
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
 # In addition to using django-storages, we're maintaining parity between the
