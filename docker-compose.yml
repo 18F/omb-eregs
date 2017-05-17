@@ -14,6 +14,13 @@ services:
     depends_on:
       - prod
       - prod-api
+  python: &PYTHON     # This command is out of order to aid with config reuse
+    image: python:3.5.3
+    volumes:
+      - $PWD:/usr/src/app
+    working_dir: /usr/src/app
+    stdin_open: true
+    tty: true
   minio:
     image: minio/minio
     environment:
@@ -25,8 +32,13 @@ services:
         # port forward the prod-api and dev-api ports
         - 8001:8001
         - 9001:9001
+    # similarly, even though minio doesn't access these links, we want py.test
+    # to have them
+    external_links:
+      - selenium_chrome
+      - selenium_firefox
   prod-api: &PROD_API
-    image: python:3.5.3
+    <<: *PYTHON
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
     environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
@@ -50,14 +62,9 @@ services:
           "name": "storage-s3"
         }]
         }
-    volumes:
-      - $PWD:/usr/src/app
-    working_dir: /usr/src/app
     depends_on:
       - persistent_db
-      - minio
-    stdin_open: true
-    tty: true
+      # minio's not needed due to the network_mode below
     # We want to use `localhost` when referring to our minio endpoint, so put
     # ourselves on minio's network
     network_mode: service:minio
@@ -65,7 +72,7 @@ services:
   dev-api: &DEV_API
     <<: *PROD_API
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
-    environment:
+    environment: &DEV_API_ENV
       <<: *API_ENV
       PORT: 8001
       DEBUG: "true"
@@ -110,41 +117,34 @@ services:
 
 
   #---- Commands ----
+  flake8:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: ./devops/activate_then flake8
+
+  pip-compile:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: ./devops/activate_then pip-compile
+
+  bandit:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: ./devops/activate_then bandit
+
+
   manage.py:
     <<: *DEV_API
     entrypoint: ./devops/wait_for_db_then ./devops/activate_then ./manage.py
     command: ''
-    ports: []
 
   py.test:
     <<: *DEV_API
     entrypoint: ./devops/wait_for_db_then ./devops/activate_then py.test
     command: ''
-    ports: []
-    external_links:
-      - selenium_chrome
-      - selenium_firefox
-
-  flake8:
-    <<: *DEV_API
-    entrypoint: ./devops/activate_then flake8
-    depends_on: []
-    command: ''
-    ports: []
-
-  pip-compile:
-    <<: *DEV_API
-    entrypoint: ./devops/activate_then pip-compile
-    depends_on: []
-    command: ''
-    ports: []
-
-  bandit:
-    <<: *DEV_API
-    entrypoint: ./devops/activate_then bandit
-    depends_on: []
-    command: ''
-    ports: []
 
   npm:
     <<: *DEV_UI
