@@ -39,6 +39,7 @@ services:
       PORT: 9001
       DJANGO_SETTINGS_MODULE: omb_eregs.settings
       TMPDIR: /tmp
+      USING_SSL: "False"
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.max.gov/cas/login
       # The following settings are to maintain environment parity between the
@@ -47,14 +48,18 @@ services:
       VCAP_APPLICATION: >
         {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api", "proxy"]}
       VCAP_SERVICES: >
-        {"config": [{"credentials":
-          {"DJANGO_SECRET_KEY": "NotASecret", "USING_SSL": "False"}
-        }],
-          "s3": [{"credentials":
-          {"access_key_id": "LOCAL_ID", "bucket": "pdfs", "secret_access_key": "LOCAL_KEY", "region": "irrelevant fake region", "endpoint": "http://0.0.0.0:9100"},
-          "label": "s3",
-          "name": "storage-s3"
-        }]
+        {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}],
+         "s3": [{
+           "credentials": {
+             "access_key_id": "LOCAL_ID",
+             "bucket": "pdfs",
+             "region": "irrelevant fake region",
+             "endpoint": "http://0.0.0.0:9100",
+             "secret_access_key": "LOCAL_KEY"
+           },
+           "label": "s3",
+           "name": "storage-s3"
+         }]
         }
     depends_on:
       - persistent_db
@@ -64,7 +69,7 @@ services:
   dev-api: &DEV_API
     <<: *PROD_API
     command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
-    environment: &DEV_API_ENV
+    environment:
       <<: *API_ENV
       PORT: 8001
       DEBUG: "true"
@@ -80,8 +85,7 @@ services:
     environment: &UI_ENV
       PORT: 9002
       NODE_ENV: production
-      INTERNAL_API: 'http://0.0.0.0:9001/'
-      PUBLIC_API: 'http://0.0.0.0:9001/'
+      API_URL: 'http://0.0.0.0:9001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
@@ -96,8 +100,7 @@ services:
       <<: *UI_ENV
       PORT: 8002
       NODE_ENV: ''
-      INTERNAL_API: 'http://0.0.0.0:8001/'
-      PUBLIC_API: 'http://0.0.0.0:8001/'
+      API_URL: 'http://0.0.0.0:8001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}

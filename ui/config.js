@@ -9,7 +9,7 @@ const config = {
 
 if (typeof process !== 'undefined') {
   Object.assign(config, {
-    apiRoot: process.env.INTERNAL_API,
+    apiRoot: process.env.API_URL,
     debug: process.env.NODE_ENV !== 'production',
   });
 }

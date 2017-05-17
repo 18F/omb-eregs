@@ -104,7 +104,7 @@ SECURE_BROWSER_XSS_FILTER = True
 # Request browsers not guess at mimetypes
 SECURE_CONTENT_TYPE_NOSNIFF = True
 # Request cookies only be sent over SSL
-USING_SSL = env.get_credential('USING_SSL', 'TRUE').upper() == 'TRUE'
+USING_SSL = os.environ.get('USING_SSL', 'TRUE').upper() == 'TRUE'
 SESSION_COOKIE_SECURE = USING_SSL
 CSRF_COOKIE_SECURE = USING_SSL
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
