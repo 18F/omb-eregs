@@ -6,17 +6,17 @@ from taggit.managers import TaggableManager
 from taggit.models import ItemBase, TagBase
 
 
-class AgencyGroup(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.CharField(max_length=64, blank=True)
-
-
 class Agency(models.Model):
     name = models.CharField(max_length=256)
     abbr = models.CharField(max_length=64, blank=True)
     omb_agency_code = models.CharField(max_length=8, blank=True)
     nonpublic = models.BooleanField(default=False)
-    groups = models.ManyToManyField(AgencyGroup)
+
+
+class AgencyGroup(models.Model):
+    name = models.CharField(max_length=256)
+    slug = models.CharField(max_length=64, blank=True)
+    agencies = models.ManyToManyField(Agency, related_name='groups')
 
 
 # Custom class for name-spacing
