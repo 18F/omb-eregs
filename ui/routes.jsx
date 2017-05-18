@@ -1,10 +1,11 @@
 import React from 'react';
-import { browserHistory, IndexRoute, IndexRedirect, Redirect, Route, Router } from 'react-router';
+import { browserHistory, IndexRoute, Redirect, Route, Router } from 'react-router';
 
 import App from './components/app';
 import PolicyContainerResolver from './components/policies/container';
 import RequirementsContainerResolver from './components/requirements/container';
 import LookupSearchResolver, { redirectIfMatched } from './components/lookup-search';
+import Homepage from './components/homepage';
 
 // Trigger DAP pageviews when our history changes (for single-page-app users)
 if (browserHistory && typeof gas !== 'undefined') {
@@ -18,7 +19,7 @@ if (browserHistory && typeof gas !== 'undefined') {
 
 export default <Router history={browserHistory} >
   <Route path="/" component={App}>
-    <IndexRedirect to="/requirements" />
+    <IndexRoute component={Homepage} />
     <Route path="search-redirect">
       <Route path="topics" component={LookupSearchResolver} onEnter={redirectIfMatched} />
       <Route path="policies" component={LookupSearchResolver} onEnter={redirectIfMatched} />

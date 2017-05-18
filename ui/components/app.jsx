@@ -1,6 +1,7 @@
 import React from 'react';
 import Disclaimer from './disclaimer';
 import Navbar from './navbar';
+import Footer from './footer';
 
 function App(props) {
   return (
@@ -8,6 +9,7 @@ function App(props) {
       <Disclaimer />
       <Navbar />
       {props.children}
+      <Footer />
     </div>
   );
 }
