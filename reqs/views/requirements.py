@@ -53,6 +53,9 @@ class RequirementViewSet(viewsets.ModelViewSet):
         'agencies__' + key: value
         for key, value in AgencyFilter.get_fields().items()})
     filter_fields.update({
+        'all_agencies__' + key: value
+        for key, value in AgencyFilter.get_fields().items()})
+    filter_fields.update({
         'agency_groups__' + key: value
         for key, value in AgencyGroupFilter.get_fields().items()})
     filter_fields.update({

@@ -2,7 +2,7 @@ import pytest
 from model_mommy import mommy
 from rest_framework.test import APIClient
 
-from reqs.models import Agency, Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
 
 
 @pytest.mark.django_db
@@ -181,3 +181,40 @@ def test_requirements_fulltext_search(term, icontains_count, search_count):
     path = "/requirements/?req_text__search=" + term
     response = client.get(path).json()
     assert response['count'] == search_count
+
+
+@pytest.fixture
+def applied_agencies():
+    a_req, a_group_match, a_group_nonmatch = mommy.make(Agency, _quantity=3)
+    g_match, g_nonmatch = mommy.make(AgencyGroup, _quantity=2)
+    g_match.agencies.add(a_group_match)
+    g_nonmatch.agencies.add(a_group_nonmatch)
+    req = mommy.make(Requirement)
+    req.agencies.add(a_req)
+    req.agency_groups.add(g_match)
+    yield a_req, a_group_match, a_group_nonmatch
+
+
+@pytest.mark.django_db
+def test_all_agencies_agency_match(applied_agencies):
+    a_req, _, _ = applied_agencies
+    path = "/requirements/?all_agencies__id__in=42,99,{0}".format(a_req.pk)
+    response = APIClient().get(path).json()['results']
+    assert response
+
+
+@pytest.mark.django_db
+def test_all_agencies_agency_group(applied_agencies):
+    _, a_group_match, _ = applied_agencies
+    path = "/requirements/?all_agencies__id__in={0} ".format(a_group_match.pk)
+    response = APIClient().get(path).json()['results']
+    assert response
+
+
+@pytest.mark.django_db
+def test_all_agencies_agency_nonmatching_group(applied_agencies):
+    _, _, a_group_nonmatch = applied_agencies
+    path = "/requirements/?all_agencies__id__in={0}".format(
+        a_group_nonmatch.pk)
+    response = APIClient().get(path).json()['results']
+    assert not response
