@@ -15,6 +15,19 @@ def subfilter_params(params, subfield):
             if key.startswith(prefix)}
 
 
+def filter_by_topic(params, req_queryset):
+    """Given a queryset of Requirements, filter it by a subquery based on
+    which topic parameters are present in the url"""
+    topic_params = subfilter_params(params, 'topics')
+
+    if topic_params:
+        subquery = Topic.objects.all()
+        subquery = TopicFilter(topic_params, queryset=subquery).qs
+        subquery = subquery.values('topic__content_object')
+        req_queryset = req_queryset.filter(pk__in=subquery)
+    return req_queryset
+
+
 def relevant_reqs_count(params):
     """Create a subquery of the count of requirements relevant to the provided
     query parameters"""
@@ -23,13 +36,7 @@ def relevant_reqs_count(params):
     params = subfilter_params(params, 'requirements')
     subquery = RequirementFilter(params, queryset=subquery).qs
 
-    params = subfilter_params(params, 'topics')
-
-    if params:
-        subsubquery = Topic.objects.all()
-        subsubquery = TopicFilter(params, queryset=subsubquery).qs
-        subsubquery = subsubquery.values('topic__content_object')
-        subquery = subquery.filter(pk__in=subsubquery)
+    subquery = filter_by_topic(params, subquery)
 
     subquery = subquery.values('policy').\
         annotate(count=Count('policy')).values('count').\
