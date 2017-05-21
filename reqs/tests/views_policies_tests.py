@@ -4,7 +4,7 @@ import pytest
 from model_mommy import mommy
 from rest_framework.test import APIClient
 
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
 
 PolicySetup = namedtuple('PolicySetup', ('policies', 'reqs'))
 
@@ -91,3 +91,52 @@ def test_topics_counts_filter_by_multiple_topics(policy_topic_setup):
     assert response['results'][1]['total_reqs'] == len(reqs[1])
     # reqs[1][1]
     assert response['results'][1]['relevant_reqs'] == 1
+
+
+@pytest.mark.django_db
+def test_agencies_direct(policy_setup):
+    _, reqs = policy_setup
+    agencies = mommy.make(Agency, _quantity=3)
+    reqs[0][1].agencies.add(agencies[0], agencies[1])
+    reqs[1][0].agencies.add(agencies[2])
+    client = APIClient()
+
+    path = "/policies/?requirements__all_agencies__id__in={0}".format(
+        agencies[0].pk)
+    response = client.get(path).json()
+    assert response['count'] == 1
+    assert response['results'][0]['relevant_reqs'] == 1
+
+    path = "/policies/?requirements__agencies__id__in={0}".format(
+        agencies[0].pk)
+    response = client.get(path).json()
+    assert response['count'] == 1
+    assert response['results'][0]['relevant_reqs'] == 1
+
+
+@pytest.mark.django_db
+def test_agencies_indirect(policy_setup):
+    _, reqs = policy_setup
+    group = mommy.make(AgencyGroup)
+    agency_in_group, agency_no_group = mommy.make(Agency, _quantity=2)
+    group.agencies.add(agency_in_group)
+    reqs[0][0].agencies.add(agency_no_group)
+    reqs[1][0].agency_groups.add(group)
+    client = APIClient()
+
+    path = "/policies/?requirements__all_agencies__id__in={0}".format(
+        agency_in_group.pk)
+    response = client.get(path).json()
+    assert response['count'] == 1
+    assert response['results'][0]['relevant_reqs'] == 1
+
+    path = "/policies/?requirements__agencies__id__in={0}".format(
+        agency_in_group.pk)
+    response = client.get(path).json()
+    assert response['count'] == 0
+
+    path = "/policies/?requirements__agency_groups__id__in={0}".format(
+        group.pk)
+    response = client.get(path).json()
+    assert response['count'] == 1
+    assert response['results'][0]['relevant_reqs'] == 1
