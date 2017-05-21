@@ -36,12 +36,21 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
   const filterControls = [
     React.createElement(FilterListView, {
       autocompleter: React.createElement(Autocompleter, {
-        insertParam: 'topics__id__in',
+        insertParam: fieldNames.topics,
         lookup: 'topics',
         pathname: '/requirements',
       }),
       heading: 'Topics',
       key: 'topic',
+    }),
+    React.createElement(FilterListView, {
+      autocompleter: React.createElement(Autocompleter, {
+        insertParam: fieldNames.agencies,
+        lookup: 'agencies',
+        pathname: '/requirements',
+      }),
+      heading: 'Agencies',
+      key: 'agency',
     }),
   ];
   const tabs = [

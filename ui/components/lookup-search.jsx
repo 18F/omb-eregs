@@ -73,8 +73,9 @@ function redirectUrl(params, idToInsert) {
 /* Mapping between a lookup type (e.g. "topic") and the field in the API we
  * should search against/display */
 export const apiParam = {
-  topics: 'name',
+  agencies: 'name',
   policies: 'title',
+  topics: 'name',
 };
 
 export function redirectIfMatched({ routes, location: { query } }, redirect, done) {

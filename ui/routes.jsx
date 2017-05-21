@@ -21,8 +21,9 @@ export default <Router history={browserHistory} >
   <Route path="/" component={App}>
     <IndexRoute component={Homepage} />
     <Route path="search-redirect">
-      <Route path="topics" component={LookupSearchResolver} onEnter={redirectIfMatched} />
+      <Route path="agencies" component={LookupSearchResolver} onEnter={redirectIfMatched} />
       <Route path="policies" component={LookupSearchResolver} onEnter={redirectIfMatched} />
+      <Route path="topics" component={LookupSearchResolver} onEnter={redirectIfMatched} />
     </Route>
     <Route path="policies" component={PolicyContainerResolver} />
     <Route path="requirements">
