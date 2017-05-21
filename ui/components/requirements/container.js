@@ -25,6 +25,13 @@ function policiesTab(reqQuery) {
     { active: false, tabName: 'Policies', key: 'Policies', link });
 }
 
+const fieldNames = {
+  agencies: 'all_agencies__id__in',
+  policies: 'policy__id__in',
+  search: 'req_text__search',
+  topics: 'topics__id__in',
+};
+
 export function RequirementsContainer({ location: { query }, pagedReqs }) {
   const filterControls = [
     React.createElement(FilterListView, {
@@ -46,14 +53,8 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
     RequirementsView,
     { requirements: pagedReqs.results, count: pagedReqs.count },
   );
-  const selectedFilters = React.createElement(ExistingFilters, {
-    fieldNames: {
-      policies: 'policy__id__in',
-      search: 'req_text__search',
-      topics: 'topics__id__in',
-    },
-    query,
-  });
+  const selectedFilters = React.createElement(
+    ExistingFilters, { fieldNames, query });
   return React.createElement(
     SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
