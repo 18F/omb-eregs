@@ -8,6 +8,7 @@ import { Async } from 'react-select';
 
 import SearchView from './search-view';
 import { apiParam, redirectQuery, search } from '../lookup-search';
+import redirectWhiteList from '../redirectWhiteList';
 
 export default class Autocompleter extends React.Component {
   constructor(props, context) {
@@ -31,7 +32,8 @@ export default class Autocompleter extends React.Component {
     const { location } = this.context.router;
     const query = redirectQuery(location.query, this.props.insertParam, entry.value);
     const paramStr = querystring.stringify(query);
-    this.context.router.push(`${location.pathname}?${paramStr}`);
+    const dirPath = this.props.pathname || location.pathname;
+    this.context.router.push(`${dirPath}?${paramStr}`);
   }
 
   loadOptions(inputStr) {
@@ -45,7 +47,11 @@ export default class Autocompleter extends React.Component {
 
   render() {
     const { insertParam, lookup } = this.props;
-    const { pathname, query } = this.context.router.location;
+    const { query } = this.context.router.location;
+    let { pathname } = this.context.router.location;
+    if (redirectWhiteList.includes(pathname) === false) {
+      pathname = '/requirements';
+    }
     if (this.state.autocomplete) {
       return React.createElement(Async, {
         loadOptions: this.loadOptions,
