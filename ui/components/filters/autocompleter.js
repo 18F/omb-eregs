@@ -8,7 +8,6 @@ import { Async } from 'react-select';
 
 import SearchView from './search-view';
 import { apiParam, redirectQuery, search } from '../lookup-search';
-import redirectWhiteList from '../redirectWhiteList';
 
 export default class Autocompleter extends React.Component {
   constructor(props, context) {
