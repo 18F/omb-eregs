@@ -19,8 +19,18 @@ export default function Homepage() {
     <div>
       <section>
         <h2>About this site</h2>
-        <p>The OMB Policy Library includes excerpts from memos and policy documents issued by the White House. This project is part of our ongoing efforts to make it easier to find, read, and understand information technology requirements.</p>
-        <p>The information on this site should be considered unofficial and will be updated frequently as a convenience to agencies and the public. For official OMB guidance, please follow the links to the original memos and policy documents.</p>
+        <p>
+            The OMB Policy Library includes excerpts from memos and
+            policy documents issued by the White House. This project
+            is part of our ongoing efforts to make it easier to find,
+            read, and understand information technology requirements.
+        </p>
+        <p>
+            The information on this site should be considered unofficial
+            and will be updated frequently as a convenience to agencies
+            and the public. For official OMB guidance, please follow the
+            links to the original memos and policy documents.
+        </p>
       </section>
 
       <section>

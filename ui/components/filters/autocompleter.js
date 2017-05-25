@@ -49,6 +49,8 @@ export default class Autocompleter extends React.Component {
     const { insertParam, lookup } = this.props;
     const { query } = this.context.router.location;
     let { pathname } = this.context.router.location;
+    // if we are coming from a page other than /requirements or
+    // /policies (ex. the homepage), default to going to /requirements
     if (redirectWhiteList.includes(pathname) === false) {
       pathname = '/requirements';
     }
@@ -66,6 +68,7 @@ export default class Autocompleter extends React.Component {
 Autocompleter.propTypes = {
   lookup: React.PropTypes.oneOf(Object.keys(apiParam)).isRequired,
   insertParam: React.PropTypes.string.isRequired,
+  pathname: React.PropTypes.string.isRequired,
 };
 Autocompleter.contextTypes = {
   router: React.PropTypes.shape({
