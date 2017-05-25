@@ -1,7 +1,5 @@
 import React from 'react';
 
-import redirectWhiteList from '../redirectWhiteList';
-
 export default function SearchView({ insertParam, lookup, pathname, query }) {
   return (
     <form action={`/search-redirect/${lookup}/`} method="GET">
