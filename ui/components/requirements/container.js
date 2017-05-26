@@ -29,7 +29,10 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
   const filterControls = [
     React.createElement(FilterListView, {
       autocompleter: React.createElement(Autocompleter, {
-        insertParam: 'topics__id__in', lookup: 'topics' }),
+        insertParam: 'topics__id__in',
+        lookup: 'topics',
+        pathname: '/requirements',
+      }),
       heading: 'Topics',
       key: 'topic',
     }),
