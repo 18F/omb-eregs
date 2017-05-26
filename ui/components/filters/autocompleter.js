@@ -31,7 +31,7 @@ export default class Autocompleter extends React.Component {
     const { location } = this.context.router;
     const query = redirectQuery(location.query, this.props.insertParam, entry.value);
     const paramStr = querystring.stringify(query);
-    this.context.router.push(`${location.pathname}?${paramStr}`);
+    this.context.router.push(`${this.props.pathname}?${paramStr}`);
   }
 
   loadOptions(inputStr) {
@@ -44,8 +44,8 @@ export default class Autocompleter extends React.Component {
   }
 
   render() {
-    const { insertParam, lookup } = this.props;
-    const { pathname, query } = this.context.router.location;
+    const { insertParam, lookup, pathname } = this.props;
+    const { query } = this.context.router.location;
     if (this.state.autocomplete) {
       return React.createElement(Async, {
         loadOptions: this.loadOptions,
@@ -60,6 +60,7 @@ export default class Autocompleter extends React.Component {
 Autocompleter.propTypes = {
   lookup: React.PropTypes.oneOf(Object.keys(apiParam)).isRequired,
   insertParam: React.PropTypes.string.isRequired,
+  pathname: React.PropTypes.string.isRequired,
 };
 Autocompleter.contextTypes = {
   router: React.PropTypes.shape({

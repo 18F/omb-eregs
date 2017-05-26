@@ -29,7 +29,10 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
   const filterControls = [
     React.createElement(FilterListView, {
       autocompleter: React.createElement(Autocompleter, {
-        insertParam: 'requirements__topics__id__in', lookup: 'topics' }),
+        insertParam: 'requirements__topics__id__in',
+        lookup: 'topics',
+        pathname: '/policies',
+      }),
       heading: 'Topics',
       key: 'topic',
     }),

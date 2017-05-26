@@ -39,7 +39,7 @@ describe('<Autocompleter />', () => {
       pathname: '/some/path/', query: { values: 'mocked' } });
     router.push = jest.fn();
     const component = new Autocompleter(
-      { lookup: 'topics', insertParam: 'insertHere' }, { router });
+      { lookup: 'topics', insertParam: 'insertHere', pathname: '/some/path/' }, { router });
     component.onChange({ value: 8 });
     expect(lookupSearch.redirectQuery).toHaveBeenCalledWith(
       { values: 'mocked' }, 'insertHere', 8);
