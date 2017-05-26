@@ -20,7 +20,7 @@ export default function Homepage() {
       <section className="filter-form px4 py2 center">
         <h2>Find policies and requirements that apply to your agency.</h2>
         <div className="filter px4">
-          <label>What topics are you interested in?</label>
+          <h4>What topics are you interested in?</h4>
           <div className="form-field">
             { filterControls }
           </div>
