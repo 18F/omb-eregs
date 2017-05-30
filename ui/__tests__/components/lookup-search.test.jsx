@@ -157,14 +157,14 @@ describe('search()', () => {
   it('uses the correct parameters for topics', () => {
     search('topics', 'some query here');
     expect(api.topics.fetch).toHaveBeenCalledWith({
-      name__icontains: 'some query here', page: '1',
+      search: 'some query here', page: '1',
     });
   });
 
   it('uses the correct parameters for policies', () => {
     search('policies', 'some query here', '3');
     expect(api.policies.fetch).toHaveBeenCalledWith({
-      title__icontains: 'some query here', page: '3',
+      search: 'some query here', page: '3',
     });
   });
 });

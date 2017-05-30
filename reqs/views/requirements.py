@@ -66,6 +66,7 @@ class RequirementViewSet(viewsets.ModelViewSet):
         for key, value in TopicFilter.get_fields().items()})
     filter_backends = (DjangoFilterBackend, PriorityOrderingFilter)
     ordering_fields = filter_fields.keys()
+    search_fields = ('req_text',)
 
     def get_queryset(self):
         queryset = super().get_queryset()

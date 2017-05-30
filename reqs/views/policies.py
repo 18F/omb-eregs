@@ -65,6 +65,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
     queryset = Policy.objects.all()
     serializer_class = PolicySerializer
     filter_fields = PolicyFilter.get_fields()
+    search_fields = ('title',)
 
     def get_queryset(self):
         queryset = super().get_queryset()

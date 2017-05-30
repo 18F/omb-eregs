@@ -165,8 +165,7 @@ LookupSearch.propTypes = {
 };
 
 export function search(lookup, q, page = '1') {
-  const queryParam = `${apiParam[lookup]}__icontains`;
-  const apiQuery = { [queryParam]: q, page };
+  const apiQuery = { search: q, page };
   return api[lookup].fetch(apiQuery);
 }
 
