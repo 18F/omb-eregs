@@ -4,7 +4,7 @@ import pytest
 from model_mommy import mommy
 from rest_framework.test import APIClient
 
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Agency, Policy, Requirement, Topic
 
 
 @pytest.mark.django_db
@@ -129,6 +129,38 @@ def test_requirements_ordered_by_bad_key(params):
     response = client.get(path)
     req_ids = [req['req_id'] for req in response.json()['results']]
     assert req_ids == ['0', '1', '2']
+
+
+@pytest.mark.django_db
+def test_requirements_agencies_filter():
+    client = APIClient()
+    req1 = mommy.make(Requirement)
+    req1.agencies.add(*mommy.make(Agency, _quantity=3))
+    req2 = mommy.make(Requirement)
+    req2.agencies.add(*mommy.make(Agency, _quantity=4))
+
+    path = "/requirements/"
+    response = client.get(path).json()['results']
+    assert len(response) == 2
+
+    path += "?agencies__id__in={0}".format(req1.agencies.first().pk)
+    response = client.get(path).json()['results']
+    assert len(response) == 1
+    assert response[0]['req_id'] == req1.req_id
+
+
+@pytest.mark.django_db
+def test_requirements_agencies_nonpublic():
+    client = APIClient()
+    agencies = mommy.make(Agency, _quantity=3)
+    agencies.append(mommy.make(Agency, nonpublic=True))
+    req = mommy.make(Requirement)
+    req.agencies.add(*agencies)
+
+    path = "/requirements/?id={0}".format(req.pk)
+    response = client.get(path).json()['results']
+    assert len(response) == 1
+    assert len(response[0]['agencies']) == 3
 
 
 PolicySetup = namedtuple('PolicySetup', ('topics', 'policies', 'reqs'))

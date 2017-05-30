@@ -6,17 +6,36 @@ from taggit.managers import TaggableManager
 from taggit.models import ItemBase, TagBase
 
 
-class AgencyGroup(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.CharField(max_length=64, blank=True)
-
-
 class Agency(models.Model):
+    class Meta:
+        ordering = ['name']
+        verbose_name = ugettext_lazy('Agency')
+        verbose_name_plural = ugettext_lazy('Agencies')
+
     name = models.CharField(max_length=256)
     abbr = models.CharField(max_length=64, blank=True)
     omb_agency_code = models.CharField(max_length=8, blank=True)
     nonpublic = models.BooleanField(default=False)
-    groups = models.ManyToManyField(AgencyGroup)
+
+    def __str__(self):
+        if self.abbr:
+            return '{0} ({1})'.format(self.name, self.abbr)
+        return self.name
+
+
+class AgencyGroup(models.Model):
+    class Meta:
+        ordering = ['name']
+        verbose_name = ugettext_lazy('Agency Group')
+        verbose_name_plural = ugettext_lazy('Agency Groups')
+
+    name = models.CharField(max_length=256)
+    slug = models.CharField(max_length=64, blank=True)
+    agencies = models.ManyToManyField(Agency, related_name='groups',
+                                      blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 # Custom class for name-spacing
@@ -131,6 +150,8 @@ class Requirement(models.Model):
     precedent = models.CharField(max_length=1024, blank=True)
     related_reqs = models.CharField(max_length=1024, blank=True)
     omb_data_collection = models.CharField(max_length=1024, blank=True)
+    agencies = models.ManyToManyField(Agency, blank=True)
+    agency_groups = models.ManyToManyField(AgencyGroup, blank=True)
 
     def __str__(self):
         text = self.req_text[:40]

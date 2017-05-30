@@ -18,7 +18,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from reqs.router import router
-from reqs.views import TopicAdminAutocomplete
+from reqs.views.simple import TopicAdminAutocomplete
 
 urlpatterns = [
     url(r'^', include(router.urls)),
