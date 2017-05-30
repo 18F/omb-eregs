@@ -6,7 +6,7 @@ from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
 class AgencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Agency
-        fields = ('id', 'name', 'abbr')
+        fields = ('id', 'name', 'abbr', 'name_with_abbr')
 
 
 class AgencyGroupSerializer(serializers.ModelSerializer):

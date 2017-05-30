@@ -65,7 +65,7 @@ export function redirectQuery(query, insertParam, idToInsert) {
 /* Mapping between a lookup type (e.g. "topic") and the field in the API we
  * should display */
 export const apiNameField = {
-  agencies: 'name',
+  agencies: 'name_with_abbr',
   policies: 'title',
   topics: 'name',
 };

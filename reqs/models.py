@@ -17,10 +17,14 @@ class Agency(models.Model):
     omb_agency_code = models.CharField(max_length=8, blank=True)
     nonpublic = models.BooleanField(default=False)
 
-    def __str__(self):
+    @property
+    def name_with_abbr(self):
         if self.abbr:
             return '{0} ({1})'.format(self.name, self.abbr)
         return self.name
+
+    def __str__(self):
+        return self.name_with_abbr
 
 
 class AgencyGroup(models.Model):
