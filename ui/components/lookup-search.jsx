@@ -1,5 +1,3 @@
-import querystring from 'querystring';
-
 import React from 'react';
 import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
@@ -64,43 +62,17 @@ export function redirectQuery(query, insertParam, idToInsert) {
   return result;
 }
 
-function redirectUrl(params, idToInsert) {
-  const query = redirectQuery(params.redirect.query, params.insertParam, idToInsert);
-  const paramStr = querystring.stringify(query);
-  return `${params.redirect.pathname}?${paramStr}`;
-}
-
 /* Mapping between a lookup type (e.g. "topic") and the field in the API we
- * should search against/display */
-export const apiParam = {
+ * should display */
+export const apiNameField = {
   agencies: 'name',
   policies: 'title',
   topics: 'name',
 };
 
-export function redirectIfMatched({ routes, location: { query } }, redirect, done) {
-  if (query.page) {
-    /* If the user's already paging through search results, we shouldn't try
-     * to find an exact match */
-    done();
-  } else {
-    const lookup = routes[routes.length - 1].path;
-    const apiQuery = { [apiParam[lookup]]: query.q };
-    new Promise(success => success(cleanParams(query)))
-      .then(params => Promise.all(
-        [Promise.resolve(params), api[lookup].fetch(apiQuery)]))
-      .then(([params, { count, results }]) => {
-        if (count > 0) {
-          redirect(redirectUrl(params, results[0].id));
-        }
-        done();
-      })
-      .catch(done);   // pass any exceptions to `done`
-  }
-}
 
 function Entry({ entry, location, lookup }) {
-  const name = entry[apiParam[lookup]];
+  const name = entry[apiNameField[lookup]];
   const params = cleanParams(location.query);
   const modifiedQuery = redirectQuery(params.redirect.query, params.insertParam, entry.id);
   return (
@@ -123,7 +95,7 @@ Entry.propTypes = {
   location: React.PropTypes.shape({
     query: React.PropTypes.shape({}),
   }),
-  lookup: React.PropTypes.oneOf(Object.keys(apiParam)),
+  lookup: React.PropTypes.oneOf(Object.keys(apiNameField)),
 };
 
 
@@ -171,8 +143,6 @@ export function search(lookup, q, page = '1') {
 
 /**
  * Asynchronously grab the search result data from the API.
- * Assume parameters are already validated (lest redirectIfMatched would have
- * failed)
  **/
 function fetchData({ routes, location: { query } }) {
   const lookup = routes[routes.length - 1].path;

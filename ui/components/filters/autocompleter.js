@@ -7,7 +7,7 @@ import React from 'react';
 import { Async } from 'react-select';
 
 import SearchView from './search-view';
-import { apiParam, redirectQuery, search } from '../lookup-search';
+import { apiNameField, redirectQuery, search } from '../lookup-search';
 
 export default class Autocompleter extends React.Component {
   constructor(props, context) {
@@ -36,7 +36,7 @@ export default class Autocompleter extends React.Component {
 
   loadOptions(inputStr) {
     const { lookup } = this.props;
-    const textField = apiParam[lookup];
+    const textField = apiNameField[lookup];
     return search(lookup, inputStr).then(data => ({
       options: data.results.map(
         entry => ({ value: entry.id, label: entry[textField] })),
@@ -58,7 +58,7 @@ export default class Autocompleter extends React.Component {
   }
 }
 Autocompleter.propTypes = {
-  lookup: React.PropTypes.oneOf(Object.keys(apiParam)).isRequired,
+  lookup: React.PropTypes.oneOf(Object.keys(apiNameField)).isRequired,
   insertParam: React.PropTypes.string.isRequired,
   pathname: React.PropTypes.string.isRequired,
 };
