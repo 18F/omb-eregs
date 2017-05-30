@@ -15,9 +15,11 @@ and includes any non-semantic helper classes
 @import 'typography';
 @import 'header';
 @import 'base';
+@import 'footer';
 
 // Components
 @import 'requirements';
 @import 'req-filter-ui';
 @import 'search-autocomplete';
 @import 'policies';
+@import 'homepage';

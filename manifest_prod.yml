@@ -29,6 +29,5 @@ applications:
     services:
       - config    # user-provided service w/ UI_BASIC_AUTH and NEW_RELIC_LICENSE_KEY
     env:
-      INTERNAL_API: https://policy-api.cio.gov/
-      PUBLIC_API: https://policy-api.cio.gov/
+      API_URL: https://policy-api.cio.gov/
       NEW_RELIC_APP_NAME: OMB Prod UI
