@@ -163,6 +163,28 @@ def test_requirements_agencies_nonpublic():
     assert len(response[0]['agencies']) == 3
 
 
+@pytest.mark.django_db
+@pytest.mark.parametrize('term, icontains_count, search_count', [
+    ('stem', 2, 2),
+    ('stems', 1, 2),
+    ('stemmed', 1, 2),
+    ('full', 2, 1),
+])
+def test_requirements_fulltext_search(term, icontains_count, search_count):
+    client = APIClient()
+    mommy.make(Requirement, req_text='Full text stems words')
+    mommy.make(Requirement, req_text='Stemmed textual input')
+    mommy.make(Requirement, req_text='Fullerton place')
+
+    path = "/requirements/?req_text__icontains=" + term
+    response = client.get(path).json()
+    assert response['count'] == icontains_count
+
+    path = "/requirements/?req_text__search=" + term
+    response = client.get(path).json()
+    assert response['count'] == search_count
+
+
 PolicySetup = namedtuple('PolicySetup', ('topics', 'policies', 'reqs'))
 
 
