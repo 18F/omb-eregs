@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 from reversion.admin import VersionAdmin
 
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
 
 
 def is_extension_pdf(uploaded_file):
@@ -68,3 +68,26 @@ class RequirementForm(forms.ModelForm):
 class RequirementAdmin(VersionAdmin):
     form = RequirementForm
     search_fields = ['req_id', 'req_text']
+
+
+@admin.register(Agency)
+class AgencyAdmin(VersionAdmin):
+    fieldsets = (
+        ('Editable fields', {'fields': ['nonpublic']}),
+        ('Imported fields', {
+            'description': ('Data for these fields has been imported from '
+                            'itdashboard.gov.'),
+            'fields': ['name', 'abbr']
+        })
+    )
+    list_display = ['name', 'abbr', 'nonpublic']
+    list_filter = ['nonpublic']
+    readonly_fields = ['name', 'abbr']
+    search_fields = ['name']
+
+
+@admin.register(AgencyGroup)
+class AgencyGroupAdmin(VersionAdmin):
+    fields = ['name', 'agencies']
+    filter_horizontal = ['agencies']
+    search_fields = ['name']

@@ -5,7 +5,7 @@ from model_mommy import mommy
 from reversion.models import Version
 
 from reqs.admin import RequirementForm
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Agency, Policy, Requirement, Topic
 
 
 def test_reqs_in_topics(admin_client):
@@ -130,7 +130,7 @@ def test_taggit_widget_doublequotes(tag, expected):
 
 
 @pytest.mark.django_db
-def test_reversion(admin_client):
+def test_reversion():
     with reversion.create_revision():
         key = mommy.make(Topic, name="key1")
 
@@ -154,3 +154,17 @@ def test_reversion(admin_client):
 
     key.refresh_from_db()
     assert key.name == "key1"
+
+
+@pytest.mark.django_db
+def test_agency_form(admin_client):
+    agency = mommy.make(Agency)
+    resp = admin_client.get('/admin/reqs/agency/{0}/change/'.format(
+        agency.pk))
+
+    markup = resp.content.decode('utf-8')
+    assert 'Editable fields' in markup
+    assert 'Imported fields' in markup
+    assert 'name="nonpublic"' in markup
+    assert 'name="name"' not in markup
+    assert 'name="abbr"' not in markup
