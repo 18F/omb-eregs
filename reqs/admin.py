@@ -85,6 +85,10 @@ class AgencyAdmin(VersionAdmin):
     readonly_fields = ['name', 'abbr']
     search_fields = ['name']
 
+    def has_add_permission(self, request):
+        """Don't allow users to add Agencies."""
+        return False
+
 
 @admin.register(AgencyGroup)
 class AgencyGroupAdmin(VersionAdmin):

@@ -168,3 +168,8 @@ def test_agency_form(admin_client):
     assert 'name="nonpublic"' in markup
     assert 'name="name"' not in markup
     assert 'name="abbr"' not in markup
+
+
+def test_agency_cannot_be_added(admin_client):
+    resp = admin_client.get('/admin/reqs/agency/add/')
+    assert resp.status_code == 403
