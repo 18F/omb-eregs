@@ -47,7 +47,11 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
     { requirements: pagedReqs.results, count: pagedReqs.count },
   );
   const selectedFilters = React.createElement(ExistingFilters, {
-    fieldNames: { policies: 'policy__id__in', topics: 'topics__id__in' },
+    fieldNames: {
+      policies: 'policy__id__in',
+      search: 'req_text__search',
+      topics: 'topics__id__in',
+    },
     query,
   });
   return React.createElement(

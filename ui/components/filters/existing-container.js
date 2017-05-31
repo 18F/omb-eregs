@@ -35,6 +35,28 @@ RemoveLinkContainer.contextTypes = {
   }),
 };
 
+export function RemoveSearchContainer(
+  { field }, { router: { location: { pathname, query } } }) {
+  const existing = query[field];
+  if (!existing) {
+    return null;
+  }
+
+  const modifiedQuery = Object.assign({}, query);
+  delete modifiedQuery[field];
+  delete modifiedQuery.page;
+
+  return React.createElement(FilterRemoveView, {
+    linkToRemove: { pathname, query: modifiedQuery },
+    name: existing,
+    heading: 'Search',
+  });
+}
+RemoveSearchContainer.propTypes = {
+  field: React.PropTypes.string.isRequired,
+};
+RemoveSearchContainer.contextTypes = RemoveLinkContainer.contextTypes;
+
 export function ExistingFiltersContainer({ fieldNames, policies, topics }) {
   const topicIds = topics.map(topic => topic.id);
   const topicFilters = topics.map(topic => React.createElement(
@@ -58,8 +80,16 @@ export function ExistingFiltersContainer({ fieldNames, policies, topics }) {
       name: policy.title,
     }));
 
+  const searchFilters = [
+    React.createElement(RemoveSearchContainer, {
+      field: fieldNames.search,
+      key: 'search',
+    }),
+  ];
+
   return React.createElement(
-    'ol', { className: 'list-reset' }, [].concat(topicFilters, policyFilters));
+    'ol', { className: 'list-reset' },
+    [].concat(topicFilters, policyFilters, searchFilters));
 }
 ExistingFiltersContainer.propTypes = {
   policies: React.PropTypes.arrayOf(React.PropTypes.shape({
@@ -68,6 +98,7 @@ ExistingFiltersContainer.propTypes = {
   })).isRequired,
   fieldNames: React.PropTypes.shape({
     policies: React.PropTypes.string,
+    search: React.PropTypes.string,
     topics: React.PropTypes.string,
   }).isRequired,
   topics: React.PropTypes.arrayOf(React.PropTypes.shape({
