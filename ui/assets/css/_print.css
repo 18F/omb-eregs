@@ -1,0 +1,16 @@
+@media print {
+  .sidebar,
+  .tab-container {
+    display: none;
+  }
+
+  .main {
+    border-left: 0;
+  }
+
+  .requirement-list > li {
+    border: 0;
+    border-bottom: 1px solid;
+    border-radius: 0;
+  }
+}
