@@ -35,6 +35,7 @@ class PolicyFilter(django_filters.FilterSet):
             'policy_type': ('exact', 'in'),
             'issuance': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
                          'month', 'day'),
+            'issuing_body': ('exact', 'icontains'),
             'sunset': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
                        'month', 'day', 'isnull'),
         }
@@ -45,7 +46,6 @@ class RequirementFilter(django_filters.FilterSet):
         model = Requirement
         fields = {
             'req_id': ('exact',),
-            'issuing_body': ('exact', 'icontains'),
             'policy_section': ('exact', 'icontains'),
             'policy_sub_section': ('exact', 'icontains'),
             'req_text': ('icontains', 'search'),

@@ -102,6 +102,7 @@ class Policy(models.Model):
     policy_status = models.CharField(max_length=256, blank=True)
     document_source = models.FileField(blank=True)
     nonpublic = models.BooleanField(default=False)
+    issuing_body = models.CharField(max_length=512)
 
     @property
     def title_with_number(self):
@@ -133,7 +134,6 @@ class Requirement(models.Model):
     policy = models.ForeignKey(Policy, on_delete=models.CASCADE,
                                related_name='requirements')
     req_id = models.CharField(max_length=16, unique=True)
-    issuing_body = models.CharField(max_length=512)
     policy_section = models.CharField(max_length=1024, blank=True)
     policy_sub_section = models.CharField(max_length=1024, blank=True)
     req_text = models.TextField()
