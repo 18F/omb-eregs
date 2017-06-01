@@ -100,6 +100,7 @@ def test_pdf_upload(admin_client):
         'omb_policy_id': policy.omb_policy_id,
         'policy_type': policy.policy_type,
         'issuance': policy.issuance,
+        'issuing_body': policy.issuing_body,
         'sunset': '2015-01-01',
         'policy_status': policy.policy_status,
     }
@@ -135,6 +136,7 @@ def test_not_pdf_upload(admin_client):
         'omb_policy_id': policy.omb_policy_id,
         'policy_type': policy.policy_type,
         'issuance': policy.issuance,
+        'issuing_body': policy.issuing_body,
         'sunset': '2015-01-01',
         'policy_status': policy.policy_status,
     }

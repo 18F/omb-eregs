@@ -139,7 +139,7 @@ def test_policy_from_row():
     row = {'policyNumber': '123', 'policyTitle': 'title 1',
            'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
            'policyType': 'Memo', 'policyIssuanceYear': '12/20/2001',
-           'policySunset': 'NA'}
+           'policySunset': 'NA', 'issuingBody': 'IBIB'}
     policy_proc = import_reqs.PolicyProcessor()
     policy = policy_proc.from_row(row)
     assert policy.policy_number == 123
@@ -150,6 +150,7 @@ def test_policy_from_row():
     assert policy.issuance == date(2001, 12, 20)
     assert policy.sunset is None
     assert {123: policy} == policy_proc.policies
+    assert policy.issuing_body == 'IBIB'
 
 
 @pytest.mark.django_db
@@ -158,7 +159,7 @@ def test_policy_from_row_duplicate():
     row = {'policyNumber': '123', 'policyTitle': 'title 1',
            'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
            'policyType': 'Memo', 'policyIssuanceYear': '12/20/2001',
-           'policySunset': 'NA'}
+           'policySunset': 'NA', 'issuingBody': 'IBIB'}
     import_reqs.PolicyProcessor().from_row(row)
     assert Policy.objects.count() == 1
     assert Policy.objects.get(policy_number=123).title == 'title 1'
@@ -205,7 +206,7 @@ def test_no_matching_policy_type():
     row = {'policyNumber': '123', 'policyTitle': 'title 1',
            'uriPolicyId': 'http://example.com/a', 'ombPolicyId': 'policy',
            'policyType': 'IAmAnOutlier', 'policyIssuanceYear': '12/20/2001',
-           'policySunset': 'NA'}
+           'policySunset': 'NA', 'issuingBody': 'IBIB'}
     policy_proc = import_reqs.PolicyProcessor()
     with pytest.raises(ValueError):
         policy_proc.from_row(row)
@@ -221,7 +222,6 @@ def test_varying_requirement_headers(verb_field, reqid_field, entity_field,
     processor = import_reqs.RowProcessor()
     processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})
     row = {
-        'issuingBody': 'body',
         'policySection': 'None',
         'policySubSection': 'None',
         'reqDeadline': 'N/A',
@@ -233,7 +233,6 @@ def test_varying_requirement_headers(verb_field, reqid_field, entity_field,
     row[verb_field] = 'shall'
     processor.add(row)
     assert Requirement.objects.count() == 1
-    assert Requirement.objects.first().issuing_body == 'body'
     assert Requirement.objects.first().citation == 'N/A'
     assert Requirement.objects.first().impacted_entity == 'something'
     assert Requirement.objects.first().req_id == '13.37'
@@ -249,6 +248,7 @@ def test_varying_policy_headers(opfid_field, uri_field):
     OMB Policy ID field).
     """
     row = {
+        'issuingBody': 'IBIB',
         'policyIssuanceYear': '12/20/2001',
         'policyNumber': '123',
         'policySunset': 'NA',
@@ -359,7 +359,6 @@ def test_bad_requirement_ids_raise_value_error(requirement_id):
     processor = import_reqs.RowProcessor()
     processor.policies = Mock(**{'from_row.return_value': mommy.make(Policy)})
     row = {
-        'issuingBody': 'body',
         'policySection': 'None',
         'policySubSection': 'None',
         'reqDeadline': 'N/A',
