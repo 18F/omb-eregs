@@ -2,8 +2,8 @@ import moment from 'moment';
 import React from 'react';
 import { resolve } from 'react-resolver';
 
-import api from '../api';
-import NewPolicyView from './new-policy-view';
+import api from '../../../api';
+import NewPolicyView from './view';
 
 const NUM_POLICIES = 4;
 // See https://momentjs.com/docs/#/displaying/ for options

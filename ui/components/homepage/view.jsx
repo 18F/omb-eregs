@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Autocompleter from './filters/autocompleter';
-import ResolvedNewPoliciesContainer from './new-policies-container';
+import Autocompleter from '../filters/autocompleter';
+import NewPoliciesContainerResolver from './new-policies/container';
 
 export default function Homepage() {
   return (
@@ -37,7 +37,7 @@ export default function Homepage() {
       <section className="new-policies px4 py3 mb4">
         <div className="px2 mx4">
           <h3>New policies</h3>
-          <ResolvedNewPoliciesContainer />
+          <NewPoliciesContainerResolver />
         </div>
       </section>
     </div>

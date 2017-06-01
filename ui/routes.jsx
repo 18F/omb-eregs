@@ -5,7 +5,7 @@ import App from './components/app';
 import PolicyContainerResolver from './components/policies/container';
 import RequirementsContainerResolver from './components/requirements/container';
 import LookupSearchResolver, { redirectIfMatched } from './components/lookup-search';
-import Homepage from './components/homepage';
+import Homepage from './components/homepage/view';
 
 // Trigger DAP pageviews when our history changes (for single-page-app users)
 if (browserHistory && typeof gas !== 'undefined') {
