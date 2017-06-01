@@ -1,4 +1,9 @@
 @media print {
+
+  .usa-disclaimer, .navbar-title, .req .metadata, .req .req-text {
+    color: #111 !important;
+  }
+
   .sidebar,
   .tab-container {
     display: none;
@@ -8,9 +13,25 @@
     border-left: 0;
   }
 
+  ol.list-reset {
+    border-bottom: 1px solid #111;
+  }
+
+  .active-filter {
+    margin: 0;
+  }
   .requirement-list > li {
     border: 0;
     border-bottom: 1px solid;
     border-radius: 0;
+  }
+
+  .topics-list a, a:link {
+   text-decoration: none;
+   color: #111;
+  }
+
+  .topics-list a:link:after {
+    content: " (" attr(href) ") ";
   }
 }
