@@ -26,7 +26,7 @@ export function formatIssuance(policy) {
   });
 }
 
-function fetchRecentPolicies() {
+export function fetchRecentPolicies() {
   return api.policies.fetchResults({ ordering: '-issuance' })
     .then(results => results.slice(0, NUM_POLICIES).map(formatIssuance));
 }
