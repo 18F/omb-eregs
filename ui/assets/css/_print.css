@@ -20,7 +20,8 @@
   .active-filter {
     margin: 0;
   }
-  .requirement-list > li {
+  .requirement-list > li,
+  .policy {
     border: 0;
     border-bottom: 1px solid;
     border-radius: 0;
