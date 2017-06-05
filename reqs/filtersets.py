@@ -48,7 +48,7 @@ class RequirementFilter(django_filters.FilterSet):
             'issuing_body': ('exact', 'icontains'),
             'policy_section': ('exact', 'icontains'),
             'policy_sub_section': ('exact', 'icontains'),
-            'req_text': ('icontains',),
+            'req_text': ('icontains', 'search'),
             'verb': ('icontains',),
             'impacted_entity': ('icontains',),
             'req_deadline': ('icontains',),

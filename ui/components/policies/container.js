@@ -51,7 +51,11 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
     },
   );
   const selectedFilters = React.createElement(ExistingFilters, {
-    fieldNames: { policies: 'id__in', topics: 'requirements__topics__id__in' },
+    fieldNames: {
+      policies: 'id__in',
+      search: 'requirements__req_text__search',
+      topics: 'requirements__topics__id__in',
+    },
     query,
   });
   return React.createElement(
