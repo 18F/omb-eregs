@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 """
 We have a set of field names that change depending on the input file, and
-storing that information in one spot is probably the best appraoch.
+storing that information in one spot is probably the best approach.
 """
 FIELDS = {
     "verbs": ("reqVerb", "req_verb", "verb"),
@@ -143,7 +143,8 @@ class PolicyProcessor:
                 'policy_status': row.get("policyStatus", ""),
                 'policy_type': convert_policy_type(row['policyType']),
                 'issuance': convert_date(row['policyIssuanceYear']),
-                'sunset': convert_date(row['policySunset'])
+                'sunset': convert_date(row['policySunset']),
+                'issuing_body': row['issuingBody'],
             }
             policy, _ = Policy.objects.update_or_create(
                 policy_number=policy_number, defaults=params)
@@ -267,7 +268,6 @@ class RowProcessor:
         params = dict(
             citation=row[citation_key],
             impacted_entity=row[impacted_key],
-            issuing_body=row['issuingBody'],
             omb_data_collection=row.get("ombDataCollection", ""),
             policy=self.policies.from_row(row),
             policy_section=row['policySection'],
