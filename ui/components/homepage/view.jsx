@@ -1,20 +1,9 @@
 import React from 'react';
 
-import FilterListView from './filters/list-view';
-import Autocompleter from './filters/autocompleter';
+import Autocompleter from '../filters/autocompleter';
+import NewPoliciesContainerResolver from './new-policies/container';
 
 export default function Homepage() {
-  const filterControls = [
-    React.createElement(FilterListView, {
-      autocompleter: React.createElement(Autocompleter, {
-        insertParam: 'topics__id__in',
-        lookup: 'topics',
-        pathname: '/requirements',
-      }),
-      key: 'topic',
-    }),
-  ];
-
   return (
     <div className="homepage">
       <section className="filter-form px4 py2 center">
@@ -22,7 +11,7 @@ export default function Homepage() {
         <div className="filter px4">
           <h4>What topics are you interested in?</h4>
           <div className="form-field">
-            { filterControls }
+            <Autocompleter insertParam="topics__id__in" lookup="topics" pathname="/requirements" />
           </div>
         </div>
       </section>
@@ -42,6 +31,13 @@ export default function Homepage() {
               and the public. For official OMB guidance, please follow the
               links to the original memos and policy documents.
           </p>
+        </div>
+      </section>
+
+      <section className="new-policies px4 py3 mb4">
+        <div className="px2 mx4">
+          <h3>New policies</h3>
+          <NewPoliciesContainerResolver />
         </div>
       </section>
     </div>
