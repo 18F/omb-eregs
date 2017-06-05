@@ -1,8 +1,9 @@
 from django.db.models import Count, IntegerField, OuterRef, Subquery
 from rest_framework import viewsets
 
-from reqs.filtersets import PolicyFilter, RequirementFilter, TopicFilter
-from reqs.models import Policy, Requirement, Topic
+from reqs.filtersets import (AgencyFilter, AgencyGroupFilter, PolicyFilter,
+                             RequirementFilter, TopicFilter)
+from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
 from reqs.serializers import PolicySerializer
 
 
@@ -15,6 +16,31 @@ def subfilter_params(params, subfield):
             if key.startswith(prefix)}
 
 
+def make_filter(param, backref, model_class, filter_class):
+    """Create a function which filters a Requirements queryset by GET
+    parameters. We don't want to use joins as we ultimately just need a
+    count"""
+    def filter_fn(params, req_queryset):
+        params = subfilter_params(params, param)
+
+        if params:
+            subquery = model_class.objects.all()
+            subquery = filter_class(params, queryset=subquery).qs
+            subquery = subquery.values(backref)
+            req_queryset = req_queryset.filter(pk__in=subquery)
+        return req_queryset
+    return filter_fn
+
+
+filter_by_topic = make_filter('topics', 'topic__content_object', Topic,
+                              TopicFilter)
+filter_by_agency = make_filter('agencies', 'requirement', Agency, AgencyFilter)
+filter_by_agency_group = make_filter('agency_groups', 'requirement',
+                                     AgencyGroup, AgencyGroupFilter)
+filter_by_all_agency = make_filter('all_agencies', 'all_requirements', Agency,
+                                   AgencyFilter)
+
+
 def relevant_reqs_count(params):
     """Create a subquery of the count of requirements relevant to the provided
     query parameters"""
@@ -23,13 +49,10 @@ def relevant_reqs_count(params):
     params = subfilter_params(params, 'requirements')
     subquery = RequirementFilter(params, queryset=subquery).qs
 
-    params = subfilter_params(params, 'topics')
-
-    if params:
-        subsubquery = Topic.objects.all()
-        subsubquery = TopicFilter(params, queryset=subsubquery).qs
-        subsubquery = subsubquery.values('topic__content_object')
-        subquery = subquery.filter(pk__in=subsubquery)
+    subquery = filter_by_topic(params, subquery)
+    subquery = filter_by_agency(params, subquery)
+    subquery = filter_by_agency_group(params, subquery)
+    subquery = filter_by_all_agency(params, subquery)
 
     subquery = subquery.values('policy').\
         annotate(count=Count('policy')).values('count').\

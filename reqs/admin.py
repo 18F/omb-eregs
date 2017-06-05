@@ -58,7 +58,7 @@ class TaggitWidget(TaggitSelect2):
 class RequirementForm(forms.ModelForm):
     class Meta:
         model = Requirement
-        fields = '__all__'
+        exclude = ['all_agencies']
         widgets = {
             'topics': TaggitWidget('/admin/ajax/topics/')
         }

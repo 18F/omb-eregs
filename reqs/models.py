@@ -152,6 +152,9 @@ class Requirement(models.Model):
     omb_data_collection = models.CharField(max_length=1024, blank=True)
     agencies = models.ManyToManyField(Agency, blank=True)
     agency_groups = models.ManyToManyField(AgencyGroup, blank=True)
+    all_agencies = models.ManyToManyField(
+        Agency, through='RequirementAllAgencies',
+        related_name='all_requirements')
 
     def __str__(self):
         text = self.req_text[:40]
@@ -164,3 +167,16 @@ class Requirement(models.Model):
         """Using self.topics.names will result in a new query. That's very
         inefficient if we've already prefetched that data."""
         return [topic.name for topic in self.topics.all()]
+
+
+class RequirementAllAgencies(models.Model):
+    """This many-to-many table refers to a view, allowing us to retrieve all
+    agencies (including through the agency group relationship) relevant to a
+    requirement (or vise versa)"""
+    class Meta:
+        db_table = 'reqs_requirement_all_agencies'
+        managed = False
+
+    id = models.CharField(max_length=1024, primary_key=True)    # noqa
+    requirement = models.ForeignKey(Requirement, on_delete=models.DO_NOTHING)
+    agency = models.ForeignKey(Agency, on_delete=models.DO_NOTHING)
