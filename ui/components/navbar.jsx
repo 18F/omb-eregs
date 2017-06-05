@@ -3,7 +3,7 @@ import React from 'react';
 import Search from './search/search';
 
 
-function Navbar(props) {
+function Navbar() {
   return (
     <div className="overflow-auto">
       <div className="flex items-center navbar">
@@ -18,13 +18,9 @@ function Navbar(props) {
             OMB Policy Library <sup>BETA</sup>
         </h1>
       </div>
-      <Search router={props.router} />
+      <Search />
     </div>
   );
 }
-
-Navbar.propTypes = {
-  router: React.PropTypes.shape.isRequired,
-};
 
 export default Navbar;

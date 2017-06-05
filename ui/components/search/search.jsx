@@ -18,10 +18,10 @@ export default class Search extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { location } = this.props.router;
+    const { location } = this.context.router;
     const query = redirectQuery(location.query, 'req_text__search', this.state.searchTerm);
     const paramStr = querystring.stringify(query);
-    this.props.router.push(`/requirements/?${paramStr}`);
+    this.context.router.push(`/requirements/?${paramStr}`);
   }
 
   render() {
@@ -39,10 +39,12 @@ export default class Search extends React.Component {
   }
 }
 
-Search.propTypes = {
+Search.contextTypes = {
   router: React.PropTypes.shape({
-    location: React.PropTypes.shape,
+    location: React.PropTypes.shape({
+      query: React.PropTypes.shape({}),
+      pathname: React.PropTypes.string,
+    }),
     push: React.PropTypes.func,
-  }).isRequired,
+  }),
 };
-

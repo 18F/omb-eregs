@@ -7,7 +7,7 @@ function App(props) {
   return (
     <div>
       <Disclaimer />
-      <Navbar router={props.router} />
+      <Navbar />
       {props.children}
       <Footer />
     </div>
@@ -20,7 +20,6 @@ App.defaultProps = {
 
 App.propTypes = {
   children: React.PropTypes.node,
-  router: React.PropTypes.shape.isRequired,
 };
 
 export default App;
