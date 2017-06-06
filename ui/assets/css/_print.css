@@ -31,8 +31,4 @@
    text-decoration: none;
    color: #111;
   }
-
-  .topics-list a:link:after {
-    content: " (" attr(href) ") ";
-  }
 }
