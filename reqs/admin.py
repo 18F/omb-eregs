@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 from reversion.admin import VersionAdmin
 
-from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
 
 
 def is_extension_pdf(uploaded_file):
@@ -31,6 +31,11 @@ class PolicyAdmin(VersionAdmin):
 
 @admin.register(Topic)
 class TopicAdmin(VersionAdmin):
+    search_fields = ['name']
+
+
+@admin.register(Office)
+class OfficeAdmin(VersionAdmin):
     search_fields = ['name']
 
 
