@@ -396,6 +396,11 @@
       "from": "mime-types@>=2.1.11 <2.2.0",
       "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.14.tgz"
     },
+    "moment": {
+      "version": "2.18.1",
+      "from": "moment@latest",
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.18.1.tgz"
+    },
     "morgan": {
       "version": "1.8.1",
       "from": "morgan@>=1.8.1 <2.0.0",

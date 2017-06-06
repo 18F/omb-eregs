@@ -6,7 +6,7 @@ from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
 class AgencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Agency
-        fields = ('id', 'name', 'abbr')
+        fields = ('id', 'name', 'abbr', 'name_with_abbr')
 
 
 class AgencyGroupSerializer(serializers.ModelSerializer):
@@ -32,19 +32,20 @@ class PolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = Policy
         fields = (
-            'policy_number',
-            'title',
-            'uri',
-            'omb_policy_id',
-            'policy_type',
-            'issuance',
-            'sunset',
-            'id',
-            'total_reqs',
-            'relevant_reqs',
             'document_source',
-            'title_with_number',
+            'id',
+            'issuance',
+            'issuing_body',
+            'omb_policy_id',
             'original_url',
+            'policy_number',
+            'policy_type',
+            'relevant_reqs',
+            'sunset',
+            'title',
+            'title_with_number',
+            'total_reqs',
+            'uri',
         )
 
 
@@ -67,7 +68,6 @@ class RequirementSerializer(serializers.ModelSerializer):
             'agency_groups',
             'citation',
             'impacted_entity',
-            'issuing_body',
             'policy',
             'policy_section',
             'policy_sub_section',

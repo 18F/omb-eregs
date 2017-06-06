@@ -12,6 +12,7 @@ class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
     filter_fields = TopicFilter.get_fields()
+    search_fields = ('name',)
 
 
 class TopicAdminAutocomplete(Select2QuerySetView):
@@ -24,6 +25,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
     queryset = Agency.objects.filter(nonpublic=False)
     serializer_class = AgencySerializer
     filter_fields = AgencyFilter.get_fields()
+    search_fields = ('name', 'abbr')
 
 
 class AgencyGroupViewSet(viewsets.ModelViewSet):
@@ -34,3 +36,4 @@ class AgencyGroupViewSet(viewsets.ModelViewSet):
     filter_fields.update({
         'agencies__' + key: value
         for key, value in AgencyFilter.get_fields().items()})
+    search_fields = ('name',)

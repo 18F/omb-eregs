@@ -25,16 +25,32 @@ function policiesTab(reqQuery) {
     { active: false, tabName: 'Policies', key: 'Policies', link });
 }
 
+const fieldNames = {
+  agencies: 'all_agencies__id__in',
+  policies: 'policy__id__in',
+  search: 'req_text__search',
+  topics: 'topics__id__in',
+};
+
 export function RequirementsContainer({ location: { query }, pagedReqs }) {
   const filterControls = [
     React.createElement(FilterListView, {
       autocompleter: React.createElement(Autocompleter, {
-        insertParam: 'topics__id__in',
+        insertParam: fieldNames.topics,
         lookup: 'topics',
         pathname: '/requirements',
       }),
       heading: 'Topics',
       key: 'topic',
+    }),
+    React.createElement(FilterListView, {
+      autocompleter: React.createElement(Autocompleter, {
+        insertParam: fieldNames.agencies,
+        lookup: 'agencies',
+        pathname: '/requirements',
+      }),
+      heading: 'Agencies',
+      key: 'agency',
     }),
   ];
   const tabs = [
@@ -46,10 +62,8 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
     RequirementsView,
     { requirements: pagedReqs.results, count: pagedReqs.count },
   );
-  const selectedFilters = React.createElement(ExistingFilters, {
-    fieldNames: { policies: 'policy__id__in', topics: 'topics__id__in' },
-    query,
-  });
+  const selectedFilters = React.createElement(
+    ExistingFilters, { fieldNames, query });
   return React.createElement(
     SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
