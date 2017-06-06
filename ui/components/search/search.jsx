@@ -1,38 +1,24 @@
 import React from 'react';
-import querystring from 'querystring';
-
-import { redirectQuery } from '../lookup-search';
 
 export default class Search extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { searchTerm: '' };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+  hiddenFields() {
+    const query = this.context.router.location.query;
+    const modifiedQuery = Object.assign({}, query);
+    delete modifiedQuery.page;
+    delete modifiedQuery.req_text__search;
+    return Object.keys(modifiedQuery).map(k =>
+      <input type="hidden" key={k} name={k} value={modifiedQuery[k]} />);
   }
 
-  handleChange(e) {
-    this.setState({ searchTerm: e.target.value });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    const { location } = this.context.router;
-    const query = redirectQuery(location.query, 'req_text__search', this.state.searchTerm);
-    const paramStr = querystring.stringify(query);
-    this.context.router.push(`/requirements/?${paramStr}`);
+  inputName() {
+    return this.context.router.location.pathname.includes('requirements') ? 'req_text__search' : 'requirements__req_text__search';
   }
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          value={this.state.searchTerm}
-          onChange={this.handleChange}
-          type="text"
-          placeholder="Search..."
-        />
+      <form method="GET" action={this.context.router.location.pathname}>
+        <input name={this.inputName()} type="text" placeholder="Search..." />
+        { this.hiddenFields() }
         <input type="submit" value="Submit" />
       </form>
     );
@@ -45,6 +31,5 @@ Search.contextTypes = {
       query: React.PropTypes.shape({}),
       pathname: React.PropTypes.string,
     }),
-    push: React.PropTypes.func,
   }),
 };
