@@ -1,5 +1,4 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 
 import PoliciesView from './policies-view';
 import SearchFilterView from '../search-filter-view';
@@ -7,6 +6,7 @@ import TabView from '../tab-view';
 import ExistingFilters from '../filters/existing-container';
 import FilterListView from '../filters/list-view';
 import Selector from '../filters/selector';
+import { wrapWithAjaxLoader } from '../ajax-loading';
 import api from '../../api';
 
 function requirementsTab(policyQuery) {
@@ -90,7 +90,5 @@ function fetchPolicies({ location: { query } }) {
   return api.policies.fetch(params);
 }
 
-export default resolve({
-  pagedPolicies: fetchPolicies,
-})(PoliciesContainer);
-
+export default wrapWithAjaxLoader(
+  PoliciesContainer, { pagedPolicies: fetchPolicies });
