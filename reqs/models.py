@@ -88,6 +88,10 @@ class PolicyTypes(Enum):
     strategy = 'Strategy'
 
 
+class Office(models.Model):
+    name = models.CharField(max_length=256)
+
+
 class Policy(models.Model):
     class Meta:
         verbose_name_plural = ugettext_lazy('Policies')
@@ -107,6 +111,8 @@ class Policy(models.Model):
     document_source = models.FileField(blank=True)
     nonpublic = models.BooleanField(default=False)
     issuing_body = models.CharField(max_length=512)
+    managing_office = models.ForeignKey(Office, on_delete=models.CASCADE,
+                                        blank=True, null=True)
 
     @property
     def title_with_number(self):
