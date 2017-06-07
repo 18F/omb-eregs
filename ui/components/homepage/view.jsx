@@ -25,7 +25,11 @@ export default function Homepage() {
                 <TopicAutocomplete />
               </div>
               <div className="form-field">
-                <input type="submit" value="Search" />
+                <input
+                  className="filter-form-submit mt2 h4 py1 px4 rounded"
+                  value="Search"
+                  type="submit"
+                />
               </div>
             </form>
           </ConditionalRender>
