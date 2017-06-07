@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Autocompleter from '../filters/autocompleter';
+import Selector from '../filters/selector';
 import NewPoliciesContainerResolver from './new-policies/container';
 
 export default function Homepage() {
@@ -11,7 +11,7 @@ export default function Homepage() {
         <div className="filter px4">
           <h4>What topics are you interested in?</h4>
           <div className="form-field">
-            <Autocompleter insertParam="topics__id__in" lookup="topics" pathname="/requirements" />
+            <Selector insertParam="topics__id__in" lookup="topics" pathname="/requirements" />
           </div>
         </div>
       </section>
