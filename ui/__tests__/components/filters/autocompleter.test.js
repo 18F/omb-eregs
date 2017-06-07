@@ -2,10 +2,12 @@ import { mount, shallow } from 'enzyme';
 import React from 'react';
 
 import Autocompleter from '../../../components/filters/autocompleter';
-import * as lookupSearch from '../../../components/lookup-search';
+import * as lookupSearch from '../../../lookup-search';
+import * as redirects from '../../../redirects';
 import mockRouter from '../../util/mockRouter';
 
-jest.mock('../../../components/lookup-search');
+jest.mock('../../../lookup-search');
+jest.mock('../../../redirects');
 
 
 describe('<Autocompleter />', () => {
@@ -34,14 +36,14 @@ describe('<Autocompleter />', () => {
     });
   });
   it('changes the URL on selection', () => {
-    lookupSearch.redirectQuery = jest.fn(() => ({ dummy: 'data' }));
+    redirects.redirectQuery = jest.fn(() => ({ dummy: 'data' }));
     const router = mockRouter({
       pathname: '/some/path/', query: { values: 'mocked' } });
     router.push = jest.fn();
     const component = new Autocompleter(
       { lookup: 'topics', insertParam: 'insertHere', pathname: '/some/path/' }, { router });
     component.onChange({ value: 8 });
-    expect(lookupSearch.redirectQuery).toHaveBeenCalledWith(
+    expect(redirects.redirectQuery).toHaveBeenCalledWith(
       { values: 'mocked' }, 'insertHere', 8);
     expect(router.push).toHaveBeenCalledWith('/some/path/?dummy=data');
   });

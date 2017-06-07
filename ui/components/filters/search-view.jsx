@@ -1,6 +1,6 @@
 import React from 'react';
 
-import redirectWhiteList from '../redirectWhiteList';
+import { redirectWhiteList } from '../../redirects';
 
 export default function SearchView({ insertParam, lookup, pathname, query }) {
   return (
