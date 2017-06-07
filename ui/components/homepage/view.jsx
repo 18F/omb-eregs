@@ -1,6 +1,8 @@
 import React from 'react';
 
-import Selector from '../filters/selector';
+import ConditionalRender from '../conditional-render';
+import FallbackView from '../filters/fallback-view';
+import TopicAutocomplete from './topic-autocomplete';
 import NewPoliciesContainerResolver from './new-policies/container';
 
 export default function Homepage() {
@@ -10,9 +12,23 @@ export default function Homepage() {
         <h2>Find policies and requirements that apply to your agency.</h2>
         <div className="filter px4">
           <h4>What topics are you interested in?</h4>
-          <div className="form-field">
-            <Selector insertParam="topics__id__in" lookup="topics" pathname="/requirements" />
-          </div>
+          <ConditionalRender>
+            <div className="form-field">
+              <FallbackView
+                insertParam="topics__id__in"
+                lookup="topics"
+                pathname="/requirements"
+              />
+            </div>
+            <form method="GET" action="/requirements">
+              <div className="form-field">
+                <TopicAutocomplete />
+              </div>
+              <div className="form-field">
+                <input type="submit" value="Search" />
+              </div>
+            </form>
+          </ConditionalRender>
         </div>
       </section>
 
