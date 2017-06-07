@@ -23,9 +23,19 @@ export default class Search extends React.Component {
     return (
       <div className="search-form pr2">
         <form method="GET" action={this.actionPath()} className="mb0 flex items-center">
-          <input name={this.inputName()} type="text" placeholder="Search" className="search-input p1 gray-border" />
+          <input
+            name={this.inputName()}
+            type="text"
+            placeholder="Search"
+            className="search-input p1 gray-border"
+          />
           { this.hiddenFields() }
-          <input type="image" src="/static/img/search-icon.svg" value="Submit" className="search-submit p1 gray-border" />
+          <input
+            type="image"
+            src="/static/img/search-icon.svg"
+            value="Submit"
+            className="search-submit p1 gray-border"
+          />
         </form>
       </div>
     );
