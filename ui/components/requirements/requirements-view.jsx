@@ -6,7 +6,7 @@ import Pagers from '../pagers';
 export default function RequirementsView({ requirements, count }) {
   return (
     <div>
-      <ul className="list-reset">
+      <ul className="requirement-list list-reset">
         { requirements.map(requirement =>
           <li key={requirement.req_id} className="gray-border border rounded mb2">
             <Requirement requirement={requirement} />

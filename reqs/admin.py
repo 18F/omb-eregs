@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 from reversion.admin import VersionAdmin
 
-from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
 
 
 def is_extension_pdf(uploaded_file):
@@ -34,6 +34,11 @@ class TopicAdmin(VersionAdmin):
     search_fields = ['name']
 
 
+@admin.register(Office)
+class OfficeAdmin(VersionAdmin):
+    search_fields = ['name']
+
+
 def handle_quotation_marks(value):
     """Account for commas and quotation marks in tags."""
     num_marks = value.count('"')
@@ -58,7 +63,7 @@ class TaggitWidget(TaggitSelect2):
 class RequirementForm(forms.ModelForm):
     class Meta:
         model = Requirement
-        fields = '__all__'
+        exclude = ['all_agencies']
         widgets = {
             'topics': TaggitWidget('/admin/ajax/topics/')
         }
