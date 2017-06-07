@@ -17,8 +17,8 @@ function Navbar() {
         <h1 className="navbar-title">
             OMB Policy Library <sup>BETA</sup>
         </h1>
+        <Search />
       </div>
-      <Search />
     </div>
   );
 }

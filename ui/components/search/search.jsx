@@ -16,21 +16,18 @@ export default class Search extends React.Component {
 
   actionPath() {
     const path = this.context.router.location.pathname;
-    if (path.includes('policies') || path.includes('requirements')) {
-      return path;
-    }
-    else {
-      return 'requirements/';
-    }
+    return (path.includes('policies') || path.includes('requirements')) ? path : 'requirements/';
   }
 
   render() {
     return (
-      <form method="GET" action={this.actionPath()}>
-        <input name={this.inputName()} type="text" placeholder="Search..." />
-        { this.hiddenFields() }
-        <input type="submit" value="Submit" />
-      </form>
+      <div className="search-form pr2">
+        <form method="GET" action={this.actionPath()} className="mb0 flex items-center">
+          <input name={this.inputName()} type="text" placeholder="Search" className="search-input p1 gray-border" />
+          { this.hiddenFields() }
+          <input type="image" src="/static/img/search-icon.svg" value="Submit" className="search-submit p1 gray-border" />
+        </form>
+      </div>
     );
   }
 }

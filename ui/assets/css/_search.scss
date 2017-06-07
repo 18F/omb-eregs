@@ -1,0 +1,22 @@
+.search-form {
+  position: absolute;
+  right: 0;
+
+  .search-input {
+    @include font-source-sans-pro();
+    border: 1px solid;
+    border-right: 0;
+    border-radius: 5px 0 0 5px;
+    font-size: 0.75rem;
+    padding: 0.56rem;
+    width: 20rem;
+  }
+
+  .search-submit {
+    background-color: $color-white;
+    border: 1px solid;
+    border-left: 0;
+    border-radius: 0 5px 5px 0;
+    padding: 0.57rem;
+  }
+}
