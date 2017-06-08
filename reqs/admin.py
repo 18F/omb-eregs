@@ -27,6 +27,7 @@ class PolicyAdmin(VersionAdmin):
     form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
     list_filter = ['policy_type', 'policy_status', 'nonpublic']
+    radio_fields = {'policy_type': admin.VERTICAL}
 
 
 @admin.register(Topic)
@@ -63,7 +64,24 @@ class TaggitWidget(TaggitSelect2):
 class RequirementForm(forms.ModelForm):
     class Meta:
         model = Requirement
-        exclude = ['all_agencies']
+        fields = [
+            'policy',
+            'req_id',
+            'policy_section',
+            'policy_sub_section',
+            'req_text',
+            'verb',
+            'impacted_entity',
+            'req_deadline',
+            'citation',
+            'req_status',
+            'precedent',
+            'related_reqs',
+            'omb_data_collection',
+            'topics',
+            'agencies',
+            'agency_groups',
+        ]
         widgets = {
             'topics': TaggitWidget('/admin/ajax/topics/')
         }
@@ -73,6 +91,7 @@ class RequirementForm(forms.ModelForm):
 class RequirementAdmin(VersionAdmin):
     form = RequirementForm
     search_fields = ['req_id', 'req_text']
+    filter_horizontal = ['agencies', 'agency_groups']
 
 
 @admin.register(Agency)

@@ -1,17 +1,23 @@
 from django.conf import settings
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from django.contrib.admin import AdminSite
+from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.models import Group, User
 from django.utils.translation import gettext_lazy as _
-from taggit.models import Tag
 
 from ereqs_admin.forms import UserChangeForm, UserCreationForm
+from reqs.admin import (AgencyAdmin, AgencyGroupAdmin, OfficeAdmin,
+                        PolicyAdmin, RequirementAdmin, TopicAdmin)
+from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
 
-# We have our own tag type; best to hide the taggit Tags from end users
-admin.site.unregister(Tag)
+
+class EReqsAdminSite(AdminSite):
+    site_header = settings.ADMIN_TITLE
+    site_title = settings.ADMIN_TITLE
+    site_url = None
+    index_title = 'Welcome'
 
 
-class PasswordlessAdmin(UserAdmin):
+class PasswordlessUserAdmin(UserAdmin):
     """A replacement user admin which references the modified creation +
     change forms. This also removes the password + is_staff fields and makes
     the user name fields (which are set by our MAX integration) and date
@@ -35,6 +41,18 @@ class PasswordlessAdmin(UserAdmin):
     )
 
 
+admin_site = EReqsAdminSite()
+
+admin_site.register(Group, GroupAdmin)
+
+admin_site.register(Agency, AgencyAdmin)
+admin_site.register(AgencyGroup, AgencyGroupAdmin)
+admin_site.register(Office, OfficeAdmin)
+admin_site.register(Policy, PolicyAdmin)
+admin_site.register(Requirement, RequirementAdmin)
+admin_site.register(Topic, TopicAdmin)
+
 if settings.MAX_URL:
-    admin.site.unregister(User)
-    admin.site.register(User, PasswordlessAdmin)
+    admin_site.register(User, PasswordlessUserAdmin)
+else:
+    admin_site.register(User, UserAdmin)
