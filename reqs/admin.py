@@ -73,6 +73,7 @@ class RequirementForm(forms.ModelForm):
 class RequirementAdmin(VersionAdmin):
     form = RequirementForm
     search_fields = ['req_id', 'req_text']
+    filter_horizontal = ['agencies', 'agency_groups']
 
 
 @admin.register(Agency)
