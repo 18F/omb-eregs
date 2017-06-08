@@ -259,3 +259,5 @@ REST_FRAMEWORK = {
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': 'omb_eregs.utils.show_toolbar',
 }
+
+ADMIN_TITLE = 'OMB Policy Library Editor'
