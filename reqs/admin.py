@@ -27,6 +27,7 @@ class PolicyAdmin(VersionAdmin):
     form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
     list_filter = ['policy_type', 'policy_status', 'nonpublic']
+    radio_fields = {'policy_type': admin.VERTICAL}
 
 
 @admin.register(Topic)
