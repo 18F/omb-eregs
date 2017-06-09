@@ -43,6 +43,7 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
       heading: 'Topics',
       key: 'topic',
     }),
+    /* Add this back once the data's cleaned up
     React.createElement(FilterListView, {
       autocompleter: React.createElement(Autocompleter, {
         insertParam: fieldNames.agencies,
@@ -52,6 +53,7 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
       heading: 'Agencies',
       key: 'agency',
     }),
+    */
   ];
   const tabs = [
     requirementsTab(query),
