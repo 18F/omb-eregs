@@ -6,17 +6,40 @@ from taggit.managers import TaggableManager
 from taggit.models import ItemBase, TagBase
 
 
-class AgencyGroup(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.CharField(max_length=64, blank=True)
-
-
 class Agency(models.Model):
+    class Meta:
+        ordering = ['name']
+        verbose_name = ugettext_lazy('Agency')
+        verbose_name_plural = ugettext_lazy('Agencies')
+
     name = models.CharField(max_length=256)
     abbr = models.CharField(max_length=64, blank=True)
     omb_agency_code = models.CharField(max_length=8, blank=True)
     nonpublic = models.BooleanField(default=False)
-    groups = models.ManyToManyField(AgencyGroup)
+
+    @property
+    def name_with_abbr(self):
+        if self.abbr:
+            return '{0} ({1})'.format(self.name, self.abbr)
+        return self.name
+
+    def __str__(self):
+        return self.name_with_abbr
+
+
+class AgencyGroup(models.Model):
+    class Meta:
+        ordering = ['name']
+        verbose_name = ugettext_lazy('Agency Group')
+        verbose_name_plural = ugettext_lazy('Agency Groups')
+
+    name = models.CharField(max_length=256)
+    slug = models.CharField(max_length=64, blank=True)
+    agencies = models.ManyToManyField(Agency, related_name='groups',
+                                      blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 # Custom class for name-spacing
@@ -65,6 +88,13 @@ class PolicyTypes(Enum):
     strategy = 'Strategy'
 
 
+class Office(models.Model):
+    name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.name
+
+
 class Policy(models.Model):
     class Meta:
         verbose_name_plural = ugettext_lazy('Policies')
@@ -83,6 +113,9 @@ class Policy(models.Model):
     policy_status = models.CharField(max_length=256, blank=True)
     document_source = models.FileField(blank=True)
     nonpublic = models.BooleanField(default=False)
+    issuing_body = models.CharField(max_length=512)
+    managing_office = models.ForeignKey(Office, on_delete=models.CASCADE,
+                                        blank=True, null=True)
 
     @property
     def title_with_number(self):
@@ -114,7 +147,6 @@ class Requirement(models.Model):
     policy = models.ForeignKey(Policy, on_delete=models.CASCADE,
                                related_name='requirements')
     req_id = models.CharField(max_length=16, unique=True)
-    issuing_body = models.CharField(max_length=512)
     policy_section = models.CharField(max_length=1024, blank=True)
     policy_sub_section = models.CharField(max_length=1024, blank=True)
     req_text = models.TextField()
@@ -131,6 +163,11 @@ class Requirement(models.Model):
     precedent = models.CharField(max_length=1024, blank=True)
     related_reqs = models.CharField(max_length=1024, blank=True)
     omb_data_collection = models.CharField(max_length=1024, blank=True)
+    agencies = models.ManyToManyField(Agency, blank=True)
+    agency_groups = models.ManyToManyField(AgencyGroup, blank=True)
+    all_agencies = models.ManyToManyField(
+        Agency, through='RequirementAllAgencies',
+        related_name='all_requirements')
 
     def __str__(self):
         text = self.req_text[:40]
@@ -143,3 +180,16 @@ class Requirement(models.Model):
         """Using self.topics.names will result in a new query. That's very
         inefficient if we've already prefetched that data."""
         return [topic.name for topic in self.topics.all()]
+
+
+class RequirementAllAgencies(models.Model):
+    """This many-to-many table refers to a view, allowing us to retrieve all
+    agencies (including through the agency group relationship) relevant to a
+    requirement (or vise versa)"""
+    class Meta:
+        db_table = 'reqs_requirement_all_agencies'
+        managed = False
+
+    id = models.CharField(max_length=1024, primary_key=True)    # noqa
+    requirement = models.ForeignKey(Requirement, on_delete=models.DO_NOTHING)
+    agency = models.ForeignKey(Agency, on_delete=models.DO_NOTHING)

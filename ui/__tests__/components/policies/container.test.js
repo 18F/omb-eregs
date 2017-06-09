@@ -67,6 +67,7 @@ describe('<PoliciesContainer />', () => {
     const selectedFilters = result.prop('selectedFilters');
 
     expect(selectedFilters.props.fieldNames).toHaveProperty('policies');
+    expect(selectedFilters.props.fieldNames).toHaveProperty('search');
     expect(selectedFilters.props.fieldNames).toHaveProperty('topics');
     expect(selectedFilters.props.query).toEqual(location.query);
   });

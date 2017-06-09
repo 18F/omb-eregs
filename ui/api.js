@@ -38,7 +38,8 @@ export class Endpoint {
 }
 
 export default {
-  topics: new Endpoint('topics/'),
+  agencies: new Endpoint('agencies/'),
   policies: new Endpoint('policies/'),
   requirements: new Endpoint('requirements/'),
+  topics: new Endpoint('topics/'),
 };

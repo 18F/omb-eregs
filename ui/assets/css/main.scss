@@ -16,6 +16,7 @@ and includes any non-semantic helper classes
 @import 'header';
 @import 'base';
 @import 'footer';
+@import 'print';
 
 // Components
 @import 'requirements';
@@ -23,3 +24,4 @@ and includes any non-semantic helper classes
 @import 'search-autocomplete';
 @import 'policies';
 @import 'homepage';
+@import 'search';

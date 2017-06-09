@@ -19,7 +19,7 @@ export default function Policy({ policy, topicsIds }) {
   const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
   return (
     <li key={policy.id} className="my2">
-      <section className="border rounded gray-border p2">
+      <section className="policy border rounded gray-border p2">
         <h2 className="mt0 mb3">{policy.title_with_number}</h2>
         <div className="clearfix">
           <span className="requirements-links col col-6">

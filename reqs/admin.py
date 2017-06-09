@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 from reversion.admin import VersionAdmin
 
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
 
 
 def is_extension_pdf(uploaded_file):
@@ -27,10 +27,16 @@ class PolicyAdmin(VersionAdmin):
     form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
     list_filter = ['policy_type', 'policy_status', 'nonpublic']
+    radio_fields = {'policy_type': admin.VERTICAL}
 
 
 @admin.register(Topic)
 class TopicAdmin(VersionAdmin):
+    search_fields = ['name']
+
+
+@admin.register(Office)
+class OfficeAdmin(VersionAdmin):
     search_fields = ['name']
 
 
@@ -58,7 +64,24 @@ class TaggitWidget(TaggitSelect2):
 class RequirementForm(forms.ModelForm):
     class Meta:
         model = Requirement
-        fields = '__all__'
+        fields = [
+            'policy',
+            'req_id',
+            'policy_section',
+            'policy_sub_section',
+            'req_text',
+            'verb',
+            'impacted_entity',
+            'req_deadline',
+            'citation',
+            'req_status',
+            'precedent',
+            'related_reqs',
+            'omb_data_collection',
+            'topics',
+            'agencies',
+            'agency_groups',
+        ]
         widgets = {
             'topics': TaggitWidget('/admin/ajax/topics/')
         }
@@ -68,3 +91,31 @@ class RequirementForm(forms.ModelForm):
 class RequirementAdmin(VersionAdmin):
     form = RequirementForm
     search_fields = ['req_id', 'req_text']
+    filter_horizontal = ['agencies', 'agency_groups']
+
+
+@admin.register(Agency)
+class AgencyAdmin(VersionAdmin):
+    fieldsets = (
+        ('Editable fields', {'fields': ['nonpublic']}),
+        ('Imported fields', {
+            'description': ('Data for these fields has been imported from '
+                            'itdashboard.gov.'),
+            'fields': ['name', 'abbr']
+        })
+    )
+    list_display = ['name', 'abbr', 'nonpublic']
+    list_filter = ['nonpublic']
+    readonly_fields = ['name', 'abbr']
+    search_fields = ['name']
+
+    def has_add_permission(self, request):
+        """Don't allow users to add Agencies."""
+        return False
+
+
+@admin.register(AgencyGroup)
+class AgencyGroupAdmin(VersionAdmin):
+    fields = ['name', 'agencies']
+    filter_horizontal = ['agencies']
+    search_fields = ['name']
