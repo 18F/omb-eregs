@@ -19,18 +19,12 @@ describe('<PoliciesContainer />', () => {
 
   it('has a topics filter controls', () => {
     const controls = result.prop('filterControls');
-    expect(controls).toHaveLength(2);
+    expect(controls).toHaveLength(1);
     expect(controls[0].props.heading).toEqual('Topics');
-    expect(controls[1].props.heading).toEqual('Agencies');
 
-    let autocompleter = controls[0].props.autocompleter;
+    const autocompleter = controls[0].props.autocompleter;
     expect(autocompleter.props.insertParam).toEqual('requirements__topics__id__in');
     expect(autocompleter.props.lookup).toEqual('topics');
-
-    autocompleter = controls[1].props.autocompleter;
-    expect(autocompleter.props.insertParam).toEqual(
-      'requirements__all_agencies__id__in');
-    expect(autocompleter.props.lookup).toEqual('agencies');
   });
 
 
