@@ -31,4 +31,8 @@
    text-decoration: none;
    color: #111;
   }
+
+  .search-form {
+    display: none;
+  }
 }
