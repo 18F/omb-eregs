@@ -91,6 +91,9 @@ class PolicyTypes(Enum):
 class Office(models.Model):
     name = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.name
+
 
 class Policy(models.Model):
     class Meta:
