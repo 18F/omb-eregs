@@ -8,10 +8,14 @@ boto3==1.4.4
 botocore==1.5.39          # via boto3, s3transfer
 cfenv==0.5.2
 dj-database-url==0.4.2
+django-admin-interface==0.4.6
 django-autocomplete-light==3.2.7
 django-cas-ng==3.5.7
+django-colorfield==0.1.12  # via django-admin-interface
 django-cors-headers==2.0.2
 django-filter==1.0.2
+django-flat-responsive==1.3.0  # via django-admin-interface
+django-flat-theme==1.1.4  # via django-admin-interface
 django-reversion==2.0.8
 django-storages==1.5.2
 django-taggit==0.22.0

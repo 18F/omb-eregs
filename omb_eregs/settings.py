@@ -48,6 +48,10 @@ INSTALLED_APPS = (
     'rest_framework',
     'reversion',
     'storages',
+    # Must be before admin
+    'admin_interface',
+    'flat_responsive',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
