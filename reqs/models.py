@@ -2,7 +2,6 @@ from enum import Enum, unique
 
 from django.db import models
 from django.utils.translation import ugettext_lazy
-from taggit.models import ItemBase
 
 
 class Agency(models.Model):
@@ -49,22 +48,6 @@ class Topic(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class TopicConnect(ItemBase):
-    tag = models.ForeignKey(Topic, on_delete=models.CASCADE,
-                            related_name='topic')
-    content_object = models.ForeignKey('Requirement', on_delete=models.CASCADE)
-
-    @classmethod
-    def tags_for(cls, model, instance=None, **extra_filters):
-        kwargs = dict(extra_filters)
-        key = '{0}__content_object'.format(cls.tag_relname())
-        if instance is not None:
-            kwargs[key] = instance.pk
-        else:
-            kwargs[key + '__isnull'] = False
-        return Topic.objects.filter(**kwargs).distinct()
 
 
 @unique
@@ -156,6 +139,8 @@ class Requirement(models.Model):
     public = models.BooleanField(default=True)
     agencies = models.ManyToManyField(Agency, blank=True)
     agency_groups = models.ManyToManyField(AgencyGroup, blank=True)
+    topics = models.ManyToManyField(Topic, blank=True,
+                                    related_name='requirements')
     all_agencies = models.ManyToManyField(
         Agency, through='RequirementAllAgencies',
         related_name='all_requirements')
