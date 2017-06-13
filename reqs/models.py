@@ -163,6 +163,7 @@ class Requirement(models.Model):
     precedent = models.CharField(max_length=1024, blank=True)
     related_reqs = models.CharField(max_length=1024, blank=True)
     omb_data_collection = models.CharField(max_length=1024, blank=True)
+    public = models.BooleanField(default=True)
     agencies = models.ManyToManyField(Agency, blank=True)
     agency_groups = models.ManyToManyField(AgencyGroup, blank=True)
     all_agencies = models.ManyToManyField(
