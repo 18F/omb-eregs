@@ -151,10 +151,7 @@ class Requirement(models.Model):
             text += '...'
         return '{0}: {1}'.format(self.req_id, text)
 
-    @property
-    def prefetched_topic_names(self):
-        """Using self.topics.names will result in a new query. That's very
-        inefficient if we've already prefetched that data."""
+    def topic_names(self):
         return [topic.name for topic in self.topics.all()]
 
 

@@ -61,8 +61,8 @@ def test_imports_correctly(csv_file):
         "months, and, ideally, less than six months, with initial deployment "
         "to end users no later than 18 months after the program begins.")
     assert reqs[0].impacted_entity == 'All CFO-Act Agencies'
-    assert {t.name for t in reqs[0].topics.all()} == {
-        'Software', 'Software Development Lifecycle/Agile'}
+    assert reqs[0].topic_names() == ['Software',
+                                     'Software Development Lifecycle/Agile']
 
     assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
     assert reqs[1].policy.policy_type == 'memorandum'
@@ -70,9 +70,11 @@ def test_imports_correctly(csv_file):
     assert reqs[1].req_id == '21.44'
     assert reqs[1].verb == 'Will'
     assert reqs[1].req_deadline == 'Within 30 days'
-    assert {t.name for t in reqs[1].topics.all()} == {
-        'Governance - Org Structure', 'Financial Systems',
-        'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
+    assert reqs[1].topic_names() == [
+        'Financial Systems',
+        'Governance - Org Structure',
+        'IT Transparency (Open Data, FOIA, Public Records, etc.)'
+    ]
 
 
 @pytest.mark.django_db
@@ -93,8 +95,8 @@ def test_imports_correctly2(csv_file2):
         "months, and, ideally, less than six months, with initial deployment "
         "to end users no later than 18 months after the program begins.")
     assert reqs[0].impacted_entity == 'All CFO-Act Agencies'
-    assert {t.name for t in reqs[0].topics.all()} == {
-        'Software', 'Software Development Lifecycle/Agile'}
+    assert reqs[0].topic_names() == ['Software',
+                                     'Software Development Lifecycle/Agile']
 
     dcoi = reqs[-1]
     assert dcoi.policy.title == 'Data Center Optimization Initiative (DCOI)'
@@ -103,9 +105,11 @@ def test_imports_correctly2(csv_file2):
     assert dcoi.req_id == '21.44'
     assert dcoi.verb == 'Will'
     assert dcoi.req_deadline == 'Within 30 days'
-    assert {t.name for t in dcoi.topics.all()} == {
-        'Governance - Org Structure', 'Financial Systems',
-        'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
+    assert dcoi.topic_names() == [
+        'Financial Systems',
+        'Governance - Org Structure',
+        'IT Transparency (Open Data, FOIA, Public Records, etc.)',
+    ]
 
 
 @pytest.mark.django_db
@@ -300,7 +304,7 @@ def test_topic_normalization(blank_csv_file, topic, expected):
 
     reqs = list(Requirement.objects.order_by("req_id"))
     assert len(reqs) == 1
-    assert {t.name for t in reqs[0].topics.all()} == set(expected)
+    assert reqs[0].topic_names() == expected
 
 
 @pytest.mark.parametrize("test_input,expected", (

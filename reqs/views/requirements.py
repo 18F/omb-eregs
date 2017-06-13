@@ -19,10 +19,10 @@ class PriorityOrderingFilter(OrderingFilter):
         if topics:
             sql = """
                 SELECT count(*) FROM (
-                    SELECT tag_id FROM reqs_topicconnect
-                    WHERE tag_id IN %s
-                    AND content_object_id = reqs_requirement.id
-                    GROUP BY tag_id
+                    SELECT topic_id FROM reqs_requirement_topics
+                    WHERE topic_id IN %s
+                    AND requirement_id = reqs_requirement.id
+                    GROUP BY topic_id
                 ) AS subq
             """
             queryset = queryset.annotate(kw_count=RawSQL(sql, (topics,)))
