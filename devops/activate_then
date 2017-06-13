@@ -13,7 +13,7 @@ else
 fi
 
 if ! [ -x "$(command -v pip-sync)" ]; then
-  pip install pip-tools==1.8.2
+  pip install pip-tools==1.9.0
 fi
 
 if [ -n "$DEBUG" ]; then
