@@ -6,7 +6,7 @@ from django.core.management import call_command
 from model_mommy import mommy
 
 from reqs.management.commands import import_reqs
-from reqs.models import Policy, PolicyTypes, Requirement, Topic, TopicConnect
+from reqs.models import Policy, PolicyTypes, Requirement, Topic
 
 SAMPLE_CSV = [
     """policyNumber,policyTitle,uriPolicyId,ombPolicyId,policyType,policyIssuanceYear,policySunset,reqId,issuingBody,policySection,policySubSection,reqText,verb,Impacted Entity,reqDeadline,citation,Acquisition/Contracts (Keywords),Human Capital (Keywords),Cloud (Keywords),Data Centers (Keywords),Cybersecurity (Keywords),Privacy (Keywords),Shared Services (Keywords),IT Project Management (Keywords),Software (Keywords),Digital Services (Keywords),Mobile (Keywords),Hardware/Government Furnished Equipment (GFE) (Keywords),"IT Transparency (Open Data, FOIA, Public Records, etc.) (Keywords)",Agency Statistics (Keywords),Customer Services (Keywords),Governance (Keywords),Financial Systems (Keywords),Budget (Keywords),Governance - Org Structure (Keywords),Governance - Implementation (Keywords),Data Management/Standards (Keywords),Definitions (Keywords),Reporting (Keywords),Other (Keywords)""",  # noqa
@@ -61,7 +61,7 @@ def test_imports_correctly(csv_file):
         "months, and, ideally, less than six months, with initial deployment "
         "to end users no later than 18 months after the program begins.")
     assert reqs[0].impacted_entity == 'All CFO-Act Agencies'
-    assert set(reqs[0].topics.names()) == {
+    assert {t.name for t in reqs[0].topics.all()} == {
         'Software', 'Software Development Lifecycle/Agile'}
 
     assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
@@ -70,7 +70,7 @@ def test_imports_correctly(csv_file):
     assert reqs[1].req_id == '21.44'
     assert reqs[1].verb == 'Will'
     assert reqs[1].req_deadline == 'Within 30 days'
-    assert set(reqs[1].topics.names()) == {
+    assert {t.name for t in reqs[1].topics.all()} == {
         'Governance - Org Structure', 'Financial Systems',
         'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
 
@@ -93,7 +93,7 @@ def test_imports_correctly2(csv_file2):
         "months, and, ideally, less than six months, with initial deployment "
         "to end users no later than 18 months after the program begins.")
     assert reqs[0].impacted_entity == 'All CFO-Act Agencies'
-    assert set(reqs[0].topics.names()) == {
+    assert {t.name for t in reqs[0].topics.all()} == {
         'Software', 'Software Development Lifecycle/Agile'}
 
     dcoi = reqs[-1]
@@ -103,7 +103,7 @@ def test_imports_correctly2(csv_file2):
     assert dcoi.req_id == '21.44'
     assert dcoi.verb == 'Will'
     assert dcoi.req_deadline == 'Within 30 days'
-    assert set(dcoi.topics.names()) == {
+    assert {t.name for t in dcoi.topics.all()} == {
         'Governance - Org Structure', 'Financial Systems',
         'IT Transparency (Open Data, FOIA, Public Records, etc.)'}
 
@@ -113,13 +113,11 @@ def test_imports_twice(csv_file):
     """Importing the same file twice won't change the object counts"""
     call_command('import_reqs', str(csv_file))
     assert Topic.objects.count() == 5
-    assert TopicConnect.objects.count() == 5
     assert Policy.objects.count() == 2
     assert Requirement.objects.count() == 2
 
     call_command('import_reqs', str(csv_file))
     assert Topic.objects.count() == 5
-    assert TopicConnect.objects.count() == 5
     assert Policy.objects.count() == 2
     assert Requirement.objects.count() == 2
 
@@ -302,7 +300,7 @@ def test_topic_normalization(blank_csv_file, topic, expected):
 
     reqs = list(Requirement.objects.order_by("req_id"))
     assert len(reqs) == 1
-    assert set(reqs[0].topics.names()) == set(expected)
+    assert {t.name for t in reqs[0].topics.all()} == set(expected)
 
 
 @pytest.mark.parametrize("test_input,expected", (
