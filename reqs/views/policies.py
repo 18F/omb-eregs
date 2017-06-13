@@ -53,6 +53,7 @@ def relevant_reqs_count(params):
     subquery = filter_by_agency(params, subquery)
     subquery = filter_by_agency_group(params, subquery)
     subquery = filter_by_all_agency(params, subquery)
+    subquery = subquery.filter(public=True)
 
     subquery = subquery.values('policy').\
         annotate(count=Count('policy')).values('count').\
@@ -69,7 +70,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.exclude(nonpublic=True)
+        queryset = queryset.filter(public=True)
         queryset = queryset.annotate(
             total_reqs=relevant_reqs_count({}),
             relevant_reqs=relevant_reqs_count(self.request.GET),

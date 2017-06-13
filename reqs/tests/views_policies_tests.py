@@ -140,3 +140,19 @@ def test_agencies_indirect(policy_setup):
     response = client.get(path).json()
     assert response['count'] == 1
     assert response['results'][0]['relevant_reqs'] == 1
+
+
+@pytest.mark.django_db
+def test_nonpublic_reqs():
+    client = APIClient()
+    policy = mommy.make(Policy)
+    mommy.make(Requirement, policy=policy, public=False)
+
+    assert client.get('/policies/').json()['count'] == 0
+
+    mommy.make(Requirement, _quantity=4, policy=policy)
+    response = client.get('/policies/').json()
+    assert response['count'] == 1
+    assert policy.requirements.count() == 5
+    assert response['results'][0]['relevant_reqs'] == 4
+    assert response['results'][0]['total_reqs'] == 4

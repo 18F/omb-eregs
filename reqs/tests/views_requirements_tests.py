@@ -148,10 +148,25 @@ def test_requirements_agencies_filter():
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize('policy_public, req_public, visible', [
+    (False, False, False),
+    (False, True, False),
+    (True, False, False),
+    (True, True, True),
+])
+def test_requirements_nonpublic(policy_public, req_public, visible):
+    policy = mommy.make(Policy, public=policy_public)
+    mommy.make(Requirement, policy=policy, public=req_public)
+
+    num_visible = APIClient().get('/requirements/').json()['count']
+    assert num_visible == int(visible)
+
+
+@pytest.mark.django_db
 def test_requirements_agencies_nonpublic():
     client = APIClient()
     agencies = mommy.make(Agency, _quantity=3)
-    agencies.append(mommy.make(Agency, nonpublic=True))
+    agencies.append(mommy.make(Agency, public=False))
     req = mommy.make(Requirement)
     req.agencies.add(*agencies)
 
