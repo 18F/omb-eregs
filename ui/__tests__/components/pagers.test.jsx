@@ -9,7 +9,7 @@ describe('<Pagers />', () => {
   it('shows zero pages when there are no results', () => {
     const context = { router: mockRouter() };
     const result = shallow(<Pagers count={0} />, { context });
-    expect(result.text()).toMatch(/0 of 0/);
+    expect(result.text()).toMatch(/No requirements match your search, try removing some filters to see more results./);
     expect(result.find('Link').length).toEqual(0);
   });
 
