@@ -22,7 +22,7 @@ class TopicAdminAutocomplete(Select2QuerySetView):
 
 
 class AgencyViewSet(viewsets.ModelViewSet):
-    queryset = Agency.objects.filter(nonpublic=False)
+    queryset = Agency.objects.filter(public=True)
     serializer_class = AgencySerializer
     filter_fields = AgencyFilter.get_fields()
     search_fields = ('name', 'abbr')

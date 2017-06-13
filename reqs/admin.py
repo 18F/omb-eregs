@@ -26,7 +26,7 @@ class PolicyForm(forms.ModelForm):
 class PolicyAdmin(VersionAdmin):
     form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
-    list_filter = ['policy_type', 'policy_status', 'nonpublic']
+    list_filter = ['policy_type', 'policy_status', 'public']
     radio_fields = {'policy_type': admin.VERTICAL}
 
 
@@ -97,15 +97,15 @@ class RequirementAdmin(VersionAdmin):
 @admin.register(Agency)
 class AgencyAdmin(VersionAdmin):
     fieldsets = (
-        ('Editable fields', {'fields': ['nonpublic']}),
+        ('Editable fields', {'fields': ['public']}),
         ('Imported fields', {
             'description': ('Data for these fields has been imported from '
                             'itdashboard.gov.'),
             'fields': ['name', 'abbr']
         })
     )
-    list_display = ['name', 'abbr', 'nonpublic']
-    list_filter = ['nonpublic']
+    list_display = ['name', 'abbr', 'public']
+    list_filter = ['public']
     readonly_fields = ['name', 'abbr']
     search_fields = ['name']
 

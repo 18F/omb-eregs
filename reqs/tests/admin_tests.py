@@ -165,7 +165,7 @@ def test_agency_form(admin_client):
     markup = resp.content.decode('utf-8')
     assert 'Editable fields' in markup
     assert 'Imported fields' in markup
-    assert 'name="nonpublic"' in markup
+    assert 'name="public"' in markup
     assert 'name="name"' not in markup
     assert 'name="abbr"' not in markup
 

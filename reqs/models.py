@@ -15,7 +15,7 @@ class Agency(models.Model):
     name = models.CharField(max_length=256)
     abbr = models.CharField(max_length=64, blank=True)
     omb_agency_code = models.CharField(max_length=8, blank=True)
-    nonpublic = models.BooleanField(default=False)
+    public = models.BooleanField(default=True)
 
     @property
     def name_with_abbr(self):
@@ -112,7 +112,7 @@ class Policy(models.Model):
     sunset = models.DateField(blank=True, null=True)
     policy_status = models.CharField(max_length=256, blank=True)
     document_source = models.FileField(blank=True)
-    nonpublic = models.BooleanField(default=False)
+    public = models.BooleanField(default=True)
     issuing_body = models.CharField(max_length=512)
     managing_office = models.ForeignKey(Office, on_delete=models.CASCADE,
                                         blank=True, null=True)

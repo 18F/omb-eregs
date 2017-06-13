@@ -69,7 +69,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.exclude(nonpublic=True)
+        queryset = queryset.filter(public=True)
         queryset = queryset.annotate(
             total_reqs=relevant_reqs_count({}),
             relevant_reqs=relevant_reqs_count(self.request.GET),
