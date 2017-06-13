@@ -53,6 +53,7 @@ def relevant_reqs_count(params):
     subquery = filter_by_agency(params, subquery)
     subquery = filter_by_agency_group(params, subquery)
     subquery = filter_by_all_agency(params, subquery)
+    subquery = subquery.filter(public=True)
 
     subquery = subquery.values('policy').\
         annotate(count=Count('policy')).values('count').\
