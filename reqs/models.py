@@ -2,8 +2,7 @@ from enum import Enum, unique
 
 from django.db import models
 from django.utils.translation import ugettext_lazy
-from taggit.managers import TaggableManager
-from taggit.models import ItemBase, TagBase
+from taggit.models import ItemBase
 
 
 class Agency(models.Model):
@@ -42,18 +41,14 @@ class AgencyGroup(models.Model):
         return self.name
 
 
-# Custom class for name-spacing
-class Topic(TagBase):
+class Topic(models.Model):
     class Meta:
         ordering = ['name']
-        verbose_name = ugettext_lazy('Topic')
-        verbose_name_plural = ugettext_lazy('Topics')
 
-    @property
-    def requirements(self):
-        """Taggit isn't creating a backwards relation as we'd expect, so
-        simulate it here"""
-        return Requirement.objects.filter(topics=self.pk)
+    name = models.CharField(max_length=256, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class TopicConnect(ItemBase):
@@ -154,11 +149,6 @@ class Requirement(models.Model):
     impacted_entity = models.CharField(max_length=8192, blank=True)
     req_deadline = models.CharField(max_length=512, blank=True)
     citation = models.CharField(max_length=1024, blank=True)
-    topics = TaggableManager(
-        through=TopicConnect,
-        verbose_name=ugettext_lazy('Topics'),
-        blank=True
-    )
     req_status = models.CharField(max_length=32, blank=True)
     precedent = models.CharField(max_length=1024, blank=True)
     related_reqs = models.CharField(max_length=1024, blank=True)
