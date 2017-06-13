@@ -1,6 +1,7 @@
 boto3
 cfenv
 django>=1.11,<1.12
+django-admin-interface
 django-autocomplete-light
 django-cas-ng
 django-cors-headers
