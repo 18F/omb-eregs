@@ -70,5 +70,5 @@ class RequirementViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(policy__public=True)
+        queryset = queryset.filter(public=True, policy__public=True)
         return queryset
