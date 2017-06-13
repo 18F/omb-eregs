@@ -2,13 +2,12 @@ boto3
 cfenv
 django>=1.11,<1.12
 django-admin-interface
-django-autocomplete-light
 django-cas-ng
 django-cors-headers
 django-filter
 django-reversion
 django-storages
-django-taggit
+django-taggit   # cannot remove until we squash migrations
 djangorestframework
 dj-database-url
 gunicorn
