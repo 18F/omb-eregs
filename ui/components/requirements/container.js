@@ -6,7 +6,7 @@ import SearchFilterView from '../search-filter-view';
 import TabView from '../tab-view';
 import ExistingFilters from '../filters/existing-container';
 import FilterListView from '../filters/list-view';
-import Autocompleter from '../filters/autocompleter';
+import Selector from '../filters/selector';
 import api from '../../api';
 
 function policiesTab(reqQuery) {
@@ -35,23 +35,23 @@ const fieldNames = {
 export function RequirementsContainer({ location: { query }, pagedReqs }) {
   const filterControls = [
     React.createElement(FilterListView, {
-      autocompleter: React.createElement(Autocompleter, {
+      heading: 'Topics',
+      key: 'topic',
+      selector: React.createElement(Selector, {
         insertParam: fieldNames.topics,
         lookup: 'topics',
         pathname: '/requirements',
       }),
-      heading: 'Topics',
-      key: 'topic',
     }),
     /* Add this back once the data's cleaned up
     React.createElement(FilterListView, {
-      autocompleter: React.createElement(Autocompleter, {
+      heading: 'Agencies',
+      key: 'agency',
+      selector: React.createElement(Selector, {
         insertParam: fieldNames.agencies,
         lookup: 'agencies',
         pathname: '/requirements',
       }),
-      heading: 'Agencies',
-      key: 'agency',
     }),
     */
   ];
