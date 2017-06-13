@@ -42,7 +42,7 @@ class RequirementViewSet(viewsets.ModelViewSet):
     # Distinct to account for multiple tag matches when filtering
     queryset = Requirement.objects.select_related('policy').\
         prefetch_related(
-            Prefetch('agencies', Agency.objects.filter(nonpublic=False)),
+            Prefetch('agencies', Agency.objects.filter(public=True)),
             'agency_groups',
             'topics'
         ).distinct()
@@ -70,5 +70,5 @@ class RequirementViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.exclude(policy__nonpublic=True)
+        queryset = queryset.filter(policy__public=True)
         return queryset

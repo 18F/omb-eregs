@@ -151,7 +151,7 @@ def test_requirements_agencies_filter():
 def test_requirements_agencies_nonpublic():
     client = APIClient()
     agencies = mommy.make(Agency, _quantity=3)
-    agencies.append(mommy.make(Agency, nonpublic=True))
+    agencies.append(mommy.make(Agency, public=False))
     req = mommy.make(Requirement)
     req.agencies.add(*agencies)
 
