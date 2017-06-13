@@ -21,7 +21,7 @@ export default class Search extends React.Component {
 
   render() {
     return (
-      <div className="search-form pr2">
+      <div className="search-form pr2 no-print">
         <form method="GET" action={this.actionPath()} className="mb0 flex items-center">
           <input
             name={this.inputName()}
