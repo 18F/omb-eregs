@@ -8,7 +8,7 @@
 
 .navbar {
   background-color: $color-primary-darkest;
-  height: 80px;
+  display: flex;
 }
 
 .navbar-title {
@@ -20,5 +20,20 @@
   sup {
     font-size: 0.625rem;
     padding-left: 0.2rem;
+  }
+}
+
+.homepage-link,
+.header-search {
+  display: flex;
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    display: block
+  }
+
+  .header-search {
+    padding: 0 0 1rem 1rem;
   }
 }
