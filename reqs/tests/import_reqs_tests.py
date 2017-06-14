@@ -6,6 +6,7 @@ import pytest
 from django.core.management import call_command
 from django.utils.crypto import get_random_string
 from model_mommy import mommy
+from reversion.models import Version
 
 from reqs.management.commands import import_reqs
 from reqs.models import Policy, PolicyTypes, Requirement, Topic
@@ -65,6 +66,8 @@ def test_imports_correctly(csv_file):
     assert reqs[0].impacted_entity == 'All CFO-Act Agencies'
     assert reqs[0].topic_names() == ['Software',
                                      'Software Development Lifecycle/Agile']
+    version = Version.objects.get_for_object(reqs[0]).get()
+    assert len(version.field_dict['topics']) == 2
 
     assert reqs[1].policy.title == 'Data Center Optimization Initiative (DCOI)'
     assert reqs[1].policy.policy_type == 'memorandum'
@@ -116,16 +119,23 @@ def test_imports_correctly2(csv_file2):
 
 @pytest.mark.django_db
 def test_imports_twice(csv_file):
-    """Importing the same file twice won't change the object counts"""
+    """Importing the same file twice won't change the object counts, but will
+    create new versions."""
     call_command('import_reqs', str(csv_file))
     assert Topic.objects.count() == 5
+    assert Version.objects.get_for_model(Topic).count() == 5
     assert Policy.objects.count() == 2
+    assert Version.objects.get_for_model(Policy).count() == 2
     assert Requirement.objects.count() == 2
+    assert Version.objects.get_for_model(Requirement).count() == 2
 
     call_command('import_reqs', str(csv_file))
     assert Topic.objects.count() == 5
+    assert Version.objects.get_for_model(Topic).count() == 10
     assert Policy.objects.count() == 2
+    assert Version.objects.get_for_model(Policy).count() == 4
     assert Requirement.objects.count() == 2
+    assert Version.objects.get_for_model(Requirement).count() == 4
 
 
 @pytest.mark.parametrize('text,result', [
