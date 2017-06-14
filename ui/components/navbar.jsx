@@ -18,7 +18,7 @@ function Navbar() {
             OMB Policy Library <sup>BETA</sup>
         </h1>
       </div>
-      <div className="items-center header-search">
+      <div className="items-center header-search flex">
         <Search />
       </div>
     </div>
