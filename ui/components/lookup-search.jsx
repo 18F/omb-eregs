@@ -1,11 +1,11 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 import validator from 'validator';
 
 import { redirectQuery, redirectWhiteList } from '../redirects';
 import { UserError } from '../error-handling';
 import { apiNameField, search } from '../lookup-search';
+import { wrapWithAjaxLoader } from './ajax-loading';
 import Pagers from './pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
@@ -120,4 +120,4 @@ function fetchData({ routes, location: { query } }) {
   return search(lookup, userParams.q, userParams.page);
 }
 
-export default resolve('pagedEntries', fetchData)(LookupSearch);
+export default wrapWithAjaxLoader(LookupSearch, { pagedEntries: fetchData });

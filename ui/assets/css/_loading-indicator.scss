@@ -1,0 +1,15 @@
+.loading-indicator {
+  text-align: center;
+
+  .loading-spinner {
+    -webkit-animation: Select-animation-spin 400ms infinite linear;
+    -o-animation: Select-animation-spin 400ms infinite linear;
+    animation: Select-animation-spin 400ms infinite linear;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border-style: solid;
+    border-color: #ccc;
+    border-right-color: #333;
+    display: inline-block;
+  }
+}
