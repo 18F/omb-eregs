@@ -26,6 +26,7 @@ class Command(BaseCommand):
         data = requests.get(SOURCE_URL).json()
         for row in data['result']:
             self.sync_row(row)
+        self.create_group_revision()
 
     def create_system_groups(self):
         """If AgencyGroups corresponding to the SYSTEM_GROUPS don't exist,
@@ -47,9 +48,17 @@ class Command(BaseCommand):
         with reversion.create_revision():
             agency.save()
 
-            if row['agencyType'] != '5-Other Branches':
-                self.system_groups['executive'].agencies.add(agency)
-            if row['CFO_Act']:
-                self.system_groups['cfo-act'].agencies.add(agency)
-            if row['CIO_Council']:
-                self.system_groups['cio-council'].agencies.add(agency)
+        if row['agencyType'] != '5-Other Branches':
+            self.system_groups['executive'].agencies.add(agency)
+        if row['CFO_Act']:
+            self.system_groups['cfo-act'].agencies.add(agency)
+        if row['CIO_Council']:
+            self.system_groups['cio-council'].agencies.add(agency)
+
+    def create_group_revision(self):
+        """Rather than create a revision for every agency that's added to the
+        system groups, we'll create one revision that covers all of the
+        additions."""
+        with reversion.create_revision():
+            for group in self.system_groups.values():
+                group.save()
