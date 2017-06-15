@@ -55,6 +55,27 @@ TopicLink.propTypes = {
 };
 
 
+function PolicyLink({ policy }) {
+  const linkTo = {
+    pathname: '/policies',
+    query: { id__in: policy.id },
+  };
+  return (
+    <div className="policy-title metadata">
+      Policy title:
+      {' '}
+      <Link to={linkTo}>{policy.title_with_number}</Link>
+    </div>
+  );
+}
+PolicyLink.propTypes = {
+  policy: React.PropTypes.shape({
+    id: React.PropTypes.number,
+    title_with_number: React.PropTypes.string,
+  }).isRequired,
+};
+
+
 export default function Requirement({ requirement }) {
   // We could have multiple lines with the same text, so can't use a stable ID
   /* eslint-disable react/no-array-index-key */
@@ -67,12 +88,7 @@ export default function Requirement({ requirement }) {
       <div className="req-text col col-12">
         { reqTexts }
         <div className="clearfix mt3">
-          <Metadata
-            className="policy-title"
-            name="Policy title"
-            value={requirement.policy.title}
-            nullValue="Policy title: none"
-          />
+          <PolicyLink policy={requirement.policy} />
           <Metadata
             className="omb-policy-id"
             name="OMB Policy ID"
