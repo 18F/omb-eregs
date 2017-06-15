@@ -38,7 +38,7 @@ Metadata.defaultProps = {
 
 function TopicLink({ topic }) {
   const linkTo = {
-    pathname: '/requirements/by-topic',
+    pathname: '/requirements',
     query: { topics__id__in: topic.id },
   };
   return (

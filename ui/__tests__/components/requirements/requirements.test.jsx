@@ -21,6 +21,6 @@ describe('<Requirement />', () => {
     const [six, eight] = [links.first(), links.last()];
     expect(six.text()).toEqual('Six');
     expect(six.prop('to').query.topics__id__in).toEqual(6);
-    expect(eight.prop('to').pathname).toEqual('/requirements/by-topic');
+    expect(eight.prop('to').pathname).toEqual('/requirements');
   });
 });
