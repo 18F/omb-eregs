@@ -32,8 +32,7 @@ def make_filter(param, backref, model_class, filter_class):
     return filter_fn
 
 
-filter_by_topic = make_filter('topics', 'topic__content_object', Topic,
-                              TopicFilter)
+filter_by_topic = make_filter('topics', 'requirements', Topic, TopicFilter)
 filter_by_agency = make_filter('agencies', 'requirement', Agency, AgencyFilter)
 filter_by_agency_group = make_filter('agency_groups', 'requirement',
                                      AgencyGroup, AgencyGroupFilter)
@@ -53,6 +52,7 @@ def relevant_reqs_count(params):
     subquery = filter_by_agency(params, subquery)
     subquery = filter_by_agency_group(params, subquery)
     subquery = filter_by_all_agency(params, subquery)
+    subquery = subquery.filter(public=True)
 
     subquery = subquery.values('policy').\
         annotate(count=Count('policy')).values('count').\
@@ -69,7 +69,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.exclude(nonpublic=True)
+        queryset = queryset.filter(public=True)
         queryset = queryset.annotate(
             total_reqs=relevant_reqs_count({}),
             relevant_reqs=relevant_reqs_count(self.request.GET),

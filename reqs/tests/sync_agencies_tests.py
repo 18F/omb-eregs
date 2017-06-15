@@ -36,7 +36,7 @@ def test_sync_row_new():
     assert agency.name == 'Aquarius'
     assert agency.abbr == ''
     assert agency.omb_agency_code == '123'
-    assert not agency.nonpublic
+    assert agency.public
     group_slugs = {g.slug for g in agency.groups.all()}
     assert group_slugs == {'cfo-act'}
 
@@ -62,6 +62,6 @@ def test_sync_row_existing():
     assert agency.name == 'New Name Here'
     assert agency.abbr == 'BH'
     assert agency.omb_agency_code == '90210'
-    assert not agency.nonpublic
+    assert agency.public
     group_slugs = {g.slug for g in agency.groups.all()}
     assert group_slugs == {'cio-council', 'executive'}

@@ -1,4 +1,3 @@
-from dal_select2_taggit.widgets import TaggitSelect2
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
@@ -26,7 +25,7 @@ class PolicyForm(forms.ModelForm):
 class PolicyAdmin(VersionAdmin):
     form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
-    list_filter = ['policy_type', 'policy_status', 'nonpublic']
+    list_filter = ['policy_type', 'policy_status', 'public']
     radio_fields = {'policy_type': admin.VERTICAL}
 
 
@@ -40,72 +39,42 @@ class OfficeAdmin(VersionAdmin):
     search_fields = ['name']
 
 
-def handle_quotation_marks(value):
-    """Account for commas and quotation marks in tags."""
-    num_marks = value.count('"')
-    if num_marks % 2 != 0:
-        value = value.replace('"', '')
-    else:
-        while '"' in value:
-            marks = ("“", "”")
-            value = value.replace('"', marks[value.count('"') % 2], 1)
-
-    return '"{0}"'.format(value)
-
-
-class TaggitWidget(TaggitSelect2):
-    """Account for commas in tags by wrapping each entry in double quotes"""
-    def value_from_datadict(self, data, files, name):
-        values = data.getlist(name)
-        values = [handle_quotation_marks(v) for v in values]
-        return ','.join(values)
-
-
-class RequirementForm(forms.ModelForm):
-    class Meta:
-        model = Requirement
-        fields = [
-            'policy',
-            'req_id',
-            'policy_section',
-            'policy_sub_section',
-            'req_text',
-            'verb',
-            'impacted_entity',
-            'req_deadline',
-            'citation',
-            'req_status',
-            'precedent',
-            'related_reqs',
-            'omb_data_collection',
-            'topics',
-            'agencies',
-            'agency_groups',
-        ]
-        widgets = {
-            'topics': TaggitWidget('/admin/ajax/topics/')
-        }
-
-
 @admin.register(Requirement)
 class RequirementAdmin(VersionAdmin):
-    form = RequirementForm
     search_fields = ['req_id', 'req_text']
-    filter_horizontal = ['agencies', 'agency_groups']
+    filter_horizontal = ['agencies', 'agency_groups', 'topics']
+    fields = [
+        'policy',
+        'req_id',
+        'policy_section',
+        'policy_sub_section',
+        'req_text',
+        'verb',
+        'impacted_entity',
+        'req_deadline',
+        'citation',
+        'req_status',
+        'precedent',
+        'related_reqs',
+        'omb_data_collection',
+        'topics',
+        'agencies',
+        'agency_groups',
+    ]
 
 
 @admin.register(Agency)
 class AgencyAdmin(VersionAdmin):
     fieldsets = (
-        ('Editable fields', {'fields': ['nonpublic']}),
+        ('Editable fields', {'fields': ['public']}),
         ('Imported fields', {
             'description': ('Data for these fields has been imported from '
                             'itdashboard.gov.'),
             'fields': ['name', 'abbr']
         })
     )
-    list_display = ['name', 'abbr', 'nonpublic']
-    list_filter = ['nonpublic']
+    list_display = ['name', 'abbr', 'public']
+    list_filter = ['public']
     readonly_fields = ['name', 'abbr']
     search_fields = ['name']
 
