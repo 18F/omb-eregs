@@ -34,14 +34,14 @@ export default function Homepage() {
                 </div>
               </form>
             </ConditionalRender>
-        </div>
+          </div>
         </div>
       </section>
 
       <section className="about py3">
         <div className="mx3">
           <div className="about-inner px2 sm-col-12 md-col-6 mx-auto">
-            <h3 class="h2">About this site</h3>
+            <h3 className="h2">About this site</h3>
             <p>
                 The OMB Policy Library includes excerpts from memos and
                 policy documents issued by the White House. This project

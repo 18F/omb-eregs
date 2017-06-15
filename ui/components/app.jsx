@@ -10,7 +10,7 @@ function App(props) {
       <Navbar />
       <div className="container">
         {props.children}
-      </div>  
+      </div>
       <Footer />
     </div>
   );
