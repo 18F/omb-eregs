@@ -1,5 +1,6 @@
 import pytest
 from model_mommy import mommy
+from reversion.models import Version
 
 from reqs.management.commands.sync_agencies import Command
 from reqs.models import Agency, AgencyGroup
@@ -7,11 +8,15 @@ from reqs.models import Agency, AgencyGroup
 
 @pytest.mark.django_db
 def test_create_system_groups():
+    """We create agency groups *if they do not already exist*. When creating,
+    we generate a version"""
     AgencyGroup.objects.create(slug='cfo-act', name='Alt CFO')
     cmd = Command()
     cmd.create_system_groups()
 
     assert AgencyGroup.objects.count() == 3
+    # We only make a new version for the newly generated groups
+    assert Version.objects.get_for_model(AgencyGroup).count() == 2
     assert AgencyGroup.objects.get(slug='executive').name == 'Executive'
     # name not changed
     assert AgencyGroup.objects.get(slug='cfo-act').name == 'Alt CFO'
@@ -39,6 +44,9 @@ def test_sync_row_new():
     assert agency.public
     group_slugs = {g.slug for g in agency.groups.all()}
     assert group_slugs == {'cfo-act'}
+    assert Version.objects.get_for_object(agency).count() == 1
+    group_version = Version.objects.get_for_object(agency.groups.get()).first()
+    assert group_version.field_dict['agencies'] == [agency.pk]
 
 
 @pytest.mark.django_db
@@ -65,3 +73,7 @@ def test_sync_row_existing():
     assert agency.public
     group_slugs = {g.slug for g in agency.groups.all()}
     assert group_slugs == {'cio-council', 'executive'}
+    assert Version.objects.get_for_object(agency).count() == 1
+    for group in agency.groups.all():
+        group_version = Version.objects.get_for_object(group).first()
+        assert group_version.field_dict['agencies'] == [agency.pk]

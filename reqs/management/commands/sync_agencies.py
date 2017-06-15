@@ -1,4 +1,5 @@
 import requests
+import reversion
 from django.core.management.base import BaseCommand
 
 from reqs.models import Agency, AgencyGroup
@@ -30,20 +31,25 @@ class Command(BaseCommand):
         """If AgencyGroups corresponding to the SYSTEM_GROUPS don't exist,
         create them. Also, populate self.system_groups"""
         for slug, name in SYSTEM_GROUPS.items():
-            self.system_groups[slug], _ = AgencyGroup.objects.get_or_create(
-                slug=slug, defaults=dict(name=name))
+            group = AgencyGroup.objects.filter(slug=slug).first()
+            if not group:
+                with reversion.create_revision():
+                    group = AgencyGroup.objects.create(slug=slug, name=name)
+            self.system_groups[slug] = group
 
     def sync_row(self, row):
         """Create/update a single agency from itdashboard.gov"""
-        agency, _ = Agency.objects.get_or_create(
-            omb_agency_code=row['agencyCode'])
+        agency = Agency.objects.filter(
+            omb_agency_code=row['agencyCode']).first()
+        agency = agency or Agency(omb_agency_code=row['agencyCode'])
         agency.name = row['agencyName']
         agency.abbr = row['agencyAbbreviation'] or agency.abbr
-        agency.save()
+        with reversion.create_revision():
+            agency.save()
 
-        if row['agencyType'] != '5-Other Branches':
-            agency.groups.add(self.system_groups['executive'])
-        if row['CFO_Act']:
-            agency.groups.add(self.system_groups['cfo-act'])
-        if row['CIO_Council']:
-            agency.groups.add(self.system_groups['cio-council'])
+            if row['agencyType'] != '5-Other Branches':
+                self.system_groups['executive'].agencies.add(agency)
+            if row['CFO_Act']:
+                self.system_groups['cfo-act'].agencies.add(agency)
+            if row['CIO_Council']:
+                self.system_groups['cio-council'].agencies.add(agency)
