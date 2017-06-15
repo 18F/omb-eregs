@@ -7,7 +7,7 @@ import sys
 from dateutil import parser as dateutil_parser
 from django.core.management.base import BaseCommand
 
-from reqs.models import Policy, PolicyTypes, Requirement, Topic, TopicConnect
+from reqs.models import Policy, PolicyTypes, Requirement, Topic
 
 logger = logging.getLogger(__name__)
 
@@ -190,7 +190,7 @@ class TopicProcessor:
                 normalized.append(value)
         return normalized
 
-    def topics(self, row):
+    def topic_strings(self, row):
         to_return = []
         for field in self.fields:
             value = row.get(field)
@@ -202,13 +202,11 @@ class TopicProcessor:
                 to_return.append(field.replace("(Keywords)", "").strip())
         return to_return
 
-    def connections(self, row, req_pk):
-        for topic in self.topics(row):
+    def topics(self, row):
+        for topic in self.topic_strings(row):
             if topic not in self.cache:
-                self.cache[topic] = Topic.objects.get_or_create(
-                    name=topic)[0].pk
-            yield TopicConnect(tag_id=self.cache[topic],
-                               content_object_id=req_pk)
+                self.cache[topic] = Topic.objects.get_or_create(name=topic)[0]
+            yield self.cache[topic]
 
 
 class RowProcessor:
@@ -218,8 +216,7 @@ class RowProcessor:
         self.policies = PolicyProcessor()
         if topics is None:
             topics = []
-        self.topics = TopicProcessor(topics)
-        self.connections = []
+        self.topic_proc = TopicProcessor(topics)
         self.req_ids = set()
         self.last_id = "0.0"
 
@@ -281,7 +278,7 @@ class RowProcessor:
         )
         req, _ = Requirement.objects.update_or_create(
             req_id=req_id, defaults=params)
-        self.connections.extend(self.topics.connections(row, req.pk))
+        req.topics.set(list(self.topic_proc.topics(row)))
         self.req_ids.add(req_id)
         self.last_id = req_id
 
@@ -309,7 +306,3 @@ class Command(BaseCommand):
                 rows.add(row)
             except ValueError as err:
                 logger.warning("Problem with row %s: %s", idx + 1, err)
-        # Delete all topic connections which may exist in the DB
-        TopicConnect.objects.filter(
-            content_object__req_id__in=rows.req_ids).delete()
-        TopicConnect.objects.bulk_create(rows.connections)

@@ -30,12 +30,11 @@ def test_topic_filtering(path, num_results):
 def test_requirement_filtering_topic(path, num_results):
     """We can filter by a nested topic"""
     client = APIClient()
-    for i in range(4):
-        mommy.make(Topic, name=str(i)*4)
+    topics = [mommy.make(Topic, name=str(i)*4) for i in range(4)]
     req1, req2, req3 = mommy.make(Requirement, _quantity=3)
-    req1.topics.add('0000', '1111')
-    req2.topics.add('1111', '2222')
-    req3.topics.add('3333')
+    req1.topics.add(topics[0], topics[1])
+    req2.topics.add(topics[1], topics[2])
+    req3.topics.add(topics[3])
     results = client.get(path).json()['results']
     assert len(results) == num_results
 
@@ -44,12 +43,12 @@ def test_requirement_filtering_topic(path, num_results):
 def test_requirements_queryset_order():
     """We should receive results in # of matches order"""
     client = APIClient()
-    topics = [mommy.make(Topic, name=str(i + 1)*4) for i in range(6)]
+    topics = mommy.make(Topic, _quantity=6)
     req1, req2, req3 = [mommy.make(Requirement, req_id=str(i + 1))
                         for i in range(3)]
-    req1.topics.add('1111', '2222')
-    req2.topics.add('2222', '3333', '4444')
-    req3.topics.add('1111', '5555', '6666')
+    req1.topics.add(topics[0], topics[1])
+    req2.topics.add(topics[1], topics[2], topics[3])
+    req3.topics.add(topics[0], topics[4], topics[5])
     param = ','.join(str(topics[i].pk) for i in (0, 2, 3))
     response = client.get('/requirements/?topics__id__in=' + param)
     req_ids = [req['req_id'] for req in response.json()['results']]

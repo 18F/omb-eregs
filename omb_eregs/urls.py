@@ -18,11 +18,9 @@ from django.conf.urls import include, url
 
 from ereqs_admin.admin import admin_site
 from reqs.router import router
-from reqs.views.simple import TopicAdminAutocomplete
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^admin/ajax/topics/$', TopicAdminAutocomplete.as_view()),
     url(r'^admin/', admin_site.urls),
 ]
 
