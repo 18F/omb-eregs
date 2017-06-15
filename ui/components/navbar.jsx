@@ -15,7 +15,7 @@ function Navbar() {
         />
         <a href="/" className="text-decoration-none">
           <h1 className="navbar-title">
-              OMB Policy Library <sup>BETA</sup>
+              OMB IT Policy Library <sup>BETA</sup>
           </h1>
         </a>
         <Search />

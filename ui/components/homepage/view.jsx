@@ -8,11 +8,11 @@ import NewPoliciesContainerResolver from './new-policies/container';
 export default function Homepage() {
   return (
     <div className="homepage">
-      <section className="filter-form px4 py2 center">
-        <div className="col-8 mx-auto center">
-          <h2>Find policies and requirements that apply to your agency.</h2>
+      <section className="filter-form py2 center">
+        <div className="sm-col-12 md-col-6 mx-auto center">
+          <h2 className="h1">Find policies and requirements that apply to your agency.</h2>
           <div className="filter px4">
-            <h4>What topics are you interested in?</h4>
+            <h3 className="h3">What topics are you interested in?</h3>
             <ConditionalRender>
               <div className="form-field">
                 <FallbackView
@@ -38,10 +38,10 @@ export default function Homepage() {
         </div>
       </section>
 
-      <section className="about px4 py3">
+      <section className="about py3">
         <div className="mx3">
-          <div className="about-inner px2 col-8 mx-auto">
-            <h3>About this site</h3>
+          <div className="about-inner px2 sm-col-12 md-col-6 mx-auto">
+            <h3 class="h2">About this site</h3>
             <p>
                 The OMB Policy Library includes excerpts from memos and
                 policy documents issued by the White House. This project
@@ -58,8 +58,8 @@ export default function Homepage() {
         </div>
       </section>
 
-      <section className="new-policies px4 py3 mb4">
-        <div className="col-8 mx-auto">
+      <section className="new-policies py3 mb4">
+        <div className="sm-col-12 md-col-6 mx-auto">
           <h3>New policies</h3>
           <NewPoliciesContainerResolver />
         </div>
