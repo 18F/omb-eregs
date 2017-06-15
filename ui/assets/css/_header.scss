@@ -8,7 +8,6 @@
 
 .navbar {
   background-color: $color-primary-darkest;
-  display: flex;
 }
 
 .navbar-title {
@@ -23,14 +22,10 @@
   }
 }
 
-.homepage-link,
-.header-search {
-  display: flex;
-}
-
 @media (max-width: 700px) {
   .navbar {
-    display: block
+    display: block;
+    align-items: left;
   }
 
   .header-search {
