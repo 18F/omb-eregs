@@ -12,7 +12,6 @@ cfenv==0.5.2
 coverage==4.3.4           # via pytest-cov
 dj-database-url==0.4.2
 django-admin-interface==0.5.0
-django-autocomplete-light==3.2.7
 django-cas-ng==3.5.7
 django-colorfield==0.1.12
 django-cors-headers==2.0.2
@@ -75,6 +74,3 @@ sqlparse==0.2.3           # via django-debug-toolbar
 stevedore==1.21.0         # via bandit
 testfixtures==4.13.4      # via flake8-isort
 whitenoise==3.3.0
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools                # via pytest

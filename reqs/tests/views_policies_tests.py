@@ -22,11 +22,11 @@ def policy_setup():
 def policy_topic_setup(policy_setup):
     topics = mommy.make(Topic, _quantity=3)
     reqs = policy_setup.reqs
-    reqs[0][0].topics.add(topics[0].name)
-    reqs[0][1].topics.add(topics[1].name)
-    reqs[0][2].topics.add(topics[0].name, topics[1].name)
-    reqs[1][0].topics.add(topics[1].name)
-    reqs[1][1].topics.add(topics[1].name, topics[2].name)
+    reqs[0][0].topics.add(topics[0])
+    reqs[0][1].topics.add(topics[1])
+    reqs[0][2].topics.add(topics[0], topics[1])
+    reqs[1][0].topics.add(topics[1])
+    reqs[1][1].topics.add(topics[1], topics[2])
     yield policy_setup, topics
 
 

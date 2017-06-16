@@ -1,8 +1,8 @@
 import moment from 'moment';
 import React from 'react';
-import { resolve } from 'react-resolver';
 
 import api from '../../../api';
+import { wrapWithAjaxLoader } from '../../ajax-loading';
 import NewPolicyView from './view';
 
 const NUM_POLICIES = 4;
@@ -31,6 +31,5 @@ export function fetchRecentPolicies() {
     .then(results => results.slice(0, NUM_POLICIES).map(formatIssuance));
 }
 
-export default resolve({
-  recentPolicies: fetchRecentPolicies,
-})(NewPoliciesContainer);
+export default wrapWithAjaxLoader(
+  NewPoliciesContainer, { recentPolicies: fetchRecentPolicies });

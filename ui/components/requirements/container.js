@@ -1,7 +1,7 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 
 import RequirementsView from './requirements-view';
+import { wrapWithAjaxLoader } from '../ajax-loading';
 import SearchFilterView from '../search-filter-view';
 import TabView from '../tab-view';
 import ExistingFilters from '../filters/existing-container';
@@ -85,6 +85,5 @@ function fetchRequirements({ location: { query } }) {
   return api.requirements.fetch(query);
 }
 
-export default resolve({
-  pagedReqs: fetchRequirements,
-})(RequirementsContainer);
+export default wrapWithAjaxLoader(
+  RequirementsContainer, { pagedReqs: fetchRequirements });

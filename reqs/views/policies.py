@@ -32,8 +32,7 @@ def make_filter(param, backref, model_class, filter_class):
     return filter_fn
 
 
-filter_by_topic = make_filter('topics', 'topic__content_object', Topic,
-                              TopicFilter)
+filter_by_topic = make_filter('topics', 'requirements', Topic, TopicFilter)
 filter_by_agency = make_filter('agencies', 'requirement', Agency, AgencyFilter)
 filter_by_agency_group = make_filter('agency_groups', 'requirement',
                                      AgencyGroup, AgencyGroupFilter)
