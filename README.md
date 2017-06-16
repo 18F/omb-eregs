@@ -67,7 +67,6 @@ Let's also load the requirements and agency data from OMB:
 docker-compose run --rm manage.py fetch_csv
 docker-compose run --rm manage.py import_reqs data.csv
 docker-compose run --rm manage.py sync_agencies
-docker-compose run --rm manage.py createinitialrevisions
 ```
 
 This may emit some warnings for improper input. The next time you visit the
