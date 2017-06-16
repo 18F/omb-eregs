@@ -1,26 +1,48 @@
 import React from 'react';
+import {Collapse} from 'react-collapse';
 
-export default function SearchFilterView(
-  { filterControls, pageContent, selectedFilters, tabs }) {
-  return (
-    <div className="clearfix">
-      <div className="sidebar col col-2 p2 no-print">
-        Search and filter
-        {filterControls}
-      </div>
-      <div className="main col col-10 pl4 border-left max-width-3">
-        <div className="tab-container no-print">
-          <span className="mr4">View:</span>
-          <ul className="organize-tabs list-reset inline-block">
-            {tabs}
-          </ul>
+export default class SearchFilterView extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {isOpened: false};
+    this.openFilters = this.openFilters.bind(this);
+  }
+
+  openFilters() {
+    this.setState(
+      {isOpened: !this.state.isOpened}
+    );
+  }
+
+  render() {
+    return (
+      <div className="clearfix">
+        <div className="mobile-filters md-hide lg-hide" onClick={this.openFilters} role="link">
+          Edit Filters
+          <div className="open-close-indicator" />
         </div>
-        { selectedFilters }
-        {/* page counts here */}
-        { pageContent }
+        <Collapse isOpened={this.state.isOpened} fixedHeight={180}>
+          <div className="sidebar sm-col sm-col-12 md-col-2 lg-col-2 p2 no-print">
+            Search and filter
+            {this.props.filterControls}
+            <div className="show-results" role="link" onClick={this.openFilters}>Show results</div>
+          </div>
+        </Collapse>
+        <div className="main col col-10 pl4 border-left max-width-3">
+          <div className="tab-container no-print">
+            <span className="mr4">View:</span>
+            <ul className="organize-tabs list-reset inline-block">
+              {this.props.tabs}
+            </ul>
+          </div>
+          { this.props.selectedFilters }
+          {/* page counts here */}
+          { this.props.pageContent }
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 SearchFilterView.propTypes = {
