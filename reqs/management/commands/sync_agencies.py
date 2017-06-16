@@ -7,9 +7,10 @@ from reqs.models import Agency, AgencyGroup
 SOURCE_URL = ("https://myit-2018.itdashboard.gov/api/v1/ITDB2/dataFeeds/"
               "agency?json=true")
 SYSTEM_GROUPS = {
-    'executive': 'Executive',
+    'all-agencies': 'All Agencies',
     'cfo-act': 'CFO Act',
     'cio-council': 'CIO Council',
+    'executive': 'Executive',
 }
 
 
@@ -47,6 +48,8 @@ class Command(BaseCommand):
         agency.abbr = row['agencyAbbreviation'] or agency.abbr
         with reversion.create_revision():
             agency.save()
+
+        agency.groups.add(self.system_groups['all-agencies'])
 
         if row['agencyType'] != '5-Other Branches':
             self.system_groups['executive'].agencies.add(agency)
