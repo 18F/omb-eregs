@@ -24,7 +24,7 @@ export default function Policy({ policy, topicsIds }) {
         <div className="clearfix">
           <span className="requirements-links col col-6">
             <div className="circle-bg border gray-border center p1">
-              <Link to={relevantReqs} className={countClass}>
+              <Link aria-label="Relevant requirements" to={relevantReqs} className={countClass}>
                 {relevantReqCount}
               </Link>
             </div> of&nbsp;
