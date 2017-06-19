@@ -4,6 +4,7 @@ import logging
 import re
 import sys
 
+import reversion
 from dateutil import parser as dateutil_parser
 from django.core.management.base import BaseCommand
 
@@ -135,19 +136,18 @@ class PolicyProcessor:
         uri_key = find_key("uri_policy_ids", row)
         omb_key = find_key("omb_policy_ids", row)
         if policy_number not in self.policies:
-            params = {
-                'policy_number': policy_number,
-                'title': row['policyTitle'],
-                'uri': row[uri_key],
-                'omb_policy_id': convert_omb_policy_id(row[omb_key]),
-                'policy_status': row.get("policyStatus", ""),
-                'policy_type': convert_policy_type(row['policyType']),
-                'issuance': convert_date(row['policyIssuanceYear']),
-                'sunset': convert_date(row['policySunset']),
-                'issuing_body': row['issuingBody'],
-            }
-            policy, _ = Policy.objects.update_or_create(
-                policy_number=policy_number, defaults=params)
+            policy = Policy.objects.filter(policy_number=policy_number).first()
+            policy = policy or Policy(policy_number=policy_number)
+            policy.title = row['policyTitle']
+            policy.uri = row[uri_key]
+            policy.omb_policy_id = convert_omb_policy_id(row[omb_key])
+            policy.policy_status = row.get("policyStatus", "")
+            policy.policy_type = convert_policy_type(row['policyType'])
+            policy.issuance = convert_date(row['policyIssuanceYear'])
+            policy.sunset = convert_date(row['policySunset'])
+            policy.issuing_body = row['issuingBody']
+            with reversion.create_revision():
+                policy.save()
             self.policies[policy_number] = policy
         return self.policies[policy_number]
 
@@ -205,7 +205,10 @@ class TopicProcessor:
     def topics(self, row):
         for topic in self.topic_strings(row):
             if topic not in self.cache:
-                self.cache[topic] = Topic.objects.get_or_create(name=topic)[0]
+                topic_model, _ = Topic.objects.get_or_create(name=topic)
+                with reversion.create_revision():
+                    topic_model.save()
+                self.cache[topic] = topic_model
             yield self.cache[topic]
 
 
@@ -262,23 +265,23 @@ class RowProcessor:
         impacted_key = find_key("entities", row)
         citation_key = find_key("citations", row)
 
-        params = dict(
-            citation=row[citation_key],
-            impacted_entity=row[impacted_key],
-            omb_data_collection=row.get("ombDataCollection", ""),
-            policy=self.policies.from_row(row),
-            policy_section=row['policySection'],
-            policy_sub_section=row['policySubSection'],
-            precedent=row.get("precedent", ""),
-            related_reqs=row.get("relatedReqs", ""),
-            req_deadline=row['reqDeadline'],
-            req_id=req_id,
-            req_text=row['reqText'],
-            verb=row[verb_key],
-        )
-        req, _ = Requirement.objects.update_or_create(
-            req_id=req_id, defaults=params)
-        req.topics.set(list(self.topic_proc.topics(row)))
+        req = Requirement.objects.filter(req_id=req_id).first()
+        req = req or Requirement(req_id=req_id)
+        req.citation = row[citation_key]
+        req.impacted_entity = row[impacted_key]
+        req.omb_data_collection = row.get("ombDataCollection", "")
+        req.policy = self.policies.from_row(row)
+        req.policy_section = row['policySection']
+        req.policy_sub_section = row['policySubSection']
+        req.precedent = row.get("precedent", "")
+        req.related_reqs = row.get("relatedReqs", "")
+        req.req_deadline = row['reqDeadline']
+        req.req_text = row['reqText']
+        req.verb = row[verb_key]
+        with reversion.create_revision():
+            req.save()
+            req.topics.set(list(self.topic_proc.topics(row)))
+
         self.req_ids.add(req_id)
         self.last_id = req_id
 

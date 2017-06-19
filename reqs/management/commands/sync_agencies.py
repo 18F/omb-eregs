@@ -1,4 +1,5 @@
 import requests
+import reversion
 from django.core.management.base import BaseCommand
 
 from reqs.models import Agency, AgencyGroup
@@ -25,25 +26,39 @@ class Command(BaseCommand):
         data = requests.get(SOURCE_URL).json()
         for row in data['result']:
             self.sync_row(row)
+        self.create_group_revision()
 
     def create_system_groups(self):
         """If AgencyGroups corresponding to the SYSTEM_GROUPS don't exist,
         create them. Also, populate self.system_groups"""
         for slug, name in SYSTEM_GROUPS.items():
-            self.system_groups[slug], _ = AgencyGroup.objects.get_or_create(
-                slug=slug, defaults=dict(name=name))
+            group = AgencyGroup.objects.filter(slug=slug).first()
+            if not group:
+                with reversion.create_revision():
+                    group = AgencyGroup.objects.create(slug=slug, name=name)
+            self.system_groups[slug] = group
 
     def sync_row(self, row):
         """Create/update a single agency from itdashboard.gov"""
-        agency, _ = Agency.objects.get_or_create(
-            omb_agency_code=row['agencyCode'])
+        agency = Agency.objects.filter(
+            omb_agency_code=row['agencyCode']).first()
+        agency = agency or Agency(omb_agency_code=row['agencyCode'])
         agency.name = row['agencyName']
         agency.abbr = row['agencyAbbreviation'] or agency.abbr
-        agency.save()
+        with reversion.create_revision():
+            agency.save()
 
         if row['agencyType'] != '5-Other Branches':
-            agency.groups.add(self.system_groups['executive'])
+            self.system_groups['executive'].agencies.add(agency)
         if row['CFO_Act']:
-            agency.groups.add(self.system_groups['cfo-act'])
+            self.system_groups['cfo-act'].agencies.add(agency)
         if row['CIO_Council']:
-            agency.groups.add(self.system_groups['cio-council'])
+            self.system_groups['cio-council'].agencies.add(agency)
+
+    def create_group_revision(self):
+        """Rather than create a revision for every agency that's added to the
+        system groups, we'll create one revision that covers all of the
+        additions."""
+        with reversion.create_revision():
+            for group in self.system_groups.values():
+                group.save()
