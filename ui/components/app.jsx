@@ -8,7 +8,9 @@ function App(props) {
     <div>
       <Disclaimer />
       <Navbar />
-      {props.children}
+      <div className="container">
+        {props.children}
+      </div>
       <Footer />
     </div>
   );
