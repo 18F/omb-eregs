@@ -31,13 +31,9 @@ export default class Search extends React.Component {
             className="search-input p1 gray-border"
           />
           { this.hiddenFields() }
-          <input
-            aria-label="Submit search"
-            type="image"
-            src="/static/img/search-icon.svg"
-            value="Submit"
-            className="search-submit p1 gray-border"
-          />
+          <button type="submit" className="search-submit p1 gray-border">
+            <img alt="Submit search" src="/static/img/search-icon.svg" />
+          </button>
         </form>
       </div>
     );

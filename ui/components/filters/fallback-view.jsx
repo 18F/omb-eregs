@@ -17,11 +17,12 @@ export default function FallbackView(props) {
         />
         { Object.keys(query).map(key =>
           <input key={key} type="hidden" name={`redirectQuery__${key}`} value={query[key]} />)}
-        <input
+        <button
           type="submit"
-          value="Add"
           className="add-filter-button border rounded-right p1 col col-3"
-        />
+        >
+          <img alt="Add" src="/static/img/add-icon.svg" />
+        </button>
       </div>
     </form>
   );

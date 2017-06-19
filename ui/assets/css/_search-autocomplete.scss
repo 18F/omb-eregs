@@ -6,12 +6,10 @@
 }
 
 .add-filter-button {
-  background: url('/static/img/add-icon.svg') no-repeat center;
   background-color: $color-primary;
   border-color: $color-primary;
   color: $color-white;
   cursor: pointer;
-  text-indent: -9999px;
 }
 
 .Select-clear,
