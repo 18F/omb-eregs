@@ -26,6 +26,10 @@
 }
 
 @media (max-width: 700px) {
+  .filter-ui {
+    margin-top: 0;
+  }
+
   .mobile-filters {
     background: $color-gray-warm-light url('/static/img/filter-icon.svg') center no-repeat;
     background-position-x: 1rem;
@@ -47,5 +51,19 @@
     &.open {
       transform: rotate(0deg);
     }
+  }
+
+  .sidebar {
+    background-color: $color-gray-warm-light;
+  }
+
+  .filter-heading {
+    display: none;
+  }
+
+  .show-results {
+    background-color: $color-primary;
+    color: $color-white;
+    text-align: center;
   }
 }
