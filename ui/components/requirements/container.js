@@ -36,8 +36,10 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
   const filterControls = [
     React.createElement(FilterListView, {
       heading: 'Topics',
+      headingLabel: 'topics_label',
       key: 'topic',
       selector: React.createElement(Selector, {
+        'aria-labelledby': 'topics_label',
         insertParam: fieldNames.topics,
         lookup: 'topics',
         pathname: '/requirements',

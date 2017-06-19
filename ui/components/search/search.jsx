@@ -24,6 +24,7 @@ export default class Search extends React.Component {
       <div className="search-form pr2 no-print">
         <form method="GET" action={this.actionPath()} className="mb0 flex items-center">
           <input
+            aria-label="Search term"
             name={this.inputName()}
             type="text"
             placeholder="Search"
@@ -31,6 +32,7 @@ export default class Search extends React.Component {
           />
           { this.hiddenFields() }
           <input
+            aria-label="Submit search"
             type="image"
             src="/static/img/search-icon.svg"
             value="Submit"
