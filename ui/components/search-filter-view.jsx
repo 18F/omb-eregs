@@ -30,12 +30,15 @@ export default class SearchFilterView extends React.Component {
           <div className={this.arrowClasses()} />
         </a>
         <Collapse isOpened={this.state.isOpened} fixedHeight={180}>
-          <div className="sidebar sm-col sm-col-12 md-col-2 lg-col-2 p2 no-print">
-            <div className="filter-heading">Search and filter</div>
+          <div className="sidebar sm-col sm-col-12 md-hide lg-hide p2 no-print">
             {this.props.filterControls}
             <div className="show-results p1 rounded" role="link" onClick={this.openFilters}>Show results</div>
           </div>
         </Collapse>
+        <div className="sidebar lg-sidebar md-col md-col-2 lg-col-2 p2 no-print">
+          <div className="filter-heading">Search and filter</div>
+          {this.props.filterControls}
+        </div>
         <div className="main sm-col sm-col-12 md-col-10 lg-col-10 pl4 border-left max-width-3">
           <div className="tab-container no-print">
             <span className="mr4">View:</span>

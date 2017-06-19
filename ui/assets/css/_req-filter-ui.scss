@@ -58,14 +58,14 @@
     background-color: $color-gray-warm-light;
   }
 
-  .filter-heading {
-    display: none;
-  }
-
   .show-results {
     background-color: $color-primary;
     color: $color-white;
     margin: 1.5rem 0;
     text-align: center;
+  }
+
+  .lg-sidebar {
+    display: none;
   }
 }
