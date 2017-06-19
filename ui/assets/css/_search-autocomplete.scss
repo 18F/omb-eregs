@@ -13,3 +13,10 @@
   cursor: pointer;
   text-indent: -9999px;
 }
+
+.Select-clear,
+.Select-placeholder,
+.Select-value-icon,
+.Select-value-label {
+  color: $color-gray;
+}
