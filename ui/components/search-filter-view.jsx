@@ -25,7 +25,7 @@ export default class SearchFilterView extends React.Component {
   render() {
     return (
       <div className="clearfix">
-        <a className="mobile-filters md-hide lg-hide" onClick={this.openFilters} role="link">
+        <a className="mobile-filters" onClick={this.openFilters} role="link">
           Edit Filters
           <div className={this.arrowClasses()} />
         </a>
@@ -35,11 +35,11 @@ export default class SearchFilterView extends React.Component {
             <div className="show-results p1 rounded" role="link" onClick={this.openFilters}>Show results</div>
           </div>
         </Collapse>
-        <div className="sidebar lg-sidebar md-col md-col-2 lg-col-2 p2 no-print">
+        <div className="sidebar lg-sidebar col col-2 p2 no-print">
           <div className="filter-heading">Search and filter</div>
           {this.props.filterControls}
         </div>
-        <div className="main sm-col sm-col-12 md-col-10 lg-col-10 pl4 border-left max-width-3">
+        <div className="main col col-10 pl4 border-left max-width-3">
           <div className="tab-container no-print">
             <span className="mr4">View:</span>
             <ul className="organize-tabs list-reset inline-block">

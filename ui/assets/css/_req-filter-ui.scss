@@ -26,6 +26,12 @@
   }
 }
 
+@media (min-width: 701px) {
+  .mobile-filters {
+    display: none;
+  }
+}
+
 @media (max-width: 700px) {
   .filter-ui {
     margin-top: 0;
