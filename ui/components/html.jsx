@@ -37,9 +37,9 @@ function newRelicTag() {
 export default function Html({ contents, data }) {
   return (
     <html lang="en-US">
-      <title>OMB Policy Library (Beta)</title>
       <head>
         { newRelicTag() }
+        <title>OMB IT Policy Library (Beta)</title>
         <link rel="stylesheet" href="/static/styles.css" />
         <DAP />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
