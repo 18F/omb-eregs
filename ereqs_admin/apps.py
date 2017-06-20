@@ -3,6 +3,8 @@ import logging
 from django.apps import AppConfig
 from django.db.models.signals import m2m_changed, post_migrate, post_save
 
+from ereqs_admin.revision_creation import create_versions_after_migration
+
 logger = logging.getLogger(__name__)
 
 
@@ -59,6 +61,7 @@ class EreqsAdminConfig(AppConfig):
     def ready(self):
         from django.contrib.auth.models import Group, User     # noqa
         post_migrate.connect(create_editors, sender=self)
+        post_migrate.connect(create_versions_after_migration, sender=self)
         post_save.connect(adminlog_post_save, sender='admin.LogEntry')
         m2m_changed.connect(log_m2m_change, sender=User.groups.through)
         m2m_changed.connect(log_m2m_change,
