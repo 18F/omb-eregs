@@ -1,4 +1,3 @@
-from functools import singledispatch
 from typing import List, Union
 
 import reversion
@@ -18,17 +17,66 @@ class Command(BaseCommand):
         """
         Go through each requirement.
         If its impacted_entity field is blank, return the requirement.
-        Otherwise, pass the value of impacted_entity to extract_entities,
-        then pass the result to create_relationship.
+        Otherwise, try to extract agencies and agency groups from the
+        impacted_entity value and create relationships accordingly.
         """
-        for requirement in Requirement.objects.all():
+        for requirement in Requirement.objects.iterator():
             impacted = requirement.impacted_entity.lower()
             if not impacted:
                 continue
 
-            entities = extract_entities(impacted)
-            for entity in entities:
-                create_relationship(entity, requirement)
+            with reversion.create_revision():
+                agencies = extract_agencies(impacted)
+                requirement.agencies.add(*agencies)
+                reversion.set_comment(
+                    "Add agency via extraction from impacted_entity.")
+
+            with reversion.create_revision():
+                groups = extract_groups(impacted)
+                requirement.agency_groups.add(*groups)
+                reversion.set_comment(
+                    "Add agency group via extraction from impacted_entity.")
+
+
+def extract_agencies(entities: str) -> List[Agency]:
+    """
+    Look for matches in the string of impacted_entity and accordingly return a
+    list of agencies.
+
+    This is currently very primitive matching, but we may eventually want to do
+    proper cleanup and splitting on the entities argument.
+    """
+    conditions_abbrs = (
+        ("dhs" in entities or "department of homeland" in entities, "DHS"),
+        ("gsa" in entities or "general services" in entities, "GSA"),
+        ("dod" in entities or "defense" in entities, "DOD"),
+        ("doj" in entities or "justice" in entities, "Justice"),
+    )
+    matched_abbrs = [abbr for (cond, abbr) in conditions_abbrs if cond]
+
+    return Agency.objects.filter(abbr__in=matched_abbrs)
+
+
+def extract_groups(entities: str) -> List[AgencyGroup]:
+    """
+    Look for matches in the string of impacted_entity and accordingly return a
+    list of agency groups.
+
+    This is currently very primitive matching, but we may eventually want to do
+    proper cleanup and splitting on the entities argument.
+    """
+    conditions_slugs = (
+        ("cfo" in entities and "federal cfo council" not in entities,
+         "cfo-act"),
+        (all([
+            "all agencies" in entities,
+            "micro" not in entities,
+            "paperwork" not in entities,
+        ]), "all-agencies"),
+    )
+    matched_slugs = [slug for (cond, slug) in conditions_slugs if cond]
+
+    return AgencyGroup.objects.filter(slug__in=matched_slugs)
 
 
 def extract_entities(entities: str) -> List[Union[Agency, AgencyGroup]]:
@@ -67,24 +115,11 @@ def extract_entities(entities: str) -> List[Union[Agency, AgencyGroup]]:
     return matched_entities
 
 
-@singledispatch
-@reversion.create_revision()
-def create_relationship(entity: Agency, requirement: Requirement) -> None:
-    requirement.agencies.add(entity)
-    reversion.set_comment("Add agency.")
-
-
-@create_relationship.register(AgencyGroup)
-@reversion.create_revision()
-def crg(entity: AgencyGroup, requirement: Requirement) -> None:
-    requirement.agency_groups.add(entity)
-    reversion.set_comment("Add agency group.")
-
-
 def reset_agency_relationships() -> None:
     """
     Remove all agency relationships from the database.
+    Not used in production code, but left in as a convenience method for
+    resetting state during development.
     """
-    for requirement in Requirement.objects.all():
-        requirement.agencies.clear()
-        requirement.agency_groups.clear()
+    Requirement.agencies.through.objects.all().delete()
+    Requirement.agency_groups.through.objects.all().delete()

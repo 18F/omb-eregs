@@ -1,63 +1,32 @@
+from collections import namedtuple
+
 import pytest
 from model_mommy import mommy
 
-from reqs.management.commands import link_agencies
-from reqs.management.commands.sync_agencies import Command as SynchCommand
+from reqs.management.commands import link_agencies, sync_agencies
 from reqs.models import Agency, AgencyGroup, Requirement
 
 
 @pytest.fixture
 def populate_agencies():
-    synch = SynchCommand()
-    synch.create_system_groups()
-    synch.sync_row({
-        'agencyAbbreviation': None,
-        'agencyCode': '123',
-        'agencyName': 'Aquarius',
-        'agencyType': '5-Other Branches',
-        'CFO_Act': '1',
-        'CIO_Council': None,
-    })
-    synch.sync_row({
-        'agencyAbbreviation': "DOD",
-        'agencyCode': '111',
-        'agencyName': 'Department of Defense',
-        'agencyType': '',
-        'CFO_Act': '1',
-        'CIO_Council': None,
-    })
-    synch.sync_row({
-        'agencyAbbreviation': "DHS",
-        'agencyCode': '100',
-        'agencyName': 'Department of Homeland Security',
-        'agencyType': '',
-        'CFO_Act': '1',
-        'CIO_Council': None,
-    })
-    synch.sync_row({
-        'agencyAbbreviation': "GSA",
-        'agencyCode': '101',
-        'agencyName': 'General Services Administration',
-        'agencyType': '',
-        'CFO_Act': '1',
-        'CIO_Council': None,
-    })
-    synch.sync_row({
-        'agencyAbbreviation': "Justice",
-        'agencyCode': '102',
-        'agencyName': 'Department of Justice',
-        'agencyType': '',
-        'CFO_Act': '1',
-        'CIO_Council': None,
-    })
-    synch.sync_row({
-        'agencyAbbreviation': "FOO",
-        'agencyCode': '112',
-        'agencyName': 'Department of Foo',
-        'agencyType': '',
-        'CFO_Act': None,
-        'CIO_Council': None,
-    })
+    cmd = sync_agencies.Command()
+    cmd.create_system_groups()
+    mommy.make(Agency, name="Aquarius", omb_agency_code="123")
+    dod = mommy.make(Agency, name="Department of Defense", abbr="DOD",
+                     omb_agency_code="111")
+    mommy.make(Agency, name="Department of Homeland Security", abbr="DHS",
+               omb_agency_code="100")
+    mommy.make(Agency, name="General Services Administration", abbr="GSA",
+               omb_agency_code="101")
+    mommy.make(Agency, name="Department of Justice", abbr="Justice",
+               omb_agency_code="102")
+    mommy.make(Agency, name="Department of Foo", abbr="FOO",
+               omb_agency_code="112")
+
+    MockAgencies = namedtuple("MockAgencies", ["dod", "all_agencies"])
+    all_agencies_group = AgencyGroup.objects.get(slug="all-agencies")
+    mock_agencies = MockAgencies(dod=dod, all_agencies=all_agencies_group)
+    yield mock_agencies
 
 
 @pytest.mark.django_db
@@ -89,19 +58,19 @@ def test_linking(populate_agencies, impacted_entity, agencies,
     reqs = [mommy.make(Requirement, impacted_entity=_) for _ in
             impacted_entity]
     link_agencies.Command().handle()
-    for i, req in enumerate(reqs):
-        req_agencies = {_.abbr for _ in req.agencies.all()}
-        assert req_agencies == agencies[i]
-        req_groups = {_.slug for _ in req.agency_groups.all()}
-        assert req_groups == agency_groups[i]
+    for agency_set, agency_group, req in zip(agencies, agency_groups, reqs):
+        req_agencies = {a.abbr for a in req.agencies.all()}
+        assert req_agencies == agency_set
+        req_groups = {g.slug for g in req.agency_groups.all()}
+        assert req_groups == agency_group
 
 
 @pytest.mark.django_db
 def test_link_requirements(populate_agencies):
     dod_req = mommy.make(Requirement, impacted_entity="DOD")
-    dod_agency = Agency.objects.get(abbr="DOD")
     all_agencies_req = mommy.make(Requirement, impacted_entity="All agencies")
-    all_agencies_group = AgencyGroup.objects.get(slug="all-agencies")
+    dod_agency = populate_agencies.dod
+    all_agencies_group = populate_agencies.all_agencies
 
     assert Requirement.objects.count() == 2
     assert Requirement.objects.filter(agencies=None,
