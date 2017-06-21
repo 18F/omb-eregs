@@ -75,6 +75,19 @@ PolicyLink.propTypes = {
   }).isRequired,
 };
 
+const badEntities = [
+  'NA', 'N/A', 'Not Applicable', 'None', 'None Specified', 'unknown', 'TBA',
+  'Cannot determine-Ask Mindy',
+].map(e => e.toLowerCase());
+/* Temporary "solution" to bad data: filter it out on the front end */
+export function filterAppliesTo(text) {
+  const normalized = (text || '').toLowerCase().trim();
+  if (badEntities.includes(normalized)) {
+    return null;
+  }
+  return text;
+}
+
 
 export default function Requirement({ requirement }) {
   // We could have multiple lines with the same text, so can't use a stable ID
@@ -107,8 +120,7 @@ export default function Requirement({ requirement }) {
           <Metadata
             className="applies-to mr2"
             name="Applies to"
-            value={requirement.impacted_entity}
-            nullValue="Applies to: unknown"
+            value={filterAppliesTo(requirement.impacted_entity)}
           />
           <Metadata
             className="issuing-body"

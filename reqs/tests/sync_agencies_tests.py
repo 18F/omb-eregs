@@ -17,9 +17,10 @@ def test_create_system_groups():
     cmd = sync_agencies.Command()
     cmd.create_system_groups()
 
-    assert AgencyGroup.objects.count() == 3
+    assert AgencyGroup.objects.count() == 4
     # We only make a new version for the newly generated groups
-    assert Version.objects.get_for_model(AgencyGroup).count() == 2
+    assert Version.objects.get_for_model(AgencyGroup).count() == 3
+
     assert AgencyGroup.objects.get(slug='executive').name == 'Executive'
     # name not changed
     assert AgencyGroup.objects.get(slug='cfo-act').name == 'Alt CFO'
@@ -46,8 +47,8 @@ def test_sync_row_new():
     assert agency.omb_agency_code == '123'
     assert agency.public
     group_slugs = {g.slug for g in agency.groups.all()}
-    assert group_slugs == {'cfo-act'}
     assert Version.objects.get_for_object(agency).count() == 1
+    assert group_slugs == {'all-agencies', 'cfo-act'}
 
 
 @pytest.mark.django_db
@@ -73,7 +74,7 @@ def test_sync_row_existing():
     assert agency.omb_agency_code == '90210'
     assert agency.public
     group_slugs = {g.slug for g in agency.groups.all()}
-    assert group_slugs == {'cio-council', 'executive'}
+    assert group_slugs == {'all-agencies', 'cio-council', 'executive'}
     assert Version.objects.get_for_object(agency).count() == 1
 
 

@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from reversion.admin import VersionAdmin
 
+from ereqs_admin.revision_admin import EReqsVersionAdmin
 from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
 
 
@@ -22,7 +22,7 @@ class PolicyForm(forms.ModelForm):
 
 
 @admin.register(Policy)
-class PolicyAdmin(VersionAdmin):
+class PolicyAdmin(EReqsVersionAdmin):
     form = PolicyForm
     search_fields = ['title', 'omb_policy_id']
     list_filter = ['policy_type', 'policy_status', 'public']
@@ -30,17 +30,17 @@ class PolicyAdmin(VersionAdmin):
 
 
 @admin.register(Topic)
-class TopicAdmin(VersionAdmin):
+class TopicAdmin(EReqsVersionAdmin):
     search_fields = ['name']
 
 
 @admin.register(Office)
-class OfficeAdmin(VersionAdmin):
+class OfficeAdmin(EReqsVersionAdmin):
     search_fields = ['name']
 
 
 @admin.register(Requirement)
-class RequirementAdmin(VersionAdmin):
+class RequirementAdmin(EReqsVersionAdmin):
     search_fields = ['req_id', 'req_text']
     filter_horizontal = ['agencies', 'agency_groups', 'topics']
     fields = [
@@ -64,7 +64,7 @@ class RequirementAdmin(VersionAdmin):
 
 
 @admin.register(Agency)
-class AgencyAdmin(VersionAdmin):
+class AgencyAdmin(EReqsVersionAdmin):
     fieldsets = (
         ('Editable fields', {'fields': ['public']}),
         ('Imported fields', {
@@ -84,7 +84,7 @@ class AgencyAdmin(VersionAdmin):
 
 
 @admin.register(AgencyGroup)
-class AgencyGroupAdmin(VersionAdmin):
+class AgencyGroupAdmin(EReqsVersionAdmin):
     fields = ['name', 'agencies']
     filter_horizontal = ['agencies']
     search_fields = ['name']
