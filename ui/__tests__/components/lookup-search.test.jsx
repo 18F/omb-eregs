@@ -18,7 +18,7 @@ describe('cleanParams()', () => {
     expect(() => cleanParams(query)).not.toThrow();
   });
 
-  ['q', 'insertParam', 'redirectPathname'].forEach((param) => {
+  ['insertParam', 'redirectPathname'].forEach((param) => {
     it(`raises an error when ${param} is not present`, () => {
       const queryCopy = Object.assign({}, query);
       delete queryCopy[param];
