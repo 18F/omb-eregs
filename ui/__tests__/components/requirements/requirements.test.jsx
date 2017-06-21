@@ -42,4 +42,20 @@ describe('<Requirement />', () => {
     expect(six.prop('to').query.topics__id__in).toEqual(6);
     expect(eight.prop('to').pathname).toEqual('/requirements');
   });
+
+  it('filters out values in the "applies to" field', () => {
+    const hasEntity = Object.assign({}, baseReq, {
+      impacted_entity: 'A Value that has NA in it',
+    });
+    const hasNA = Object.assign({}, baseReq, {
+      impacted_entity: '   nA',
+    });
+
+    let result = mount(<Requirement requirement={hasEntity} />);
+    expect(result.find('.applies-to').first().text()).toEqual(
+      'Applies to: A Value that has NA in it');
+
+    result = mount(<Requirement requirement={hasNA} />);
+    expect(result.find('.applies-to')).toHaveLength(0);
+  });
 });
