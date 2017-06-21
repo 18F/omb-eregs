@@ -1,58 +1,26 @@
 import React from 'react';
-import {Collapse} from 'react-collapse';
 
-export default class SearchFilterView extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {isOpened: false};
-    this.openFilters = this.openFilters.bind(this);
-  }
-
-  arrowClasses() {
-    const defaultClass = "open-close-indicator";
-    const openClass = defaultClass + " open";
-
-    return (this.state.isOpened ? openClass : defaultClass);
-  }
-
-  openFilters() {
-    this.setState(
-      {isOpened: !this.state.isOpened}
-    );
-  }
-
-  render() {
-    return (
-      <div className="clearfix">
-        <a className="mobile-filters" onClick={this.openFilters} role="link">
-          Edit Filters
-          <div className={this.arrowClasses()} />
-        </a>
-        <Collapse isOpened={this.state.isOpened} fixedHeight={180}>
-          <div className="sidebar sm-col sm-col-12 md-hide lg-hide p2 no-print">
-            {this.props.filterControls}
-            <div className="show-results p1 rounded" role="link" onClick={this.openFilters}>Show results</div>
-          </div>
-        </Collapse>
-        <div className="sidebar lg-sidebar col col-2 p2 no-print">
-          <div className="filter-heading">Search and filter</div>
-          {this.props.filterControls}
-        </div>
-        <div className="main col col-10 pl4 border-left max-width-3">
-          <div className="tab-container no-print">
-            <span className="mr4">View:</span>
-            <ul className="organize-tabs list-reset inline-block">
-              {this.props.tabs}
-            </ul>
-          </div>
-          { this.props.selectedFilters }
-          {/* page counts here */}
-          { this.props.pageContent }
-        </div>
+export default function SearchFilterView(
+  { filterControls, pageContent, selectedFilters, tabs }) {
+  return (
+    <div className="clearfix">
+      <div className="sidebar sm-col sm-col-12 md-col-2 lg-col-2 p2 no-print">
+        <div className="filter-header">Search and filter</div>
+        {filterControls}
       </div>
-    );
-  }
+      <div className="main col col-10 pl4 border-left max-width-3">
+        <div className="tab-container no-print">
+          <span className="mr4">View:</span>
+          <ul className="organize-tabs list-reset inline-block">
+            {tabs}
+          </ul>
+        </div>
+        { selectedFilters }
+        {/* page counts here */}
+        { pageContent }
+      </div>
+    </div>
+  );
 }
 
 SearchFilterView.propTypes = {

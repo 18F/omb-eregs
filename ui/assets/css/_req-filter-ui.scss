@@ -37,41 +37,11 @@
     margin-top: 0;
   }
 
-  .mobile-filters {
-    background: $color-gray-warm-light url('/static/img/filter-icon.svg') center no-repeat;
-    background-position-x: 1rem;
-    border-bottom: 1px solid $color-gray-light;
-    color: $color-primary-darkest;
-    cursor: pointer;
-    display: block;
-    font-size: 1.125rem;
-    padding: .5rem 1rem .5rem 2.5rem;
-  }
-
-  .open-close-indicator {
-    background: url('/static/img/arrow-icon.svg') center no-repeat;
-    float: right;
-    height: 20px;
-    transform: rotate(180deg);
-    width: 30px;
-  
-    &.open {
-      transform: rotate(0deg);
-    }
-  }
-
   .sidebar {
     background-color: $color-gray-warm-light;
   }
 
-  .show-results {
-    background-color: $color-primary;
-    color: $color-white;
-    margin: 1.5rem 0;
-    text-align: center;
-  }
-
-  .lg-sidebar {
+  .filter-header {
     display: none;
   }
 }
