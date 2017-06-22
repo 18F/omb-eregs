@@ -5,12 +5,11 @@ import Pagers from '../pagers';
 import ThingCounter from '../thing-counters';
 
 export default function RequirementsView({ requirements, count }) {
-  const chunk = 25;
   const singular = 'requirement';
   const plural = 'requirements';
   return (
     <div>
-      <ThingCounter count={count} chunk={chunk} singular={singular} plural={plural} />
+      <ThingCounter count={count} singular={singular} plural={plural} />
       <ul className="requirement-list list-reset">
         { requirements.map(requirement =>
           <li key={requirement.req_id} className="gray-border border rounded mb2">
