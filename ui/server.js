@@ -28,9 +28,11 @@ app.use(doNotCache);
 app.use(morgan('combined'));
 app.use('/static', express.static(path.join('ui-dist', 'static')));
 app.use(passport.initialize());
-app.use(errorHandler);
 
 app.get('*', passport.authenticate(['ip', 'basic'], { session: false }), serverRender);
+
+// Error handler must be after all middleware and handlers
+app.use(errorHandler);
 
 /* Start */
 app.listen(env.port, () => {
