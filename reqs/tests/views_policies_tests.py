@@ -22,11 +22,11 @@ def policy_setup():
 def policy_topic_setup(policy_setup):
     topics = mommy.make(Topic, _quantity=3)
     reqs = policy_setup.reqs
-    reqs[0][0].topics.add(topics[0].name)
-    reqs[0][1].topics.add(topics[1].name)
-    reqs[0][2].topics.add(topics[0].name, topics[1].name)
-    reqs[1][0].topics.add(topics[1].name)
-    reqs[1][1].topics.add(topics[1].name, topics[2].name)
+    reqs[0][0].topics.add(topics[0])
+    reqs[0][1].topics.add(topics[1])
+    reqs[0][2].topics.add(topics[0], topics[1])
+    reqs[1][0].topics.add(topics[1])
+    reqs[1][1].topics.add(topics[1], topics[2])
     yield policy_setup, topics
 
 
@@ -140,3 +140,19 @@ def test_agencies_indirect(policy_setup):
     response = client.get(path).json()
     assert response['count'] == 1
     assert response['results'][0]['relevant_reqs'] == 1
+
+
+@pytest.mark.django_db
+def test_nonpublic_reqs():
+    client = APIClient()
+    policy = mommy.make(Policy)
+    mommy.make(Requirement, policy=policy, public=False)
+
+    assert client.get('/policies/').json()['count'] == 0
+
+    mommy.make(Requirement, _quantity=4, policy=policy)
+    response = client.get('/policies/').json()
+    assert response['count'] == 1
+    assert policy.requirements.count() == 5
+    assert response['results'][0]['relevant_reqs'] == 4
+    assert response['results'][0]['total_reqs'] == 4

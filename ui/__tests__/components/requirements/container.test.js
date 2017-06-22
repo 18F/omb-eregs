@@ -22,9 +22,9 @@ describe('<RequirementsContainer />', () => {
     expect(controls).toHaveLength(1);
     expect(controls[0].props.heading).toEqual('Topics');
 
-    const autocompleter = controls[0].props.autocompleter;
-    expect(autocompleter.props.insertParam).toEqual('topics__id__in');
-    expect(autocompleter.props.lookup).toEqual('topics');
+    const selector = controls[0].props.selector;
+    expect(selector.props.insertParam).toEqual('topics__id__in');
+    expect(selector.props.lookup).toEqual('topics');
   });
 
   describe('its tabs', () => {

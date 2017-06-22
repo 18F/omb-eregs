@@ -1,8 +1,8 @@
 import React from 'react';
 
-import redirectWhiteList from '../redirectWhiteList';
+import { redirectWhiteList } from '../../redirects';
 
-export default function SearchView({ insertParam, lookup, pathname, query }) {
+export default function FallbackView({ insertParam, lookup, pathname, query }) {
   return (
     <form action={`/search-redirect/${lookup}/`} method="GET">
       <input type="hidden" name="insertParam" value={insertParam} />
@@ -24,13 +24,13 @@ export default function SearchView({ insertParam, lookup, pathname, query }) {
     </form>
   );
 }
-SearchView.propTypes = {
+FallbackView.propTypes = {
   insertParam: React.PropTypes.string,
   lookup: React.PropTypes.string.isRequired,
   pathname: React.PropTypes.oneOf(redirectWhiteList).isRequired,
   query: React.PropTypes.shape({}),
 };
-SearchView.defaultProps = {
+FallbackView.defaultProps = {
   insertParam: '',
   query: {},
 };

@@ -1,11 +1,8 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { cleanParams, LookupSearch, redirectQuery, search } from '../../components/lookup-search';
-import api from '../../api';
 import { UserError } from '../../error-handling';
-
-jest.mock('../../api');
+import { cleanParams, LookupSearch } from '../../components/lookup-search';
 
 
 describe('cleanParams()', () => {
@@ -56,17 +53,6 @@ describe('cleanParams()', () => {
   });
 });
 
-describe('redirectQuery()', () => {
-  it('updates an empty query', () => {
-    const result = redirectQuery({ some: 'thing' }, 'myParam', 3);
-    expect(result).toEqual({ some: 'thing', myParam: '3' });
-  });
-  it('updates a populated query', () => {
-    const query = { some: 'thing', myParam: '1,7,9' };
-    const result = redirectQuery(query, 'myParam', 3);
-    expect(result).toEqual({ some: 'thing', myParam: '1,7,9,3' });
-  });
-});
 
 describe('<LookupSearch />', () => {
   const params = {
@@ -95,23 +81,6 @@ describe('<LookupSearch />', () => {
     expect(link.prop('to')).toEqual({
       pathname: '/requirements',
       query: { some: 'field', page: '4' },
-    });
-  });
-});
-
-
-describe('search()', () => {
-  it('uses the correct parameters for topics', () => {
-    search('topics', 'some query here');
-    expect(api.topics.fetch).toHaveBeenCalledWith({
-      search: 'some query here', page: '1',
-    });
-  });
-
-  it('uses the correct parameters for policies', () => {
-    search('policies', 'some query here', '3');
-    expect(api.policies.fetch).toHaveBeenCalledWith({
-      search: 'some query here', page: '3',
     });
   });
 });

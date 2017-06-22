@@ -19,10 +19,10 @@ class PriorityOrderingFilter(OrderingFilter):
         if topics:
             sql = """
                 SELECT count(*) FROM (
-                    SELECT tag_id FROM reqs_topicconnect
-                    WHERE tag_id IN %s
-                    AND content_object_id = reqs_requirement.id
-                    GROUP BY tag_id
+                    SELECT topic_id FROM reqs_requirement_topics
+                    WHERE topic_id IN %s
+                    AND requirement_id = reqs_requirement.id
+                    GROUP BY topic_id
                 ) AS subq
             """
             queryset = queryset.annotate(kw_count=RawSQL(sql, (topics,)))
@@ -42,7 +42,7 @@ class RequirementViewSet(viewsets.ModelViewSet):
     # Distinct to account for multiple tag matches when filtering
     queryset = Requirement.objects.select_related('policy').\
         prefetch_related(
-            Prefetch('agencies', Agency.objects.filter(nonpublic=False)),
+            Prefetch('agencies', Agency.objects.filter(public=True)),
             'agency_groups',
             'topics'
         ).distinct()
@@ -70,5 +70,5 @@ class RequirementViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.exclude(policy__nonpublic=True)
+        queryset = queryset.filter(public=True, policy__public=True)
         return queryset

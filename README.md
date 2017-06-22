@@ -67,7 +67,6 @@ Let's also load the requirements and agency data from OMB:
 docker-compose run --rm manage.py fetch_csv
 docker-compose run --rm manage.py import_reqs data.csv
 docker-compose run --rm manage.py sync_agencies
-docker-compose run --rm manage.py createinitialrevisions
 ```
 
 This may emit some warnings for improper input. The next time you visit the
@@ -147,6 +146,26 @@ services:
     environment:
       MAX_URL: https://example.com/etc
 ```
+
+### Data Migrations
+
+We aim to store a history of changes to requirements, agencies, etc. etc. as a
+safety against accidental data loss.
+[`Django-reversion`](https://django-reversion.readthedocs.io) handles these
+changes made in the admin and offers partial solutions for data changes
+outside of that context. We must be careful to always wrap creation, deletion,
+and updates to data within its `create_revision` block, lest we have no
+history of the new data. Relatedly, we must not use backwards references (e.g.
+a `blog_set` field on `authors`) when updating data as that won't get
+serialized.
+
+When we create database migrations, we *may* want to create a revision of all
+affected models. This is necessary when moving data from one field to another
+or transforming data in place. To do this, we can specify a `REVISED_MODELS`
+field on our migration and set it to contain a sequence of pairs of
+`app_label`, `model_name`. After all migrations are run, Django will check
+which (if any) models need revisions generated. See
+`reqs/migrations/0040_auto_20170616_1501.py` for an example.
 
 ## API Endpoints
 
