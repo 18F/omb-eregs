@@ -5,7 +5,7 @@ export default class Search extends React.Component {
     const query = this.context.router.location.query;
     const modifiedQuery = Object.assign({}, query);
     delete modifiedQuery.page;
-    delete modifiedQuery.req_text__search;
+    delete modifiedQuery[this.inputName()];
     return Object.keys(modifiedQuery).map(k =>
       <input type="hidden" key={k} name={k} value={modifiedQuery[k]} />);
   }
