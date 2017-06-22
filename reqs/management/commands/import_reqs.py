@@ -4,16 +4,17 @@ import logging
 import re
 import sys
 
+import reversion
 from dateutil import parser as dateutil_parser
 from django.core.management.base import BaseCommand
 
-from reqs.models import Policy, PolicyTypes, Requirement, Topic, TopicConnect
+from reqs.models import Policy, PolicyTypes, Requirement, Topic
 
 logger = logging.getLogger(__name__)
 
 """
 We have a set of field names that change depending on the input file, and
-storing that information in one spot is probably the best appraoch.
+storing that information in one spot is probably the best approach.
 """
 FIELDS = {
     "verbs": ("reqVerb", "req_verb", "verb"),
@@ -135,18 +136,18 @@ class PolicyProcessor:
         uri_key = find_key("uri_policy_ids", row)
         omb_key = find_key("omb_policy_ids", row)
         if policy_number not in self.policies:
-            params = {
-                'policy_number': policy_number,
-                'title': row['policyTitle'],
-                'uri': row[uri_key],
-                'omb_policy_id': convert_omb_policy_id(row[omb_key]),
-                'policy_status': row.get("policyStatus", ""),
-                'policy_type': convert_policy_type(row['policyType']),
-                'issuance': convert_date(row['policyIssuanceYear']),
-                'sunset': convert_date(row['policySunset'])
-            }
-            policy, _ = Policy.objects.update_or_create(
-                policy_number=policy_number, defaults=params)
+            policy = Policy.objects.filter(policy_number=policy_number).first()
+            policy = policy or Policy(policy_number=policy_number)
+            policy.title = row['policyTitle']
+            policy.uri = row[uri_key]
+            policy.omb_policy_id = convert_omb_policy_id(row[omb_key])
+            policy.policy_status = row.get("policyStatus", "")
+            policy.policy_type = convert_policy_type(row['policyType'])
+            policy.issuance = convert_date(row['policyIssuanceYear'])
+            policy.sunset = convert_date(row['policySunset'])
+            policy.issuing_body = row['issuingBody']
+            with reversion.create_revision():
+                policy.save()
             self.policies[policy_number] = policy
         return self.policies[policy_number]
 
@@ -189,7 +190,7 @@ class TopicProcessor:
                 normalized.append(value)
         return normalized
 
-    def topics(self, row):
+    def topic_strings(self, row):
         to_return = []
         for field in self.fields:
             value = row.get(field)
@@ -201,13 +202,14 @@ class TopicProcessor:
                 to_return.append(field.replace("(Keywords)", "").strip())
         return to_return
 
-    def connections(self, row, req_pk):
-        for topic in self.topics(row):
+    def topics(self, row):
+        for topic in self.topic_strings(row):
             if topic not in self.cache:
-                self.cache[topic] = Topic.objects.get_or_create(
-                    name=topic)[0].pk
-            yield TopicConnect(tag_id=self.cache[topic],
-                               content_object_id=req_pk)
+                topic_model, _ = Topic.objects.get_or_create(name=topic)
+                with reversion.create_revision():
+                    topic_model.save()
+                self.cache[topic] = topic_model
+            yield self.cache[topic]
 
 
 class RowProcessor:
@@ -217,8 +219,7 @@ class RowProcessor:
         self.policies = PolicyProcessor()
         if topics is None:
             topics = []
-        self.topics = TopicProcessor(topics)
-        self.connections = []
+        self.topic_proc = TopicProcessor(topics)
         self.req_ids = set()
         self.last_id = "0.0"
 
@@ -264,24 +265,23 @@ class RowProcessor:
         impacted_key = find_key("entities", row)
         citation_key = find_key("citations", row)
 
-        params = dict(
-            citation=row[citation_key],
-            impacted_entity=row[impacted_key],
-            issuing_body=row['issuingBody'],
-            omb_data_collection=row.get("ombDataCollection", ""),
-            policy=self.policies.from_row(row),
-            policy_section=row['policySection'],
-            policy_sub_section=row['policySubSection'],
-            precedent=row.get("precedent", ""),
-            related_reqs=row.get("relatedReqs", ""),
-            req_deadline=row['reqDeadline'],
-            req_id=req_id,
-            req_text=row['reqText'],
-            verb=row[verb_key],
-        )
-        req, _ = Requirement.objects.update_or_create(
-            req_id=req_id, defaults=params)
-        self.connections.extend(self.topics.connections(row, req.pk))
+        req = Requirement.objects.filter(req_id=req_id).first()
+        req = req or Requirement(req_id=req_id)
+        req.citation = row[citation_key]
+        req.impacted_entity = row[impacted_key]
+        req.omb_data_collection = row.get("ombDataCollection", "")
+        req.policy = self.policies.from_row(row)
+        req.policy_section = row['policySection']
+        req.policy_sub_section = row['policySubSection']
+        req.precedent = row.get("precedent", "")
+        req.related_reqs = row.get("relatedReqs", "")
+        req.req_deadline = row['reqDeadline']
+        req.req_text = row['reqText']
+        req.verb = row[verb_key]
+        with reversion.create_revision():
+            req.save()
+            req.topics.set(list(self.topic_proc.topics(row)))
+
         self.req_ids.add(req_id)
         self.last_id = req_id
 
@@ -309,7 +309,3 @@ class Command(BaseCommand):
                 rows.add(row)
             except ValueError as err:
                 logger.warning("Problem with row %s: %s", idx + 1, err)
-        # Delete all topic connections which may exist in the DB
-        TopicConnect.objects.filter(
-            content_object__req_id__in=rows.req_ids).delete()
-        TopicConnect.objects.bulk_create(rows.connections)

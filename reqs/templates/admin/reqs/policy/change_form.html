@@ -11,14 +11,14 @@
       <table>
         <thead>
           <tr>
-            <th>Requirement</th>
+            <th>Text</th>
             <th>Policy Section</th>
             <th>Policy Sub-Section</th>
             <th>Topics</th>
           </tr>
         </thead>
         <tbody>
-          {% for req in original.requirements.all %}
+          {% for req in original.requirements_with_topics %}
           <tr class="form-row {% cycle "row1" "row2" %}">
             {% comment %}
               We'll let the req text be a bit longer in this view.
@@ -28,7 +28,7 @@
             </td>
             <td>{{ req.policy_section | truncatechars:40}}</td>
             <td>{{ req.policy_sub_section | truncatechars:40 }}</td>
-            <td>{{ req.topics.names | join:", " }}</td>
+            <td>{{ req.topic_names | join:", " }}</td>
           </tr>
           {% endfor %}
         </tbody>

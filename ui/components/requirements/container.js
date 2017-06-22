@@ -1,10 +1,12 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 
 import RequirementsView from './requirements-view';
+import { wrapWithAjaxLoader } from '../ajax-loading';
 import SearchFilterView from '../search-filter-view';
 import TabView from '../tab-view';
-import TopicFilterContainer from '../filters/topic-container';
+import ExistingFilters from '../filters/existing-container';
+import FilterListView from '../filters/list-view';
+import Selector from '../filters/selector';
 import api from '../../api';
 
 function policiesTab(reqQuery) {
@@ -23,11 +25,35 @@ function policiesTab(reqQuery) {
     { active: false, tabName: 'Policies', key: 'Policies', link });
 }
 
+const fieldNames = {
+  agencies: 'all_agencies__id__in',
+  policies: 'policy__id__in',
+  search: 'req_text__search',
+  topics: 'topics__id__in',
+};
+
 export function RequirementsContainer({ location: { query }, pagedReqs }) {
-  const filters = [
-    React.createElement(
-      TopicFilterContainer,
-      { query, paramName: 'topics__id__in', key: 'topic' }),
+  const filterControls = [
+    React.createElement(FilterListView, {
+      heading: 'Topics',
+      key: 'topic',
+      selector: React.createElement(Selector, {
+        insertParam: fieldNames.topics,
+        lookup: 'topics',
+        pathname: '/requirements',
+      }),
+    }),
+    /* Add this back once the data's cleaned up
+    React.createElement(FilterListView, {
+      heading: 'Agencies',
+      key: 'agency',
+      selector: React.createElement(Selector, {
+        insertParam: fieldNames.agencies,
+        lookup: 'agencies',
+        pathname: '/requirements',
+      }),
+    }),
+    */
   ];
   const tabs = [
     React.createElement(
@@ -38,7 +64,10 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
     RequirementsView,
     { requirements: pagedReqs.results, count: pagedReqs.count },
   );
-  return React.createElement(SearchFilterView, { filters, tabs, pageContent });
+  const selectedFilters = React.createElement(
+    ExistingFilters, { fieldNames, query });
+  return React.createElement(
+    SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
 RequirementsContainer.propTypes = {
   location: React.PropTypes.shape({ query: React.PropTypes.shape({}) }),
@@ -56,6 +85,5 @@ function fetchRequirements({ location: { query } }) {
   return api.requirements.fetch(query);
 }
 
-export default resolve({
-  pagedReqs: fetchRequirements,
-})(RequirementsContainer);
+export default wrapWithAjaxLoader(
+  RequirementsContainer, { pagedReqs: fetchRequirements });

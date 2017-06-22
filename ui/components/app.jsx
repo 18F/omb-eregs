@@ -1,13 +1,17 @@
 import React from 'react';
 import Disclaimer from './disclaimer';
 import Navbar from './navbar';
+import Footer from './footer';
 
 function App(props) {
   return (
     <div>
       <Disclaimer />
       <Navbar />
-      {props.children}
+      <div className="container">
+        {props.children}
+      </div>
+      <Footer />
     </div>
   );
 }

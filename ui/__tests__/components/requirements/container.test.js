@@ -17,12 +17,14 @@ describe('<RequirementsContainer />', () => {
   const result = shallow(React.createElement(
     RequirementsContainer, { location, pagedReqs }));
 
-  it('has a topics filter', () => {
-    const filters = result.prop('filters');
-    expect(filters).toHaveLength(1);
+  it('has a topics filter controls', () => {
+    const controls = result.prop('filterControls');
+    expect(controls).toHaveLength(1);
+    expect(controls[0].props.heading).toEqual('Topics');
 
-    expect(filters[0].props.query).toEqual(location.query);
-    expect(filters[0].props.paramName).toEqual('topics__id__in');
+    const selector = controls[0].props.selector;
+    expect(selector.props.insertParam).toEqual('topics__id__in');
+    expect(selector.props.lookup).toEqual('topics');
   });
 
   describe('its tabs', () => {
@@ -58,6 +60,15 @@ describe('<RequirementsContainer />', () => {
 
     expect(pageContent.props.requirements).toEqual(pagedReqs.results);
     expect(pageContent.props.count).toEqual(pagedReqs.count);
+  });
+
+  it('has configured selectedFilters', () => {
+    const selectedFilters = result.prop('selectedFilters');
+
+    expect(selectedFilters.props.fieldNames).toHaveProperty('policies');
+    expect(selectedFilters.props.fieldNames).toHaveProperty('search');
+    expect(selectedFilters.props.fieldNames).toHaveProperty('topics');
+    expect(selectedFilters.props.query).toEqual(location.query);
   });
 });
 

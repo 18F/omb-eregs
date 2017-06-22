@@ -9,13 +9,14 @@ const config = {
 
 if (typeof process !== 'undefined') {
   Object.assign(config, {
-    apiRoot: process.env.INTERNAL_API,
+    apiRoot: process.env.API_URL,
+    clientSide: false,
     debug: process.env.NODE_ENV !== 'production',
   });
 }
 
 if (typeof window !== 'undefined' && window.APP_CONFIG) {
-  Object.assign(config, window.APP_CONFIG);
+  Object.assign(config, window.APP_CONFIG, { clientSide: true });
 }
 
 export default config;

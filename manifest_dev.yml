@@ -18,12 +18,13 @@ applications:
       MAX_URL: https://login.test.max.gov/cas/login
   - name: ui
     buildpack: nodejs_buildpack
+    instances: 4
+    memory: 128M
     command: node ui-dist/server.js
     routes:
       - route: omb-eregs-demo.app.cloud.gov
     services:
       - config    # user-provided service w/ UI_BASIC_AUTH and NEW_RELIC_LICENSE_KEY
     env:
-      INTERNAL_API: https://omb-eregs-api-demo.app.cloud.gov/
-      PUBLIC_API: https://omb-eregs-api-demo.app.cloud.gov/
+      API_URL: https://omb-eregs-api-demo.app.cloud.gov/
       NEW_RELIC_APP_NAME: OMB Demo UI

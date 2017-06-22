@@ -42,17 +42,20 @@ INSTALLED_APPS = (
     # must be after taggit and contenttypes, but before auth
     'ereqs_admin.apps.EreqsAdminConfig',
     'corsheaders',
-    'dal',
-    'dal_select2',
     'django_filters',
     'rest_framework',
     'reversion',
     'storages',
+    # Must be before admin
+    'admin_interface',
+    'flat_responsive',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
 )
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
@@ -96,7 +99,7 @@ if DEBUG:
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/(?!admin).*$'
 
-# Request the browser not allow the CSRF cookie to be used in JS (not: this
+# Request the browser not allow the CSRF cookie to be used in JS (note: this
 # means we can't have AJAX forms)
 CSRF_COOKIE_HTTPONLY = True
 # Request browsers block XSS attacks when they can
@@ -104,9 +107,12 @@ SECURE_BROWSER_XSS_FILTER = True
 # Request browsers not guess at mimetypes
 SECURE_CONTENT_TYPE_NOSNIFF = True
 # Request cookies only be sent over SSL
-USING_SSL = env.get_credential('USING_SSL', 'TRUE').upper() == 'TRUE'
+USING_SSL = os.environ.get('USING_SSL', 'TRUE').upper() == 'TRUE'
 SESSION_COOKIE_SECURE = USING_SSL
 CSRF_COOKIE_SECURE = USING_SSL
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 8*60*60  # 8 hrs
+CAS_RENEW = True    # Don't auto-login. Max.gov should require login each time
 
 # For the time being, tell downstream (notably CloudFront) to avoid caching
 # content rather than guessing.
@@ -205,6 +211,9 @@ else:
     # On cloud.gov, we need region and we want django-storages to infer the
     # correct URL for us rather than setting an endpoint ourselves.
     AWS_S3_REGION_NAME = s3service.credentials["region"]
+AWS_S3_OBJECT_PARAMETERS = {
+    'ContentDisposition': 'attachment',     # Browsers should download files
+}
 
 TAGGIT_CASE_INSENSITIVE = True
 
@@ -235,6 +244,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
@@ -251,3 +261,5 @@ REST_FRAMEWORK = {
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': 'omb_eregs.utils.show_toolbar',
 }
+
+ADMIN_TITLE = 'OMB Policy Library Editor'

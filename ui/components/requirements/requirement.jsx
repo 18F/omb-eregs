@@ -38,7 +38,7 @@ Metadata.defaultProps = {
 
 function TopicLink({ topic }) {
   const linkTo = {
-    pathname: '/requirements/by-topic',
+    pathname: '/requirements',
     query: { topics__id__in: topic.id },
   };
   return (
@@ -55,6 +55,40 @@ TopicLink.propTypes = {
 };
 
 
+function PolicyLink({ policy }) {
+  const linkTo = {
+    pathname: '/policies',
+    query: { id__in: policy.id },
+  };
+  return (
+    <div className="policy-title metadata">
+      Policy title:
+      {' '}
+      <Link to={linkTo}>{policy.title_with_number}</Link>
+    </div>
+  );
+}
+PolicyLink.propTypes = {
+  policy: React.PropTypes.shape({
+    id: React.PropTypes.number,
+    title_with_number: React.PropTypes.string,
+  }).isRequired,
+};
+
+const badEntities = [
+  'NA', 'N/A', 'Not Applicable', 'None', 'None Specified', 'unknown', 'TBA',
+  'Cannot determine-Ask Mindy',
+].map(e => e.toLowerCase());
+/* Temporary "solution" to bad data: filter it out on the front end */
+export function filterAppliesTo(text) {
+  const normalized = (text || '').toLowerCase().trim();
+  if (badEntities.includes(normalized)) {
+    return null;
+  }
+  return text;
+}
+
+
 export default function Requirement({ requirement }) {
   // We could have multiple lines with the same text, so can't use a stable ID
   /* eslint-disable react/no-array-index-key */
@@ -67,12 +101,7 @@ export default function Requirement({ requirement }) {
       <div className="req-text col col-12">
         { reqTexts }
         <div className="clearfix mt3">
-          <Metadata
-            className="policy-title"
-            name="Policy title"
-            value={requirement.policy.title}
-            nullValue="Policy title: none"
-          />
+          <PolicyLink policy={requirement.policy} />
           <Metadata
             className="omb-policy-id"
             name="OMB Policy ID"
@@ -91,8 +120,7 @@ export default function Requirement({ requirement }) {
           <Metadata
             className="applies-to mr2"
             name="Applies to"
-            value={requirement.impacted_entity}
-            nullValue="Applies to: unknown"
+            value={filterAppliesTo(requirement.impacted_entity)}
           />
           <Metadata
             className="issuing-body"

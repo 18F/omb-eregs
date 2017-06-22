@@ -1,11 +1,8 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { cleanParams, LookupSearch, redirectIfMatched, redirectQuery, search } from '../../components/lookup-search';
-import api from '../../api';
 import { UserError } from '../../error-handling';
-
-jest.mock('../../api');
+import { cleanParams, LookupSearch } from '../../components/lookup-search';
 
 
 describe('cleanParams()', () => {
@@ -56,70 +53,6 @@ describe('cleanParams()', () => {
   });
 });
 
-describe('redirectQuery()', () => {
-  it('updates an empty query', () => {
-    const result = redirectQuery({ some: 'thing' }, 'myParam', 3);
-    expect(result).toEqual({ some: 'thing', myParam: '3' });
-  });
-  it('updates a populated query', () => {
-    const query = { some: 'thing', myParam: '1,7,9' };
-    const result = redirectQuery(query, 'myParam', 3);
-    expect(result).toEqual({ some: 'thing', myParam: '1,7,9,3' });
-  });
-});
-
-describe('redirectIfMatched()', () => {
-  const query = {
-    q: 'qqq',
-    insertParam: 'ins',
-    redirectPathname: '/requirements',
-  };
-  const routes = [{ path: 'search-redirect' }, { path: 'topics' }];
-  it('does not hit the api if a page number is present', () => {
-    const modifiedQuery = Object.assign({}, query, { page: '5' });
-    const params = { routes, location: { query: modifiedQuery } };
-    const redirect = jest.fn();
-    const done = jest.fn();
-
-    redirectIfMatched(params, redirect, done);
-    expect(api.topics.fetch).not.toHaveBeenCalled();
-    expect(redirect).not.toHaveBeenCalled();
-    expect(done).toHaveBeenCalledWith();
-  });
-  it('redirects if there is an exact match', () => {
-    const params = { routes, location: { query } };
-    const redirect = jest.fn();
-    api.topics.fetch.mockImplementationOnce(() =>
-      Promise.resolve({ count: 1, results: [{ id: 4 }] }));
-
-    const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
-    return asyncCall.then(() => {
-      expect(api.topics.fetch).toHaveBeenCalledWith({ name: 'qqq' });
-      expect(redirect).toHaveBeenCalled();
-    });
-  });
-  it('passes exceptions up', () => {
-    const params = { routes, location: { query } };
-    const redirect = jest.fn();
-    api.topics.fetch.mockImplementationOnce(() =>
-      Promise.reject(Error('oh noes')));
-    const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
-    return asyncCall.then((error) => {
-      expect(error).toEqual(Error('oh noes'));
-      expect(redirect).not.toHaveBeenCalled();
-    });
-  });
-  it('continues if there is no exact match', () => {
-    const params = { routes, location: { query } };
-    const redirect = jest.fn();
-    api.topics.fetch.mockImplementationOnce(() =>
-      Promise.resolve({ count: 0, results: [] }));
-    const asyncCall = new Promise(done => redirectIfMatched(params, redirect, done));
-    return asyncCall.then(() => {
-      expect(redirect).not.toHaveBeenCalled();
-    });
-  });
-});
 
 describe('<LookupSearch />', () => {
   const params = {
@@ -148,23 +81,6 @@ describe('<LookupSearch />', () => {
     expect(link.prop('to')).toEqual({
       pathname: '/requirements',
       query: { some: 'field', page: '4' },
-    });
-  });
-});
-
-
-describe('search()', () => {
-  it('uses the correct parameters for topics', () => {
-    search('topics', 'some query here');
-    expect(api.topics.fetch).toHaveBeenCalledWith({
-      name__icontains: 'some query here', page: '1',
-    });
-  });
-
-  it('uses the correct parameters for policies', () => {
-    search('policies', 'some query here', '3');
-    expect(api.policies.fetch).toHaveBeenCalledWith({
-      title__icontains: 'some query here', page: '3',
     });
   });
 });

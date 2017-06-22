@@ -2,9 +2,6 @@
 {% load i18n %}
 
 {% block form_top %}
-  {% if adminform.form.password1 %}
-  HERE
-  {% endif %}
   {% if not is_popup %}
     {% if adminform.form.password1 %}
       <p>{% trans "First, enter a username and password. Then, you'll be able to edit more user options." %}</p>
