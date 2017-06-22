@@ -11,7 +11,9 @@ export default function Pagers({ count }, { router }) {
   if (count === 0) {
     pageInt = 0;
     return (
-      <div className="alert p1 m1 border">No requirements match your search, try removing some filters to see more results.</div>
+      <div className="alert p1 m1 border">
+        No requirements match your search, try removing some filters to see more results.
+      </div>
     );
   }
 
