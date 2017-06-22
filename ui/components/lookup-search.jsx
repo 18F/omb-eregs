@@ -35,9 +35,7 @@ export function cleanParams(query) {
     }
   });
 
-  if (validator.isEmpty(clean.q)) {
-    throw new UserError('Needs a "q" parameter');
-  } else if (validator.isEmpty(clean.insertParam)) {
+  if (validator.isEmpty(clean.insertParam)) {
     throw new UserError('Needs an "insertParam" parameter');
   } else if (!validator.isIn(clean.redirect.pathname, redirectWhiteList)) {
     throw new UserError('Invalid "redirectPathname" parameter');
