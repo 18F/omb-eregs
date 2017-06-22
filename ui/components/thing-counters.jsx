@@ -7,7 +7,7 @@ export default function ThingCounter({ count, singular, plural }, { router }) {
   const verb = count === 1 ? 'matches' : 'match';
   const classes = count === 0 ? 'alert p1 m1 border' : '';
 
-  const unfiltered = queryKeys.length === 0 || queryKeys == ['page'];
+  const unfiltered = queryKeys.length === 0 || (queryKeys.length === 1 && queryKeys[0] === 'page');
   const searchText = unfiltered ? '.' : ` ${verb} your search.`;
 
   const noMatches = `No ${noun} ${verb} your search, try removing some filters to see more results.`;

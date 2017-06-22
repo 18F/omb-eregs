@@ -44,6 +44,13 @@ describe('<ThingCounter />', () => {
     expect(result.find("div")).toHaveLength(1);
     expect(result.find(".alert .p1 .m1 .border")).toHaveLength(0);
   });
+  it('states two total results when there are two total results, even with a page parameter present', () => {
+    const context = { router: mockRouter({ query: { page: '1'} }) };
+    const result = makeReqThing(2, context)
+    expect(result.text()).toMatch(/2 requirements\./);
+    expect(result.find("div")).toHaveLength(1);
+    expect(result.find(".alert .p1 .m1 .border")).toHaveLength(0);
+  });
 
 });
 
