@@ -11,7 +11,7 @@ export default class TopicAutocomplete extends React.Component {
   }
 
   render() {
-    return React.createElement(Async, {
+    const props = Object.assign({}, this.props, {
       joinValues: true,
       loadOptions: makeOptionLoader('topics'),
       multi: true,
@@ -20,5 +20,6 @@ export default class TopicAutocomplete extends React.Component {
       placeholder: 'Shared services, IT management, ...',
       value: this.state.value,
     });
+    return React.createElement(Async, props);
   }
 }
