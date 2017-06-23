@@ -12,10 +12,11 @@ export default function Homepage() {
         <div className="sm-col-12 md-col-6 mx-auto center">
           <h2 className="h1">Find policies and requirements that apply to your agency.</h2>
           <div className="filter px4">
-            <h3 className="h3">What topics are you interested in?</h3>
+            <h3 className="h3" id="topics_label">What topics are you interested in?</h3>
             <ConditionalRender>
               <div className="form-field">
                 <FallbackView
+                  aria-labelledby="topics_label"
                   insertParam="topics__id__in"
                   lookup="topics"
                   pathname="/requirements"
@@ -23,7 +24,7 @@ export default function Homepage() {
               </div>
               <form method="GET" action="/requirements">
                 <div className="form-field">
-                  <TopicAutocomplete />
+                  <TopicAutocomplete aria-labelledby="topics_label" />
                 </div>
                 <div className="form-field">
                   <input

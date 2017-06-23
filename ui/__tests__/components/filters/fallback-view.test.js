@@ -6,6 +6,7 @@ import FallbackView from '../../../components/filters/fallback-view';
 
 describe('<FallbackView /> form', () => {
   const props = {
+    'aria-labelledby': 'some_id',
     insertParam: 'someParam',
     lookup: 'topics',
     pathname: '/policies',
