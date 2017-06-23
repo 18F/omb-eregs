@@ -3,7 +3,8 @@ import React from 'react';
 function isUnfiltered(query) {
   const noPage = Object.assign({}, query);
   delete noPage.page;
-  return Object.values(noPage).every(x => x === ''); // true if all empty.
+  const values = Object.keys(noPage).map(key => noPage[key]);
+  return values.every(x => x === ''); // true if all empty.
 }
 
 export default function ThingCounter({ count, singular, plural }, { router }) {
