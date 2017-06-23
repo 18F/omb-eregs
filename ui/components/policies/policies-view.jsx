@@ -5,8 +5,8 @@ import Policy from './policy-view';
 import ThingCounter from '../thing-counters';
 
 export default function PoliciesView({ policies, count, topicsIds }) {
-  const singular = 'Policy';
-  const plural = 'Policies';
+  const singular = 'policy';
+  const plural = 'policies';
 
   return (
     <div>
