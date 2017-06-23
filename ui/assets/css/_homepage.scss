@@ -5,24 +5,18 @@
     color: $color-white;
   }
 
+  .filter-form-submit {
+    background-color: $color-primary;
+    color: $color-white;
+    border: 1px solid $color-white;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   h2, h3, h4 {
     font-weight: normal;
-  }
-
-  h3 {
-    font-size: 1.375rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  h4 {
-    font-size: 1.25rem;
-  }
-
-  .form-field {
-    padding: 0 9rem;
+    line-height: 1.25em;
   }
 
   .about-inner {
@@ -32,12 +26,27 @@
       @include font-merriweather();
       letter-spacing: .5px;
       line-height: 1.375rem;
+      width: 50vmax;
     }
   }
 
   .new-policies {
     background-color: $color-gray-lightest;
-    border-top: 1px solid $color-gray-dark;
-    border-bottom: 1px solid $color-gray-dark;
+    border-top: 1px solid $color-gray-light;
+    border-bottom: 1px solid $color-gray-light;
   }
+}
+
+@media (max-width: 52em) {
+  .homepage {
+    .about-inner {
+      p {
+        width: 100%;
+      }
+    }
+
+    .new-policies {
+      padding: 2rem 1rem;
+    }
+  }  
 }

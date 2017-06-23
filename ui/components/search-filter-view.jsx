@@ -4,12 +4,12 @@ export default function SearchFilterView(
   { filterControls, pageContent, selectedFilters, tabs }) {
   return (
     <div className="clearfix">
-      <div className="sidebar col col-2 p2">
-        Search and filter
+      <div className="sidebar sm-col sm-col-12 md-col-2 lg-col-2 p2 no-print">
+        <div className="filter-header">Search and filter</div>
         {filterControls}
       </div>
       <div className="main col col-10 pl4 border-left max-width-3">
-        <div className="tab-container">
+        <div className="tab-container no-print">
           <span className="mr4">View:</span>
           <ul className="organize-tabs list-reset inline-block">
             {tabs}

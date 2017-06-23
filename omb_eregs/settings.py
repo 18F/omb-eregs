@@ -42,12 +42,14 @@ INSTALLED_APPS = (
     # must be after taggit and contenttypes, but before auth
     'ereqs_admin.apps.EreqsAdminConfig',
     'corsheaders',
-    'dal',
-    'dal_select2',
     'django_filters',
     'rest_framework',
     'reversion',
     'storages',
+    # Must be before admin
+    'admin_interface',
+    'flat_responsive',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',

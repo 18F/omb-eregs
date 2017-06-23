@@ -1,17 +1,18 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import SearchView from '../../../components/filters/search-view';
+import FallbackView from '../../../components/filters/fallback-view';
 
 
-describe('<SearchView /> form', () => {
+describe('<FallbackView /> form', () => {
   const props = {
+    'aria-labelledby': 'some_id',
     insertParam: 'someParam',
     lookup: 'topics',
     pathname: '/policies',
     query: { some: 'thing', more: 'params', et: 'c' },
   };
-  const result = shallow(React.createElement(SearchView, props));
+  const result = shallow(React.createElement(FallbackView, props));
 
   it('creates a form with the correct url', () => {
     expect(result.prop('action')).toEqual('/search-redirect/topics/');

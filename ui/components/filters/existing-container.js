@@ -1,7 +1,7 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 
 import FilterRemoveView from './remove-view';
+import { wrapWithAjaxLoader } from '../ajax-loading';
 import api from '../../api';
 
 export function RemoveLinkContainer(
@@ -133,8 +133,9 @@ function fetchAgencies({ query, fieldNames }) {
   return api.agencies.withIds(query[fieldNames.agencies]);
 }
 
-export default resolve({
-  agencies: fetchAgencies,
-  policies: fetchPolicies,
-  topics: fetchTopics,
-})(ExistingFiltersContainer);
+export default wrapWithAjaxLoader(
+  ExistingFiltersContainer,
+  { agencies: fetchAgencies,
+    policies: fetchPolicies,
+    topics: fetchTopics },
+  50);

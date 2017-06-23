@@ -8,7 +8,6 @@
 
 .navbar {
   background-color: $color-primary-darkest;
-  height: 80px;
 }
 
 .navbar-title {
@@ -20,5 +19,16 @@
   sup {
     font-size: 0.625rem;
     padding-left: 0.2rem;
+  }
+}
+
+@media (max-width: 52em) {
+  .navbar {
+    display: block;
+    align-items: left;
+  }
+
+  .header-search {
+    padding: 0 0 1rem 1rem;
   }
 }

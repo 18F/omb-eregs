@@ -1,4 +1,3 @@
-from dal.autocomplete import Select2QuerySetView
 from django.db.models import Prefetch
 from rest_framework import viewsets
 
@@ -15,14 +14,8 @@ class TopicViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
 
 
-class TopicAdminAutocomplete(Select2QuerySetView):
-    """Very similar to the TopicViewSet, except in a format the Select2
-    widget expects"""
-    model = Topic
-
-
 class AgencyViewSet(viewsets.ModelViewSet):
-    queryset = Agency.objects.filter(nonpublic=False)
+    queryset = Agency.objects.filter(public=True)
     serializer_class = AgencySerializer
     filter_fields = AgencyFilter.get_fields()
     search_fields = ('name', 'abbr')

@@ -1,12 +1,12 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 import { Link } from 'react-router';
 import validator from 'validator';
 
-import api from '../api';
+import { redirectQuery, redirectWhiteList } from '../redirects';
 import { UserError } from '../error-handling';
+import { apiNameField, search } from '../lookup-search';
+import { wrapWithAjaxLoader } from './ajax-loading';
 import Pagers from './pagers';
-import redirectWhiteList from './redirectWhiteList';
 
 const redirectQueryPrefix = 'redirectQuery__';
 
@@ -35,9 +35,7 @@ export function cleanParams(query) {
     }
   });
 
-  if (validator.isEmpty(clean.q)) {
-    throw new UserError('Needs a "q" parameter');
-  } else if (validator.isEmpty(clean.insertParam)) {
+  if (validator.isEmpty(clean.insertParam)) {
     throw new UserError('Needs an "insertParam" parameter');
   } else if (!validator.isIn(clean.redirect.pathname, redirectWhiteList)) {
     throw new UserError('Invalid "redirectPathname" parameter');
@@ -45,31 +43,6 @@ export function cleanParams(query) {
 
   return clean;
 }
-
-/**
- * Mix in the idToInsert into the original request parameters.
- **/
-export function redirectQuery(query, insertParam, idToInsert) {
-  const result = Object.assign({}, query);
-  const ids = (result[insertParam] || '').split(',').filter(i => i.length > 0);
-  delete result.page;
-
-  if (!ids.includes(idToInsert)) {
-    ids.push(idToInsert);
-  }
-  result[insertParam] = ids.join(',');
-
-  return result;
-}
-
-/* Mapping between a lookup type (e.g. "topic") and the field in the API we
- * should display */
-export const apiNameField = {
-  agencies: 'name_with_abbr',
-  policies: 'title',
-  topics: 'name',
-};
-
 
 function Entry({ entry, location, lookup }) {
   const name = entry[apiNameField[lookup]];
@@ -136,11 +109,6 @@ LookupSearch.propTypes = {
   }),
 };
 
-export function search(lookup, q, page = '1') {
-  const apiQuery = { search: q, page };
-  return api[lookup].fetch(apiQuery);
-}
-
 /**
  * Asynchronously grab the search result data from the API.
  **/
@@ -150,4 +118,4 @@ function fetchData({ routes, location: { query } }) {
   return search(lookup, userParams.q, userParams.page);
 }
 
-export default resolve('pagedEntries', fetchData)(LookupSearch);
+export default wrapWithAjaxLoader(LookupSearch, { pagedEntries: fetchData });

@@ -1,12 +1,11 @@
 @media print {
 
-  .usa-disclaimer, .navbar-title, .req .metadata, .req .req-text {
-    color: #111 !important;
+  .no-print {
+    display: none;
   }
 
-  .sidebar,
-  .tab-container {
-    display: none;
+  .usa-disclaimer, .navbar-title, .req .metadata, .req .req-text {
+    color: #111 !important;
   }
 
   .main {
@@ -30,9 +29,5 @@
   .topics-list a, a:link {
    text-decoration: none;
    color: #111;
-  }
-
-  .search-form {
-    display: none;
   }
 }

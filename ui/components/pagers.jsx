@@ -14,11 +14,11 @@ export default function Pagers({ count }, { router }) {
 
   if (pageInt > 1) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt - 1 });
-    prevPage = <Link to={{ pathname, query: modifiedQuery }}>&lt;</Link>;
+    prevPage = <Link aria-label="Previous page" to={{ pathname, query: modifiedQuery }}>&lt;</Link>;
   }
   if (nextOffset < count) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt + 1 });
-    nextPage = <Link to={{ pathname, query: modifiedQuery }}>&gt;</Link>;
+    nextPage = <Link aria-label="Next page" to={{ pathname, query: modifiedQuery }}>&gt;</Link>;
   }
   return (
     <div>

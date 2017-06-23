@@ -2,8 +2,6 @@ from enum import Enum, unique
 
 from django.db import models
 from django.utils.translation import ugettext_lazy
-from taggit.managers import TaggableManager
-from taggit.models import ItemBase, TagBase
 
 
 class Agency(models.Model):
@@ -15,7 +13,7 @@ class Agency(models.Model):
     name = models.CharField(max_length=256)
     abbr = models.CharField(max_length=64, blank=True)
     omb_agency_code = models.CharField(max_length=8, blank=True)
-    nonpublic = models.BooleanField(default=False)
+    public = models.BooleanField(default=True)
 
     @property
     def name_with_abbr(self):
@@ -42,34 +40,14 @@ class AgencyGroup(models.Model):
         return self.name
 
 
-# Custom class for name-spacing
-class Topic(TagBase):
+class Topic(models.Model):
     class Meta:
         ordering = ['name']
-        verbose_name = ugettext_lazy('Topic')
-        verbose_name_plural = ugettext_lazy('Topics')
 
-    @property
-    def requirements(self):
-        """Taggit isn't creating a backwards relation as we'd expect, so
-        simulate it here"""
-        return Requirement.objects.filter(topics=self.pk)
+    name = models.CharField(max_length=256, unique=True)
 
-
-class TopicConnect(ItemBase):
-    tag = models.ForeignKey(Topic, on_delete=models.CASCADE,
-                            related_name='topic')
-    content_object = models.ForeignKey('Requirement', on_delete=models.CASCADE)
-
-    @classmethod
-    def tags_for(cls, model, instance=None, **extra_filters):
-        kwargs = dict(extra_filters)
-        key = '{0}__content_object'.format(cls.tag_relname())
-        if instance is not None:
-            kwargs[key] = instance.pk
-        else:
-            kwargs[key + '__isnull'] = False
-        return Topic.objects.filter(**kwargs).distinct()
+    def __str__(self):
+        return self.name
 
 
 @unique
@@ -112,7 +90,7 @@ class Policy(models.Model):
     sunset = models.DateField(blank=True, null=True)
     policy_status = models.CharField(max_length=256, blank=True)
     document_source = models.FileField(blank=True)
-    nonpublic = models.BooleanField(default=False)
+    public = models.BooleanField(default=True)
     issuing_body = models.CharField(max_length=512)
     managing_office = models.ForeignKey(Office, on_delete=models.CASCADE,
                                         blank=True, null=True)
@@ -154,17 +132,15 @@ class Requirement(models.Model):
     impacted_entity = models.CharField(max_length=8192, blank=True)
     req_deadline = models.CharField(max_length=512, blank=True)
     citation = models.CharField(max_length=1024, blank=True)
-    topics = TaggableManager(
-        through=TopicConnect,
-        verbose_name=ugettext_lazy('Topics'),
-        blank=True
-    )
     req_status = models.CharField(max_length=32, blank=True)
     precedent = models.CharField(max_length=1024, blank=True)
     related_reqs = models.CharField(max_length=1024, blank=True)
     omb_data_collection = models.CharField(max_length=1024, blank=True)
+    public = models.BooleanField(default=True)
     agencies = models.ManyToManyField(Agency, blank=True)
     agency_groups = models.ManyToManyField(AgencyGroup, blank=True)
+    topics = models.ManyToManyField(Topic, blank=True,
+                                    related_name='requirements')
     all_agencies = models.ManyToManyField(
         Agency, through='RequirementAllAgencies',
         related_name='all_requirements')
@@ -175,10 +151,7 @@ class Requirement(models.Model):
             text += '...'
         return '{0}: {1}'.format(self.req_id, text)
 
-    @property
-    def prefetched_topic_names(self):
-        """Using self.topics.names will result in a new query. That's very
-        inefficient if we've already prefetched that data."""
+    def topic_names(self):
         return [topic.name for topic in self.topics.all()]
 
 

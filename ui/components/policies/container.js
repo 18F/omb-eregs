@@ -1,12 +1,12 @@
 import React from 'react';
-import { resolve } from 'react-resolver';
 
 import PoliciesView from './policies-view';
 import SearchFilterView from '../search-filter-view';
 import TabView from '../tab-view';
 import ExistingFilters from '../filters/existing-container';
 import FilterListView from '../filters/list-view';
-import Autocompleter from '../filters/autocompleter';
+import Selector from '../filters/selector';
+import { wrapWithAjaxLoader } from '../ajax-loading';
 import api from '../../api';
 
 function requirementsTab(policyQuery) {
@@ -35,23 +35,25 @@ const fieldNames = {
 export function PoliciesContainer({ location: { query }, pagedPolicies }) {
   const filterControls = [
     React.createElement(FilterListView, {
-      autocompleter: React.createElement(Autocompleter, {
+      heading: 'Topics',
+      headingLabel: 'topics_label',
+      key: 'topic',
+      selector: React.createElement(Selector, {
+        'aria-labelledby': 'topics_label',
         insertParam: fieldNames.topics,
         lookup: 'topics',
         pathname: '/policies',
       }),
-      heading: 'Topics',
-      key: 'topic',
     }),
     /* Add this back once the data's cleaned up
     React.createElement(FilterListView, {
-      autocompleter: React.createElement(Autocompleter, {
+      heading: 'Agencies',
+      key: 'agency',
+      selector: React.createElement(Selector, {
         insertParam: fieldNames.agencies,
         lookup: 'agencies',
         patname: '/policies',
       }),
-      heading: 'Agencies',
-      key: 'agency',
     }),
     */
   ];
@@ -90,7 +92,5 @@ function fetchPolicies({ location: { query } }) {
   return api.policies.fetch(params);
 }
 
-export default resolve({
-  pagedPolicies: fetchPolicies,
-})(PoliciesContainer);
-
+export default wrapWithAjaxLoader(
+  PoliciesContainer, { pagedPolicies: fetchPolicies });
