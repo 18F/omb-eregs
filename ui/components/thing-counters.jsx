@@ -1,13 +1,18 @@
 import React from 'react';
 
+function isUnfiltered(query) {
+  const noPage = Object.assign({}, query);
+  delete noPage.page;
+  return Object.values(noPage).every(x => x === ''); // true if all empty.
+}
+
 export default function ThingCounter({ count, singular, plural }, { router }) {
   const query = router.location.query;
-  const queryKeys = Object.keys(query);
   const noun = count === 1 ? singular : plural;
   const verb = count === 1 ? 'matches' : 'match';
   const classes = count === 0 ? 'alert p1 m1 border' : '';
 
-  const unfiltered = queryKeys.length === 0 || (queryKeys.length === 1 && queryKeys[0] === 'page');
+  const unfiltered = isUnfiltered(query);
   const searchText = unfiltered ? '.' : ` ${verb} your search.`;
 
   const noMatches = `No ${noun} ${verb} your search, try removing some filters to see more results.`;

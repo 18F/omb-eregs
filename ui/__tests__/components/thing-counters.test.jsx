@@ -51,6 +51,21 @@ describe('<ThingCounter />', () => {
     expect(result.find("div")).toHaveLength(1);
     expect(result.find(".alert .p1 .m1 .border")).toHaveLength(0);
   });
+  it('states two total results when there are two total results, even with an empty parameter present', () => {
+    const context = { router: mockRouter({ query: { topics_id__in: ''} }) };
+    const result = makeReqThing(2, context)
+    expect(result.text()).toMatch(/2 requirements\./);
+    expect(result.find("div")).toHaveLength(1);
+    expect(result.find(".alert .p1 .m1 .border")).toHaveLength(0);
+  });
+  it('states two total results when there are two total results, even with multiple empty parameters present', () => {
+    const context = { router: mockRouter({
+          query: { topics_id__in: '', red_id: ''} }) };
+    const result = makeReqThing(2, context)
+    expect(result.text()).toMatch(/2 requirements\./);
+    expect(result.find("div")).toHaveLength(1);
+    expect(result.find(".alert .p1 .m1 .border")).toHaveLength(0);
+  });
 
 });
 
