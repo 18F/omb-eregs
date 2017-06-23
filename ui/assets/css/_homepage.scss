@@ -36,3 +36,17 @@
     border-bottom: 1px solid $color-gray-light;
   }
 }
+
+@media (max-width: 52em) {
+  .homepage {
+    .about-inner {
+      p {
+        width: 100%;
+      }
+    }
+
+    .new-policies {
+      padding: 2rem 1rem;
+    }
+  }  
+}

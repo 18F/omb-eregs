@@ -17,10 +17,12 @@ describe('<Selector />', () => {
     router.push = jest.fn();
 
     const el = shallow(
-      React.createElement(
-        Selector,
-        { lookup: 'topics', insertParam: 'insertHere', pathname: '/some/path/' }),
-      { context: { router } });
+      React.createElement(Selector, {
+        'aria-labelledby': 'some_id',
+        insertParam: 'insertHere',
+        lookup: 'topics',
+        pathname: '/some/path/',
+      }), { context: { router } });
     expect(el.children()).toHaveLength(2);
 
     const autocompleter = el.childAt(1);
