@@ -22,7 +22,7 @@ export default function Policy({ policy, topicsIds }) {
       <section className="policy border rounded gray-border p2">
         <h2 className="mt0 mb3">{policy.title_with_number}</h2>
         <div className="clearfix">
-          <span className="requirements-links col col-6">
+          <div className="requirements-links mb1 sm-col sm-col-12 md-col-6">
             <div className="circle-bg border gray-border center p1">
               <Link aria-label="Relevant requirements" to={relevantReqs} className={countClass}>
                 {relevantReqCount}
@@ -30,15 +30,15 @@ export default function Policy({ policy, topicsIds }) {
             </div> of&nbsp;
             {policy.total_reqs} requirements
              match your search
-          </span>
-          <span className="external-link icon-links col col-3">
+          </div>
+          <div className="external-link icon-links sm-col sm-col-12 md-col-3">
             <ExternalLink href={policy.original_url}>
               View original
             </ExternalLink>
-          </span>
-          <span className="view-requirements-link icon-links col col-3">
+          </div>
+          <div className="view-requirements-link icon-links sm-col sm-col-12 md-col-3">
             <Link to={allReqs}>View all requirements</Link>
-          </span>
+          </div>
         </div>
       </section>
     </li>

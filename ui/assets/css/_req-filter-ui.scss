@@ -2,6 +2,7 @@
 
 .active-filter {
   background-color: $color-gray-warm-light;
+  border: 1px solid $color-gray-light;
   font-weight: 500;
   font-size: 0.875rem;
   padding: 0.25rem;
@@ -28,4 +29,18 @@
 .alert {
   background-color: $color-gold-lightest;
   border-color: $color-gold;
+}
+
+@media (max-width: 52em) {
+  .filter-ui {
+    margin-top: 0;
+  }
+
+  .sidebar {
+    background-color: $color-gray-warm-light;
+  }
+
+  .filter-header {
+    display: none;
+  }
 }
