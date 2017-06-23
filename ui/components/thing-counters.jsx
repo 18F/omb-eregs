@@ -3,13 +3,14 @@ import React from 'react';
 function isUnfiltered(query) {
   const queryKeys = Object.keys(query);
   if (queryKeys.length === 0) {
-      return true;
+    return true;
   }
   if (queryKeys.length === 1 && queryKeys[0] === 'page') {
-      return true;
+    return true;
   }
-  delete query.page;
-  return Object.values(query).every(x => x === ''); // true if all empty.
+  const noPage = Object.assign({}, query);
+  delete noPage.page;
+  return Object.values(noPage).every(x => x === ''); // true if all empty.
 }
 
 export default function ThingCounter({ count, singular, plural }, { router }) {
