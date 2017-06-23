@@ -8,7 +8,7 @@
     border-right: 0;
     border-radius: 5px 0 0 5px;
     font-size: 0.75rem;
-    padding: 0.56rem;
+    padding: 0.54rem;
     width: 20rem;
   }
 
@@ -17,6 +17,20 @@
     border: 1px solid;
     border-left: 0;
     border-radius: 0 5px 5px 0;
-    padding: 0.57rem;
+    padding: 0.58rem;
+  }
+}
+
+@media (max-width: 52em) {
+  .search-form {
+    position: relative;
+
+    .search-input {
+      padding: 0.56rem;
+    }
+
+    .search-submit {
+      padding: 0.57rem;
+    }
   }
 }
