@@ -1,13 +1,6 @@
 import React from 'react';
 
 function isUnfiltered(query) {
-  const queryKeys = Object.keys(query);
-  if (queryKeys.length === 0) {
-    return true;
-  }
-  if (queryKeys.length === 1 && queryKeys[0] === 'page') {
-    return true;
-  }
   const noPage = Object.assign({}, query);
   delete noPage.page;
   return Object.values(noPage).every(x => x === ''); // true if all empty.
