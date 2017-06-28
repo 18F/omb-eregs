@@ -46,6 +46,7 @@ export default function Html({ contents, data }) {
         <div id="app">
           { contents }
         </div>
+        <script src="/static/ie.js" />
         { scriptTag(data) }
         <script src="/static/browser.js" />
       </body>

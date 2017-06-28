@@ -36,6 +36,7 @@ module.exports = [
       new CopyWebpackPlugin([
           { from: 'ui/assets/font/*', to: 'font', flatten: true },
           { from: 'ui/assets/img/*', to: 'img', flatten: true },
+          { from: 'ui/ie.js', to: '' }
       ]),
     ],
   },
