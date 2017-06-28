@@ -33,6 +33,7 @@ export default class Search extends React.Component {
           <input
             type="image"
             src="/static/img/search-icon.svg"
+            alt="Search"
             value="Submit"
             className="search-submit p1 gray-border"
           />
