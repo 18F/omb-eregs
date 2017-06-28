@@ -7,7 +7,7 @@ export default function Footer() {
         <ul class="list-reset">
           <li><a href="https://github.com/18F/omb-eregs/">Github</a></li>
           <li><a href="https://github.com/18F/omb-eregs/issues/">Report issue</a></li>
-          <li><a>Contact us</a></li>
+          <li><a href="mailto:ofcio@omb.eop.gov">Contact us</a></li>
         </ul>
     </footer>
   );
