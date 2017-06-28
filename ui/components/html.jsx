@@ -39,8 +39,10 @@ export default function Html({ contents, data }) {
     <html lang="en-US">
       <head>
         { newRelicTag() }
+        <title>OMB IT Policy Library (Beta)</title>
         <link rel="stylesheet" href="/static/styles.css" />
         <DAP />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
         <div id="app">

@@ -60,6 +60,7 @@ class RequirementAdmin(EReqsVersionAdmin):
         'topics',
         'agencies',
         'agency_groups',
+        'public',
     ]
 
 
