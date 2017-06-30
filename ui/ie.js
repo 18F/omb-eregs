@@ -45,7 +45,10 @@ window.onload = function() {
       document.body.className = 'legacy-ie';
     }
     else if (ieVersion === 10) {
-      document.body.className = 'ie';
+      document.body.className = 'ie10';
+    }
+    else if (ieVersion === 11) {
+      document.body.className = 'ie11';
     }
   }
 }

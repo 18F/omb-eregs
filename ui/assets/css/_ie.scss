@@ -21,7 +21,7 @@
   }
 }
 
-.ie {
+.ie10 {
   .search-form {
     top: 60px;
   }
@@ -29,5 +29,11 @@
   .homepage-link img {
     float: left;
     margin-top: 15px;
+  }
+}
+
+.ie11 {
+  .search-form {
+    margin-top: -10px;
   }
 }
