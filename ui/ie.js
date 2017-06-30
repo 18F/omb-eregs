@@ -7,6 +7,8 @@
  * Additionally, we need to run this script before any of the other page
  * JS because the browser JS doesn't work in IE10-. When the browser JS
  * breaks, this script fails to run.
+ * Unfortunately, this script and the IE CSS do get loaded in each browser.
+ * Fortunately, each is pretty small.
  * What I'm saying is that this is, by my estimation, a necessary evil. [TS]
  */
 // https://codepen.io/gapcode/pen/vEJNZN
