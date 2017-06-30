@@ -1,3 +1,14 @@
+/* Using React's dangerouslySetInnerHTML to inject conditional stylesheet
+ * comments proved not to work. The comments need to be inserted in a 
+ * <meta> and React throws an error around this. Inserting the comments
+ * in a <script> does not work.
+ * Using something like the ie-version npm package would not work because
+ * the `window` object is not available server-side.
+ * Additionally, we need to run this script before any of the other page
+ * JS because the browser JS doesn't work in IE10-. When the browser JS
+ * breaks, this script fails to run.
+ * What I'm saying is that this is, by my estimation, a necessary evil. [TS]
+ */
 // https://codepen.io/gapcode/pen/vEJNZN
 function detectIE() {
   var ua = window.navigator.userAgent;
@@ -30,6 +41,9 @@ window.onload = function() {
   if (ieVersion) {
     if (ieVersion <= 9) {
       document.body.className = 'legacy-ie';
+    }
+    else if (ieVersion === 10) {
+      document.body.className = 'ie';
     }
   }
 }
