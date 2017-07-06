@@ -5,7 +5,7 @@ import Search from './search/search';
 function Navbar() {
   return (
     <div className="items-center navbar flex">
-      <div className="homepage-link items-center flex">
+      <div className="homepage-link items-center flex clearfix">
         <img
           className="pl2 pr1"
           alt="US flag"

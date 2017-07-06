@@ -19,7 +19,7 @@ export default function FallbackView(props) {
           <input key={key} type="hidden" name={`redirectQuery__${key}`} value={query[key]} />)}
         <button
           type="submit"
-          className="add-filter-button border rounded-right p1 col col-3"
+          className="add-filter-button homepage-filter-button border rounded-right p1 col col-3"
         >
           <img alt="Add" src="/static/img/add-icon.svg" />
         </button>
