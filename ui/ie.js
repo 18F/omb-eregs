@@ -39,8 +39,15 @@ function detectIE() {
 }
 
 window.onload = function() {
-  var ieVersion = detectIE();
-  if (ieVersion) {
+  var ieVersion;
+  try { 
+    ieVersion = detectIE();
+  }
+  catch(e) {
+    console.error(e.message);
+    return;
+  }
+  if (ieVersion === parseInt(ieVersion, 10)) {
     if (ieVersion <= 9) {
       document.body.className = 'legacy-ie';
     }
