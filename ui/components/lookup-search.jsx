@@ -11,14 +11,14 @@ import Pagers from './pagers';
 const redirectQueryPrefix = 'redirectQuery__';
 
 
-/**
+/*
  * We expect a query like
  *  /some/path/?q=term&insertParam=lookup_id__in&page=1
  *    &redirectPathname=/prev/path&redirectQuery__lookup_id__in=1,2,3
  *    &redirectQuery__someOtherParameter=value
  * Return a clean version of that data; if we can't validate, raise an
  * exception.
- **/
+ */
 export function cleanParams(query) {
   const clean = {
     q: (query.q || '').toString(),
@@ -109,9 +109,9 @@ LookupSearch.propTypes = {
   }),
 };
 
-/**
+/*
  * Asynchronously grab the search result data from the API.
- **/
+ */
 function fetchData({ routes, location: { query } }) {
   const lookup = routes[routes.length - 1].path;
   const userParams = cleanParams(query);
