@@ -1,0 +1,39 @@
+.legacy-ie {
+  .sidebar {
+    width: 100%;
+  }
+
+  .clearfix {
+    display: inline-block;
+    zoom: 1;
+  }
+
+  .search-form {
+    top: 50px;
+  }
+
+  .active-filter {
+    .remove-filter-link {
+      text-indent: 0;
+      float: right;
+      color: #000;
+    }
+  }
+}
+
+.ie10 {
+  .search-form {
+    top: 60px;
+  }
+
+  .homepage-link img {
+    float: left;
+    margin-top: 15px;
+  }
+}
+
+.ie11 {
+  .search-form {
+    margin-top: -10px;
+  }
+}

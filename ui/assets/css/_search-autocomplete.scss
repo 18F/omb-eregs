@@ -10,6 +10,10 @@
   border-color: $color-primary;
   color: $color-white;
   cursor: pointer;
+
+  &.homepage-filter-button {
+    border-color: $color-gray-dark;
+  }
 }
 
 .Select-clear,
