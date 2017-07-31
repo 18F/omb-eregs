@@ -1,7 +1,7 @@
 import React from 'react';
 
-var styles = {
-	paddingBottom:'1em'
+const styles = {
+  paddingBottom: '1em',
 };
 
 const Disclaimer = () => (
@@ -18,19 +18,18 @@ const Disclaimer = () => (
         An official website of the United States government
       </div>
       <div>
-        <a href="javascript:void(0)">{/*This site is currently in beta.*/} See less {/*&#9660;*/}&#9650;</a>
+        <span className="todo">See less &#9650;</span>
       </div>
     </div>
     <div className="flex items-center justify-center usa-disclaimer" style={styles}>
       <div className="hidden">
-        <span className="t-bold">This site is currently in beta</span>&nbsp;{/*| More information can be given.*/}
+        <span className="t-bold">This site is currently in beta</span>
         <div className="toggle" aria-hidden="false">
-          <span className="t-block">Questions or comments? Email&nbsp;<a href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</a>.</span>
+          <span className="t-block">
+            Questions or comments?
+            Email&nbsp;<a href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</a>.
+          </span>
         </div>
-        {/*<div className="toggle-text" aria-expanded="true">
-          <button className="less" aria-hidden="false" tabIndex={0}>Show less <i className="icon-small--arrow-up-border" /></button>
-          <button className="more" aria-hidden="true" tabIndex={0}>Show more <i className="icon-small--arrow-down-border" /></button>
-        </div>*/}
       </div>
     </div>
   </div>
