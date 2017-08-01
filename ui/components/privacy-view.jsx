@@ -65,7 +65,7 @@ export default function PrivacyView() {
       <h4>Google Analytics</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
-        Fpc.gov participates in the U.S.
+        The OMB Policy Library participates in the U.S.
          Digital Analytics Program, (DAP) which utilizes a unified Google Analytics account for Federal Government agencies.
          This program helps Federal agencies understand how people find, access, and use government services online.
 
@@ -98,7 +98,7 @@ export default function PrivacyView() {
         Users of this website may send the OMB feedback or report an issue by sending an email to ofcio@omb.eop.gov.
         If you choose to send us your personally identifiable information, we will only use that information to respond to your message.
          We only share the information you give us with another government agency if your question relates to that agency, or as otherwise required by law.
-         Fpc.gov never collects information or creates individual profiles for the purposes of advertising, marketing, or any other commercial purpose.
+         The OMB Policy Library never collects information or creates individual profiles for the purposes of advertising, marketing, or any other commercial purpose.
           We do not create or store lists of email addresses or other information to deliver email alerts, newsletters, or otherwise send marketing messages or contact individuals.
            When you contact us, any personally identifiable information you provide is voluntary.
            Please do not include sensitive personally identifiable information or other sensitive information in the content of your email.
