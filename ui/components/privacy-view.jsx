@@ -57,7 +57,7 @@ export default function PrivacyView() {
          As discussed below under “Google Analytics,” our use of persistent cookies qualifies as “Usage Tier 2—Multi-session without personally identifiable information,” as defined in the OMB M-10-22 guidance.
          The policy states, “This tier encompasses any use of multi-session Web measurement and customization technologies when no [personally identifiable information] is collected.” We do not use persistent cookies to collect personally identifiable information.
         If you do not want to accept cookies, you can edit your browser’s options to stop accepting persistent cookies or to prompt you before accepting a cookie from the websites you visit.
-         Here are instructions for how you can disable cookies and/or Google Demographic and Interests reports.
+         <a href="https://www.usa.gov/optout-instructions">Here are instructions for how you can disable cookies and/or Google Demographic and Interests reports.<a/>
          {/*eslint-enable */}
       </p>
 
