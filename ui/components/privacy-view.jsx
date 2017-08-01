@@ -36,7 +36,7 @@ export default function PrivacyView() {
         {/*eslint-enable */}
       </p>
 
-      <h4>How the Federal Privacy Council uses Cookies on the OMB Policy Library</h4>
+      <h4>How the OMB uses Cookies on the OMB Policy Library</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
         When you visit a website, its server may generate a piece of text known as a “cookie” to place on your device.
@@ -92,10 +92,10 @@ export default function PrivacyView() {
         {/*eslint-enable */}
       </p>
 
-      <h4>Information You Choose to Give the Federal Privacy Council</h4>
+      <h4>Information You Choose to Give the OMB</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
-        Users of this website may send the Federal Privacy Council feedback or report an issue by sending an email to ofcio@omb.eop.gov.
+        Users of this website may send the OMB feedback or report an issue by sending an email to ofcio@omb.eop.gov.
         If you choose to send us your personally identifiable information, we will only use that information to respond to your message.
          We only share the information you give us with another government agency if your question relates to that agency, or as otherwise required by law.
          Fpc.gov never collects information or creates individual profiles for the purposes of advertising, marketing, or any other commercial purpose.
@@ -136,7 +136,7 @@ export default function PrivacyView() {
       <h4>Questions about the Privacy Policy</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
-        If you have questions about this privacy policy or the privacy practices of the Federal Privacy Council, please submit your questions to ofcio@omb.eop.gov.
+        If you have questions about this privacy policy or the privacy practices of the OMB, please submit your questions to ofcio@omb.eop.gov.
         {/*eslint-enable */}
       </p>
 
