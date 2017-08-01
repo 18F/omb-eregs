@@ -120,9 +120,9 @@ export default function PrivacyView() {
       <p className="max-width-3">
         {/*eslint-disable */}
         This website was built using Sites, a government-hosted service designed to enable the rapid deployment of government websites in a secure and readily accessible environment.
-        Sites is a product of the Digital Government Division of the Office of Citizen Services and Innovative Technologies in the U.S.
+        Sites is a product of the Office of Products and Programs.
          General Services Administration.
-         Sites, which hosts www.the OMB Policy Library, provides a secure, FISMA compliant platform.
+         Sites, which hosts the OMB Policy Library, provides a secure, FISMA compliant platform.
 
         The security policy of Sites states, “[f]or site security purposes and to ensure that this service remains available to all users, this government computer system employs software programs to monitor network traffic to identify unauthorized attempts to upload or change information, or otherwise cause damage.”
 
