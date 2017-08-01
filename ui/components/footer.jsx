@@ -6,6 +6,7 @@ export default function Footer() {
       <h4>OMB Policy Library</h4>
       <ul className="list-reset">
         <li><a href="https://github.com/18F/omb-eregs/">GitHub</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
         <li><a href="https://github.com/18F/omb-eregs/issues/">Report issue</a></li>
         <li><a href="mailto:ofcio@omb.eop.gov">Contact us</a></li>
       </ul>
