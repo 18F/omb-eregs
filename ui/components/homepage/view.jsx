@@ -49,12 +49,6 @@ export default function Homepage() {
                 is part of our ongoing efforts to make it easier to find,
                 read, and understand information technology requirements.
             </p>
-            <p>
-                The information on this site should be considered unofficial
-                and will be updated frequently as a convenience to agencies
-                and the public. For official OMB guidance, please follow the
-                links to the original memos and policy documents.
-            </p>
             <h3 className="h2">Disclaimer</h3>
             <p>
               The information appearing on this website is for general
