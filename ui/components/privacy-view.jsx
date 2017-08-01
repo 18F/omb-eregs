@@ -15,7 +15,7 @@ export default function PrivacyView() {
          {/*eslint-enable */}
       </p>
 
-      <h4>Information Collected and Stored Automatically</h4>
+      <h4>Information collected and stored automatically</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
         As with many Federal Government websites, the OMB Policy Library is hosted by the U.S.
@@ -36,7 +36,7 @@ export default function PrivacyView() {
         {/*eslint-enable */}
       </p>
 
-      <h4>How the OMB uses Cookies on the OMB Policy Library</h4>
+      <h4>How the OMB uses cookies on the OMB policy library</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
         When you visit a website, its server may generate a piece of text known as a “cookie” to place on your device.
@@ -92,7 +92,7 @@ export default function PrivacyView() {
         {/*eslint-enable */}
       </p>
 
-      <h4>Information You Choose to Give the OMB</h4>
+      <h4>Information you choose to give the OMB</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
         Users of this website may send the OMB feedback or report an issue by sending an email to ofcio@omb.eop.gov.
@@ -105,7 +105,7 @@ export default function PrivacyView() {
            {/*eslint-enable */}
       </p>
 
-      <h4>Children and Privacy on the OMB Policy Library</h4>
+      <h4>Children and privacy on the OMB policy library</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
         We believe in the importance of protecting the privacy of children online.
@@ -133,7 +133,7 @@ export default function PrivacyView() {
       </p>
 
 
-      <h4>Questions about the Privacy Policy</h4>
+      <h4>Questions about the privacy policy</h4>
       <p className="max-width-3">
         {/*eslint-disable */}
         If you have questions about this privacy policy or the privacy practices of the OMB, please submit your questions to ofcio@omb.eop.gov.
