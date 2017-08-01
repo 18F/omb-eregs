@@ -72,7 +72,7 @@ export default function PrivacyView() {
         The DAP is a hosted shared service provided by the General Services Administration’s (GSA’s) Office of Citizen Services and Innovative Technologies, and the protocol and information collected are the same for all websites participating in the DAP.
         As a participant in GSA’s DAP program, this website’s Google Analytics traffic data is automatically reported to GSA.
 
-        Google Analytics is a third-party web measurement and customization technology as defined in OMB M-10-22 (PDF).
+        Google Analytics is a third-party web measurement and customization technology as defined in OMB M-10-22.
 
         Here is how it works: Google Analytics sets one or more cookies on your computer so that it can recognize your computer if you visit the the OMB Policy Library website in the future.
          This cookie(s) does not collect personally identifiable information.
