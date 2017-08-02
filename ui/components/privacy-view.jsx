@@ -54,14 +54,14 @@ export default function PrivacyView() {
 
         Google Analytics does not collect personally identifiable information through its cookie(s).
          The program does not track individuals and anonymizes the IP addresses of visitors.
-        <a href="https://www.digitalgov.gov/services/dap/common-questions-about-dap-faq/">Common Questions about DAP (FAQ) provides more information about how Google Analytics handles IP addresses.</a> According to GSA’s Common Questions About DAP, “none of the federal government data tracked as part of the Data Analytics Program will be shared with or available to Google’s corporate advertising partners.”
+        <a href="https://www.digitalgov.gov/services/dap/common-questions-about-dap-faq/">Common Questions about DAP (FAQ) provides more information about how Google Analytics handles IP addresses</a>. According to GSA’s Common Questions About DAP, “none of the federal government data tracked as part of the Data Analytics Program will be shared with or available to Google’s corporate advertising partners.”
 
         A limited number of authorized individuals will have user accounts that will allow them to log in to the Google Analytics dashboard and view or run reports regarding visits to the OMB Policy Library and the other web metrics available from the DAP.
 
         Visitors who choose to disable this web measurement tool will still have full access to the OMB Policy Library.
         While the details vary from browser to browser, most modern browsers can be set up to accept, reject, or request user intervention when a site asks to set a cookie.
 
-        You can view web metrics information at https://analytics.usa.gov//.
+        You can view web metrics information at <a href="https://analytics.usa.gov/">analytics.usa.gov</a>.
         {/*eslint-enable */}
       </p>
 
