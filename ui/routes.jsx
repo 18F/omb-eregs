@@ -2,6 +2,7 @@ import React from 'react';
 import { browserHistory, IndexRoute, Redirect, Route, Router } from 'react-router';
 
 import App from './components/app';
+import PrivacyView from './components/privacy-view';
 import PolicyContainerResolver from './components/policies/container';
 import RequirementsContainerResolver from './components/requirements/container';
 import LookupSearchResolver from './components/lookup-search';
@@ -20,6 +21,7 @@ if (browserHistory && typeof gas !== 'undefined') {
 export default <Router history={browserHistory} >
   <Route path="/" component={App}>
     <IndexRoute component={Homepage} />
+    <Route path="privacy" component={PrivacyView} />
     <Route path="search-redirect">
       <Route path="agencies" component={LookupSearchResolver} />
       <Route path="policies" component={LookupSearchResolver} />

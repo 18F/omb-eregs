@@ -6,6 +6,14 @@
   line-height: 0.9375rem;
 }
 
+button.usa-disclaimer {
+  border: 0;
+}
+
+.usa-disclaimer-text {
+  padding-bottom: 1em;
+}
+
 .navbar {
   background-color: $color-primary-darkest;
 }

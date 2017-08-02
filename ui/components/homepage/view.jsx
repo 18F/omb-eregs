@@ -49,11 +49,35 @@ export default function Homepage() {
                 is part of our ongoing efforts to make it easier to find,
                 read, and understand information technology requirements.
             </p>
+            <h3 className="h2">Disclaimer</h3>
             <p>
-                The information on this site should be considered unofficial
-                and will be updated frequently as a convenience to agencies
-                and the public. For official OMB guidance, please follow the
-                links to the original memos and policy documents.
+              The information appearing on this website is for general
+              informational purposes only, intended to supplement official
+              resources, including the Office of Management and Budget’s (OMB)
+              website (<a href="https://www.whitehouse.gov/omb">www.whitehouse.gov/omb</a>).
+              This website does not provide legal advice to any individual or
+              entity; establish, modify, or interpret any OMB policies; serve
+              as a decision-making tool or a compliance check-list; or
+              provide a comprehensive set of requirements applicable to
+              agencies. This website should not be cited as the source of any
+              policies or requirements. Consult with your agency’s legal
+              counsel before taking any action based in whole or part on
+              information appearing on this site or any site to which it may
+              be linked. We also urge you to conduct a thorough review of all
+              relevant requirements applicable to you.
+            </p>
+            <p>
+              While OMB strives to make the information on this website as
+              timely and accurate as possible, OMB makes no claims, promises,
+              or guarantees about the accuracy, completeness, or adequacy of
+              the contents of this site, and expressly disclaims liability for
+              errors and omissions in the contents of this site. No warranty
+              of any kind, implied, expressed, or statutory, including but not
+              limited to the warranties of non- infringement of third party
+              rights, title, merchantability, fitness for a particular purpose
+              or freedom from computer virus, is given with respect to the
+              contents of this website or its links to other Internet
+              resources.
             </p>
           </div>
         </div>
