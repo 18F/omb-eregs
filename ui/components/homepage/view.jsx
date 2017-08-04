@@ -44,10 +44,10 @@ export default function Homepage() {
           <div className="about-inner px2 sm-col-12 md-col-6 mx-auto">
             <h3 className="h2">About this site</h3>
             <p>
-                The OMB Policy Library includes excerpts from memos and
-                policy documents issued by the White House. This project
-                is part of our ongoing efforts to make it easier to find,
-                read, and understand information technology requirements.
+              The beta OMB Policy Library includes excerpts from policies issued by the White House. This project is part of our ongoing efforts to make it easier to find and understand policy. 
+            </p>
+            <p>
+              This site does not include a comprehensive list of OMB policies. We are adding select policies on a rolling basis and working with users to make the site more useful. <a href="mailto:ofcio@omb.eop.gov">Tell us what you think!</a>
             </p>
             <h3 className="h2">Disclaimer</h3>
             <p>
