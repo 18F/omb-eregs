@@ -51,7 +51,7 @@ export default function Homepage() {
             <p>
               This site does not include a comprehensive list of OMB policies.
               We are adding select policies on a rolling basis and working
-              with users to make the site more useful. 
+              with users to make the site more useful.{' '}
               <a href="mailto:ofcio@omb.eop.gov">Tell us what you think!</a>
             </p>
             <h3 className="h2">Disclaimer</h3>
