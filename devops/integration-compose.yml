@@ -13,7 +13,7 @@ services:
       - prod-api
       - proxy
   selenium-py.test:
-    image: python:3.5.3
+    image: python:3.6.2
     volumes:
       - $PWD:/usr/src/app
     working_dir: /usr/src/app
