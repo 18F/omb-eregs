@@ -1,0 +1,55 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+        - image: circleci/python:3.6.2
+      
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Setup "holder" container for file storage
+          command: |
+            docker create -v /usr/src/app -w /usr/src/app/ --name holder python:3.6.2 sleep 100d
+            docker cp . holder:/usr/src/app
+            docker start holder
+      - run:
+          name: Generate circle-specific docker configs
+          command: |
+            docker exec holder pip install pyyaml
+            docker exec holder python ./devops/transform_circle.py docker-compose.yml holder > docker-compose-circle.yml
+
+      - run:
+          name: UI Tests
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm npm test
+      - run:
+          name: Build UI
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: |
+            docker-compose run --rm webpack
+            docker cp holder:/usr/src/app/ui-dist ./ui-dist
+      - run:
+          name: API Unit tests
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm py.test
+      - run:
+          name: API Flake8
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm flake8
+      - run:
+          name: API Bandit
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
