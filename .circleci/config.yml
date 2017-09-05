@@ -53,3 +53,15 @@ jobs:
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
           command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
+
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              export CF_USERNAME=$CF_USERNAME_DEV
+              export CF_PASSWORD=$CF_PASSWORD_DEV
+              ./devops/circle-deploy.sh dev
+            elif [ "${CIRCLE_BRANCH}" == "release" ]; then
+              export CF_USERNAME=$CF_USERNAME_PROD
+              export CF_PASSWORD=$CF_PASSWORD_PROD
+              ./devops/circle-deploy.sh prod
+            fi
