@@ -6,8 +6,8 @@
 #
 attrs==16.3.0             # via flake8-bugbear
 bandit==1.4.0
-boto3==1.4.4
-botocore==1.5.39
+boto3==1.4.7
+botocore==1.7.4
 cfenv==0.5.2
 coverage==4.3.4           # via pytest-cov
 dj-database-url==0.4.2
