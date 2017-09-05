@@ -6,7 +6,7 @@
 #
 boto3==1.4.7
 botocore==1.7.4           # via boto3, s3transfer
-cfenv==0.5.2
+cfenv==0.5.3
 dj-database-url==0.4.2
 django-admin-interface==0.5.0
 django-cas-ng==3.5.7
