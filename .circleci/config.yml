@@ -54,6 +54,12 @@ jobs:
             COMPOSE_FILE: docker-compose-circle.yml
           command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
 
+      - run:
+          name: Submit UI Coverage
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm --no-deps -e CODECLIMATE_REPO_TOKEN npm run submit-coverage
+
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
