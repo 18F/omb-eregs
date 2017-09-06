@@ -43,7 +43,7 @@ gitpython==2.1.3          # via bandit
 gunicorn==19.7.1
 idna==2.6
 isort==4.2.15             # via flake8-isort
-jedi==0.10.0
+jedi==0.10.2
 jmespath==0.9.3
 mccabe==0.6.1             # via flake8
 model-mommy==1.3.2
