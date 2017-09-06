@@ -51,7 +51,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
-    "axios": "^0.15.3",
+    "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
     "buffer-equal-constant-time": "^1.0.1",
     "cfenv": "^1.0.4",
