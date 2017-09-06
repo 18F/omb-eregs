@@ -38,8 +38,8 @@ flake8-string-format==0.2.3
 flake8-tuple==0.2.13
 flake8==3.4.1
 furl==1.0.0
-gitdb2==2.0.0             # via gitpython
-gitpython==2.1.3          # via bandit
+gitdb2==2.0.2             # via gitpython
+gitpython==2.1.5          # via bandit
 gunicorn==19.7.1
 idna==2.6
 isort==4.2.15             # via flake8-isort
@@ -49,7 +49,7 @@ mccabe==0.6.1             # via flake8
 model-mommy==1.3.2
 newrelic==2.90.0.75
 orderedmultidict==0.7.11
-pbr==3.0.0                # via stevedore
+pbr==3.1.1                # via stevedore
 pep8-naming==0.4.1
 psycopg2==2.7.3.1
 py==1.4.34                # via pytest
@@ -72,9 +72,9 @@ requests==2.18.4
 s3transfer==0.1.10
 selenium==3.3.3           # via pytest-selenium
 six==1.10.0
-smmap2==2.0.1             # via gitdb2
+smmap2==2.0.3             # via gitdb2
 sqlparse==0.2.3           # via django-debug-toolbar
-stevedore==1.21.0         # via bandit
+stevedore==1.26.0         # via bandit
 testfixtures==5.2.0       # via flake8-isort
 urllib3==1.22
 whitenoise==3.3.0
