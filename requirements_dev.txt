@@ -12,7 +12,7 @@ cfenv==0.5.3
 coverage==4.3.4           # via pytest-cov
 dj-database-url==0.4.2
 django-admin-interface==0.5.2
-django-cas-ng==3.5.7
+django-cas-ng==3.5.8
 django-colorfield==0.1.12
 django-cors-headers==2.0.2
 django-debug-toolbar==1.7
