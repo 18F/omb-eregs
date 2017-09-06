@@ -9,7 +9,6 @@ AppUrls = namedtuple('AppUrls', ('ui', 'api', 'admin'))
 def selenium(selenium):
     """Configure selenium"""
     selenium.implicitly_wait(10)
-    selenium.maximize_window()
     return selenium
 
 

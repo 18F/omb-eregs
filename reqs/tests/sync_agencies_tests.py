@@ -82,11 +82,12 @@ def test_sync_row_existing():
 def test_group_versions(monkeypatch):
     """Avoid creating dozens of versions per agency group."""
     monkeypatch.setattr(sync_agencies, 'requests', Mock())
-    sync_agencies.requests.get.return_value.json.return_value = dict(result=[
-        dict(agencyAbbreviation=c, agencyCode=c, agencyName=c, agencyType=c,
-             CFO_Act='1', CIO_Council='')
-        for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    ])
+    sync_agencies.requests.get.return_value.json.return_value = {
+        'result': [
+            {'agencyAbbreviation': c, 'agencyCode': c, 'agencyName': c,
+             'agencyType': c, 'CFO_Act': '1', 'CIO_Council': ''}
+            for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'],
+    }
 
     call_command('sync_agencies')
 

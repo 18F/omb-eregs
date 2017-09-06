@@ -150,19 +150,19 @@ def test_priority_split(text, result):
 
 def policy_row_factory(**kwargs):
     """Generate random data in a policy-row format"""
-    row = dict(
-        policyNumber=str(random.randint(100, 999)),                 # nosec
-        policyTitle=get_random_string(32),
-        uriPolicyId='http://example.com/' + get_random_string(10),
-        ombPolicyId=get_random_string(32),
-        policyType=random.choice([t.value for t in PolicyTypes]),   # nosec
-        policyIssuanceYear=date(
+    row = {
+        'policyNumber': str(random.randint(100, 999)),                 # nosec
+        'policyTitle': get_random_string(32),
+        'uriPolicyId': 'http://example.com/' + get_random_string(10),
+        'ombPolicyId': get_random_string(32),
+        'policyType': random.choice([t.value for t in PolicyTypes]),   # nosec
+        'policyIssuanceYear': date(
             random.randint(1950, 2016),                             # nosec
             random.randint(1, 12),                                  # nosec
             random.randint(1, 28)).strftime('%m/%d/%Y'),            # nosec
-        policySunset='NA',
-        issuingBody=get_random_string(10)
-    )
+        'policySunset': 'NA',
+        'issuingBody': get_random_string(10)
+    }
     row.update(kwargs)
     return row
 
