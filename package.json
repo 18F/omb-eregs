@@ -59,7 +59,7 @@
     "helmet": "^3.8.1",
     "lru-cache": "^4.1.1",
     "moment": "^2.18.1",
-    "morgan": "^1.8.1",
+    "morgan": "^1.8.2",
     "newrelic": "^1.38.1",
     "passport": "^0.3.2",
     "passport-custom": "^1.0.5",
