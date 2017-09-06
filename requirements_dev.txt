@@ -24,7 +24,7 @@ django-flat-theme==1.1.4
 django-reversion==2.0.10
 django-storages==1.6.5
 django-taggit==0.22.0
-django==1.11
+django==1.11.5
 djangorestframework==3.6.4
 docutils==0.13.1
 flake8-bugbear==16.12.2
