@@ -62,7 +62,7 @@ pytest-selenium==1.9.1
 pytest-variables==1.5.1   # via pytest-selenium
 pytest==3.0.6
 python-cas==1.2.0
-python-dateutil==2.6.0
+python-dateutil==2.6.1
 pytz==2017.2
 pyyaml==3.12              # via bandit
 requests==2.13.0
