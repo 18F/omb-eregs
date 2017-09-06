@@ -16,7 +16,7 @@ export default class Search extends React.Component {
 
   actionPath() {
     const path = this.context.router.location.pathname;
-    return (path.includes('policies') || path.includes('requirements')) ? path : 'requirements/';
+    return (path.includes('policies') || path.includes('requirements')) ? path : '/requirements/';
   }
 
   render() {
