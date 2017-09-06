@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements_dev.txt requirements_dev.in
 #
-attrs==16.3.0             # via flake8-bugbear
+attrs==17.2.0             # via flake8-bugbear
 bandit==1.4.0
 boto3==1.4.7
 botocore==1.7.4
@@ -27,7 +27,7 @@ django-taggit==0.22.0
 django==1.11.5
 djangorestframework==3.6.4
 docutils==0.13.1
-flake8-bugbear==16.12.2
+flake8-bugbear==17.4.0
 flake8-builtins==0.2
 flake8-comprehensions==1.2.1
 flake8-isort==2.1.3
