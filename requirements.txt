@@ -24,7 +24,7 @@ docutils==0.13.1          # via botocore
 furl==1.0.0               # via cfenv
 gunicorn==19.7.1
 jmespath==0.9.3           # via boto3, botocore
-newrelic==2.82.0.62
+newrelic==2.90.0.75
 orderedmultidict==0.7.11  # via furl
 psycopg2==2.7.1
 python-cas==1.2.0         # via django-cas-ng

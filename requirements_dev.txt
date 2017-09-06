@@ -44,7 +44,7 @@ jedi==0.10.0
 jmespath==0.9.3
 mccabe==0.6.1             # via flake8
 model-mommy==1.3.2
-newrelic==2.82.0.62
+newrelic==2.90.0.75
 orderedmultidict==0.7.11
 pbr==3.0.0                # via stevedore
 pep8-naming==0.4.1
