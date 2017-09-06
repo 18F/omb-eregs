@@ -19,7 +19,7 @@ django-debug-toolbar==1.7
 django-filter==1.0.4
 django-flat-responsive==1.4.1
 django-flat-theme==1.1.4
-django-reversion==2.0.8
+django-reversion==2.0.10
 django-storages==1.5.2
 django-taggit==0.22.0
 django==1.11

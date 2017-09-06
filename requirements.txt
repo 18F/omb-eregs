@@ -15,7 +15,7 @@ django-cors-headers==2.1.0
 django-filter==1.0.4
 django-flat-responsive==1.4.1  # via django-admin-interface
 django-flat-theme==1.1.4  # via django-admin-interface
-django-reversion==2.0.8
+django-reversion==2.0.10
 django-storages==1.5.2
 django-taggit==0.22.0
 django==1.11
