@@ -6,7 +6,9 @@
 #
 boto3==1.4.7
 botocore==1.7.4           # via boto3, s3transfer
+certifi==2017.7.27.1      # via requests
 cfenv==0.5.3
+chardet==3.0.4            # via requests
 dj-database-url==0.4.2
 django-admin-interface==0.5.2
 django-cas-ng==3.5.8
@@ -23,6 +25,7 @@ djangorestframework==3.6.4
 docutils==0.13.1          # via botocore
 furl==1.0.0               # via cfenv
 gunicorn==19.7.1
+idna==2.6                 # via requests
 jmespath==0.9.3           # via boto3, botocore
 newrelic==2.90.0.75
 orderedmultidict==0.7.11  # via furl
@@ -30,7 +33,8 @@ psycopg2==2.7.3.1
 python-cas==1.2.0         # via django-cas-ng
 python-dateutil==2.6.1
 pytz==2017.2              # via django
-requests==2.13.0
+requests==2.18.4
 s3transfer==0.1.10        # via boto3
 six==1.10.0               # via furl, orderedmultidict, python-cas, python-dateutil
+urllib3==1.22             # via requests
 whitenoise==3.3.0
