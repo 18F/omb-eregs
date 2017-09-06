@@ -24,15 +24,7 @@ before_deploy:
 - cf install-plugin -f ~/autopilot-linux
 deploy:
   - provider: script
-    script: devops/deploy.sh dev
-    skip_cleanup: true
-    on:
-      branch: master
-  - provider: script
     script: devops/deploy.sh prod
     skip_cleanup: true
     on:
       branch: release
-after_success:
-- docker-compose run --rm dev npm install codeclimate-test-reporter
-- docker-compose run --rm -e CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN dev ./node_modules/.bin/codeclimate-test-reporter < ui/lcov.info
