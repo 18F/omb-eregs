@@ -17,5 +17,8 @@ if [ -n "$CF_USERNAME" ] && [ -n "$CF_PASSWORD" ]; then
 fi
 cf target -o $ORG -s $SPACE
 
+cf scale -i 1 api   # ensure we have 512M free
 cf zero-downtime-push api -f $MANIFEST
+cf scale -i 1 ui
 cf zero-downtime-push ui -f $MANIFEST
+cf zero-downtime-push redeployer -f $MANIFEST
