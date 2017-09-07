@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import config from '../../config';
@@ -38,7 +39,7 @@ FiveHundred.defaultProps = {
   err: { stack: '' },
 };
 FiveHundred.propTypes = {
-  err: React.PropTypes.shape({
-    stack: React.PropTypes.string,
+  err: PropTypes.shape({
+    stack: PropTypes.string,
   }),
 };

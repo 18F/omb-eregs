@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import Requirement from './requirement';
@@ -22,12 +23,12 @@ export default function RequirementsView({ requirements, count }) {
   );
 }
 RequirementsView.propTypes = {
-  requirements: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.number,
-    title: React.PropTypes.string,
-    relevant_reqs: React.PropTypes.number,
+  requirements: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    relevant_reqs: PropTypes.number,
   })),
-  count: React.PropTypes.number,
+  count: PropTypes.number,
 };
 RequirementsView.defaultProps = {
   requirements: [],

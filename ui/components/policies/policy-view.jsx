@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 
@@ -46,13 +47,13 @@ export default function Policy({ policy, topicsIds }) {
 }
 
 Policy.propTypes = {
-  policy: React.PropTypes.shape({
-    id: React.PropTypes.number,
-    title_with_number: React.PropTypes.string,
-    relevant_reqs: React.PropTypes.number,
-    total_reqs: React.PropTypes.number,
+  policy: PropTypes.shape({
+    id: PropTypes.number,
+    title_with_number: PropTypes.string,
+    relevant_reqs: PropTypes.number,
+    total_reqs: PropTypes.number,
   }),
-  topicsIds: React.PropTypes.string,
+  topicsIds: PropTypes.string,
 };
 
 Policy.defaultProps = {

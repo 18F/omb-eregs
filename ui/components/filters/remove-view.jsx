@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 
@@ -17,9 +18,9 @@ export default function FilterRemoveView({ heading, linkToRemove, name }) {
   );
 }
 FilterRemoveView.propTypes = {
-  heading: React.PropTypes.string,
-  linkToRemove: React.PropTypes.shape({ pathname: React.PropTypes.string }),
-  name: React.PropTypes.string.isRequired,
+  heading: PropTypes.string,
+  linkToRemove: PropTypes.shape({ pathname: PropTypes.string }),
+  name: PropTypes.string.isRequired,
 };
 FilterRemoveView.defaultProps = {
   heading: '',

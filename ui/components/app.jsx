@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+
 import Disclaimer from './disclaimer';
 import Navbar from './navbar';
 import Footer from './footer';
@@ -21,7 +23,7 @@ App.defaultProps = {
 };
 
 App.propTypes = {
-  children: React.PropTypes.node,
+  children: PropTypes.node,
 };
 
 export default App;

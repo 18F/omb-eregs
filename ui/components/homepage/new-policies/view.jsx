@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 
@@ -17,10 +18,10 @@ export default function NewPolicyView({ policy }) {
   );
 }
 NewPolicyView.propTypes = {
-  policy: React.PropTypes.shape({
-    id: React.PropTypes.number,
-    issuance_pretty: React.PropTypes.string,
-    issuing_body: React.PropTypes.string,
-    title_with_number: React.PropTypes.string,
+  policy: PropTypes.shape({
+    id: PropTypes.number,
+    issuance_pretty: PropTypes.string,
+    issuing_body: PropTypes.string,
+    title_with_number: PropTypes.string,
   }).isRequired,
 };

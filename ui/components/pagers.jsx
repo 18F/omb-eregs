@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 
@@ -34,14 +35,14 @@ Pagers.defaultProps = {
 };
 
 Pagers.propTypes = {
-  count: React.PropTypes.number,
+  count: PropTypes.number,
 };
 Pagers.contextTypes = {
-  router: React.PropTypes.shape({
-    location: React.PropTypes.shape({
-      pathname: React.PropTypes.string,
-      query: React.PropTypes.shape({
-        page: React.PropTypes.string,
+  router: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+      query: PropTypes.shape({
+        page: PropTypes.string,
       }),
     }),
   }),

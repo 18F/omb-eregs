@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 
@@ -22,11 +23,11 @@ export function Metadata({ className, name, value, nullValue, separator }) {
 }
 
 Metadata.propTypes = {
-  className: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string.isRequired,
-  value: React.PropTypes.string,
-  nullValue: React.PropTypes.string,
-  separator: React.PropTypes.string,
+  className: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  nullValue: PropTypes.string,
+  separator: PropTypes.string,
 };
 
 Metadata.defaultProps = {
@@ -48,9 +49,9 @@ function TopicLink({ topic }) {
   );
 }
 TopicLink.propTypes = {
-  topic: React.PropTypes.shape({
-    id: React.PropTypes.number,
-    name: React.PropTypes.string,
+  topic: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
   }).isRequired,
 };
 
@@ -69,9 +70,9 @@ function PolicyLink({ policy }) {
   );
 }
 PolicyLink.propTypes = {
-  policy: React.PropTypes.shape({
-    id: React.PropTypes.number,
-    title_with_number: React.PropTypes.string,
+  policy: PropTypes.shape({
+    id: PropTypes.number,
+    title_with_number: PropTypes.string,
   }).isRequired,
 };
 
@@ -148,15 +149,15 @@ export default function Requirement({ requirement }) {
 }
 
 Requirement.propTypes = {
-  requirement: React.PropTypes.shape({
-    topics: React.PropTypes.arrayOf(React.PropTypes.shape({
-      id: React.PropTypes.number,
-      name: React.PropTypes.string,
+  requirement: PropTypes.shape({
+    topics: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
     })),
-    policy: React.PropTypes.shape({
-      sunset: React.PropTypes.string,
+    policy: PropTypes.shape({
+      sunset: PropTypes.string,
     }),
-    req_text: React.PropTypes.string,
-    req_id: React.PropTypes.string,
+    req_text: PropTypes.string,
+    req_id: PropTypes.string,
   }).isRequired,
 };

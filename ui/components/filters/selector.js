@@ -1,5 +1,6 @@
 import querystring from 'querystring';
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Async } from 'react-select';
 
@@ -34,17 +35,17 @@ export default function Selector(props, { router }) {
   return React.createElement(ConditionalRender, {}, fallback, autocompleter);
 }
 Selector.propTypes = {
-  'aria-labelledby': React.PropTypes.string.isRequired,
-  lookup: React.PropTypes.oneOf(Object.keys(apiNameField)).isRequired,
-  insertParam: React.PropTypes.string.isRequired,
-  pathname: React.PropTypes.string.isRequired,
+  'aria-labelledby': PropTypes.string.isRequired,
+  lookup: PropTypes.oneOf(Object.keys(apiNameField)).isRequired,
+  insertParam: PropTypes.string.isRequired,
+  pathname: PropTypes.string.isRequired,
 };
 Selector.contextTypes = {
-  router: React.PropTypes.shape({
-    location: React.PropTypes.shape({
-      query: React.PropTypes.shape({}),
-      pathname: React.PropTypes.string,
+  router: PropTypes.shape({
+    location: PropTypes.shape({
+      query: PropTypes.shape({}),
+      pathname: PropTypes.string,
     }),
-    push: React.PropTypes.func,
+    push: PropTypes.func,
   }),
 };

@@ -631,7 +631,7 @@
     },
     "prop-types": {
       "version": "15.5.10",
-      "from": "prop-types@>=15.5.10 <16.0.0",
+      "from": "https://registry.npmjs.org/prop-types/-/prop-types-15.5.10.tgz",
       "resolved": "https://registry.npmjs.org/prop-types/-/prop-types-15.5.10.tgz"
     },
     "proxy-addr": {

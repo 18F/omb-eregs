@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import PoliciesView from './policies-view';
@@ -76,8 +77,8 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
     SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
 PoliciesContainer.propTypes = {
-  location: React.PropTypes.shape({ query: React.PropTypes.shape({}) }),
-  pagedPolicies: React.PropTypes.shape({
+  location: PropTypes.shape({ query: PropTypes.shape({}) }),
+  pagedPolicies: PropTypes.shape({
     results: PoliciesView.propTypes.policies,
     count: PoliciesView.propTypes.count,
   }),

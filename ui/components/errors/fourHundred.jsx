@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import DAP from '../dap';
@@ -22,6 +23,6 @@ FourHundred.defaultProps = {
   message: '',
 };
 FourHundred.propTypes = {
-  message: React.PropTypes.string,
+  message: PropTypes.string,
 };
 
