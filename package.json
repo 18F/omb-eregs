@@ -73,7 +73,7 @@
     "react-select": "^1.0.0-rc.5",
     "serialize-javascript": "^1.4.0",
     "uswds": "^0.14.0",
-    "validator": "^7.0.0"
+    "validator": "^8.1.0"
   },
   "engines": {
     "node": "6.x"
