@@ -11,10 +11,11 @@ export default function RequirementsView({ requirements, count }) {
     <div>
       <ThingCounter count={count} singular={singular} plural={plural} />
       <ul className="requirement-list list-reset">
-        { requirements.map(requirement =>
+        { requirements.map(requirement => (
           <li key={requirement.req_id} className="gray-border border rounded mb2">
             <Requirement requirement={requirement} />
-          </li>) }
+          </li>
+        )) }
       </ul>
       <Pagers count={count} />
     </div>

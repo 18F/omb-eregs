@@ -22,7 +22,7 @@ function scriptTag(data) {
  * the generated text. */
 function newRelicTag() {
   const stringWithTags = newrelic.getBrowserTimingHeader();
-  if (!stringWithTags) {  /* agent is disabled */
+  if (!stringWithTags) { /* agent is disabled */
     return null;
   }
   const endOpeningTag = stringWithTags.indexOf('>');
