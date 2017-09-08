@@ -74,6 +74,7 @@ jobs:
             ./cc-test-reporter upload-coverage --input coverage/codeclimate.json
 
       - deploy:
+          name: Deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               export CF_USERNAME=$CF_USERNAME_DEV
