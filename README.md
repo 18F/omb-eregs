@@ -9,7 +9,8 @@ See our bi-weekly demos [on
 YouTube](https://www.youtube.com/playlist?list=PLd9b-GuOJ3nEJsDD5BZ5qlVkr9RZ0PivQ).
 
 ## Status
-[![Build Status](https://travis-ci.org/18F/omb-eregs.svg?branch=master)](https://travis-ci.org/18F/omb-eregs)
+
+[![CircleCI](https://circleci.com/gh/18F/omb-eregs.svg?style=svg)](https://circleci.com/gh/18F/omb-eregs)
 [![Code Climate](https://codeclimate.com/github/18F/omb-eregs/badges/gpa.svg)](https://codeclimate.com/github/18F/omb-eregs)
 [![Dependency Status](https://gemnasium.com/badges/github.com/18F/omb-eregs.svg)](https://gemnasium.com/github.com/18F/omb-eregs)
 
@@ -208,11 +209,11 @@ set up, so we've wrapped them in a script:
 If your environment does not have a bash-like shell, inspect that file to
 implement something similar.
 
-See our `.travis.yml` test for a list of the exact commands we run in CI.
+See our `.circleci/config.yml` for a list of the exact commands we run in CI.
 
 ## Deploying
 
-We deploy to our dev/demo environment via Travis after every merge to master.
+We deploy to our dev/demo environment via CircleCI after every merge to master.
 To deploy manually (or to prod), you will need to install the `cf` command
 line tool and an associated plugin:
 
