@@ -15,6 +15,12 @@ jobs:
       - setup_remote_docker
 
       - run:
+          name: Prep Code Climate Coverage reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod a+x ./cc-test-reporter
+            ./cc-test-reporter before-build
+      - run:
           name: Setup "holder" container for file storage
           command: |
             docker create -v /usr/src/app -w /usr/src/app/ --name holder python:3.6.2 sleep 100d
@@ -42,7 +48,7 @@ jobs:
           name: API Unit tests
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm py.test
+          command: docker-compose run --rm py.test --cov --cov-report xml
       - run:
           name: API Flake8
           environment:
@@ -55,12 +61,20 @@ jobs:
           command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
 
       - run:
-          name: Submit UI Coverage
+          name: Submit Coverage
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm --no-deps -e CODECLIMATE_REPO_TOKEN npm run submit-coverage
+          command: |
+            mkdir coverage
+            docker cp holder:/usr/src/app/coverage.xml coverage.xml
+            docker cp holder:/usr/src/app/ui/lcov.info coverage/lcov.info
+            ./cc-test-reporter format-coverage --prefix /usr/src/app --input-type coverage.py --output coverage/codeclimate.python.json
+            ./cc-test-reporter format-coverage --prefix /usr/src/app --input-type lcov --output coverage/codeclimate.node.json
+            ./cc-test-reporter sum-coverage --output coverage/codeclimate.json --parts 2 coverage/codeclimate.*.json
+            ./cc-test-reporter upload-coverage --input coverage/codeclimate.json
 
       - deploy:
+          name: Deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               export CF_USERNAME=$CF_USERNAME_DEV
