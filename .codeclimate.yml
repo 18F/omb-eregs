@@ -10,6 +10,8 @@ engines:
       - python
   fixme:
     enabled: true
+  nodesecurity:
+    enabled: true
   radon:
     enabled: true
 ratings:
