@@ -14,6 +14,8 @@ engines:
     enabled: true
   radon:
     enabled: true
+  scss-lint:
+    enabled: true
 ratings:
   paths:
   - "**.css"

@@ -9,12 +9,15 @@
     background-color: $color-primary;
     color: $color-white;
     border: 1px solid $color-white;
+
     &:hover {
       cursor: pointer;
     }
   }
 
-  h2, h3, h4 {
+  h2,
+  h3,
+  h4 {
     font-weight: normal;
     line-height: 1.25em;
   }
@@ -48,5 +51,5 @@
     .new-policies {
       padding: 2rem 1rem;
     }
-  }  
+  }
 }
