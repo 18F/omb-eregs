@@ -1,3 +1,4 @@
+#!/bin/bash
 set -v -e
 
 docker-compose down   # free up ports
