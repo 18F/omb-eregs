@@ -71,7 +71,8 @@ jobs:
             ./cc-test-reporter format-coverage --prefix /usr/src/app --input-type coverage.py --output coverage/codeclimate.python.json
             ./cc-test-reporter format-coverage --prefix /usr/src/app --input-type lcov --output coverage/codeclimate.node.json
             ./cc-test-reporter sum-coverage --output coverage/codeclimate.json --parts 2 coverage/codeclimate.*.json
-            ./cc-test-reporter upload-coverage --input coverage/codeclimate.json
+            # allow submission to fail; this occurs on re-builds
+            ./cc-test-reporter upload-coverage --input coverage/codeclimate.json || true
 
       - deploy:
           name: Deploy
