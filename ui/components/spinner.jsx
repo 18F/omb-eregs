@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 export default function Spinner({ height }) {
@@ -15,7 +16,7 @@ export default function Spinner({ height }) {
   );
 }
 Spinner.propTypes = {
-  height: React.PropTypes.number,
+  height: PropTypes.number,
 };
 Spinner.defaultProps = {
   height: 100,

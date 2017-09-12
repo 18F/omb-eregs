@@ -1,4 +1,5 @@
 import newrelic from 'newrelic';
+import PropTypes from 'prop-types';
 import React from 'react';
 import serialize from 'serialize-javascript';
 
@@ -22,7 +23,7 @@ function scriptTag(data) {
  * the generated text. */
 function newRelicTag() {
   const stringWithTags = newrelic.getBrowserTimingHeader();
-  if (!stringWithTags) {  /* agent is disabled */
+  if (!stringWithTags) { /* agent is disabled */
     return null;
   }
   const endOpeningTag = stringWithTags.indexOf('>');
@@ -60,6 +61,6 @@ Html.defaultProps = {
   data: {},
 };
 Html.propTypes = {
-  contents: React.PropTypes.node,
-  data: React.PropTypes.shape({}),
+  contents: PropTypes.node,
+  data: PropTypes.shape({}),
 };

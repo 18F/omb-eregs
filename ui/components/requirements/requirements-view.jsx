@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import Requirement from './requirement';
@@ -11,22 +12,23 @@ export default function RequirementsView({ requirements, count }) {
     <div>
       <ThingCounter count={count} singular={singular} plural={plural} />
       <ul className="requirement-list list-reset">
-        { requirements.map(requirement =>
+        { requirements.map(requirement => (
           <li key={requirement.req_id} className="gray-border border rounded mb2">
             <Requirement requirement={requirement} />
-          </li>) }
+          </li>
+        )) }
       </ul>
       <Pagers count={count} />
     </div>
   );
 }
 RequirementsView.propTypes = {
-  requirements: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.number,
-    title: React.PropTypes.string,
-    relevant_reqs: React.PropTypes.number,
+  requirements: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    relevant_reqs: PropTypes.number,
   })),
-  count: React.PropTypes.number,
+  count: PropTypes.number,
 };
 RequirementsView.defaultProps = {
   requirements: [],

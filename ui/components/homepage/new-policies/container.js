@@ -1,4 +1,5 @@
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import api from '../../../api';
@@ -15,8 +16,8 @@ export function NewPoliciesContainer({ recentPolicies }) {
   return React.createElement('ol', { className: 'list-reset clearfix' }, ...lis);
 }
 NewPoliciesContainer.propTypes = {
-  recentPolicies: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.number,
+  recentPolicies: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
   })).isRequired,
 };
 

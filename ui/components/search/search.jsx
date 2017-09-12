@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 export default class Search extends React.Component {
@@ -41,10 +42,10 @@ export default class Search extends React.Component {
 }
 
 Search.contextTypes = {
-  router: React.PropTypes.shape({
-    location: React.PropTypes.shape({
-      query: React.PropTypes.shape({}),
-      pathname: React.PropTypes.string,
+  router: PropTypes.shape({
+    location: PropTypes.shape({
+      query: PropTypes.shape({}),
+      pathname: PropTypes.string,
     }),
   }),
 };

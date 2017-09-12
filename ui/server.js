@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import 'newrelic';  // must be first
+import 'newrelic'; // must be first
 
 import path from 'path';
 

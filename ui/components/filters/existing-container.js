@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import FilterRemoveView from './remove-view';
@@ -20,17 +21,17 @@ export function RemoveLinkContainer(
   });
 }
 RemoveLinkContainer.propTypes = {
-  existing: React.PropTypes.arrayOf(React.PropTypes.number).isRequired,
-  field: React.PropTypes.string.isRequired,
-  heading: React.PropTypes.string.isRequired,
-  idToRemove: React.PropTypes.number.isRequired,
-  name: React.PropTypes.string.isRequired,
+  existing: PropTypes.arrayOf(PropTypes.number).isRequired,
+  field: PropTypes.string.isRequired,
+  heading: PropTypes.string.isRequired,
+  idToRemove: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
 };
 RemoveLinkContainer.contextTypes = {
-  router: React.PropTypes.shape({
-    location: React.PropTypes.shape({
-      pathname: React.PropTypes.string,
-      query: React.PropTypes.shape({}),
+  router: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+      query: PropTypes.shape({}),
     }),
   }),
 };
@@ -53,7 +54,7 @@ export function RemoveSearchContainer(
   });
 }
 RemoveSearchContainer.propTypes = {
-  field: React.PropTypes.string.isRequired,
+  field: PropTypes.string.isRequired,
 };
 RemoveSearchContainer.contextTypes = RemoveLinkContainer.contextTypes;
 
@@ -103,22 +104,22 @@ export function ExistingFiltersContainer({ agencies, fieldNames, policies, topic
   return React.createElement('ol', { className: 'list-reset' }, filters);
 }
 ExistingFiltersContainer.propTypes = {
-  agencies: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.number,
-    name: React.PropTypes.string,
+  agencies: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
   })).isRequired,
-  fieldNames: React.PropTypes.shape({
-    policies: React.PropTypes.string,
-    search: React.PropTypes.string,
-    topics: React.PropTypes.string,
+  fieldNames: PropTypes.shape({
+    policies: PropTypes.string,
+    search: PropTypes.string,
+    topics: PropTypes.string,
   }).isRequired,
-  policies: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.number,
-    title: React.PropTypes.string,
+  policies: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
   })).isRequired,
-  topics: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.number,
-    name: React.PropTypes.string,
+  topics: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
   })).isRequired,
 };
 

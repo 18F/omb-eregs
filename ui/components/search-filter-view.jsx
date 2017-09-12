@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 export default function SearchFilterView(
@@ -24,10 +25,10 @@ export default function SearchFilterView(
 }
 
 SearchFilterView.propTypes = {
-  filterControls: React.PropTypes.arrayOf(React.PropTypes.node),
-  pageContent: React.PropTypes.node,
-  selectedFilters: React.PropTypes.node,
-  tabs: React.PropTypes.arrayOf(React.PropTypes.node),
+  filterControls: PropTypes.arrayOf(PropTypes.node),
+  pageContent: PropTypes.node,
+  selectedFilters: PropTypes.node,
+  tabs: PropTypes.arrayOf(PropTypes.node),
 };
 SearchFilterView.defaultProps = {
   filterControls: [],

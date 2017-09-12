@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 import validator from 'validator';
@@ -62,13 +63,13 @@ Entry.defaultProps = {
   lookup: 'topics',
 };
 Entry.propTypes = {
-  entry: React.PropTypes.shape({
-    name: React.PropTypes.string,
+  entry: PropTypes.shape({
+    name: PropTypes.string,
   }),
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({}),
+  location: PropTypes.shape({
+    query: PropTypes.shape({}),
   }),
-  lookup: React.PropTypes.oneOf(Object.keys(apiNameField)),
+  lookup: PropTypes.oneOf(Object.keys(apiNameField)),
 };
 
 
@@ -95,16 +96,16 @@ LookupSearch.defaultProps = {
   pagedEntries: { count: 0, entries: [] },
 };
 LookupSearch.propTypes = {
-  routes: React.PropTypes.arrayOf(React.PropTypes.shape({
-    path: React.PropTypes.string,
+  routes: PropTypes.arrayOf(PropTypes.shape({
+    path: PropTypes.string,
   })),
-  location: React.PropTypes.shape({
-    query: React.PropTypes.shape({}),
+  location: PropTypes.shape({
+    query: PropTypes.shape({}),
   }),
-  pagedEntries: React.PropTypes.shape({
-    count: React.PropTypes.number,
-    entries: React.PropTypes.arrayOf(React.PropTypes.shape({
-      id: React.PropTypes.number,
+  pagedEntries: PropTypes.shape({
+    count: PropTypes.number,
+    entries: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
     })),
   }),
 };

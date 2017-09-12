@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import Pagers from '../pagers';
@@ -21,11 +22,11 @@ export default function PoliciesView({ policies, count, topicsIds }) {
   );
 }
 PoliciesView.propTypes = {
-  policies: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.number,
+  policies: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
   })),
-  count: React.PropTypes.number,
-  topicsIds: React.PropTypes.string,
+  count: PropTypes.number,
+  topicsIds: PropTypes.string,
 };
 PoliciesView.defaultProps = {
   policies: [],

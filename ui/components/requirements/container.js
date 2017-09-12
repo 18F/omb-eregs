@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import RequirementsView from './requirements-view';
@@ -72,8 +73,8 @@ export function RequirementsContainer({ location: { query }, pagedReqs }) {
     SearchFilterView, { filterControls, pageContent, selectedFilters, tabs });
 }
 RequirementsContainer.propTypes = {
-  location: React.PropTypes.shape({ query: React.PropTypes.shape({}) }),
-  pagedReqs: React.PropTypes.shape({
+  location: PropTypes.shape({ query: PropTypes.shape({}) }),
+  pagedReqs: PropTypes.shape({
     results: RequirementsView.propTypes.requirements,
     count: RequirementsView.propTypes.count,
   }),

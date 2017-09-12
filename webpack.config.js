@@ -42,6 +42,7 @@ module.exports = [
   },
   {
     name: 'browser-js',
+    devtool: 'sourcemap',
     entry: ['babel-polyfill', path.join(__dirname, 'ui', 'browser.js')],
     output: {
       path: path.join(__dirname, 'ui-dist', 'static'),

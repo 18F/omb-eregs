@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 export default function FilterListView({ heading, headingLabel, selector }) {
@@ -9,7 +10,7 @@ export default function FilterListView({ heading, headingLabel, selector }) {
   );
 }
 FilterListView.propTypes = {
-  heading: React.PropTypes.string.isRequired,
-  headingLabel: React.PropTypes.string.isRequired,
-  selector: React.PropTypes.node.isRequired,
+  heading: PropTypes.string.isRequired,
+  headingLabel: PropTypes.string.isRequired,
+  selector: PropTypes.node.isRequired,
 };
