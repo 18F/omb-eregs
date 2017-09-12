@@ -83,4 +83,20 @@ describe('<LookupSearch />', () => {
       query: { some: 'field', page: '4' },
     });
   });
+
+  it('has a pager if there are results', () => {
+    const result = shallow(<LookupSearch {...params} />);
+    expect(result.find('Pagers')).toHaveLength(1);
+    expect(result.text()).not.toMatch(/No topics found/);
+  });
+
+  it('does not have a pager if there are no results', () => {
+    const modifiedParams = Object.assign({}, params, {
+      pagedEntries: { count: 0, results: [] },
+      routes: [{ path: 'search-redirect' }, { path: 'thingies' }],
+    });
+    const result = shallow(<LookupSearch {...modifiedParams} />);
+    expect(result.find('Pagers')).toHaveLength(0);
+    expect(result.text()).toMatch(/No thingies found/);
+  });
 });
