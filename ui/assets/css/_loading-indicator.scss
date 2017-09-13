@@ -1,4 +1,7 @@
 .loading-indicator {
+  $loader-color-cursor: #333;
+  $loader-color: #ccc;
+
   text-align: center;
 
   .loading-spinner {
@@ -8,8 +11,8 @@
     box-sizing: border-box;
     border-radius: 50%;
     border-style: solid;
-    border-color: #ccc;
-    border-right-color: #333;
+    border-color: $loader-color;
+    border-right-color: $loader-color-cursor;
     display: inline-block;
   }
 }
