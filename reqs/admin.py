@@ -24,9 +24,10 @@ class PolicyForm(forms.ModelForm):
 @admin.register(Policy)
 class PolicyAdmin(EReqsVersionAdmin):
     form = PolicyForm
-    search_fields = ['title', 'omb_policy_id']
+    filter_horizontal = ['managing_offices']
     list_filter = ['policy_type', 'policy_status', 'public']
     radio_fields = {'policy_type': admin.VERTICAL}
+    search_fields = ['title', 'omb_policy_id']
 
 
 @admin.register(Topic)
