@@ -76,17 +76,23 @@ Entry.propTypes = {
 export function LookupSearch({ routes, location, pagedEntries }) {
   const lookup = routes[routes.length - 1].path;
   const params = cleanParams(location.query);
+  let pager;
+  if (pagedEntries.count) {
+    pager = <Pagers location={location} count={pagedEntries.count} />;
+  } else {
+    pager = <div>No {lookup} found.</div>;
+  }
 
   return (
-    <div>
+    <div className="max-width-4 mx-auto my3">
       <div>
-        <Link to={params.redirect}>Return</Link>
+        <Link to={params.redirect}>Return to view requirements</Link>
       </div>
       <ul>
         { pagedEntries.results.map(entry =>
           <Entry key={entry.id} lookup={lookup} location={location} entry={entry} />) }
       </ul>
-      <Pagers location={location} count={pagedEntries.count} />
+      { pager }
     </div>
   );
 }
