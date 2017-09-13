@@ -758,6 +758,16 @@
       "from": "setprototypeof@1.0.3",
       "resolved": "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.0.3.tgz"
     },
+    "source-map": {
+      "version": "0.5.7",
+      "from": "source-map@>=0.5.6 <0.6.0",
+      "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.5.7.tgz"
+    },
+    "source-map-support": {
+      "version": "0.4.18",
+      "from": "source-map-support@>=0.4.17 <0.5.0",
+      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.4.18.tgz"
+    },
     "spawn-sync": {
       "version": "1.0.15",
       "from": "spawn-sync@>=1.0.15 <2.0.0",
