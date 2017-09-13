@@ -92,8 +92,8 @@ class Policy(models.Model):
     document_source = models.FileField(blank=True)
     public = models.BooleanField(default=True)
     issuing_body = models.CharField(max_length=512)
-    managing_office = models.ForeignKey(Office, on_delete=models.CASCADE,
-                                        blank=True, null=True)
+    managing_offices = models.ManyToManyField(
+        Office, blank=True, related_name='policies')
 
     @property
     def title_with_number(self):
