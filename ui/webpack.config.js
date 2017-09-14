@@ -9,9 +9,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = [
   {
     name: 'styles',
-    entry: path.join(__dirname, 'ui/assets/css', 'main.scss'),
+    entry: path.join(__dirname, 'assets', 'css', 'main.scss'),
     output: {
-      path: path.join(__dirname, 'ui-dist', 'static'),
+      path: path.join(__dirname, 'dist', 'static'),
       filename: 'styles.css',
     },
     devtool: 'source-map',
@@ -34,18 +34,18 @@ module.exports = [
     plugins: [
       new ExtractTextPlugin('styles.css'),
       new CopyWebpackPlugin([
-          { from: 'ui/assets/font/*', to: 'font', flatten: true },
-          { from: 'ui/assets/img/*', to: 'img', flatten: true },
-          { from: 'ui/ie.js', to: '' }
+          { from: 'assets/font/*', to: 'font', flatten: true },
+          { from: 'assets/img/*', to: 'img', flatten: true },
+          { from: 'ie.js', to: '' }
       ]),
     ],
   },
   {
     name: 'browser-js',
     devtool: 'sourcemap',
-    entry: ['babel-polyfill', path.join(__dirname, 'ui', 'browser.js')],
+    entry: ['babel-polyfill', path.join(__dirname, 'browser.js')],
     output: {
-      path: path.join(__dirname, 'ui-dist', 'static'),
+      path: path.join(__dirname, 'dist', 'static'),
       filename: 'browser.js',
     },
     module: {
@@ -69,9 +69,9 @@ module.exports = [
   {
     name: 'server-js',
     target: 'node',
-    entry: path.join(__dirname, 'ui', 'server.js'),
+    entry: path.join(__dirname, 'server.js'),
     output: {
-      path: path.join(__dirname, 'ui-dist'),
+      path: path.join(__dirname, 'dist'),
       filename: 'server.js',
     },
     externals: [nodeExternals()],
