@@ -1,11 +1,13 @@
 #!/bin/bash
 
 if [ ! -x node_modules/.bin/deps-ok ]; then
-  npm install deps-ok
+  echo "Installing deps-ok"
+  npm install --quiet deps-ok
 fi
 
 ./node_modules/.bin/deps-ok &> /dev/null
 if [ $? -ne 0 ]; then
+  echo "Installing Node dependencies"
   npm install --quiet
 fi
 
