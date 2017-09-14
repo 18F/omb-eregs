@@ -43,7 +43,7 @@ jobs:
             COMPOSE_FILE: docker-compose-circle.yml
           command: |
             docker-compose run --rm webpack
-            docker cp holder:/usr/src/app/ui-dist ./ui-dist
+            docker cp holder:/usr/src/app/ui/dist ./ui/dist
       - run:
           name: API Unit tests
           environment:
@@ -65,14 +65,27 @@ jobs:
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
           command: |
+            docker cp holder:/usr/src/app/api/coverage.xml api/coverage.xml
+            # directory hopping so the file names match up
+            cd api
+            ../cc-test-reporter format-coverage \
+              --input-type coverage.py --output - \
+              | python ../devops/cc_add_prefix.py --prefix api/ \
+              > ../cc-coverage.python.json
+
+            cd ../ui
             mkdir coverage
-            docker cp holder:/usr/src/app/coverage.xml coverage.xml
-            docker cp holder:/usr/src/app/ui/lcov.info coverage/lcov.info
-            ./cc-test-reporter format-coverage --prefix /usr/src/app --input-type coverage.py --output coverage/codeclimate.python.json
-            ./cc-test-reporter format-coverage --prefix /usr/src/app --input-type lcov --output coverage/codeclimate.node.json
-            ./cc-test-reporter sum-coverage --output coverage/codeclimate.json --parts 2 coverage/codeclimate.*.json
+            docker cp holder:/usr/src/app/ui/lcov.info lcov.info
+            ../cc-test-reporter format-coverage \
+              --prefix /usr/src/app/ui --input-type lcov --output - lcov.info \
+              | python ../devops/cc_add_prefix.py --prefix ui/ \
+              > ../cc-coverage.node.json
+
+            cd ..
+            ./cc-test-reporter sum-coverage --output cc-coverage.json --parts 2 cc-coverage.*.json
             # allow submission to fail; this occurs on re-builds
-            ./cc-test-reporter upload-coverage --input coverage/codeclimate.json || true
+            echo 4
+            ./cc-test-reporter upload-coverage --input cc-coverage.json || true
 
       - deploy:
           name: Deploy
