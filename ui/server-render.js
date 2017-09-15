@@ -20,8 +20,8 @@ function resolveAndRender(renderProps, res) {
   Resolver
     .resolve(() => React.createElement(RouterContext, renderProps))
     .then(({ Resolved, data }) => {
-      const contents = React.createElement(Resolved);
-      const html = React.createElement(Html, { contents, data });
+      const html = React.createElement(
+        Html, { data }, [React.createElement(Resolved)]);
       res.status(200).send(renderToStaticMarkup(html));
     })
     .catch((err) => {

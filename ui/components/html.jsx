@@ -35,7 +35,7 @@ function newRelicTag() {
   /* eslint-enable react/no-danger */
 }
 
-export default function Html({ contents, data }) {
+export default function Html({ children, data }) {
   return (
     <html lang="en-US">
       <head>
@@ -47,7 +47,7 @@ export default function Html({ contents, data }) {
       </head>
       <body>
         <div id="app">
-          { contents }
+          { children }
         </div>
         <script src="/static/ie.js" />
         { scriptTag(data) }
@@ -57,10 +57,10 @@ export default function Html({ contents, data }) {
   );
 }
 Html.defaultProps = {
-  contents: null,
+  children: null,
   data: {},
 };
 Html.propTypes = {
-  contents: PropTypes.node,
+  children: PropTypes.node,
   data: PropTypes.shape({}),
 };
