@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "node ui-dist/server.js"
+    "start": "node dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -78,7 +78,6 @@
     "node": "6.x"
   },
   "jest": {
-    "rootDir": "ui",
     "collectCoverage": true,
     "coverageDirectory": "./",
     "coverageReporters": [

@@ -10,8 +10,6 @@ engines:
       - python
   fixme:
     enabled: true
-  nodesecurity:
-    enabled: true
   radon:
     enabled: true
   scss-lint:
