@@ -1,17 +1,16 @@
 import React from 'react';
 
-import DAP from '../dap';
+import App from '../app';
+import Html from '../html';
 
 
+// Prevent the page from loading the dynamic JS, which will display a
+// blank page due to not finding the route.
 export default () => (
-  <html lang="en-US">
-    <head>
-      <title>Page not found</title>
-      <DAP />
-    </head>
-    <body>
+  <Html allowDynamic={false}>
+    <App>
       <h1>Page not found</h1>
       <p>Please check the URL and try again</p>
-    </body>
-  </html>
+    </App>
+  </Html>
 );
