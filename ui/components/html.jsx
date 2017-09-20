@@ -35,7 +35,7 @@ function newRelicTag() {
   /* eslint-enable react/no-danger */
 }
 
-export default function Html({ contents, data }) {
+export default function Html({ allowDynamic, children, data }) {
   return (
     <html lang="en-US">
       <head>
@@ -47,20 +47,22 @@ export default function Html({ contents, data }) {
       </head>
       <body>
         <div id="app">
-          { contents }
+          { children }
         </div>
         <script src="/static/ie.js" />
         { scriptTag(data) }
-        <script src="/static/browser.js" />
+        { allowDynamic ? <script src="/static/browser.js" /> : null }
       </body>
     </html>
   );
 }
 Html.defaultProps = {
-  contents: null,
+  allowDynamic: true,
+  children: null,
   data: {},
 };
 Html.propTypes = {
-  contents: PropTypes.node,
+  allowDynamic: PropTypes.bool,
+  children: PropTypes.node,
   data: PropTypes.shape({}),
 };

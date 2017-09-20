@@ -41,21 +41,21 @@ export default function Homepage() {
 
       <section className="about py3">
         <div className="mx3">
-          <div className="about-inner px2 sm-col-12 md-col-6 mx-auto">
+          <div className="landing-section gold-border">
             <h3 className="h2">About this site</h3>
-            <p>
+            <p className="content">
               The beta OMB Policy Library includes excerpts from policies
               issued by the White House. This project is part of our ongoing
               efforts to make it easier to find and understand policy.
             </p>
-            <p>
+            <p className="content">
               This site does not include a comprehensive list of OMB policies.
               We are adding select policies on a rolling basis and working
               with users to make the site more useful.{' '}
               <a href="mailto:ofcio@omb.eop.gov">Tell us what you think!</a>
             </p>
             <h3 className="h2">Disclaimer</h3>
-            <p>
+            <p className="content">
               The information appearing on this website is for general
               informational purposes only, intended to supplement official
               resources, including the Office of Management and Budget’s (OMB)
@@ -71,7 +71,7 @@ export default function Homepage() {
               be linked. We also urge you to conduct a thorough review of all
               relevant requirements applicable to you.
             </p>
-            <p>
+            <p className="content">
               While OMB strives to make the information on this website as
               timely and accurate as possible, OMB makes no claims, promises,
               or guarantees about the accuracy, completeness, or adequacy of
@@ -88,8 +88,10 @@ export default function Homepage() {
         </div>
       </section>
 
+      <hr className="stars-divider" />
+
       <section className="new-policies py3 mb4">
-        <div className="sm-col-12 md-col-6 mx-auto">
+        <div className="landing-section">
           <h3>New policies</h3>
           <NewPoliciesContainerResolver />
         </div>
