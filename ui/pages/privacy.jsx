@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function PrivacyView() {
+import App from '../components/app';
+
+export function PrivacyView() {
   return (
     <div className="ml3">
       <h2 className="h1">Privacy Policy</h2>
@@ -99,3 +101,4 @@ export default function PrivacyView() {
   );
 }
 
+export default () => <App><PrivacyView /></App>;

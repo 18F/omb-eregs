@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import App from '../components/app';
 import PoliciesView from '../components/policies/policies-view';
 import SearchFilterView from '../components/search-filter-view';
 import TabView from '../components/tab-view';
@@ -77,6 +78,7 @@ PoliciesContainer.defaultProps = {
   location: { query: {} },
   pagedPolicies: { results: [], count: 0 },
 };
+const PoliciesWithApp = props => <App><PoliciesContainer {...props} /></App>;
 
 function fetchPolicies({ location: { query } }) {
   const params = Object.assign({ ordering: 'policy_number' }, query);
@@ -84,5 +86,5 @@ function fetchPolicies({ location: { query } }) {
 }
 
 export default wrapWithAjaxLoader(
-  PoliciesContainer, { pagedPolicies: fetchPolicies });
+  PoliciesWithApp, { pagedPolicies: fetchPolicies });
 

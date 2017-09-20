@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import App from '../components/app';
 import RequirementsView from '../components/requirements/requirements-view';
 import { wrapWithAjaxLoader } from '../components/ajax-loading';
 import SearchFilterView from '../components/search-filter-view';
@@ -77,9 +78,11 @@ RequirementsContainer.defaultProps = {
   pagedReqs: { results: [], count: 0 },
 };
 
+const RequirementsWithApp = props => <App><RequirementsContainer {...props} /></App>;
+
 function fetchRequirements({ location: { query } }) {
   return api.requirements.fetch(query);
 }
 
 export default wrapWithAjaxLoader(
-  RequirementsContainer, { pagedReqs: fetchRequirements });
+  RequirementsWithApp, { pagedReqs: fetchRequirements });

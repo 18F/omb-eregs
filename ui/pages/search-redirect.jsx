@@ -7,6 +7,7 @@ import { redirectQuery, redirectWhiteList } from '../redirects';
 import { UserError } from '../error-handling';
 import { apiNameField, search } from '../lookup-search';
 import { wrapWithAjaxLoader } from '../components/ajax-loading';
+import App from '../components/app';
 import Pagers from '../components/pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
@@ -116,6 +117,8 @@ LookupSearch.propTypes = {
   }),
 };
 
+const LookupSearchWithApp = props => <App><LookupSearch {...props} /></App>;
+
 /*
  * Asynchronously grab the search result data from the API.
  */
@@ -125,5 +128,5 @@ function fetchData({ routes, location: { query } }) {
   return search(lookup, userParams.q, userParams.page);
 }
 
-export default wrapWithAjaxLoader(LookupSearch, { pagedEntries: fetchData });
+export default wrapWithAjaxLoader(LookupSearchWithApp, { pagedEntries: fetchData });
 

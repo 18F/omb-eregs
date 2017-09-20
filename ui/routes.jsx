@@ -1,8 +1,7 @@
 import React from 'react';
 import { browserHistory, IndexRoute, Route, Router } from 'react-router';
 
-import App from './components/app';
-import Homepage from './pages/index';
+import HomepageView from './pages/index';
 import PolicyContainerResolver from './pages/policies';
 import Privacy from './pages/privacy';
 import RequirementsContainerResolver from './pages/requirements';
@@ -19,8 +18,8 @@ if (browserHistory && typeof gas !== 'undefined') {
 }
 
 export default <Router history={browserHistory} >
-  <Route path="/" component={App}>
-    <IndexRoute component={Homepage} />
+  <Route path="/">
+    <IndexRoute component={HomepageView} />
     <Route path="privacy" component={Privacy} />
     <Route path="search-redirect">
       <Route path="agencies" component={LookupSearchResolver} />

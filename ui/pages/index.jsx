@@ -1,11 +1,12 @@
 import React from 'react';
 
+import App from '../components/app';
 import ConditionalRender from '../components/conditional-render';
 import FallbackView from '../components/filters/fallback-view';
 import TopicAutocomplete from '../components/homepage/topic-autocomplete';
 import NewPoliciesContainerResolver from '../components/homepage/new-policies/container';
 
-export default function Homepage() {
+export function Homepage() {
   return (
     <div className="homepage">
       <section className="filter-form py2 center">
@@ -100,3 +101,4 @@ export default function Homepage() {
   );
 }
 
+export default () => <App><Homepage /></App>;
