@@ -1,8 +1,8 @@
 import React from 'react';
 
-import App from '../components/app';
 import ConditionalRender from '../components/conditional-render';
 import FallbackView from '../components/filters/fallback-view';
+import HeaderFooter from '../components/header-footer';
 import TopicAutocomplete from '../components/homepage/topic-autocomplete';
 import NewPoliciesContainerResolver from '../components/homepage/new-policies/container';
 
@@ -101,4 +101,4 @@ export function Homepage() {
   );
 }
 
-export default () => <App><Homepage /></App>;
+export default () => <HeaderFooter><Homepage /></HeaderFooter>;

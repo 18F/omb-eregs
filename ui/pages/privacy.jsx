@@ -1,6 +1,6 @@
 import React from 'react';
 
-import App from '../components/app';
+import HeaderFooter from '../components/header-footer';
 
 export function PrivacyView() {
   return (
@@ -101,4 +101,4 @@ export function PrivacyView() {
   );
 }
 
-export default () => <App><PrivacyView /></App>;
+export default () => <HeaderFooter><PrivacyView /></HeaderFooter>;

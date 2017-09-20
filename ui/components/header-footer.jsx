@@ -5,25 +5,21 @@ import Disclaimer from './disclaimer';
 import Navbar from './navbar';
 import Footer from './footer';
 
-function App(props) {
+function HeaderFooter({ children }) {
   return (
     <div>
       <Disclaimer />
       <Navbar />
       <div className="container">
-        {props.children}
+        {children}
       </div>
       <Footer />
     </div>
   );
 }
 
-App.defaultProps = {
-  children: null,
+HeaderFooter.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
-App.propTypes = {
-  children: PropTypes.node,
-};
-
-export default App;
+export default HeaderFooter;
