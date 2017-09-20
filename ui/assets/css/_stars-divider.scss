@@ -1,0 +1,16 @@
+.stars-divider {
+  $img-height: 20px;
+  $img-width: 22px;
+
+  background-image: url('/static/img/star.svg'),
+                    url('/static/img/star.svg'),
+                    url('/static/img/star.svg');
+  background-repeat: no-repeat;
+  background-position: 0 top,
+                       $img-width * 2 top,
+                       $img-width * 4 top;
+  border: none;
+  height: $img-height;
+  width: $img-width * 5;  // 3 stars + 2 whitespace
+  margin: 40px auto;
+}

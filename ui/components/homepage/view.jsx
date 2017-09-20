@@ -88,6 +88,8 @@ export default function Homepage() {
         </div>
       </section>
 
+      <hr className="stars-divider" />
+
       <section className="new-policies py3 mb4">
         <div className="landing-section">
           <h3>New policies</h3>
