@@ -6,8 +6,8 @@ import validator from 'validator';
 import { redirectQuery, redirectWhiteList } from '../redirects';
 import { UserError } from '../error-handling';
 import { apiNameField, search } from '../lookup-search';
-import { wrapWithAjaxLoader } from './ajax-loading';
-import Pagers from './pagers';
+import { wrapWithAjaxLoader } from '../components/ajax-loading';
+import Pagers from '../components/pagers';
 
 const redirectQueryPrefix = 'redirectQuery__';
 
@@ -126,3 +126,4 @@ function fetchData({ routes, location: { query } }) {
 }
 
 export default wrapWithAjaxLoader(LookupSearch, { pagedEntries: fetchData });
+

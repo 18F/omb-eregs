@@ -1,9 +1,9 @@
 import React from 'react';
 
-import ConditionalRender from '../conditional-render';
-import FallbackView from '../filters/fallback-view';
-import TopicAutocomplete from './topic-autocomplete';
-import NewPoliciesContainerResolver from './new-policies/container';
+import ConditionalRender from '../components/conditional-render';
+import FallbackView from '../components/filters/fallback-view';
+import TopicAutocomplete from '../components/homepage/topic-autocomplete';
+import NewPoliciesContainerResolver from '../components/homepage/new-policies/container';
 
 export default function Homepage() {
   return (
@@ -99,3 +99,4 @@ export default function Homepage() {
     </div>
   );
 }
+
