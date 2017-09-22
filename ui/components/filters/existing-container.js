@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import FilterRemoveView from './remove-view';
-import { wrapWithAjaxLoader } from '../ajax-loading';
-import api from '../../api';
 
 export function RemoveLinkContainer(
   { existing, field, heading, idToRemove, name },
@@ -58,7 +56,8 @@ RemoveSearchContainer.propTypes = {
 };
 RemoveSearchContainer.contextTypes = RemoveLinkContainer.contextTypes;
 
-export function ExistingFiltersContainer({ agencies, fieldNames, policies, topics }) {
+export default function ExistingFiltersContainer({
+  agencies, fieldNames, policies, topics }) {
   const topicIds = topics.map(topic => topic.id);
   const topicFilters = topics.map(topic => React.createElement(
     RemoveLinkContainer, {
@@ -122,21 +121,3 @@ ExistingFiltersContainer.propTypes = {
     name: PropTypes.string,
   })).isRequired,
 };
-
-
-function fetchTopics({ query, fieldNames }) {
-  return api.topics.withIds(query[fieldNames.topics]);
-}
-function fetchPolicies({ query, fieldNames }) {
-  return api.policies.withIds(query[fieldNames.policies]);
-}
-function fetchAgencies({ query, fieldNames }) {
-  return api.agencies.withIds(query[fieldNames.agencies]);
-}
-
-export default wrapWithAjaxLoader(
-  ExistingFiltersContainer,
-  { agencies: fetchAgencies,
-    policies: fetchPolicies,
-    topics: fetchTopics },
-  50);
