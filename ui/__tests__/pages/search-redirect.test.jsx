@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import { UserError } from '../../error-handling';
-import { cleanParams, LookupSearch } from '../../components/lookup-search';
+import { cleanParams, LookupSearch } from '../../pages/search-redirect';
 
 
 describe('cleanParams()', () => {

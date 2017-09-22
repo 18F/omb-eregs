@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function PrivacyView() {
+import HeaderFooter from '../components/header-footer';
+
+export function PrivacyView() {
   return (
     <div className="ml3">
       <h2 className="h1">Privacy Policy</h2>
@@ -98,3 +100,5 @@ export default function PrivacyView() {
     </div>
   );
 }
+
+export default () => <HeaderFooter><PrivacyView /></HeaderFooter>;

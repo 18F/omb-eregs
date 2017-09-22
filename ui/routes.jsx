@@ -1,12 +1,11 @@
 import React from 'react';
-import { browserHistory, IndexRoute, Redirect, Route, Router } from 'react-router';
+import { browserHistory, IndexRoute, Route, Router } from 'react-router';
 
-import App from './components/app';
-import PrivacyView from './components/privacy-view';
-import PolicyContainerResolver from './components/policies/container';
-import RequirementsContainerResolver from './components/requirements/container';
-import LookupSearchResolver from './components/lookup-search';
-import Homepage from './components/homepage/view';
+import HomepageView from './pages/index';
+import PolicyContainerResolver from './pages/policies';
+import Privacy from './pages/privacy';
+import RequirementsContainerResolver from './pages/requirements';
+import LookupSearchResolver from './pages/search-redirect';
 
 // Trigger DAP pageviews when our history changes (for single-page-app users)
 if (browserHistory && typeof gas !== 'undefined') {
@@ -19,19 +18,15 @@ if (browserHistory && typeof gas !== 'undefined') {
 }
 
 export default <Router history={browserHistory} >
-  <Route path="/" component={App}>
-    <IndexRoute component={Homepage} />
-    <Route path="privacy" component={PrivacyView} />
+  <Route path="/">
+    <IndexRoute component={HomepageView} />
+    <Route path="privacy" component={Privacy} />
     <Route path="search-redirect">
       <Route path="agencies" component={LookupSearchResolver} />
       <Route path="policies" component={LookupSearchResolver} />
       <Route path="topics" component={LookupSearchResolver} />
     </Route>
     <Route path="policies" component={PolicyContainerResolver} />
-    <Route path="requirements">
-      <IndexRoute component={RequirementsContainerResolver} />
-      <Redirect from="by-topic" to="/requirements" />
-      <Redirect from="by-policy" to="/requirements" />
-    </Route>
+    <Route path="requirements" component={RequirementsContainerResolver} />
   </Route>
 </Router>;

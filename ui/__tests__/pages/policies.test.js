@@ -1,21 +1,21 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { RequirementsContainer } from '../../../components/requirements/container';
+import { PoliciesContainer } from '../../pages/policies';
 
-describe('<RequirementsContainer />', () => {
+describe('<PoliciesContainer />', () => {
   const location = { query: {
-    policy__issuance__gt: '2015-01-01',
-    verb__icontains: 'must',
-    topics__id__in: '1,6,9',
+    issuance__gt: '2015-01-01',
+    requirements__verb__icontains: 'must',
+    requirements__topics__id__in: '1,6,9',
     page: '5',
   } };
-  const pagedReqs = {
+  const pagedPolicies = {
     results: [{ thing: 1 }, { thing: 2 }],
     count: 2,
   };
   const result = shallow(React.createElement(
-    RequirementsContainer, { location, pagedReqs }));
+    PoliciesContainer, { location, pagedPolicies }));
 
   it('has a topics filter controls', () => {
     const controls = result.prop('filterControls');
@@ -23,9 +23,10 @@ describe('<RequirementsContainer />', () => {
     expect(controls[0].props.heading).toEqual('Topics');
 
     const selector = controls[0].props.selector;
-    expect(selector.props.insertParam).toEqual('topics__id__in');
+    expect(selector.props.insertParam).toEqual('requirements__topics__id__in');
     expect(selector.props.lookup).toEqual('topics');
   });
+
 
   describe('its tabs', () => {
     it('has two tabs with correct names', () => {
@@ -34,22 +35,22 @@ describe('<RequirementsContainer />', () => {
 
       const [reqTab, policyTab] = tabs;
 
-      expect(reqTab.props.active).toBeTruthy();
+      expect(reqTab.props.active).toBeFalsy();
       expect(reqTab.props.tabName).toBe('Requirements');
 
-      expect(policyTab.props.active).toBeFalsy();
+      expect(policyTab.props.active).toBeTruthy();
       expect(policyTab.props.tabName).toBe('Policies');
     });
 
-    it('transforms the query for the policies tab', () => {
-      const policyTab = result.prop('tabs')[1];
-      const link = policyTab.props.link;
+    it('transforms the query for the requirements tab', () => {
+      const reqTab = result.prop('tabs')[0];
+      const link = reqTab.props.link;
       expect(link).toEqual({
-        pathname: '/policies',
+        pathname: '/requirements',
         query: {
-          issuance__gt: '2015-01-01',
-          requirements__verb__icontains: 'must',
-          requirements__topics__id__in: '1,6,9',
+          policy__issuance__gt: '2015-01-01',
+          verb__icontains: 'must',
+          topics__id__in: '1,6,9',
         },
       });
     });
@@ -58,8 +59,8 @@ describe('<RequirementsContainer />', () => {
   it('has correct pageContent', () => {
     const pageContent = result.prop('pageContent');
 
-    expect(pageContent.props.requirements).toEqual(pagedReqs.results);
-    expect(pageContent.props.count).toEqual(pagedReqs.count);
+    expect(pageContent.props.policies).toEqual(pagedPolicies.results);
+    expect(pageContent.props.count).toEqual(pagedPolicies.count);
   });
 
   it('has configured selectedFilters', () => {
@@ -71,4 +72,3 @@ describe('<RequirementsContainer />', () => {
     expect(selectedFilters.props.query).toEqual(location.query);
   });
 });
-

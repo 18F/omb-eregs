@@ -1,14 +1,14 @@
 import React from 'react';
 
-import App from '../app';
 import Html from '../html';
+import HeaderFooter from '../header-footer';
 
 
 // Prevent the page from loading the dynamic JS, which will display a
 // blank page due to not finding the route.
 export default () => (
   <Html allowDynamic={false}>
-    <App>
+    <HeaderFooter>
       <section className="py3">
         <div className="landing-section gold-border pb2">
           <h1 className="h2">
@@ -25,6 +25,6 @@ export default () => (
         </div>
         <hr className="stars-divider" />
       </section>
-    </App>
+    </HeaderFooter>
   </Html>
 );
