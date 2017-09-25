@@ -6,12 +6,17 @@
   line-height: 0.9375rem;
 }
 
-button.usa-disclaimer {
-  border: 0;
+.usa-disclaimer-flag {
+  height: 13px;
+  width: 20px;
+  padding-right: 10px;
 }
 
 .usa-disclaimer-text {
-  padding-bottom: 1em;
+  padding-left: 30px;   // flag's dimensions
+  @media #{$breakpoint-sm} {
+    text-align: right;
+  }
 }
 
 .navbar {
