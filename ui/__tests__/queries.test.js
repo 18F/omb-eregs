@@ -1,11 +1,11 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
-import { fetchRecentPolicies, formatIssuance } from '../../../components/homepage/new-policies/container';
-import NewPolicyView from '../../../components/homepage/new-policies/view';
-import api from '../../../api';
+import { formatIssuance, homepageData } from '../queries';
+import NewPolicyView from '../components/homepage/new-policy-view';
+import api from '../api';
 
-jest.mock('../../../api');
+jest.mock('../api');
 
 
 describe('formatIssuance', () => {
@@ -19,10 +19,10 @@ describe('formatIssuance', () => {
   });
 });
 
-describe('fetchRecentPolicies', () => {
+describe('homepageData', () => {
   it('makes the correct request', () => {
     api.topics.fetchResults.mockImplementationOnce(() => Promise.resolve([]));
-    return fetchRecentPolicies().then(() => {
+    return homepageData.recentPolicies().then(() => {
       expect(api.policies.fetchResults).toHaveBeenCalledWith(
         { ordering: '-issuance' });
     });
@@ -30,7 +30,7 @@ describe('fetchRecentPolicies', () => {
   it('trims to the appropriate length', () => {
     api.topics.fetchResults.mockImplementationOnce(() =>
       Promise.resolve([1, 2, 3, 4, 5, 6, 7].map(id => ({ id }))));
-    return fetchRecentPolicies().then((result) => {
+    return homepageData.recentPolicies().then((result) => {
       expect(result.map(r => r.id)).toEqual([1, 2, 3, 4]);
     });
   });
@@ -39,7 +39,7 @@ describe('fetchRecentPolicies', () => {
       { issuance: '2002-03-04' },
       { issuance: '2020-11-10' },
     ]));
-    return fetchRecentPolicies().then((result) => {
+    return homepageData.recentPolicies().then((result) => {
       expect(result.map(r => r.issuance_pretty)).toEqual([
         'March 4, 2002',
         'November 10, 2020',

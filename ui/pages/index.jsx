@@ -1,12 +1,16 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
+import { wrapWithAjaxLoader } from '../components/ajax-loading';
 import ConditionalRender from '../components/conditional-render';
 import FallbackView from '../components/filters/fallback-view';
 import HeaderFooter from '../components/header-footer';
 import TopicAutocomplete from '../components/homepage/topic-autocomplete';
-import NewPoliciesContainerResolver from '../components/homepage/new-policies/container';
+import NewPolicyView from '../components/homepage/new-policy-view';
+import { homepageData } from '../queries';
 
-export function Homepage() {
+
+export function Homepage({ recentPolicies }) {
   return (
     <div className="homepage">
       <section className="filter-form py2 center">
@@ -94,11 +98,21 @@ export function Homepage() {
       <section className="new-policies py3 mb4">
         <div className="landing-section">
           <h3>New policies</h3>
-          <NewPoliciesContainerResolver />
+          <ol className="list-reset clearfix">
+            { recentPolicies.map(p => <NewPolicyView policy={p} key={p.id} />) }
+          </ol>
         </div>
       </section>
     </div>
   );
 }
+Homepage.propTypes = {
+  recentPolicies: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  })).isRequired,
+};
 
-export default () => <HeaderFooter><Homepage /></HeaderFooter>;
+const HomepageWithHeaderFooter = props =>
+  <HeaderFooter><Homepage {...props} /></HeaderFooter>;
+
+export default wrapWithAjaxLoader(HomepageWithHeaderFooter, homepageData);

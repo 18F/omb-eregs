@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { ExistingFiltersContainer, RemoveLinkContainer, RemoveSearchContainer } from '../../../components/filters/existing-container';
+import ExistingFiltersContainer, { RemoveLinkContainer, RemoveSearchContainer } from '../../../components/filters/existing-container';
 import mockRouter from '../../util/mockRouter';
 
 

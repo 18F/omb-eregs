@@ -9,7 +9,7 @@ import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import Selector from '../components/filters/selector';
 import { wrapWithAjaxLoader } from '../components/ajax-loading';
-import api from '../api';
+import { policiesData } from '../queries';
 
 function requirementsTab(policyQuery) {
   // Transform filter keys into the format expected by requirements
@@ -34,7 +34,9 @@ const fieldNames = {
   topics: 'requirements__topics__id__in',
 };
 
-export function PoliciesContainer({ location: { query }, pagedPolicies }) {
+export function PoliciesContainer({
+  existingAgencies, existingPolicies, existingTopics, location: { query },
+  pagedPolicies }) {
   const filterControls = [
     <FilterListView
       heading="Topics"
@@ -59,7 +61,14 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
           count={pagedPolicies.count}
           topicsIds={query.requirements__topics__id__in}
         />}
-      selectedFilters={<ExistingFilters fieldNames={fieldNames} query={query} />}
+      selectedFilters={
+        <ExistingFilters
+          agencies={existingAgencies}
+          fieldNames={fieldNames}
+          policies={existingPolicies}
+          query={query}
+          topics={existingTopics}
+        />}
       tabs={[
         requirementsTab(query),
         <TabView active tabName="Policies" key="Policies" />,
@@ -68,6 +77,9 @@ export function PoliciesContainer({ location: { query }, pagedPolicies }) {
   );
 }
 PoliciesContainer.propTypes = {
+  existingAgencies: ExistingFilters.propTypes.agencies,
+  existingPolicies: ExistingFilters.propTypes.policies,
+  existingTopics: ExistingFilters.propTypes.topics,
   location: PropTypes.shape({ query: PropTypes.shape({}) }),
   pagedPolicies: PropTypes.shape({
     results: PoliciesView.propTypes.policies,
@@ -75,17 +87,14 @@ PoliciesContainer.propTypes = {
   }),
 };
 PoliciesContainer.defaultProps = {
+  existingAgencies: [],
+  existingPolicies: [],
+  existingTopics: [],
   location: { query: {} },
   pagedPolicies: { results: [], count: 0 },
 };
 const PoliciesWithHeaderFooter = props =>
   <HeaderFooter><PoliciesContainer {...props} /></HeaderFooter>;
 
-function fetchPolicies({ location: { query } }) {
-  const params = Object.assign({ ordering: 'policy_number' }, query);
-  return api.policies.fetch(params);
-}
-
-export default wrapWithAjaxLoader(
-  PoliciesWithHeaderFooter, { pagedPolicies: fetchPolicies });
+export default wrapWithAjaxLoader(PoliciesWithHeaderFooter, policiesData);
 
