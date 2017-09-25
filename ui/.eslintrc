@@ -15,6 +15,7 @@
   "rules": {
     /* TODO: These rules should be packaged */
     "no-unsafe-innerhtml/no-unsafe-innerhtml" : 2,
+    "react/jsx-filename-extension": [1, {"extensions": [".js", ".jsx"]}],
     "scanjs-rules/assign_to_hostname" : 2,
     "scanjs-rules/assign_to_href" : 2,
     "scanjs-rules/assign_to_location" : 2,
