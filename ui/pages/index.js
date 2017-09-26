@@ -24,7 +24,7 @@ export function Homepage({ recentPolicies }) {
                   aria-labelledby="topics_label"
                   insertParam="topics__id__in"
                   lookup="topics"
-                  pathname="/requirements"
+                  route="requirements"
                 />
               </div>
               <form method="GET" action="/requirements">

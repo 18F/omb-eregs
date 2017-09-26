@@ -1,15 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from '../../routes';
 
 export default function NewPolicyView({ policy }) {
   return (
     <li className="inline-block col col-6 pr2 mb2">
-      <Link
-        className="text-decoration-none"
-        to={{ pathname: '/policies', query: { id__in: policy.id } }}
-      >
-        { policy.title_with_number }
+      <Link route="policies" params={{ id__in: policy.id }}>
+        <a>{ policy.title_with_number }</a>
       </Link>
       <div className="h5">
         { policy.issuing_body }, { policy.issuance_pretty }

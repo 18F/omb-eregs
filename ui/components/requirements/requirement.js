@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
+
+import { Link } from '../../routes';
 
 export function Metadata({ className, name, value, nullValue, separator }) {
   /**
@@ -38,13 +39,11 @@ Metadata.defaultProps = {
 
 
 function TopicLink({ topic }) {
-  const linkTo = {
-    pathname: '/requirements',
-    query: { topics__id__in: topic.id },
-  };
   return (
     <li className="inline">
-      <Link to={linkTo}>{ topic.name }</Link>
+      <Link route="requirements" params={{ topics__id__in: topic.id }}>
+        <a>{ topic.name }</a>
+      </Link>
     </li>
   );
 }
@@ -57,15 +56,13 @@ TopicLink.propTypes = {
 
 
 function PolicyLink({ policy }) {
-  const linkTo = {
-    pathname: '/policies',
-    query: { id__in: policy.id },
-  };
   return (
     <div className="policy-title metadata">
       Policy title:
       {' '}
-      <Link to={linkTo}>{policy.title_with_number}</Link>
+      <Link route="policies" params={{ id__in: policy.id }}>
+        <a>{policy.title_with_number}</a>
+      </Link>
     </div>
   );
 }

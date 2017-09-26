@@ -1,20 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
 
+import { Link } from '../../routes';
 import ExternalLink from '../external-link';
 
 export default function Policy({ policy, topicsIds }) {
-  const allReqs = {
-    pathname: '/requirements',
-    query: { policy__id__in: policy.id },
-  };
-  const relevantReqs = {
-    pathname: '/requirements',
-    query: {
-      policy__id__in: policy.id,
-      topics__id__in: topicsIds,
-    },
+  const linkParams = {
+    policy__id__in: policy.id,
+    topics__id__in: topicsIds,
   };
   const relevantReqCount = policy.relevant_reqs >= 100 ? '99+' : policy.relevant_reqs;
   const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
@@ -25,8 +18,10 @@ export default function Policy({ policy, topicsIds }) {
         <div className="clearfix">
           <div className="requirements-links mb1 sm-col sm-col-12 md-col-6">
             <div className="circle-bg border gray-border center p1">
-              <Link aria-label="Relevant requirements" to={relevantReqs} className={countClass}>
-                {relevantReqCount}
+              <Link route="requirements" params={linkParams}>
+                <a aria-label="Relevant requirements" className={countClass}>
+                  {relevantReqCount}
+                </a>
               </Link>
             </div> of&nbsp;
             {policy.total_reqs} requirements
@@ -38,7 +33,9 @@ export default function Policy({ policy, topicsIds }) {
             </ExternalLink>
           </div>
           <div className="view-requirements-link icon-links sm-col sm-col-12 md-col-3">
-            <Link to={allReqs}>View all requirements</Link>
+            <Link route="requirements" params={{ policy__id__in: policy.id }}>
+              <a>View all requirements</a>
+            </Link>
           </div>
         </div>
       </section>

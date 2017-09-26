@@ -1,26 +1,28 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
 
-export default function TabView({ active, link, tabName }) {
+import { Link } from '../routes';
+
+export default function TabView({ active, params, route, tabName }) {
   if (active) {
     return <li className="inline-block mr4 bold">{ tabName }</li>;
   }
   return (
     <li className="inline-block mr4">
-      <Link to={link} >{ tabName }</Link>
+      <Link route={route} params={params}>
+        <a>{tabName}</a>
+      </Link>
     </li>
   );
 }
 
 TabView.propTypes = {
   active: PropTypes.bool.isRequired,
-  link: PropTypes.shape({
-    pathname: PropTypes.string,
-    query: PropTypes.shape({}),
-  }),
+  params: PropTypes.shape({}),
+  route: PropTypes.string,
   tabName: PropTypes.string.isRequired,
 };
 TabView.defaultProps = {
-  link: { pathname: '', query: {} },
+  params: {},
+  route: '',
 };

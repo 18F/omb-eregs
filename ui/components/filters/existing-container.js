@@ -24,14 +24,10 @@ RemoveLinkContainer.propTypes = {
   heading: PropTypes.string.isRequired,
   idToRemove: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-};
-RemoveLinkContainer.contextTypes = {
+  route: PropTypes.string.isRequired,
   router: PropTypes.shape({
-    location: PropTypes.shape({
-      pathname: PropTypes.string,
-      query: PropTypes.shape({}),
-    }),
-  }),
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
 };
 
 export function RemoveSearchContainer(
@@ -46,9 +42,10 @@ export function RemoveSearchContainer(
   delete modifiedQuery.page;
 
   return React.createElement(FilterRemoveView, {
-    linkToRemove: { pathname, query: modifiedQuery },
-    name: existing,
     heading: 'Search',
+    name: existing,
+    params: modifiedQuery,
+    route,
   });
 }
 RemoveSearchContainer.propTypes = {
@@ -57,7 +54,7 @@ RemoveSearchContainer.propTypes = {
 RemoveSearchContainer.contextTypes = RemoveLinkContainer.contextTypes;
 
 export default function ExistingFiltersContainer({
-  agencies, fieldNames, policies, topics }) {
+  agencies, fieldNames, policies, route, topics }) {
   const topicIds = topics.map(topic => topic.id);
   const topicFilters = topics.map(topic => React.createElement(
     RemoveLinkContainer, {
@@ -67,6 +64,7 @@ export default function ExistingFiltersContainer({
       idToRemove: topic.id,
       key: topic.id,
       name: topic.name,
+      route,
     }));
 
   const policyIds = policies.map(policy => policy.id);
@@ -78,12 +76,14 @@ export default function ExistingFiltersContainer({
       idToRemove: policy.id,
       key: policy.id,
       name: policy.title,
+      route,
     }));
 
   const searchFilters = [
     React.createElement(RemoveSearchContainer, {
       field: fieldNames.search,
       key: 'search',
+      route,
     }),
   ];
 
@@ -116,6 +116,7 @@ ExistingFiltersContainer.propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
   })).isRequired,
+  route: PropTypes.string.isRequired,
   topics: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,

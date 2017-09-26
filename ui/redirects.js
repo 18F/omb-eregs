@@ -13,9 +13,3 @@ export function redirectQuery(query, insertParam, idToInsert) {
 
   return result;
 }
-
-
-export const redirectWhiteList = [
-  '/policies',
-  '/requirements',
-];

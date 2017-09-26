@@ -47,7 +47,7 @@ export function RequirementsContainer({
           aria-labelledby="topics_label"
           insertParam={fieldNames.topics}
           lookup="topics"
-          pathname="/requirements"
+          route="requirements"
         />
       }
     />,
@@ -65,7 +65,7 @@ export function RequirementsContainer({
           agencies={existingAgencies}
           fieldNames={fieldNames}
           policies={existingPolicies}
-          query={query}
+          route="requirements"
           topics={existingTopics}
         />}
       tabs={[

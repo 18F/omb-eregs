@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
 
 export default function Pagers({ count }, { router }) {
   let prevPage = null;
@@ -15,11 +14,19 @@ export default function Pagers({ count }, { router }) {
 
   if (pageInt > 1) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt - 1 });
-    prevPage = <Link aria-label="Previous page" to={{ pathname, query: modifiedQuery }}>&lt;</Link>;
+    prevPage = (
+      <Link route={pathname} params={modifiedQuery}>
+        <a aria-label="Previous page">&lt;</a>
+      </Link>
+    );
   }
   if (nextOffset < count) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt + 1 });
-    nextPage = <Link aria-label="Next page" to={{ pathname, query: modifiedQuery }}>&gt;</Link>;
+    nextPage = (
+      <Link route={pathname} params={modifiedQuery}>
+        <a aria-label="Next page">&gt;</a>
+      </Link>
+    );
   }
   return (
     <div>

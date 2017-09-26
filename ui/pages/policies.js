@@ -21,10 +21,13 @@ function requirementsTab(policyQuery) {
       reqQuery[`policy__${key}`] = policyQuery[key];
     }
   });
-  const link = { pathname: '/requirements', query: reqQuery };
   return (
-    <TabView active={false} tabName="Requirements" key="Requirements" link={link} />
-  );
+    <TabView
+      active={false}
+      params={reqQuery}
+      route="requirements"
+      tabName="Requirements"
+    />);
 }
 
 const fieldNames = {
@@ -44,10 +47,10 @@ export function PoliciesContainer({
       key="topic"
       selector={
         <Selector
-          arial-labelledby="topics_label"
+          aria-labelledby="topics_label"
           insertParam={fieldNames.topics}
           lookup="topics"
-          pathname="/policies"
+          route="policies"
         />
       }
     />,
@@ -66,7 +69,7 @@ export function PoliciesContainer({
           agencies={existingAgencies}
           fieldNames={fieldNames}
           policies={existingPolicies}
-          query={query}
+          route="policies"
           topics={existingTopics}
         />}
       tabs={[

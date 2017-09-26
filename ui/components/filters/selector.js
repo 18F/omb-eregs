@@ -18,29 +18,29 @@ export default function Selector(props, { router }) {
     router.push(`${pathname}?${paramStr}`);
   };
 
-  const fallback = React.createElement(FallbackView, {
-    'aria-labelledby': props['aria-labelledby'],
-    insertParam,
-    lookup,
-    pathname,
-    query: router.location.query,
-  });
-  const autocompleter = React.createElement(Async, {
-    'aria-labelledby': props['aria-labelledby'],
-    loadOptions: makeOptionLoader(lookup),
-    onChange,
-    tabIndex: '0',
-  });
-
-  return React.createElement(ConditionalRender, {}, fallback, autocompleter);
+  return (
+    <ConditionalRender>
+      <FallbackView
+        aria-labelledby={props['aria-labelledby']}
+        insertParam={insertParam}
+        lookup={lookup}
+        route={route}
+        query={router.query}
+      />
+      <Async
+        aria-labelledby={props['aria-labelledby']}
+        loadOptions={makeOptionLoader(lookup)}
+        onChange={onChange}
+        tabIndex="0"
+      />
+    </ConditionalRender>
+  );
 }
 Selector.propTypes = {
   'aria-labelledby': PropTypes.string.isRequired,
   lookup: PropTypes.oneOf(Object.keys(apiNameField)).isRequired,
   insertParam: PropTypes.string.isRequired,
-  pathname: PropTypes.string.isRequired,
-};
-Selector.contextTypes = {
+  route: PropTypes.string.isRequired,
   router: PropTypes.shape({
     location: PropTypes.shape({
       query: PropTypes.shape({}),

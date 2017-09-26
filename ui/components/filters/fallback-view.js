@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { redirectWhiteList } from '../../redirects';
-
 export default function FallbackView(props) {
-  const { insertParam, lookup, pathname, query } = props;
+  const { insertParam, lookup, query, route } = props;
   return (
     <form action={`/search-redirect/${lookup}/`} method="GET">
       <input type="hidden" name="insertParam" value={insertParam} />
-      <input type="hidden" name="redirectPathname" value={pathname} />
+      <input type="hidden" name="redirectRoute" value={route} />
       <div className="flex clearfix relative">
         <input
           aria-labelledby={props['aria-labelledby']}
@@ -32,8 +30,8 @@ FallbackView.propTypes = {
   'aria-labelledby': PropTypes.string.isRequired,
   insertParam: PropTypes.string,
   lookup: PropTypes.string.isRequired,
-  pathname: PropTypes.oneOf(redirectWhiteList).isRequired,
   query: PropTypes.shape({}),
+  route: PropTypes.string.isRequired,
 };
 FallbackView.defaultProps = {
   insertParam: '',
