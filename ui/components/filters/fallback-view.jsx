@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import { redirectWhiteList } from '../../redirects';
@@ -28,11 +29,11 @@ export default function FallbackView(props) {
   );
 }
 FallbackView.propTypes = {
-  'aria-labelledby': React.PropTypes.string.isRequired,
-  insertParam: React.PropTypes.string,
-  lookup: React.PropTypes.string.isRequired,
-  pathname: React.PropTypes.oneOf(redirectWhiteList).isRequired,
-  query: React.PropTypes.shape({}),
+  'aria-labelledby': PropTypes.string.isRequired,
+  insertParam: PropTypes.string,
+  lookup: PropTypes.string.isRequired,
+  pathname: PropTypes.oneOf(redirectWhiteList).isRequired,
+  query: PropTypes.shape({}),
 };
 FallbackView.defaultProps = {
   insertParam: '',

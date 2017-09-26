@@ -3,6 +3,7 @@
  * is taken; when rendering client-side, the second option. When a JS-capable
  * browser received the server-side version, it will replace with the
  * client-side version. */
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import config from '../config';
@@ -35,5 +36,5 @@ export default class ConditionalRender extends React.Component {
   }
 }
 ConditionalRender.propTypes = {
-  children: React.PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired,
 };

@@ -1,9 +1,7 @@
-/*
-Main.scss
-==========================================================================
-main.scss imports all supporting scss files
-and includes any non-semantic helper classes
-*/
+// Main.scss
+// ==========================================================================
+// main.scss imports all supporting scss files
+// and includes any non-semantic helper classes
 
 // Third Party
 @import '~basscss-sass/scss/basscss';
@@ -18,6 +16,11 @@ and includes any non-semantic helper classes
 @import 'footer';
 @import 'print';
 @import 'ie';
+@import 'stars-divider';
+@import 'button-like';
+
+// Reusable styles
+@import 'utils/landing';
 
 // Components
 @import 'requirements';

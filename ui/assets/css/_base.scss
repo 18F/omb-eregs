@@ -1,11 +1,13 @@
-$color-gray-lightest: #FAFAFA;
+$color-gray-lightest: #fafafa;
 
 :root {
   font-size: 16px;
 }
 
-a, a:link {
+a,
+a:link {
   color: $color-primary;
+  text-decoration: none;
 }
 
 .gray-border {

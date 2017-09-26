@@ -6,12 +6,14 @@ inherit: manifest_base.yml
 applications:
   - name: api
     buildpack: python_buildpack
-    instances: 2
+    instances: 3
+    memory: 512M
+    path: api
     services:
       - database  # aws-rds medium-psql
       - config    # user-provided service w/ DJANGO_SECRET_KEY and NEW_RELIC_LICENSE_KEY
       - storage-s3  # S3 basic service
-    command: ./devops/run_api.sh
+    command: ./run_api.sh
     routes:
       - route: omb-eregs-api.app.cloud.gov
       - route: policy-api.cio.gov
@@ -20,9 +22,10 @@ applications:
       MAX_URL: https://login.max.gov/cas/login
   - name: ui
     buildpack: nodejs_buildpack
-    instances: 4
+    instances: 8
     memory: 128M
-    command: node ui-dist/server.js
+    path: ui
+    command: node dist/server.js
     routes:
       - route: omb-eregs.app.cloud.gov
       - route: policy-beta.cio.gov
@@ -31,3 +34,19 @@ applications:
     env:
       API_URL: https://policy-api.cio.gov/
       NEW_RELIC_APP_NAME: OMB Prod UI
+  - name: redeployer
+    buildpack: python_buildpack
+    no-route: true
+    memory: 32M
+    instances: 1
+    health-check-type: process
+    # Note, time on server is UTC
+    command: python redeploy.py 03:45
+    path: redeployer
+    services:
+      - redeployer-creds  # API_TOKEN
+    env:
+      CIRCLE_BRANCH: release
+      CIRCLE_ORGNAME: 18F
+      CIRCLE_REPONAME: omb-eregs
+      CIRCLE_VCS: github

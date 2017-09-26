@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 function isUnfiltered(query) {
@@ -34,16 +35,16 @@ ThingCounter.defaultProps = {
 };
 
 ThingCounter.propTypes = {
-  count: React.PropTypes.number,
-  singular: React.PropTypes.string,
-  plural: React.PropTypes.string,
+  count: PropTypes.number,
+  singular: PropTypes.string,
+  plural: PropTypes.string,
 };
 ThingCounter.contextTypes = {
-  router: React.PropTypes.shape({
-    location: React.PropTypes.shape({
-      pathname: React.PropTypes.string,
-      query: React.PropTypes.shape({
-        page: React.PropTypes.string,
+  router: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+      query: PropTypes.shape({
+        page: PropTypes.string,
       }),
     }),
   }),

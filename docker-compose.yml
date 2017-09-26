@@ -18,10 +18,10 @@ services:
     volumes:
       - database_data:/var/lib/postgresql/data
   python: &PYTHON     # This command is out of order to aid with config reuse
-    image: python:3.5.3
+    image: python:3.6.2
     volumes:
       - $PWD:/usr/src/app
-    working_dir: /usr/src/app
+    working_dir: /usr/src/app/api
     stdin_open: true
     tty: true
   minio:
@@ -33,7 +33,7 @@ services:
     network_mode: service:proxy
   prod-api: &PROD_API
     <<: *PYTHON
-    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
+    command: .docker/wait_for_db_then .docker/activate_then ./run_api.sh
     environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
       PORT: 9001
@@ -68,7 +68,6 @@ services:
 
   dev-api: &DEV_API
     <<: *PROD_API
-    command: ./devops/wait_for_db_then ./devops/activate_then ./devops/run_api.sh
     environment:
       <<: *API_ENV
       PORT: 8001
@@ -80,8 +79,8 @@ services:
     image: node:6
     volumes:
       - $PWD:/usr/src/app
-    working_dir: /usr/src/app
-    command: ./devops/deps_ok_then npm start
+    working_dir: /usr/src/app/ui
+    command: .docker/deps_ok_then npm start
     environment: &UI_ENV
       PORT: 9002
       NODE_ENV: production
@@ -95,7 +94,7 @@ services:
 
   dev: &DEV_UI
     <<: *PROD_UI
-    command: ./devops/deps_ok_then ./devops/dev_ui.sh
+    command: .docker/deps_ok_then .docker/watch-run.sh
     environment:
       <<: *UI_ENV
       PORT: 8002
@@ -113,41 +112,41 @@ services:
     <<: *PYTHON
     environment:
       DEBUG: "true"
-    entrypoint: ./devops/activate_then flake8
+    entrypoint: .docker/activate_then flake8
 
   pip-compile:
     <<: *PYTHON
     environment:
       DEBUG: "true"
-    entrypoint: ./devops/activate_then pip-compile
+    entrypoint: .docker/activate_then pip-compile
 
   bandit:
     <<: *PYTHON
     environment:
       DEBUG: "true"
-    entrypoint: ./devops/activate_then bandit
+    entrypoint: .docker/activate_then bandit
 
 
   manage.py:
     <<: *DEV_API
-    entrypoint: ./devops/wait_for_db_then ./devops/activate_then ./manage.py
+    entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
     command: ''
 
   py.test:
     <<: *DEV_API
-    entrypoint: ./devops/wait_for_db_then ./devops/activate_then py.test
+    entrypoint: .docker/wait_for_db_then .docker/activate_then py.test
     command: ''
 
   npm:
     <<: *DEV_UI
-    entrypoint: ./devops/deps_ok_then npm
+    entrypoint: .docker/deps_ok_then npm
     command: ''
     ports: []
     depends_on: []
 
   webpack:
     <<: *DEV_UI
-    entrypoint: ./devops/deps_ok_then ./node_modules/.bin/webpack
+    entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
     command: ''
     ports: []
     depends_on: []

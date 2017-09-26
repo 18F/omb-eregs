@@ -13,15 +13,13 @@ services:
       - prod-api
       - proxy
   selenium-py.test:
-    image: python:3.5.3
+    image: python:3.6.2
     volumes:
       - $PWD:/usr/src/app
-    working_dir: /usr/src/app
+    working_dir: /usr/src/app/devops/integration_tests/
     stdin_open: true
     tty: true
-    entrypoint: ./devops/wait_for_db_then ./devops/activate_then py.test
+    entrypoint: ../../api/.docker/activate_then py.test
     external_links:
       - selenium_chrome
       - selenium_firefox
-    environment:
-      DEBUG: "true"

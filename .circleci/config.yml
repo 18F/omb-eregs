@@ -1,0 +1,101 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+        - image: circleci/python:3.6.2
+      
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Prep Code Climate Coverage reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod a+x ./cc-test-reporter
+            ./cc-test-reporter before-build
+      - run:
+          name: Setup "holder" container for file storage
+          command: |
+            docker create -v /usr/src/app -w /usr/src/app/ --name holder python:3.6.2 sleep 100d
+            docker cp . holder:/usr/src/app
+            docker start holder
+      - run:
+          name: Generate circle-specific docker configs
+          command: |
+            docker exec holder pip install pyyaml
+            docker exec holder python ./devops/transform_circle.py docker-compose.yml holder > docker-compose-circle.yml
+
+      - run:
+          name: UI Tests
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm npm test
+      - run:
+          name: Build UI
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: |
+            docker-compose run --rm webpack
+            docker cp holder:/usr/src/app/ui/dist ./ui/dist
+      - run:
+          name: API Unit tests
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm py.test --cov --cov-report xml
+      - run:
+          name: API Flake8
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm flake8
+      - run:
+          name: API Bandit
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
+
+      - run:
+          name: Submit Coverage
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: |
+            docker cp holder:/usr/src/app/api/coverage.xml api/coverage.xml
+            # directory hopping so the file names match up
+            cd api
+            ../cc-test-reporter format-coverage \
+              --input-type coverage.py --output - \
+              | python ../devops/cc_add_prefix.py --prefix api/ \
+              > ../cc-coverage.python.json
+
+            cd ../ui
+            mkdir coverage
+            docker cp holder:/usr/src/app/ui/lcov.info lcov.info
+            ../cc-test-reporter format-coverage \
+              --prefix /usr/src/app/ui --input-type lcov --output - lcov.info \
+              | python ../devops/cc_add_prefix.py --prefix ui/ \
+              > ../cc-coverage.node.json
+
+            cd ..
+            ./cc-test-reporter sum-coverage --output cc-coverage.json --parts 2 cc-coverage.*.json
+            # allow submission to fail; this occurs on re-builds
+            echo 4
+            ./cc-test-reporter upload-coverage --input cc-coverage.json || true
+
+      - deploy:
+          name: Deploy
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              export CF_USERNAME=$CF_USERNAME_DEV
+              export CF_PASSWORD=$CF_PASSWORD_DEV
+              ./devops/circle-deploy.sh dev
+            elif [ "${CIRCLE_BRANCH}" == "release" ]; then
+              export CF_USERNAME=$CF_USERNAME_PROD
+              export CF_PASSWORD=$CF_PASSWORD_PROD
+              ./devops/circle-deploy.sh prod
+            fi

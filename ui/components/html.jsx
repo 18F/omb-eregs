@@ -1,4 +1,5 @@
 import newrelic from 'newrelic';
+import PropTypes from 'prop-types';
 import React from 'react';
 import serialize from 'serialize-javascript';
 
@@ -22,7 +23,7 @@ function scriptTag(data) {
  * the generated text. */
 function newRelicTag() {
   const stringWithTags = newrelic.getBrowserTimingHeader();
-  if (!stringWithTags) {  /* agent is disabled */
+  if (!stringWithTags) { /* agent is disabled */
     return null;
   }
   const endOpeningTag = stringWithTags.indexOf('>');
@@ -34,7 +35,7 @@ function newRelicTag() {
   /* eslint-enable react/no-danger */
 }
 
-export default function Html({ contents, data }) {
+export default function Html({ allowDynamic, children, data }) {
   return (
     <html lang="en-US">
       <head>
@@ -46,20 +47,22 @@ export default function Html({ contents, data }) {
       </head>
       <body>
         <div id="app">
-          { contents }
+          { children }
         </div>
         <script src="/static/ie.js" />
         { scriptTag(data) }
-        <script src="/static/browser.js" />
+        { allowDynamic ? <script src="/static/browser.js" /> : null }
       </body>
     </html>
   );
 }
 Html.defaultProps = {
-  contents: null,
+  allowDynamic: true,
+  children: null,
   data: {},
 };
 Html.propTypes = {
-  contents: React.PropTypes.node,
-  data: React.PropTypes.shape({}),
+  allowDynamic: PropTypes.bool,
+  children: PropTypes.node,
+  data: PropTypes.shape({}),
 };

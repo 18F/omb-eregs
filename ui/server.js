@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import 'newrelic';  // must be first
+import 'newrelic'; // must be first
 
 import path from 'path';
 
@@ -26,7 +26,7 @@ app.use(helmet({ xssFilter: { setOnOldIE: true } }));
 app.use(doNotCache);
 // logging
 app.use(morgan('combined'));
-app.use('/static', express.static(path.join('ui-dist', 'static')));
+app.use('/static', express.static(path.join('dist', 'static')));
 app.use(passport.initialize());
 
 app.get('*', passport.authenticate(['ip', 'basic'], { session: false }), serverRender);

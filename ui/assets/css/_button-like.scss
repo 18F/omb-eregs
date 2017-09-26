@@ -1,0 +1,8 @@
+.button-like {
+  @extend .rounded;
+  @extend .px3;
+  @extend .py1;
+
+  color: $color-white;
+  background-color: $color-primary;
+}

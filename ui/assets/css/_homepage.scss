@@ -9,25 +9,17 @@
     background-color: $color-primary;
     color: $color-white;
     border: 1px solid $color-white;
+
     &:hover {
       cursor: pointer;
     }
   }
 
-  h2, h3, h4 {
+  h2,
+  h3,
+  h4 {
     font-weight: normal;
     line-height: 1.25em;
-  }
-
-  .about-inner {
-    border-left: 3px solid $color-gold;
-
-    p {
-      @include font-merriweather();
-      letter-spacing: .5px;
-      line-height: 1.375rem;
-      width: 50vmax;
-    }
   }
 
   .new-policies {
@@ -48,5 +40,5 @@
     .new-policies {
       padding: 2rem 1rem;
     }
-  }  
+  }
 }
