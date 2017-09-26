@@ -31,7 +31,7 @@ Entry.propTypes = {
 export function LookupSearch({ pagedEntries, userParams }) {
   let pager;
   if (pagedEntries.count) {
-    pager = <Pagers count={pagedEntries.count} />;
+    pager = <Pagers count={pagedEntries.count} route="search-redirect"/>;
   } else {
     pager = <div>No {userParams.lookup} found.</div>;
   }

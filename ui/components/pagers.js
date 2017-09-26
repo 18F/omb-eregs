@@ -4,10 +4,10 @@ import React from 'react';
 
 import { Link } from '../routes';
 
-export function Pagers({ count, router }) {
+export function Pagers({ count, route, router }) {
   let prevPage = null;
   let nextPage = null;
-  const { pathname, query } = router;
+  const { query } = router;
   let pageInt = parseInt(query.page || '1', 10) || 1;
   const nextOffset = pageInt * 25;
 
@@ -18,7 +18,7 @@ export function Pagers({ count, router }) {
   if (pageInt > 1) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt - 1 });
     prevPage = (
-      <Link route={pathname} params={modifiedQuery}>
+      <Link route={route} params={modifiedQuery}>
         <a aria-label="Previous page">&lt;</a>
       </Link>
     );
@@ -26,7 +26,7 @@ export function Pagers({ count, router }) {
   if (nextOffset < count) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt + 1 });
     nextPage = (
-      <Link route={pathname} params={modifiedQuery}>
+      <Link route={route} params={modifiedQuery}>
         <a aria-label="Next page">&gt;</a>
       </Link>
     );
@@ -46,8 +46,8 @@ Pagers.defaultProps = {
 
 Pagers.propTypes = {
   count: PropTypes.number,
+  route: PropTypes.string.isRequired,
   router: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
     query: PropTypes.shape({}).isRequired,
   }).isRequired,
 };

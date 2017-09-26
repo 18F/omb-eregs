@@ -3,7 +3,7 @@ const Routes = require('next-routes');
 
 const routes = Routes()
   .add('homepage', '/', '/')
-  .add('/search-redirect/:lookup(agencies|policies|topics)', 'search-redirect')
+  .add('search-redirect', '/search-redirect/:lookup(agencies|policies|topics)', 'search-redirect')
   .add('policies')
   .add('privacy')
   .add('requirements');

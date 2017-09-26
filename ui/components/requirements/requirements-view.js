@@ -18,7 +18,7 @@ export default function RequirementsView({ requirements, count }) {
           </li>
         )) }
       </ul>
-      <Pagers count={count} />
+      <Pagers count={count} route="requirements"/>
     </div>
   );
 }
