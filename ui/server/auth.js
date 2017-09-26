@@ -8,17 +8,18 @@
  * Warning: do not enable UI_IP_WHITELIST unless you are behind a proxy -- we
  * are only checking the x-forwarded-for header, which is easy to spoof if you
  * are not. */
-import bufferEq from 'buffer-equal-constant-time';
-import passport from 'passport';
-import { Strategy as CustomStrategy } from 'passport-custom';
-import { BasicStrategy } from 'passport-http';
-import rangeCheck from 'range_check';
+const bufferEq = require('buffer-equal-constant-time');
+const passport = require('passport');
+const passportCustom = require('passport-custom');
+const { BasicStrategy } = require('passport-http');
+const rangeCheck = require('range_check');
 
+const CustomStrategy = passportCustom.Strategy;
 const noopStrategy = new CustomStrategy((req, callback) => {
   callback(null, true);
 });
 
-export function basicAuth(authCreds) {
+function basicAuth(authCreds) {
   return new BasicStrategy((username, password, done) => {
     const hasMatch = Object.keys(authCreds).some(key =>
       bufferEq(new Buffer(key), new Buffer(username))
@@ -27,7 +28,7 @@ export function basicAuth(authCreds) {
   });
 }
 
-export function forwardedIPAuth(whitelist) {
+function forwardedIPAuth(whitelist) {
   const ranges = whitelist.filter(rangeCheck.isRange);
   const ips = whitelist.filter(ip => !rangeCheck.isRange(ip));
   return new CustomStrategy((req, callback) => {
@@ -36,7 +37,7 @@ export function forwardedIPAuth(whitelist) {
   });
 }
 
-export default function ({ UI_BASIC_AUTH, UI_IP_WHITELIST }) {
+function setupAuth({ UI_BASIC_AUTH, UI_IP_WHITELIST }) {
   const whitelist = UI_IP_WHITELIST || [];
   passport.use('ip', forwardedIPAuth(whitelist));
 
@@ -47,3 +48,4 @@ export default function ({ UI_BASIC_AUTH, UI_IP_WHITELIST }) {
   }
 }
 
+module.exports = { basicAuth, forwardedIPAuth, default: setupAuth };
