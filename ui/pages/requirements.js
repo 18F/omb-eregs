@@ -1,3 +1,4 @@
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -11,7 +12,8 @@ import FilterListView from '../components/filters/list-view';
 import Selector from '../components/filters/selector';
 import { requirementsData } from '../queries';
 
-function policiesTab(reqQuery) {
+function PoliciesTab({ router }) {
+  const reqQuery = router.query;
   // Transform filter keys into the format expected by policies
   const policyQuery = {};
   Object.keys(reqQuery).forEach((key) => {
@@ -21,11 +23,21 @@ function policiesTab(reqQuery) {
       policyQuery[`requirements__${key}`] = reqQuery[key];
     }
   });
-  const link = { pathname: '/policies', query: policyQuery };
-  return React.createElement(
-    TabView,
-    { active: false, tabName: 'Policies', key: 'Policies', link });
+  return (
+    <TabView
+      active={false}
+      params={policyQuery}
+      route="policies"
+      tabName="Policies"
+    />);
 }
+PoliciesTab.propTypes = {
+  router: PropTypes.shape({
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
+};
+const PoliciesTabWithRouter = withRouter(PoliciesTab);
+
 
 const fieldNames = {
   agencies: 'all_agencies__id__in',
@@ -35,8 +47,7 @@ const fieldNames = {
 };
 
 export function RequirementsContainer({
-  existingAgencies, existingPolicies, existingTopics, location: { query },
-  pagedReqs }) {
+  existingAgencies, existingPolicies, existingTopics, pagedReqs }) {
   const filterControls = [
     <FilterListView
       heading="Topics"
@@ -70,7 +81,7 @@ export function RequirementsContainer({
         />}
       tabs={[
         <TabView active tabName="Requirements" key="Requirements" />,
-        policiesTab(query),
+        <PoliciesTabWithRouter key="Policies" />,
       ]}
     />
   );
@@ -79,7 +90,6 @@ RequirementsContainer.propTypes = {
   existingAgencies: ExistingFilters.propTypes.agencies,
   existingPolicies: ExistingFilters.propTypes.policies,
   existingTopics: ExistingFilters.propTypes.topics,
-  location: PropTypes.shape({ query: PropTypes.shape({}) }),
   pagedReqs: PropTypes.shape({
     results: RequirementsView.propTypes.requirements,
     count: RequirementsView.propTypes.count,
@@ -89,7 +99,6 @@ RequirementsContainer.defaultProps = {
   existingAgencies: [],
   existingPolicies: [],
   existingTopics: [],
-  location: { query: {} },
   pagedReqs: { results: [], count: 0 },
 };
 

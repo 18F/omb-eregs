@@ -1,10 +1,13 @@
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Pagers({ count }, { router }) {
+import { Link } from '../routes';
+
+export function Pagers({ count, router }) {
   let prevPage = null;
   let nextPage = null;
-  const { location: { pathname, query } } = router;
+  const { pathname, query } = router;
   let pageInt = parseInt(query.page || '1', 10) || 1;
   const nextOffset = pageInt * 25;
 
@@ -43,14 +46,10 @@ Pagers.defaultProps = {
 
 Pagers.propTypes = {
   count: PropTypes.number,
-};
-Pagers.contextTypes = {
   router: PropTypes.shape({
-    location: PropTypes.shape({
-      pathname: PropTypes.string,
-      query: PropTypes.shape({
-        page: PropTypes.string,
-      }),
-    }),
-  }),
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
 };
+
+export default withRouter(Pagers);

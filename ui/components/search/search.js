@@ -1,10 +1,10 @@
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default class Search extends React.Component {
+export class Search extends React.Component {
   hiddenFields() {
-    const query = this.context.router.location.query;
-    const modifiedQuery = Object.assign({}, query);
+    const modifiedQuery = Object.assign({}, this.props.router.query);
     delete modifiedQuery.page;
     delete modifiedQuery[this.inputName()];
     return Object.keys(modifiedQuery).map(k =>
@@ -12,11 +12,12 @@ export default class Search extends React.Component {
   }
 
   inputName() {
-    return this.context.router.location.pathname.includes('policies') ? 'requirements__req_text__search' : 'req_text__search';
+    const path = this.props.router.pathname;
+    return path.includes('policies') ? 'requirements__req_text__search' : 'req_text__search';
   }
 
   actionPath() {
-    const path = this.context.router.location.pathname;
+    const path = this.props.router.pathname;
     return (path.includes('policies') || path.includes('requirements')) ? path : '/requirements/';
   }
 
@@ -40,12 +41,11 @@ export default class Search extends React.Component {
     );
   }
 }
-
-Search.contextTypes = {
+Search.propTypes = {
   router: PropTypes.shape({
-    location: PropTypes.shape({
-      query: PropTypes.shape({}),
-      pathname: PropTypes.string,
-    }),
-  }),
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
 };
+
+export default withRouter(Search);

@@ -1,3 +1,4 @@
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -11,7 +12,8 @@ import Selector from '../components/filters/selector';
 import { wrapWithAjaxLoader } from '../components/ajax-loading';
 import { policiesData } from '../queries';
 
-function requirementsTab(policyQuery) {
+function RequirementsTab({ router }) {
+  const policyQuery = router.query;
   // Transform filter keys into the format expected by requirements
   const reqQuery = {};
   Object.keys(policyQuery).forEach((key) => {
@@ -29,6 +31,12 @@ function requirementsTab(policyQuery) {
       tabName="Requirements"
     />);
 }
+RequirementsTab.propTypes = {
+  router: PropTypes.shape({
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
+};
+const RequirementsTabWithRouter = withRouter(RequirementsTab);
 
 const fieldNames = {
   agencies: 'requirements__all_agencies__id__in',
@@ -38,8 +46,7 @@ const fieldNames = {
 };
 
 export function PoliciesContainer({
-  existingAgencies, existingPolicies, existingTopics, location: { query },
-  pagedPolicies }) {
+  existingAgencies, existingPolicies, existingTopics, pagedPolicies }) {
   const filterControls = [
     <FilterListView
       heading="Topics"
@@ -62,7 +69,7 @@ export function PoliciesContainer({
         <PoliciesView
           policies={pagedPolicies.results}
           count={pagedPolicies.count}
-          topicsIds={query.requirements__topics__id__in}
+          topicsIds={existingTopics.map(t => t.id).join(',')}
         />}
       selectedFilters={
         <ExistingFilters
@@ -73,7 +80,7 @@ export function PoliciesContainer({
           topics={existingTopics}
         />}
       tabs={[
-        requirementsTab(query),
+        <RequirementsTabWithRouter key="Requirements" />,
         <TabView active tabName="Policies" key="Policies" />,
       ]}
     />
@@ -83,7 +90,6 @@ PoliciesContainer.propTypes = {
   existingAgencies: ExistingFilters.propTypes.agencies,
   existingPolicies: ExistingFilters.propTypes.policies,
   existingTopics: ExistingFilters.propTypes.topics,
-  location: PropTypes.shape({ query: PropTypes.shape({}) }),
   pagedPolicies: PropTypes.shape({
     results: PoliciesView.propTypes.policies,
     count: PoliciesView.propTypes.count,
@@ -93,7 +99,6 @@ PoliciesContainer.defaultProps = {
   existingAgencies: [],
   existingPolicies: [],
   existingTopics: [],
-  location: { query: {} },
   pagedPolicies: { results: [], count: 0 },
 };
 const PoliciesWithHeaderFooter = props =>

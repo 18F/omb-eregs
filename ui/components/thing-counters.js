@@ -1,3 +1,4 @@
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -8,8 +9,8 @@ function isUnfiltered(query) {
   return values.every(x => x === ''); // true if all empty.
 }
 
-export default function ThingCounter({ count, singular, plural }, { router }) {
-  const query = router.location.query;
+export function ThingCounter({ count, plural, router, singular }) {
+  const { query } = router;
   const noun = count === 1 ? singular : plural;
   const verb = count === 1 ? 'matches' : 'match';
   const classes = count === 0 ? 'alert p1 m1 border' : '';
@@ -30,23 +31,17 @@ export default function ThingCounter({ count, singular, plural }, { router }) {
 
 ThingCounter.defaultProps = {
   count: 0,
-  singular: '',
   plural: '',
+  singular: '',
 };
 
 ThingCounter.propTypes = {
   count: PropTypes.number,
-  singular: PropTypes.string,
   plural: PropTypes.string,
-};
-ThingCounter.contextTypes = {
   router: PropTypes.shape({
-    location: PropTypes.shape({
-      pathname: PropTypes.string,
-      query: PropTypes.shape({
-        page: PropTypes.string,
-      }),
-    }),
-  }),
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
+  singular: PropTypes.string,
 };
 
+export default withRouter(ThingCounter);

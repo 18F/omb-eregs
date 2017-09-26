@@ -1,5 +1,4 @@
-import querystring from 'querystring';
-
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Async } from 'react-select';
@@ -8,14 +7,14 @@ import FallbackView from './fallback-view';
 import ConditionalRender from '../conditional-render';
 import { apiNameField, makeOptionLoader } from '../../lookup-search';
 import { redirectQuery } from '../../redirects';
+import { Router } from '../../routes';
 
 
-export default function Selector(props, { router }) {
-  const { insertParam, lookup, pathname } = props;
+export function Selector(props) {
+  const { insertParam, lookup, route, router } = props;
   const onChange = (entry) => {
-    const query = redirectQuery(router.location.query, insertParam, entry.value);
-    const paramStr = querystring.stringify(query);
-    router.push(`${pathname}?${paramStr}`);
+    const query = redirectQuery(router.query, insertParam, entry.value);
+    Router.pushRoute(route, query);
   };
 
   return (
@@ -42,10 +41,8 @@ Selector.propTypes = {
   insertParam: PropTypes.string.isRequired,
   route: PropTypes.string.isRequired,
   router: PropTypes.shape({
-    location: PropTypes.shape({
-      query: PropTypes.shape({}),
-      pathname: PropTypes.string,
-    }),
-    push: PropTypes.func,
-  }),
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
 };
+
+export default withRouter(Selector);
