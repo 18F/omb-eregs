@@ -35,6 +35,58 @@ function newRelicTag() {
   /* eslint-enable react/no-danger */
 }
 
+/* Generates the myriad tags needed to support favicons across a variety of
+ * OSes, browsers, and display sizes. */
+function faviconTags() {
+  const appleSizes = [57, 60, 72, 76, 114, 120, 144, 152];
+  const appleIcons = appleSizes.map(number =>
+    (
+      <link
+        rel="apple-touch-icon-precomposed"
+        sizes={`${number}x${number}`}
+        href={`/static/img/favicon/apple-icon-${number}x${number}.png`}
+      />
+    ),
+  );
+  const iconSizes = [16, 32, 96, 128, 196];
+  const icons = iconSizes.map(number =>
+    (
+      <link
+        rel="icon"
+        type="img/png"
+        sizes={`${number}x${number}`}
+        href={`/static/img/favicon/favicon-${number}x${number}.png`}
+      />
+    ),
+  );
+
+  const msSizes = [70, 144, 150, 310];
+  const msSquares = msSizes.map(number =>
+    (
+      <meta
+        name={`msapplication-square${number}x${number}logo`}
+        content={`/static/img/favicon/mstile-${number}x${number}.png`}
+      />
+    ),
+  );
+
+  return ([
+    appleIcons,
+    icons,
+    <meta name="application-name" content="&nbsp;" />,
+    <meta name="msapplication-TileColor" content="#FFFFFF" />,
+    <meta
+      name="msapplication-TileImage"
+      content="mstile-144x144.png"
+    />,
+    msSquares,
+    <meta
+      name="msapplication-wide310x150logo"
+      content="mstile-310x150.png"
+    />,
+  ]);
+}
+
 export default function Html({ allowDynamic, children, data }) {
   return (
     <html lang="en-US">
@@ -43,6 +95,7 @@ export default function Html({ allowDynamic, children, data }) {
         <title>OMB Policy Library (Beta)</title>
         <link rel="stylesheet" href="/static/styles.css" />
         <DAP />
+        { faviconTags() }
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
