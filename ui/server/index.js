@@ -27,15 +27,11 @@ expressApp.use(helmet({ xssFilter: { setOnOldIE: true } }));
 expressApp.use(doNotCache);
 // logging
 expressApp.use(morgan('combined'));
-expressApp.use('/static', express.static(path.join('dist', 'static')));
 expressApp.use(passport.initialize());
 expressApp.use('*', passport.authenticate(['ip', 'basic'], { session: false }));
 
 nextApp.prepare().then(() => {
   expressApp.use(routes.getRequestHandler(nextApp));
-
-  // Error handler must be after all middleware and handlers
-  //expressApp.use(console.log);
 
   /* Start */
   expressApp.listen(env.port, () => {
