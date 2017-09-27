@@ -3,4 +3,5 @@ stack: cflinuxfs2
 env:
   DJANGO_SETTINGS_MODULE: omb_eregs.settings
   DISABLE_COLLECTSTATIC: 1
+  NODE_ENV: production
   WEB_CONCURRENCY: 4

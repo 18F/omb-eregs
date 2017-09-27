@@ -25,7 +25,7 @@ applications:
     instances: 8
     memory: 128M
     path: ui
-    command: node dist/server.js
+    command: npm start
     routes:
       - route: omb-eregs.app.cloud.gov
       - route: policy-beta.cio.gov

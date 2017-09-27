@@ -98,7 +98,7 @@ services:
     environment:
       <<: *UI_ENV
       PORT: 8002
-      NODE_ENV: ''
+      NODE_ENV: 'development'
       API_URL: 'http://0.0.0.0:8001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
