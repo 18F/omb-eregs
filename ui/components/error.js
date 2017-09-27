@@ -57,13 +57,14 @@ export function UnexpectedError({ statusCode }) {
     </section>
   );
 }
-UnexpectedError.propTypes = { statusCode: PropTypes.number.isRequired };
+UnexpectedError.propTypes = { statusCode: PropTypes.number };
+UnexpectedError.defaultProps = { statusCode: 0 };
 
 export default function ErrorView({ err, statusCode }) {
   if (statusCode === 404) {
     return <FourOhFour />;
   } else if (err && err.statusCode === 400) {
-    return <UserError message={err.msg} />;
+    return <UserError message={err.message || err.msg} />;
   }
   return <UnexpectedError statusCode={statusCode} />;
 }

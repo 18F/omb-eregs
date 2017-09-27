@@ -6,7 +6,7 @@
   "scripts": {
     "build": "next build",
     "start": "node server/index.js",
-    "test": "jest"
+    "test": "NODE_ENV=test jest"
   },
   "repository": {
     "type": "git",
@@ -76,9 +76,6 @@
     "coverageDirectory": "./",
     "coverageReporters": [
       "lcov"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/__tests__/util/"
     ]
   }
 }

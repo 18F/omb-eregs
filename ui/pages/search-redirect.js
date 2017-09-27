@@ -40,7 +40,7 @@ export function LookupSearch({ pagedEntries, userParams }) {
   return (
     <div className="max-width-4 mx-auto my3">
       <div>
-        <Link route={userParams.redirect.route}>
+        <Link route={userParams.redirect.route} params={userParams.redirect.query}>
           <a>Return to view requirements</a>
         </Link>
       </div>

@@ -1,8 +1,4 @@
-import { mount } from 'enzyme';
-import React from 'react';
-
-import { formatIssuance, homepageData } from '../queries';
-import NewPolicyView from '../components/homepage/new-policy-view';
+import { cleanSearchParams, formatIssuance, homepageData } from '../queries';
 import api from '../api';
 
 jest.mock('../api');
@@ -22,7 +18,7 @@ describe('formatIssuance', () => {
 describe('homepageData', () => {
   it('makes the correct request', () => {
     api.topics.fetchResults.mockImplementationOnce(() => Promise.resolve([]));
-    return homepageData.recentPolicies().then(() => {
+    return homepageData().then(() => {
       expect(api.policies.fetchResults).toHaveBeenCalledWith(
         { ordering: '-issuance' });
     });
@@ -30,8 +26,8 @@ describe('homepageData', () => {
   it('trims to the appropriate length', () => {
     api.topics.fetchResults.mockImplementationOnce(() =>
       Promise.resolve([1, 2, 3, 4, 5, 6, 7].map(id => ({ id }))));
-    return homepageData.recentPolicies().then((result) => {
-      expect(result.map(r => r.id)).toEqual([1, 2, 3, 4]);
+    return homepageData().then(({ recentPolicies }) => {
+      expect(recentPolicies.map(r => r.id)).toEqual([1, 2, 3, 4]);
     });
   });
   it('formats issuance date', () => {
@@ -39,8 +35,8 @@ describe('homepageData', () => {
       { issuance: '2002-03-04' },
       { issuance: '2020-11-10' },
     ]));
-    return homepageData.recentPolicies().then((result) => {
-      expect(result.map(r => r.issuance_pretty)).toEqual([
+    return homepageData().then(({ recentPolicies }) => {
+      expect(recentPolicies.map(r => r.issuance_pretty)).toEqual([
         'March 4, 2002',
         'November 10, 2020',
       ]);
@@ -48,25 +44,50 @@ describe('homepageData', () => {
   });
 });
 
-describe('<NewPolicyView />', () => {
-  const el = React.createElement(NewPolicyView, { policy: {
-    id: 42,
-    title_with_number: 'Title with A Number',
-    issuing_body: 'Somebody',
-    issuance_pretty: 'January 4, 1900',
-  } });
-  const result = mount(el);
+describe('cleanSearchParams()', () => {
+  const query = {
+    insertParam: 'ins',
+    lookup: 'topics',
+    q: 'something',
+    redirectQuery__et: 'c',
+    redirectQuery__param: 'value',
+    redirectRoute: 'requirements',
+  };
 
-  it('includes expected fields', () => {
-    expect(result.text()).toMatch(/Title with A Number/);
-    expect(result.text()).toMatch(/Somebody/);
-    expect(result.text()).toMatch(/January 4, 1900/);
+  it('does not raise an error when all fields are present', () => {
+    expect(() => cleanSearchParams(query)).not.toThrow();
   });
-  it('links to the right place', () => {
-    const links = result.find('Link');
-    expect(links).toHaveLength(1);
-    expect(links.at(0).prop('to')).toEqual({
-      pathname: '/policies', query: { id__in: 42 },
+
+  ['insertParam', 'lookup', 'redirectRoute'].forEach((param) => {
+    it(`raises an error when ${param} is not present`, () => {
+      const queryCopy = Object.assign({}, query);
+      delete queryCopy[param];
+      expect(() => cleanSearchParams(queryCopy)).toThrow();
+    });
+    it(`raises an error when ${param} is empty`, () => {
+      const queryCopy = Object.assign({}, query, { [param]: '' });
+      expect(() => cleanSearchParams(queryCopy)).toThrow();
+    });
+  });
+
+  it('raised an error when the route is not valid', () => {
+    const queryCopy = Object.assign({}, query, { redirectRoute: 'nonsense' });
+    expect(() => cleanSearchParams(queryCopy)).toThrow(/Invalid "redirectRoute"/);
+  });
+
+  it('gives cleans the parameter values', () => {
+    expect(cleanSearchParams(query)).toEqual({
+      q: 'something',
+      insertParam: 'ins',
+      redirect: {
+        route: 'requirements',
+        query: {
+          param: 'value',
+          et: 'c',
+        },
+      },
+      lookup: 'topics',
+      page: '1',
     });
   });
 });

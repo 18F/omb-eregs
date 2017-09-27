@@ -1,4 +1,4 @@
-import { forwardedIPAuth } from '../auth';
+import { forwardedIPAuth } from '../../server/auth';
 
 
 describe('forwardedIPAuth', () => {

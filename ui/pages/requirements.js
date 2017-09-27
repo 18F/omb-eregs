@@ -11,7 +11,7 @@ import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
 import { requirementsData } from '../queries';
 
-function PoliciesTab({ router }) {
+export function PoliciesTab({ router }) {
   const reqQuery = router.query;
   // Transform filter keys into the format expected by policies
   const policyQuery = {};

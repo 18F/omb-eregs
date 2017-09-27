@@ -17,13 +17,11 @@ describe('<Requirement />', () => {
     });
 
     const result = mount(<Requirement requirement={req} />);
-    const link = result.find('.policy-title Link').first();
+    const link = result.find('.policy-title LinkRoutes').first();
 
     expect(link.text()).toEqual('Some Title Here');
-    expect(link.prop('to')).toEqual({
-      pathname: '/policies',
-      query: { id__in: 4 },
-    });
+    expect(link.prop('route')).toEqual('policies');
+    expect(link.prop('params')).toEqual({ id__in: 4 });
   });
 
   it('includes links to topics', () => {
@@ -34,13 +32,13 @@ describe('<Requirement />', () => {
     });
 
     const result = mount(<Requirement requirement={req} />);
-    const links = result.find('.topics Link');
+    const links = result.find('.topics LinkRoutes');
 
     expect(links).toHaveLength(2);
     const [six, eight] = [links.first(), links.last()];
     expect(six.text()).toEqual('Six');
-    expect(six.prop('to').query.topics__id__in).toEqual(6);
-    expect(eight.prop('to').pathname).toEqual('/requirements');
+    expect(six.prop('params').topics__id__in).toEqual(6);
+    expect(eight.prop('route')).toEqual('requirements');
   });
 
   it('filters out values in the "applies to" field', () => {

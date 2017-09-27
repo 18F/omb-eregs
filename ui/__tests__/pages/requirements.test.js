@@ -1,21 +1,14 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { RequirementsContainer } from '../../pages/requirements';
+import { PoliciesTab, RequirementsContainer } from '../../pages/requirements';
 
 describe('<RequirementsContainer />', () => {
-  const location = { query: {
-    policy__issuance__gt: '2015-01-01',
-    verb__icontains: 'must',
-    topics__id__in: '1,6,9',
-    page: '5',
-  } };
   const pagedReqs = {
     results: [{ thing: 1 }, { thing: 2 }],
     count: 2,
   };
-  const result = shallow(React.createElement(
-    RequirementsContainer, { location, pagedReqs }));
+  const result = shallow(<RequirementsContainer pagedReqs={pagedReqs} />);
 
   it('has a topics filter controls', () => {
     const controls = result.prop('filterControls');
@@ -27,32 +20,16 @@ describe('<RequirementsContainer />', () => {
     expect(selector.props.lookup).toEqual('topics');
   });
 
-  describe('its tabs', () => {
-    it('has two tabs with correct names', () => {
-      const tabs = result.prop('tabs');
-      expect(tabs).toHaveLength(2);
+  it('has two tabs with correct types', () => {
+    const tabs = result.prop('tabs');
+    expect(tabs).toHaveLength(2);
 
-      const [reqTab, policyTab] = tabs;
+    const [reqTab, policyTab] = tabs;
 
-      expect(reqTab.props.active).toBeTruthy();
-      expect(reqTab.props.tabName).toBe('Requirements');
+    expect(reqTab.props.active).toBeTruthy();
+    expect(reqTab.props.tabName).toBe('Requirements');
 
-      expect(policyTab.props.active).toBeFalsy();
-      expect(policyTab.props.tabName).toBe('Policies');
-    });
-
-    it('transforms the query for the policies tab', () => {
-      const policyTab = result.prop('tabs')[1];
-      const link = policyTab.props.link;
-      expect(link).toEqual({
-        pathname: '/policies',
-        query: {
-          issuance__gt: '2015-01-01',
-          requirements__verb__icontains: 'must',
-          requirements__topics__id__in: '1,6,9',
-        },
-      });
-    });
+    expect(policyTab.type.displayName).toEqual('withRoute(PoliciesTab)');
   });
 
   it('has correct pageContent', () => {
@@ -68,7 +45,33 @@ describe('<RequirementsContainer />', () => {
     expect(selectedFilters.props.fieldNames).toHaveProperty('policies');
     expect(selectedFilters.props.fieldNames).toHaveProperty('search');
     expect(selectedFilters.props.fieldNames).toHaveProperty('topics');
-    expect(selectedFilters.props.query).toEqual(location.query);
   });
 });
 
+
+describe('<PoliciesTab />', () => {
+  const router = {
+    pathname: '',
+    query: {
+      policy__issuance__gt: '2015-01-01',
+      verb__icontains: 'must',
+      topics__id__in: '1,6,9',
+      page: '5',
+    },
+  };
+  const result = shallow(<PoliciesTab router={router} />);
+
+  it('is a configured TabView', () => {
+    expect(result.name()).toBe('TabView');
+    expect(result.prop('active')).toBeFalsy();
+    expect(result.prop('route')).toBe('policies');
+    expect(result.prop('tabName')).toBe('Policies');
+  });
+  it('transforms the query', () => {
+    expect(result.prop('params')).toEqual({
+      issuance__gt: '2015-01-01',
+      requirements__verb__icontains: 'must',
+      requirements__topics__id__in: '1,6,9',
+    });
+  });
+});

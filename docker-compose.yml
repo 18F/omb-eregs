@@ -81,7 +81,7 @@ services:
       - $PWD:/usr/src/app
     working_dir: /usr/src/app/ui
     command: .docker/deps_ok_then npm start
-    environment: &UI_ENV
+    environment:
       PORT: 9002
       NODE_ENV: production
       API_URL: 'http://0.0.0.0:9001/'
@@ -96,9 +96,8 @@ services:
     <<: *PROD_UI
     command: .docker/deps_ok_then .docker/watch-run.sh
     environment:
-      <<: *UI_ENV
       PORT: 8002
-      NODE_ENV: 'development'
+      NODE_ENV: development
       API_URL: 'http://0.0.0.0:8001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
