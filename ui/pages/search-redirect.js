@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
-import Pagers from '../components/pagers';
+import PagersContainer from '../components/pagers';
 import { apiNameField, redirectQuery } from '../lookup-search';
 import { cleanSearchParamTypes, searchRedirectData } from '../queries';
 import { Link } from '../routes';
@@ -30,7 +30,7 @@ Entry.propTypes = {
 export function LookupSearch({ pagedEntries, userParams }) {
   let pager;
   if (pagedEntries.count) {
-    pager = <Pagers count={pagedEntries.count} route="search-redirect"/>;
+    pager = <PagersContainer count={pagedEntries.count} route="search-redirect" />;
   } else {
     pager = <div>No {userParams.lookup} found.</div>;
   }

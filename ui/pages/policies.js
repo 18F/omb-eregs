@@ -8,7 +8,7 @@ import SearchFilterView from '../components/search-filter-view';
 import TabView from '../components/tab-view';
 import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
-import Selector from '../components/filters/selector';
+import SelectorContainer from '../components/filters/selector';
 import { policiesData } from '../queries';
 
 function RequirementsTab({ router }) {
@@ -52,7 +52,7 @@ export function PoliciesContainer({
       headingLabel="topics_label"
       key="topic"
       selector={
-        <Selector
+        <SelectorContainer
           aria-labelledby="topics_label"
           insertParam={fieldNames.topics}
           lookup="topics"

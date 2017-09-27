@@ -1,5 +1,5 @@
 import React from 'react';
-import Search from './search/search';
+import SearchContainer from './search/search';
 
 
 function Navbar() {
@@ -18,7 +18,7 @@ function Navbar() {
               OMB Policy Library <sup>BETA</sup>
           </h1>
         </a>
-        <Search />
+        <SearchContainer />
       </div>
     </div>
   );

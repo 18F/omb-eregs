@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Requirement from './requirement';
-import Pagers from '../pagers';
-import ThingCounter from '../thing-counters';
+import PagersContainer from '../pagers';
+import ThingCounterContainer from '../thing-counters';
 
 export default function RequirementsView({ requirements, count }) {
   const singular = 'requirement';
   const plural = 'requirements';
   return (
     <div>
-      <ThingCounter count={count} singular={singular} plural={plural} />
+      <ThingCounterContainer count={count} singular={singular} plural={plural} />
       <ul className="requirement-list list-reset">
         { requirements.map(requirement => (
           <li key={requirement.req_id} className="gray-border border rounded mb2">
@@ -18,7 +18,7 @@ export default function RequirementsView({ requirements, count }) {
           </li>
         )) }
       </ul>
-      <Pagers count={count} route="requirements"/>
+      <PagersContainer count={count} route="requirements" />
     </div>
   );
 }

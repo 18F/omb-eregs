@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Pagers from '../pagers';
+import PagersContainer from '../pagers';
 import Policy from './policy-view';
-import ThingCounter from '../thing-counters';
+import ThingCounterContainer from '../thing-counters';
 
 export default function PoliciesView({ policies, count, topicsIds }) {
   const singular = 'policy';
@@ -11,13 +11,13 @@ export default function PoliciesView({ policies, count, topicsIds }) {
 
   return (
     <div>
-      <ThingCounter count={count} singular={singular} plural={plural} />
+      <ThingCounterContainer count={count} singular={singular} plural={plural} />
       <ul className="policy-list list-reset">
         { policies.map(policy =>
           <Policy key={policy.id} policy={policy} topicsIds={topicsIds} />,
         )}
       </ul>
-      <Pagers count={count} route="polices" />
+      <PagersContainer count={count} route="polices" />
     </div>
   );
 }
