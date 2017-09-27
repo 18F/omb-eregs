@@ -36,6 +36,7 @@ module.exports = [
       new CopyWebpackPlugin([
           { from: 'assets/font/*', to: 'font', flatten: true },
           { from: 'assets/img/*', to: 'img', flatten: true },
+          { from: 'assets/img/favicon/*', to: 'img/favicon', flatten: true },
           { from: 'ie.js', to: '' }
       ]),
     ],
