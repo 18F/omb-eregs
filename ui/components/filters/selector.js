@@ -5,8 +5,7 @@ import { Async } from 'react-select';
 
 import FallbackView from './fallback-view';
 import ConditionalRender from '../conditional-render';
-import { apiNameField, makeOptionLoader } from '../../lookup-search';
-import { redirectQuery } from '../../redirects';
+import { apiNameField, makeOptionLoader, redirectQuery } from '../../lookup-search';
 import { Router } from '../../routes';
 
 
