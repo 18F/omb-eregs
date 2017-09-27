@@ -42,6 +42,7 @@ function faviconTags() {
   const appleIcons = appleSizes.map(number =>
     (
       <link
+        key={number}
         rel="apple-touch-icon-precomposed"
         sizes={`${number}x${number}`}
         href={`/static/img/favicon/apple-icon-${number}x${number}.png`}
@@ -52,6 +53,7 @@ function faviconTags() {
   const icons = iconSizes.map(number =>
     (
       <link
+        key={number}
         rel="icon"
         type="img/png"
         sizes={`${number}x${number}`}
@@ -64,6 +66,7 @@ function faviconTags() {
   const msSquares = msSizes.map(number =>
     (
       <meta
+        key={number}
         name={`msapplication-square${number}x${number}logo`}
         content={`/static/img/favicon/mstile-${number}x${number}.png`}
       />
@@ -77,12 +80,12 @@ function faviconTags() {
     <meta name="msapplication-TileColor" content="#FFFFFF" />,
     <meta
       name="msapplication-TileImage"
-      content="mstile-144x144.png"
+      content="/static/img/favicon/mstile-144x144.png"
     />,
     msSquares,
     <meta
       name="msapplication-wide310x150logo"
-      content="mstile-310x150.png"
+      content="/static/img/favicon/mstile-310x150.png"
     />,
   ]);
 }
