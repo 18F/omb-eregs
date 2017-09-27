@@ -5,6 +5,7 @@
   "extends": ["airbnb", "plugin:jest/recommended"],
   "globals": {
     "document": true,
+    "gas": true,
     "window": true
   },
   "plugins": [

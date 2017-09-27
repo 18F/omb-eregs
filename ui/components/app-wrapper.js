@@ -7,7 +7,14 @@ import ErrorPage from './error';
 import HeaderFooter from './header-footer';
 
 
-Router.onRouteChangeComplete = NProgress.done;
+Router.onRouteChangeComplete = (url) => {
+  NProgress.done();
+  // Trigger DAP pageviews when our history changes (for single-page-app users)
+  if (typeof gas !== 'undefined') {
+    // Provided by DAP
+    gas('send', 'pageview', url);
+  }
+};
 Router.onRouteChangeError = NProgress.done;
 Router.onRouteChangeStart = NProgress.start;
 
