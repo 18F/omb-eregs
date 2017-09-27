@@ -6,13 +6,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import config from '../config';
-
 
 export default class ConditionalRender extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { clientSide: config.clientSide };
+    this.state = { clientSide: false };
     if (React.Children.count(props.children) !== 2) {
       throw new Error('ConditionalRender requires exactly 2 children');
     }
