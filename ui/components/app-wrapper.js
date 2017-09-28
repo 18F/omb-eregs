@@ -1,8 +1,15 @@
+import Router from 'next/router';
+import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import ErrorPage from './error';
 import HeaderFooter from './header-footer';
+
+
+Router.onRouteChangeComplete = NProgress.done;
+Router.onRouteChangeError = NProgress.done;
+Router.onRouteChangeStart = NProgress.start;
 
 
 export default function wrapPage(Page, dataFn) {
