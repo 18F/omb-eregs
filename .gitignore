@@ -8,6 +8,7 @@ ui-dist
 jest*
 ui/lcov-report/
 ui/lcov.info
+.next
 
 # Data
 *.csv
