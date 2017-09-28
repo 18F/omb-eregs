@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { wrapWithAjaxLoader } from '../components/ajax-loading';
+import wrapPage from '../components/app-wrapper';
 import ConditionalRender from '../components/conditional-render';
 import FallbackView from '../components/filters/fallback-view';
-import HeaderFooter from '../components/header-footer';
 import TopicAutocomplete from '../components/homepage/topic-autocomplete';
 import NewPolicyView from '../components/homepage/new-policy-view';
 import { homepageData } from '../queries';
@@ -112,7 +111,5 @@ Homepage.propTypes = {
   })).isRequired,
 };
 
-const HomepageWithHeaderFooter = props =>
-  <HeaderFooter><Homepage {...props} /></HeaderFooter>;
 
-export default wrapWithAjaxLoader(HomepageWithHeaderFooter, homepageData);
+export default wrapPage(Homepage, homepageData);

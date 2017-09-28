@@ -2,8 +2,7 @@ import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { wrapWithAjaxLoader } from '../components/ajax-loading';
-import HeaderFooter from '../components/header-footer';
+import wrapPage from '../components/app-wrapper';
 import RequirementsView from '../components/requirements/requirements-view';
 import SearchFilterView from '../components/search-filter-view';
 import TabView from '../components/tab-view';
@@ -102,7 +101,4 @@ RequirementsContainer.defaultProps = {
   pagedReqs: { results: [], count: 0 },
 };
 
-const RequirementsWithHeaderFooter = props =>
-  <HeaderFooter><RequirementsContainer {...props} /></HeaderFooter>;
-
-export default wrapWithAjaxLoader(RequirementsWithHeaderFooter, requirementsData);
+export default wrapPage(RequirementsContainer, requirementsData);

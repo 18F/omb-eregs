@@ -1,63 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import validator from 'validator';
 
-import { UserError } from '../error-handling';
-import { redirectQuery } from '../redirects';
-import { routes, Link } from '../routes';
-import { apiNameField, search } from '../lookup-search';
-import { wrapWithAjaxLoader } from '../components/ajax-loading';
-import HeaderFooter from '../components/header-footer';
+import wrapPage from '../components/app-wrapper';
 import Pagers from '../components/pagers';
+import { apiNameField } from '../lookup-search';
+import { redirectQuery } from '../redirects';
+import { cleanSearchParamTypes, searchRedirectData } from '../queries';
+import { Link } from '../routes';
 
-const redirectQueryPrefix = 'redirectQuery__';
-const validNames = routes.map(r => r.name).filter(n => n);
-
-
-/*
- * We expect a query like
- *  /some/path/?q=term&insertParam=lookup_id__in&page=1
- *    &redirectRoute=/prev/path&redirectQuery__lookup_id__in=1,2,3
- *    &redirectQuery__someOtherParameter=value
- * Return a clean version of that data; if we can't validate, raise an
- * exception.
- */
-export function cleanParams(query) {
-  const clean = {
-    q: (query.q || '').toString(),
-    insertParam: (query.insertParam || '').toString(),
-    lookup: (query.lookup || '').toString(),
-    redirect: {
-      route: (query.redirectRoute || '').toString(),
-      query: {},
-    },
-    page: (query.page || '1').toString(),
-  };
-  Object.keys(query).forEach((key) => {
-    if (key.startsWith(redirectQueryPrefix)) {
-      clean.redirect.query[key.substring(redirectQueryPrefix.length)] = query[key];
-    }
-  });
-
-  if (validator.isEmpty(clean.insertParam)) {
-    throw new UserError('Needs an "insertParam" parameter');
-  } else if (!validator.isIn(clean.redirect.route, validNames)) {
-    throw new UserError('Invalid "redirectRoute" parameter');
-  } else if (!validator.isIn(clean.lookup, Object.keys(apiNameField))) {
-    throw new UserError('Invalid "lookup" parameter');
-  }
-
-  return clean;
-}
-const cleanParamTypes = PropTypes.shape({
-  q: PropTypes.string.isRequired,
-  insertParam: PropTypes.string.isRequired,
-  lookup: PropTypes.oneOf(Object.keys(apiNameField)).isRequired,
-  redirect: PropTypes.shape({
-    route: PropTypes.string.isRequired,
-    query: PropTypes.shape({}).isRequired,
-  }).isRequired,
-});
 
 function Entry({ entry, userParams }) {
   const name = entry[apiNameField[userParams.lookup]];
@@ -75,7 +25,7 @@ Entry.propTypes = {
   entry: PropTypes.shape({
     id: PropTypes.number.isRequired,
   }).isRequired,
-  userParams: cleanParamTypes.isRequired,
+  userParams: cleanSearchParamTypes.isRequired,
 };
 
 export function LookupSearch({ pagedEntries, userParams }) {
@@ -107,20 +57,7 @@ LookupSearch.propTypes = {
       id: PropTypes.number.isRequired,
     })).isRequired,
   }).isRequired,
-  userParams: cleanParamTypes.isRequired,
+  userParams: cleanSearchParamTypes.isRequired,
 };
 
-const LookupSearchWithHeaderFooter = props =>
-  <HeaderFooter><LookupSearch {...props} /></HeaderFooter>;
-
-/*
- * Asynchronously grab the search result data from the API.
- */
-async function fetchData({ query }) {
-  const userParams = cleanParams(query);
-  return search(lookup, userParams.q, userParams.page);
-}
-
-export default wrapWithAjaxLoader(
-  LookupSearchWithHeaderFooter, { pagedEntries: fetchData });
-
+export default wrapPage(LookupSearch, searchRedirectData);

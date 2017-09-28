@@ -2,14 +2,13 @@ import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import HeaderFooter from '../components/header-footer';
+import wrapPage from '../components/app-wrapper';
 import PoliciesView from '../components/policies/policies-view';
 import SearchFilterView from '../components/search-filter-view';
 import TabView from '../components/tab-view';
 import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import Selector from '../components/filters/selector';
-import { wrapWithAjaxLoader } from '../components/ajax-loading';
 import { policiesData } from '../queries';
 
 function RequirementsTab({ router }) {
@@ -101,8 +100,6 @@ PoliciesContainer.defaultProps = {
   existingTopics: [],
   pagedPolicies: { results: [], count: 0 },
 };
-const PoliciesWithHeaderFooter = props =>
-  <HeaderFooter><PoliciesContainer {...props} /></HeaderFooter>;
 
-export default wrapWithAjaxLoader(PoliciesWithHeaderFooter, policiesData);
+export default wrapPage(PoliciesContainer, policiesData);
 
