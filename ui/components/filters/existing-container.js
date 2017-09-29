@@ -1,21 +1,22 @@
+import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import FilterRemoveView from './remove-view';
 
 export function RemoveLinkContainer(
-  { existing, field, heading, idToRemove, name },
-  { router: { location: { pathname, query } } }) {
+  { existing, field, heading, idToRemove, name, route, router }) {
   const remaining = existing.filter(id => id !== idToRemove);
-  const modifiedQuery = Object.assign({}, query, {
+  const modifiedQuery = Object.assign({}, router.query, {
     [field]: remaining.join(','),
   });
   delete modifiedQuery.page;
 
   return React.createElement(FilterRemoveView, {
-    linkToRemove: { pathname, query: modifiedQuery },
-    name,
     heading,
+    name,
+    params: modifiedQuery,
+    route,
   });
 }
 RemoveLinkContainer.propTypes = {
@@ -24,18 +25,15 @@ RemoveLinkContainer.propTypes = {
   heading: PropTypes.string.isRequired,
   idToRemove: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-};
-RemoveLinkContainer.contextTypes = {
+  route: PropTypes.string.isRequired,
   router: PropTypes.shape({
-    location: PropTypes.shape({
-      pathname: PropTypes.string,
-      query: PropTypes.shape({}),
-    }),
-  }),
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
 };
+const RemoveLinkWithRouter = withRouter(RemoveLinkContainer);
 
-export function RemoveSearchContainer(
-  { field }, { router: { location: { pathname, query } } }) {
+export function RemoveSearchContainer({ field, route, router }) {
+  const { query } = router;
   const existing = query[field];
   if (!existing) {
     return null;
@@ -46,50 +44,58 @@ export function RemoveSearchContainer(
   delete modifiedQuery.page;
 
   return React.createElement(FilterRemoveView, {
-    linkToRemove: { pathname, query: modifiedQuery },
-    name: existing,
     heading: 'Search',
+    name: existing,
+    params: modifiedQuery,
+    route,
   });
 }
 RemoveSearchContainer.propTypes = {
   field: PropTypes.string.isRequired,
+  route: PropTypes.string.isRequired,
+  router: PropTypes.shape({
+    query: PropTypes.shape({}).isRequired,
+  }).isRequired,
 };
-RemoveSearchContainer.contextTypes = RemoveLinkContainer.contextTypes;
+const RemoveSearchWithRouter = withRouter(RemoveSearchContainer);
 
 export default function ExistingFiltersContainer({
-  agencies, fieldNames, policies, topics }) {
+  agencies, fieldNames, policies, route, topics }) {
   const topicIds = topics.map(topic => topic.id);
   const topicFilters = topics.map(topic => React.createElement(
-    RemoveLinkContainer, {
+    RemoveLinkWithRouter, {
       existing: topicIds,
       field: fieldNames.topics,
       heading: 'Topic',
       idToRemove: topic.id,
       key: topic.id,
       name: topic.name,
+      route,
     }));
 
   const policyIds = policies.map(policy => policy.id);
   const policyFilters = policies.map(policy => React.createElement(
-    RemoveLinkContainer, {
+    RemoveLinkWithRouter, {
       existing: policyIds,
       field: fieldNames.policies,
       heading: 'Policy',
       idToRemove: policy.id,
       key: policy.id,
       name: policy.title,
+      route,
     }));
 
   const searchFilters = [
-    React.createElement(RemoveSearchContainer, {
+    React.createElement(RemoveSearchWithRouter, {
       field: fieldNames.search,
       key: 'search',
+      route,
     }),
   ];
 
   const agencyIds = agencies.map(agency => agency.id);
   const agencyFilters = agencies.map(agency => React.createElement(
-    RemoveLinkContainer, {
+    RemoveLinkWithRouter, {
       existing: agencyIds,
       field: fieldNames.agencies,
       heading: 'Agency',
@@ -116,6 +122,7 @@ ExistingFiltersContainer.propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
   })).isRequired,
+  route: PropTypes.string.isRequired,
   topics: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,

@@ -43,7 +43,7 @@ jobs:
             COMPOSE_FILE: docker-compose-circle.yml
           command: |
             docker-compose run --rm webpack
-            docker cp holder:/usr/src/app/ui/dist ./ui/dist
+            docker cp holder:/usr/src/app/ui/static/styles.css ./ui/static/styles.css
       - run:
           name: API Unit tests
           environment:
@@ -87,6 +87,17 @@ jobs:
             echo 4
             ./cc-test-reporter upload-coverage --input cc-coverage.json || true
 
+      - run:
+          name: Build Next App
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "release" ]; then
+              docker-compose run -e NODE_ENV=production -e API_URL=https://policy-api.cio.gov/ npm run build
+            else
+              docker-compose run -e NODE_ENV=production -e API_URL=https://omb-eregs-api-demo.app.cloud.gov npm run build
+            fi
+            docker cp holder:/usr/src/app/ui/.next ui/.next
       - deploy:
           name: Deploy
           command: |

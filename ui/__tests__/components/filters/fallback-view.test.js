@@ -9,7 +9,7 @@ describe('<FallbackView /> form', () => {
     'aria-labelledby': 'some_id',
     insertParam: 'someParam',
     lookup: 'topics',
-    pathname: '/policies',
+    route: 'policies',
     query: { some: 'thing', more: 'params', et: 'c' },
   };
   const result = shallow(React.createElement(FallbackView, props));

@@ -2,13 +2,16 @@ import axios from 'axios';
 import buildURL from 'axios/lib/helpers/buildURL';
 import LRU from 'lru-cache';
 
-import config from './config';
+const CACHE_CONFIG = {
+  max: 32,
+  maxAge: 1000 * 60 * 60, // 1 hour
+};
 
 export class Endpoint {
   constructor(endpoint) {
-    this.client = axios.create({ baseURL: config.apiRoot });
+    this.client = axios.create({ baseURL: process.env.API_URL });
     this.endpoint = endpoint;
-    this.cache = LRU(config.cacheConfig);
+    this.cache = LRU(CACHE_CONFIG);
   }
 
   fetch(params = {}) {
