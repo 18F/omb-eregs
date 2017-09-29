@@ -74,16 +74,16 @@ export default function ExistingFiltersContainer({
     }));
 
   const policyIds = policies.map(policy => policy.id);
-  const policyFilters = policies.map(policy => React.createElement(
-    RemoveLinkWithRouter, {
-      existing: policyIds,
-      field: fieldNames.policies,
-      heading: 'Policy',
-      idToRemove: policy.id,
-      key: policy.id,
-      name: policy.title,
-      route,
-    }));
+  const policyFilters = policies.map(policy => (
+    <RemoveLinkWithRouter
+      existing={policyIds}
+      field={fieldNames.policies}
+      heading="Policy"
+      idToRemove={policy.id}
+      key={policy.id}
+      name={policy.title_with_number}
+      route={route}
+    />));
 
   const searchFilters = [
     React.createElement(RemoveSearchWithRouter, {
