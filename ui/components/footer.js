@@ -3,7 +3,7 @@ import React from 'react';
 export default function Footer() {
   return (
     <footer className="global-footer px4 py3">
-      <h4>OMB Policy Library</h4>
+      <h2>OMB Policy Library</h2>
       <ul className="list-reset">
         <li><a href="https://github.com/18F/omb-eregs/">GitHub</a></li>
         <li><a href="/privacy">Privacy Policy</a></li>

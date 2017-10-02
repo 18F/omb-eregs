@@ -48,14 +48,16 @@ function faviconTags() {
   return ([
     appleIcons,
     icons,
-    <meta name="application-name" content="&nbsp;" />,
-    <meta name="msapplication-TileColor" content="#FFFFFF" />,
+    <meta key="appName" name="application-name" content="OMB Policy Library (Beta)" />,
+    <meta key="tileColor" name="msapplication-TileColor" content="#FFFFFF" />,
     <meta
+      key="tileImage"
       name="msapplication-TileImage"
       content="/static/img/favicon/mstile-144x144.png"
     />,
     msSquares,
     <meta
+      key="mstile"
       name="msapplication-wide310x150logo"
       content="/static/img/favicon/mstile-310x150.png"
     />,
