@@ -107,11 +107,29 @@ services:
 
 
   #---- Commands ----
+  bandit:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: .docker/activate_then bandit
+
   flake8:
     <<: *PYTHON
     environment:
       DEBUG: "true"
     entrypoint: .docker/activate_then flake8
+
+  manage.py:
+    <<: *DEV_API
+    entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
+    command: ''
+
+  npm:
+    <<: *DEV_UI
+    entrypoint: .docker/deps_ok_then npm
+    command: ''
+    ports: []
+    depends_on: []
 
   pip-compile:
     <<: *PYTHON
@@ -119,17 +137,10 @@ services:
       DEBUG: "true"
     entrypoint: .docker/activate_then pip-compile
 
-  bandit:
-    <<: *PYTHON
-    environment:
-      DEBUG: "true"
-    entrypoint: .docker/activate_then bandit
-
-
-  manage.py:
-    <<: *DEV_API
-    entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
-    command: ''
+  psql:
+    image: postgres:9.4
+    entrypoint: 'psql -h persistent_db -U postgres'
+    depends_on: ['persistent_db']
 
   ptw:
     <<: *DEV_API
@@ -142,24 +153,12 @@ services:
     entrypoint: .docker/wait_for_db_then .docker/activate_then py.test
     command: ''
 
-  npm:
-    <<: *DEV_UI
-    entrypoint: .docker/deps_ok_then npm
-    command: ''
-    ports: []
-    depends_on: []
-
   webpack:
     <<: *DEV_UI
     entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
     command: ''
     ports: []
     depends_on: []
-
-  psql:
-    image: postgres:9.4
-    entrypoint: 'psql -h persistent_db -U postgres'
-    depends_on: ['persistent_db']
 
 
 volumes:
