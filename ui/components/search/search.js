@@ -3,12 +3,32 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 export class Search extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { term: '' };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  actionPath() {
+    const path = this.props.router.pathname;
+    return path.includes('policies') || path.includes('requirements') ? path : '/requirements/';
+  }
+
   hiddenFields() {
-    const modifiedQuery = Object.assign({}, this.props.router.query);
-    delete modifiedQuery.page;
-    delete modifiedQuery[this.inputName()];
-    return Object.keys(modifiedQuery).map(k =>
-      <input type="hidden" key={k} name={k} value={modifiedQuery[k]} />);
+    const modifiedQuery = this.query();
+    return Object.keys(modifiedQuery).map(k => (
+      <input type="hidden" key={k} name={k} value={modifiedQuery[k]} />
+    ));
+  }
+
+  query() {
+    const query = Object.assign({}, this.props.router.query);
+    delete query.page;
+    delete query[this.inputName()];
+
+    return query;
   }
 
   inputName() {
@@ -16,23 +36,39 @@ export class Search extends React.Component {
     return path.includes('policies') ? 'requirements__req_text__search' : 'req_text__search';
   }
 
-  actionPath() {
-    const path = this.props.router.pathname;
-    return (path.includes('policies') || path.includes('requirements')) ? path : '/requirements/';
+  handleChange(e) {
+    const { value } = e.target;
+    this.setState({ term: value });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const { router } = this.props;
+    const { term } = this.state;
+    const pathname = this.actionPath();
+    const query = Object.assign({}, this.query(), { [this.inputName()]: term });
+    router.push({ pathname, query });
   }
 
   render() {
     return (
       <div className="search-form pr2 no-print">
-        <form method="GET" action={this.actionPath()} className="mb0 flex items-center">
+        <form
+          method="GET"
+          action={this.actionPath()}
+          className="mb0 flex items-center"
+          onSubmit={this.handleSubmit}
+        >
           <input
             aria-label="Search term"
             name={this.inputName()}
             type="text"
             placeholder="Search"
             className="search-input p1 gray-border"
+            onChange={this.handleChange}
+            value={this.state.term}
           />
-          { this.hiddenFields() }
+          {this.hiddenFields()}
           <button type="submit" className="search-submit p1 gray-border">
             <img alt="Submit search" src="/static/img/search-icon.svg" />
           </button>
