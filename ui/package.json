@@ -1,12 +1,14 @@
 {
   "name": "omb-eregs",
   "version": "1.0.0",
-  "description": "This repository contains code necessary to run the White House Office of Management and Budget (OMB) instance of [eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer).",
+  "description":
+    "This repository contains code necessary to run the White House Office of Management and Budget (OMB) instance of [eRegulations](https://eregs.github.io) (a regulation parser, API, and viewer).",
   "main": "index.js",
   "scripts": {
     "build": "next build",
     "start": "node server/index.js",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest --coverage",
+    "test:watch": "NODE_ENV=test jest --watch"
   },
   "repository": {
     "type": "git",
@@ -72,10 +74,7 @@
     "node": "6.x"
   },
   "jest": {
-    "collectCoverage": true,
-    "coverageDirectory": "./",
-    "coverageReporters": [
-      "lcov"
-    ]
+    "coverageReporters": ["lcov"],
+    "verbose": true
   }
 }

@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
         - image: circleci/python:3.6.2
-      
+
     working_directory: ~/repo
 
     steps:
@@ -74,8 +74,7 @@ jobs:
               > ../cc-coverage.python.json
 
             cd ../ui
-            mkdir coverage
-            docker cp holder:/usr/src/app/ui/lcov.info lcov.info
+            docker cp holder:/usr/src/app/ui/coverage/lcov.info lcov.info
             ../cc-test-reporter format-coverage \
               --prefix /usr/src/app/ui --input-type lcov --output - lcov.info \
               | python ../devops/cc_add_prefix.py --prefix ui/ \
