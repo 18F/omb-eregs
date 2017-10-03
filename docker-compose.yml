@@ -155,5 +155,11 @@ services:
     entrypoint: 'psql -h persistent_db -U postgres'
     depends_on: ['persistent_db']
 
+  watch:
+    <<: *DEV_API
+    entrypoint: ./devops/activate_then ./devops/watch_tests.sh
+    command: ''
+    ports: []
+
 volumes:
   database_data:

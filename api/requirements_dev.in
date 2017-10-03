@@ -17,3 +17,5 @@ pyinotify
 pytest
 pytest-cov
 pytest-django
+pytest-selenium
+pytest-watch
