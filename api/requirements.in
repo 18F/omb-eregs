@@ -11,6 +11,7 @@ django-taggit   # cannot remove until we squash migrations
 djangorestframework
 dj-database-url
 gunicorn
+networkx
 newrelic
 psycopg2
 python-dateutil
