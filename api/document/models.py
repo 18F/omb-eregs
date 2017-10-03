@@ -3,6 +3,7 @@ from typing import Optional
 
 from django.db import models
 from networkx import DiGraph
+from networkx.algorithms.dag import descendants
 
 from reqs.models import Policy
 
@@ -87,3 +88,26 @@ class DocCursor():
         sort_order = self.tree.out_degree(self.identifier)
         self.tree.add_edge(self.identifier, identifier, sort_order=sort_order)
         return self.__class__(self.tree, identifier=identifier)
+
+    def subtree_size(self):
+        # Using "descendants" is a bit more efficient than recursion
+        return len(descendants(self.tree, self.identifier)) + 1
+
+    def walk(self):
+        """An iterator of all the nodes in this tree."""
+        yield self
+        for child in self.children():
+            for cursor in child.walk():
+                yield cursor
+
+    def nested_set_renumber(self, left=1):
+        """The nested set model tracks parent/child relationships by requiring
+        ancestors's left-right range strictly contain any descendant's
+        left-right range. To set that up correctly, we need to renumber our
+        nodes once the whole tree is built."""
+        self.model.left = left
+        self.model.right = left + 2 * self.subtree_size() - 1
+
+        for child in self.children():
+            child.nested_set_renumber(left + 1)
+            left = child.model.right
