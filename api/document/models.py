@@ -39,6 +39,20 @@ class DocNode(models.Model):
         ))
         return DocCursor(tree, identifier)
 
+    def subtree(self, queryset=None):
+        """Load this DocNode and all its children into a tree."""
+        if queryset is None:
+            queryset = self.__class__.objects
+        descendant_models = queryset.filter(
+            left__gt=self.left, right__lt=self.right, policy=self.policy
+        ).order_by('left')
+
+        tree = DiGraph()
+        tree.add_node(self.identifier, model=self)
+        root = DocCursor(tree, self.identifier)
+        root.add_models(descendant_models)
+        return root
+
 
 class DocCursor():
     """DocNodes don't keep track of their children/relationships within a
@@ -85,8 +99,8 @@ class DocCursor():
             type_emblem=type_emblem, depth=self.model.depth + 1,
             **attrs
         ))
-        sort_order = self.tree.out_degree(self.identifier)
-        self.tree.add_edge(self.identifier, identifier, sort_order=sort_order)
+        self.tree.add_edge(self.identifier, identifier,
+                           sort_order=self.next_sort_order())
         return self.__class__(self.tree, identifier=identifier)
 
     def subtree_size(self):
@@ -111,3 +125,25 @@ class DocCursor():
         for child in self.children():
             child.nested_set_renumber(left + 1)
             left = child.model.right
+
+    def next_sort_order(self):
+        return self.tree.out_degree(self.identifier)
+
+    def parent(self):
+        if '__' in self.identifier:
+            parent_idx = self.identifier.rsplit('__', 1)[0]
+            return self.__class__(self.tree, parent_idx)
+
+    def add_models(self, models):
+        """Convert a (linear) list of DocNodes into a tree-aware version.
+        We assume that the models are already sorted."""
+        parent = self
+        for child in models:
+            # not a child of this parent; move cursor up
+            while child.left > parent.model.right:
+                parent = parent.parent()
+            self.tree.add_node(child.identifier, model=child)
+            self.tree.add_edge(parent.identifier, child.identifier,
+                               sort_order=self.next_sort_order())
+            parent = self.__class__(self.tree, child.identifier)
+        return self

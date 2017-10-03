@@ -1,4 +1,8 @@
+import pytest
+from model_mommy import mommy
+
 from document import models
+from reqs.models import Policy
 
 
 def test_new_tree():
@@ -103,3 +107,47 @@ def test_nested_sets():
     assert root['sect_2']['par_1'].model.right == 10
     assert root['sect_2'].model.right == 11
     assert root.model.right == 12
+
+
+def test_parent():
+    root = models.DocNode.new_tree('root', '0')
+    root.add_child('sect')
+    sect2 = root.add_child('sect')
+    pa = sect2.add_child('par', 'a')
+    pa.add_child('par', '1')
+    sect2.add_child('par', 'b')
+
+    assert root.parent() is None
+    assert root['sect_1'].parent().identifier == 'root_0'
+    assert root['sect_2'].parent().identifier == 'root_0'
+    assert root['sect_2']['par_a'].parent().identifier == 'root_0__sect_2'
+    assert root['sect_2']['par_b'].parent().identifier == 'root_0__sect_2'
+    assert root['sect_2']['par_a']['par_1'].parent().identifier \
+        == 'root_0__sect_2__par_a'
+
+
+@pytest.mark.django_db
+def test_create_save_load():
+    """Integration test that shows we get the same results when converting
+    data from the database."""
+    policy = mommy.make(Policy)
+    root = models.DocNode.new_tree('root', '0', text='Root', policy=policy)
+    sect1 = root.add_child('sect', text='First Section', policy=policy)
+    sect1.add_child('par', 'a', policy=policy)
+    sect1.add_child('par', 'b', text='Paragraph b', policy=policy)
+    root.add_child('sect', policy=policy)
+    app1 = root.add_child('appendix', policy=policy)
+    app1.add_child('apppar', 'i', text='Appendix par i', policy=policy)
+
+    root.nested_set_renumber()
+    models.DocNode.objects.bulk_create(n.model for n in root.walk())
+
+    assert models.DocNode.objects.count() == 7
+    model_root = models.DocNode.objects.get(identifier='root_0')
+    new_root = model_root.subtree()
+
+    assert new_root.subtree_size() == 7
+    assert new_root.model.text == 'Root'
+    assert new_root['sect_1'].model.text == 'First Section'
+    assert new_root['sect_1']['par_b'].model.text == 'Paragraph b'
+    assert new_root['appendix_1']['apppar_i'].model.text == 'Appendix par i'
