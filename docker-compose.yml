@@ -157,7 +157,7 @@ services:
 
   watch:
     <<: *DEV_API
-    entrypoint: ./devops/activate_then ./devops/watch_tests.sh
+    entrypoint: .docker/activate_then .docker/watch_tests.sh
     command: ''
     ports: []
 
