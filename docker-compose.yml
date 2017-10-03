@@ -131,6 +131,12 @@ services:
     entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
     command: ''
 
+  ptw:
+    <<: *DEV_API
+    entrypoint: .docker/activate_then .docker/watch_tests.sh
+    command: ''
+    ports: []
+
   py.test:
     <<: *DEV_API
     entrypoint: .docker/wait_for_db_then .docker/activate_then py.test
@@ -155,11 +161,6 @@ services:
     entrypoint: 'psql -h persistent_db -U postgres'
     depends_on: ['persistent_db']
 
-  watch:
-    <<: *DEV_API
-    entrypoint: .docker/activate_then .docker/watch_tests.sh
-    command: ''
-    ports: []
 
 volumes:
   database_data:
