@@ -36,6 +36,7 @@ ALLOWED_HOSTS = env.uris
 # Application definition
 
 INSTALLED_APPS = (
+    'document',
     'reqs.apps.ReqsConfig',
     'taggit',
     'django.contrib.contenttypes',
