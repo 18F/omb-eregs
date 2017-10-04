@@ -1,8 +1,15 @@
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import SearchContainer from './search/search';
 
 
-function Navbar() {
+export default function Navbar({ showSearch }) {
+  let searchContainer;
+  if (showSearch) {
+    searchContainer = <SearchContainer />;
+  }
+
   return (
     <div className="overflow-auto">
       <div className="flex items-center navbar">
@@ -18,10 +25,12 @@ function Navbar() {
               OMB Policy Library <sup>BETA</sup>
           </h1>
         </a>
-        <SearchContainer />
+        { searchContainer }
       </div>
     </div>
   );
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  showSearch: PropTypes.bool
+};
