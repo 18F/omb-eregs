@@ -191,15 +191,16 @@ We have unit tests for the API/admin (Python) and for the React-based frontend
 
 For Python unit tests, run:
 ```sh
-docker-compose run --rm py.test
 docker-compose run --rm flake8  # linting
-docker-compose run --rm ptw
+docker-compose run --rm py.test # run tests once
+docker-compose run --rm ptw     # watch command to run tests whenever a file changes
 ```
 
 For JS unit tests, run:
 ```sh
-docker-compose run --rm npm test
-docker-compose run --rm webpack       # lints (and builds)
+docker-compose run --rm webpack             # lints (and builds)
+docker-compose run --rm npm test            # run tests once
+docker-compose run --rm npm run test:watch  # watch command to run tests whenever a file changes
 ```
 
 We also have a suite of integration tests, which are relatively complicated to
