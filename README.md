@@ -3,7 +3,7 @@ This repository contains a tool to make White House Office of Management and Bud
 
 The repository contains a Django application where requirements are maintained by the OMB team. The Django application also serves an API. The repo also contains an agency- and public-facing tool to view and filter the requirements, and see related information about them. The public-facing tool is comprised of an isomorphic Node and React application.
 
-Brought to you by the 18F [eRegulations](https://eregs.github.io) team. 
+Brought to you by the 18F [eRegulations](https://eregs.github.io) team.
 
 See our bi-weekly demos [on
 YouTube](https://www.youtube.com/playlist?list=PLd9b-GuOJ3nEJsDD5BZ5qlVkr9RZ0PivQ).
@@ -193,6 +193,7 @@ For Python unit tests, run:
 ```sh
 docker-compose run --rm py.test
 docker-compose run --rm flake8  # linting
+docker-compose run --rm ptw
 ```
 
 For JS unit tests, run:
