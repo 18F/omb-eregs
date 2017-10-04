@@ -15,12 +15,14 @@ export default function FilterRemoveView({ heading, name, params, route }) {
     </li>
   );
 }
+
 FilterRemoveView.propTypes = {
   heading: PropTypes.string,
   name: PropTypes.string.isRequired,
   params: PropTypes.shape({}).isRequired,
   route: PropTypes.string.isRequired,
 };
+
 FilterRemoveView.defaultProps = {
   heading: '',
 };
