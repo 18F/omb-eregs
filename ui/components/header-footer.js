@@ -94,3 +94,7 @@ HeaderFooter.propTypes = {
   showSearch: PropTypes.bool,
   children: PropTypes.node.isRequired,
 };
+
+HeaderFooter.defaultProps = {
+  showSearch: true,
+};
