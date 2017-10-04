@@ -112,4 +112,4 @@ Homepage.propTypes = {
 };
 
 
-export default wrapPage(Homepage, homepageData);
+export default wrapPage(Homepage, homepageData, { showSearch: false });

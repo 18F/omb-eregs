@@ -19,10 +19,10 @@ Router.onRouteChangeError = NProgress.done;
 Router.onRouteChangeStart = NProgress.start;
 
 
-export default function wrapPage(Page, dataFn) {
+export default function wrapPage(Page, dataFn, headerFooterParams = { showSearch: true }) {
   function WrappedPage(props) {
     if (props.err) return <ErrorPage err={props.err} />;
-    return <HeaderFooter showSearch={ props.url.pathname !== "/" }><Page {...props} /></HeaderFooter>;
+    return <HeaderFooter showSearch={ headerFooterParams.showSearch }><Page {...props} /></HeaderFooter>;
   }
 
   WrappedPage.propTypes = {
