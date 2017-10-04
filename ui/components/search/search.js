@@ -41,6 +41,18 @@ export class Search extends React.Component {
     this.setState({ term: value });
   }
 
+  searchButton() {
+    let button;
+    if (this.props.buttonStyle == 'large') {
+      button = (<button type="submit" className="filter-form-submit h4 py1 px3 rounded">Search</button>);
+    } else {
+      button = (<button type="submit" className="search-submit p1 gray-border">
+        <img alt="Submit search" src="/static/img/search-icon.svg" />
+      </button>);
+    }
+    return button;
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const { router } = this.props;
@@ -69,19 +81,22 @@ export class Search extends React.Component {
             value={this.state.term}
           />
           {this.hiddenFields()}
-          <button type="submit" className="search-submit p1 gray-border">
-            <img alt="Submit search" src="/static/img/search-icon.svg" />
-          </button>
+          {this.searchButton()}
         </form>
       </div>
     );
   }
 }
 Search.propTypes = {
+  buttonStyle: PropTypes.string,
   router: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     query: PropTypes.shape({}).isRequired,
   }).isRequired,
+};
+
+Search.defaultProps = {
+  buttonStyle: 'small'
 };
 
 export default withRouter(Search);

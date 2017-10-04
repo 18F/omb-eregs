@@ -99,4 +99,17 @@ describe('<Search />', () => {
       });
     });
   });
+
+  describe('if rendered with buttonStyle prop', () => {
+    it('large returns a large button', () => {
+      const router = { pathname: '/no-such-path', query: {} };
+      const result = shallow(<Search router={router} buttonStyle='large' />);
+      expect(result.find('.filter-form-submit').length).toEqual(1);
+    });
+    it('small returns a small button', () => {
+      const router = { pathname: '/no-such-path', query: {} };
+      const result = shallow(<Search router={router} />);
+      expect(result.find('.search-submit').length).toEqual(1);
+    });
+  });
 });
