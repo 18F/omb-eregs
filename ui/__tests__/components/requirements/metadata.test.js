@@ -1,15 +1,12 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { Metadata } from '../../../components/requirements/requirement';
+import Metadata from '../../../components/requirements/metadata';
 
 describe('<Metadata />', () => {
   const basic = shallow(
-    <Metadata
-      className="something-hyphenated"
-      name="IAmAKey"
-      value="IAmAValue"
-    />);
+    <Metadata className="something-hyphenated" name="IAmAKey" value="IAmAValue" />,
+  );
   it('renders', () => {
     expect(basic.type()).toBe('div');
   });
@@ -26,17 +23,13 @@ describe('<Metadata />', () => {
       name="IAmAKey"
       value="IAmAValue"
       separator=" I separate things "
-    />);
+    />,
+  );
   it('has the right text content with separator', () => {
     expect(separated.text()).toMatch('IAmAKey I separate things IAmAValue');
   });
 
-  const noValue = shallow(
-    <Metadata
-      className="something-hyphenated"
-      name="IAmAKey"
-      value=""
-    />);
+  const noValue = shallow(<Metadata className="something-hyphenated" name="IAmAKey" value="" />);
   it('returns null when value and nullValue are null', () => {
     expect(noValue.type()).toBe(null);
   });
@@ -47,7 +40,8 @@ describe('<Metadata />', () => {
       name="IAmAKey"
       value=""
       nullValue="Show this instead"
-    />);
+    />,
+  );
   it('renders if nullValue is present', () => {
     expect(noValueAlt.type()).toBe('div');
   });
