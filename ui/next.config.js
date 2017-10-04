@@ -1,4 +1,8 @@
+// Next.js requires a specific version of webpack; we'll rely on that rather
+// than keeping ours in sync.
+/* eslint-disable import/no-extraneous-dependencies */
 const webpack = require('webpack');
+/* eslint-enable import/no-extraneous-dependencies */
 
 
 module.exports = {
