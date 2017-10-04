@@ -22,10 +22,24 @@ Router.onRouteChangeStart = NProgress.start;
 export default function wrapPage(Page, dataFn) {
   function WrappedPage(props) {
     if (props.err) return <ErrorPage err={props.err} />;
-    return <HeaderFooter><Page {...props} /></HeaderFooter>;
+    return <HeaderFooter showSearch={ showSearch(props.url.pathname) }><Page {...props} /></HeaderFooter>;
   }
-  WrappedPage.propTypes = { err: PropTypes.shape({}) };
-  WrappedPage.defaultProps = { err: null };
+
+  function showSearch(route) {
+    if (route == "/") {
+      return false;
+    }
+    return true;
+  }
+
+  WrappedPage.propTypes = {
+    err: PropTypes.shape({})
+  };
+
+  WrappedPage.defaultProps = {
+    err: null
+  };
+
   WrappedPage.getInitialProps = (ctx) => {
     try {
       return dataFn(ctx).catch(err => ({ err }));
