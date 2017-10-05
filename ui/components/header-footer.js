@@ -64,7 +64,7 @@ function faviconTags() {
   ]);
 }
 
-export default function HeaderFooter({ children }) {
+export default function HeaderFooter({ children, showSearch }) {
   return (
     <div>
       <Head>
@@ -80,7 +80,7 @@ export default function HeaderFooter({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Disclaimer />
-      <Navbar />
+      <Navbar showSearch={showSearch} />
       <div className="container">
         {children}
       </div>
@@ -91,5 +91,10 @@ export default function HeaderFooter({ children }) {
 }
 
 HeaderFooter.propTypes = {
+  showSearch: PropTypes.bool,
   children: PropTypes.node.isRequired,
+};
+
+HeaderFooter.defaultProps = {
+  showSearch: true,
 };
