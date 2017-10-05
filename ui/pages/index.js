@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { homepageData } from '../queries';
+
 import wrapPage from '../components/app-wrapper';
 import ConditionalRender from '../components/conditional-render';
 import FallbackView from '../components/filters/fallback-view';
 import TopicAutocomplete from '../components/homepage/topic-autocomplete';
 import NewPolicyView from '../components/homepage/new-policy-view';
-import { homepageData } from '../queries';
-
+import SearchContainer from '../components/search/search';
 
 export function Homepage({ recentPolicies }) {
   return (
@@ -26,18 +27,8 @@ export function Homepage({ recentPolicies }) {
                   route="requirements"
                 />
               </div>
-              <form method="GET" action="/requirements">
-                <div className="form-field">
-                  <TopicAutocomplete aria-labelledby="topics_label" />
-                </div>
-                <div className="form-field">
-                  <input
-                    className="filter-form-submit mt2 h4 py1 px4 rounded"
-                    value="Search"
-                    type="submit"
-                  />
-                </div>
-              </form>
+              <SearchContainer buttonStyle='large' />
+
             </ConditionalRender>
           </div>
         </div>
