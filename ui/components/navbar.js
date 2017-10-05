@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import SearchContainer from './search/search';
-
+import { Link } from '../routes';
 
 export default function Navbar({ showSearch }) {
   let searchContainer;
@@ -20,11 +20,13 @@ export default function Navbar({ showSearch }) {
           height="50"
           src="/static/img/omb-logo.png"
         />
-        <a href="/" className="text-decoration-none">
-          <h1 className="navbar-title">
-              OMB Policy Library <sup>BETA</sup>
-          </h1>
-        </a>
+        <Link route="homepage">
+          <a className="text-decoration-none">
+            <h1 className="navbar-title">
+                OMB Policy Library <sup>BETA</sup>
+            </h1>
+          </a>
+        </Link>
         { searchContainer }
       </div>
     </div>
