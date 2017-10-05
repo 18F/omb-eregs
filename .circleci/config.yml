@@ -33,6 +33,10 @@ jobs:
             docker exec holder python ./devops/transform_circle.py docker-compose.yml holder > docker-compose-circle.yml
 
       - run:
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm npm run lint
+      - run:
           name: UI Tests
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
