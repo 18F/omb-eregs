@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "next build",
+    "lint": "eslint '**/*.js'",
     "start": "node server/index.js",
     "test": "NODE_ENV=test jest --coverage",
     "test:watch": "NODE_ENV=test jest --watch"
@@ -34,7 +35,7 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-no-unsafe-innerhtml": "^1.0.16",
     "eslint-plugin-react": "^7.3.0",
-    "eslint-plugin-scanjs-rules": "0.1.5",
+    "eslint-plugin-scanjs-rules": "0.2.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "jest": "^21.0.1",
     "lodash.debounce": "^4.0.8",

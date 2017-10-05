@@ -15,7 +15,7 @@ describe('<LookupSearch />', () => {
       insertParam: 'ins',
       lookup: 'topics',
       redirect: { route: 'requirements', query: { some: 'field', page: '4' } },
-    }
+    },
   };
 
   it('contains the right number of entries', () => {
