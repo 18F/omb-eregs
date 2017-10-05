@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Link } from '../../routes';
 import HeaderFooter from '../header-footer';
 
 export default function FourOhFour() {
@@ -9,7 +10,7 @@ export default function FourOhFour() {
         <div className="landing-section gold-border pb2">
           <h1 className="h2">We can&rsquo;t find the page you&rsquo;re looking for.</h1>
           <p className="content">
-            Visit our <a href="/">homepage</a> or <a href="mailto:ofcio@omb.eop.gov">contact us</a>{' '}
+            Visit our <Link route="homepage"><a>homepage</a></Link> or <a href="mailto:ofcio@omb.eop.gov">contact us</a>{' '}
             if you need additional help.
           </p>
           <div className="my3">
