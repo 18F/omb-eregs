@@ -27,6 +27,18 @@
     border-top: 1px solid $color-gray-light;
     border-bottom: 1px solid $color-gray-light;
   }
+
+  .search-input {
+    @extend .p1;
+    @extend .col-3;
+    @extend .mr1;
+  }
+
+  .search-submit {
+    @extend .button-like;
+    @extend .border;
+    @extend .h5;
+  }
 }
 
 @media (max-width: 52em) {

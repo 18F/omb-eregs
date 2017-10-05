@@ -1,15 +1,21 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import SearchContainer from './search/search';
+import Search from './search/search';
 import { Link } from '../routes';
 
 export default function Navbar({ showSearch }) {
   let searchContainer;
   if (showSearch) {
-    searchContainer = <SearchContainer />;
+    const buttonContent = (
+      <img alt="Submit search" src="/static/img/search-icon.svg" />
+    );
+    searchContainer = (
+      <div className="header-search-form">
+        <Search buttonContent={buttonContent} placeholder="Search" />
+      </div>
+    );
   }
-
   return (
     <div className="overflow-auto">
       <div className="flex items-center navbar">
