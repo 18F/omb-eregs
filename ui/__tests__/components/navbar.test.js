@@ -8,11 +8,11 @@ import SearchContainer from '../../components/search/search';
 describe('<Navbar />', () => {
   it('without a search bar when showSearch is false', () => {
     const result = shallow(<Navbar showSearch={ false }/>);
-    expect(result.find(SearchContainer).length).toEqual(0);
+    expect(result.find(SearchContainer)).toHaveLength(0);
   });
 
   it('show search bar when showSearch is true', () => {
     const result = shallow(<Navbar showSearch={ true }/>);
-    expect(result.find(SearchContainer).length).toEqual(1);
+    expect(result.find(SearchContainer)).toHaveLength(1);
   });
 });
