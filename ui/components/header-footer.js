@@ -80,7 +80,7 @@ export default function HeaderFooter({ children, showSearch }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Disclaimer />
-      <Navbar showSearch={ showSearch } />
+      <Navbar showSearch={showSearch} />
       <div className="container">
         {children}
       </div>

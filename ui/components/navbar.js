@@ -32,9 +32,9 @@ export default function Navbar({ showSearch }) {
 }
 
 Navbar.propTypes = {
-  showSearch: PropTypes.bool
+  showSearch: PropTypes.bool,
 };
 
 Navbar.defaultProps = {
-  showSearch: true
+  showSearch: true,
 };

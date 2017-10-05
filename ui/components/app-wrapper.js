@@ -23,15 +23,15 @@ export default function wrapPage(Page, dataFn, headerFooterParams) {
   const hfParams = headerFooterParams || { showSearch: true };
   function WrappedPage(props) {
     if (props.err) return <ErrorPage err={props.err} />;
-    return <HeaderFooter { ...hfParams }><Page {...props} /></HeaderFooter>;
+    return <HeaderFooter {...hfParams}><Page {...props} /></HeaderFooter>;
   }
 
   WrappedPage.propTypes = {
-    err: PropTypes.shape({})
+    err: PropTypes.shape({}),
   };
 
   WrappedPage.defaultProps = {
-    err: null
+    err: null,
   };
 
   WrappedPage.getInitialProps = (ctx) => {
