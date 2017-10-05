@@ -48,3 +48,52 @@
     padding-left: 1rem;
   }
 }
+
+.header-search-form {
+  @extend .pr2;
+  @extend .no-print;
+  position: absolute;
+  right: 0;
+
+  form {
+    @extend .mb0;
+    @extend .flex;
+    @extend .items-center;
+  }
+
+  .search-input {
+    @extend .gray-border;
+    @include font-source-sans-pro();
+    border: 1px solid;
+    border-right: 0;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    font-size: 0.75rem;
+    padding: 0.54rem;
+    width: 20rem;
+  }
+
+  .search-submit {
+    @extend .gray-border;
+    background-color: $color-white;
+    border: 1px solid;
+    border-left: 0;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 0.54rem;
+  }
+}
+
+@media (max-width: 52em) {
+  .header-search-form {
+    position: relative;
+
+    .search-input {
+      padding: 0.56rem;
+    }
+
+    .search-submit {
+      padding: 0.57rem;
+    }
+  }
+}
