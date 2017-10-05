@@ -7,7 +7,7 @@ from document.serializers import DocCursorSerializer
 
 class TreeView(RetrieveAPIView):
     serializer_class = DocCursorSerializer
-    queryset = DocNode.objects.none()
+    queryset = DocNode.objects.none()   # Used to determine permissions
 
     def get_object(self):
         query_args = {'policy_id': self.kwargs['policy_id']}
