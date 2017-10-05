@@ -44,7 +44,7 @@ class DocNode(models.Model):
         if queryset is None:
             queryset = self.__class__.objects
         descendant_models = queryset.filter(
-            left__gt=self.left, right__lt=self.right, policy=self.policy
+            left__gt=self.left, right__lt=self.right, policy_id=self.policy_id
         ).order_by('left')
 
         tree = DiGraph()
