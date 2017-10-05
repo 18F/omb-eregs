@@ -9,7 +9,7 @@ import TabView from '../components/tab-view';
 import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
-import { policiesData } from '../queries';
+import { policiesData } from '../util/api/queries';
 
 export function RequirementsTab({ router }) {
   const policyQuery = router.query;
@@ -22,13 +22,7 @@ export function RequirementsTab({ router }) {
       reqQuery[`policy__${key}`] = policyQuery[key];
     }
   });
-  return (
-    <TabView
-      active={false}
-      params={reqQuery}
-      route="requirements"
-      tabName="Requirements"
-    />);
+  return <TabView active={false} params={reqQuery} route="requirements" tabName="Requirements" />;
 }
 RequirementsTab.propTypes = {
   router: PropTypes.shape({
@@ -45,7 +39,11 @@ const fieldNames = {
 };
 
 export function PoliciesContainer({
-  existingAgencies, existingPolicies, existingTopics, pagedPolicies }) {
+  existingAgencies,
+  existingPolicies,
+  existingTopics,
+  pagedPolicies,
+}) {
   const filterControls = [
     <FilterListView
       heading="Topics"
@@ -69,7 +67,8 @@ export function PoliciesContainer({
           policies={pagedPolicies.results}
           count={pagedPolicies.count}
           topicsIds={existingTopics.map(t => t.id).join(',')}
-        />}
+        />
+      }
       selectedFilters={
         <ExistingFilters
           agencies={existingAgencies}
@@ -77,7 +76,8 @@ export function PoliciesContainer({
           policies={existingPolicies}
           route="policies"
           topics={existingTopics}
-        />}
+        />
+      }
       tabs={[
         <RequirementsTabWithRouter key="Requirements" />,
         <TabView active tabName="Policies" key="Policies" />,
