@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 require('newrelic'); // must be first
 
-const path = require('path');
-
 const cfenv = require('cfenv');
 const express = require('express');
 const helmet = require('helmet');
