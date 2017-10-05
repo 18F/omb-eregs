@@ -2,10 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
-import ConditionalRender from '../components/conditional-render';
-import FallbackView from '../components/filters/fallback-view';
-import TopicAutocomplete from '../components/homepage/topic-autocomplete';
 import NewPolicyView from '../components/homepage/new-policy-view';
+import Search from '../components/search/search';
 import { homepageData } from '../queries';
 
 
@@ -13,32 +11,11 @@ export function Homepage({ recentPolicies }) {
   return (
     <div className="homepage">
       <section className="filter-form py2 center">
-        <div className="sm-col-12 md-col-6 mx-auto center">
+        <div className="sm-col-12 md-col-8 mx-auto center">
           <h2 className="h1">Find policies and requirements that apply to your agency.</h2>
-          <div className="filter px4">
-            <h3 className="h3" id="topics_label">What topics are you interested in?</h3>
-            <ConditionalRender>
-              <div className="form-field">
-                <FallbackView
-                  aria-labelledby="topics_label"
-                  insertParam="topics__id__in"
-                  lookup="topics"
-                  route="requirements"
-                />
-              </div>
-              <form method="GET" action="/requirements">
-                <div className="form-field">
-                  <TopicAutocomplete aria-labelledby="topics_label" />
-                </div>
-                <div className="form-field">
-                  <input
-                    className="filter-form-submit mt2 h4 py1 px4 rounded"
-                    value="Search"
-                    type="submit"
-                  />
-                </div>
-              </form>
-            </ConditionalRender>
+          <div className="filter px4 mb4">
+            <h3 className="h3" id="topics_label">What are you interested in finding?</h3>
+            <Search buttonContent="Search" placeholder="Search Keywords" />
           </div>
         </div>
       </section>
