@@ -20,7 +20,6 @@ django-flat-responsive==1.4.1  # via django-admin-interface
 django-flat-theme==1.1.4  # via django-admin-interface
 django-reversion==2.0.10
 django-storages==1.6.5
-django-taggit==0.22.0
 django==1.11.5
 djangorestframework==3.6.4
 docutils==0.13.1          # via botocore

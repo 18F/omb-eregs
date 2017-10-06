@@ -7,7 +7,6 @@ django-cors-headers
 django-filter
 django-reversion
 django-storages
-django-taggit   # cannot remove until we squash migrations
 djangorestframework
 dj-database-url
 gunicorn

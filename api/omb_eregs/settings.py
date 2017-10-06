@@ -38,7 +38,6 @@ ALLOWED_HOSTS = env.uris
 INSTALLED_APPS = (
     'document',
     'reqs.apps.ReqsConfig',
-    'taggit',
     'django.contrib.contenttypes',
     # must be after taggit and contenttypes, but before auth
     'ereqs_admin.apps.EreqsAdminConfig',
