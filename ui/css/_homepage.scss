@@ -1,0 +1,56 @@
+.homepage {
+  .filter-form {
+    background-color: $color-primary;
+    border-top: 1px solid $color-white;
+    color: $color-white;
+  }
+
+  .filter-form-submit {
+    background-color: $color-primary;
+    color: $color-white;
+    border: 1px solid $color-white;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  h2,
+  h3,
+  h4 {
+    font-weight: normal;
+    line-height: 1.25em;
+  }
+
+  .new-policies {
+    background-color: $color-gray-lightest;
+    border-top: 1px solid $color-gray-light;
+    border-bottom: 1px solid $color-gray-light;
+  }
+
+  .search-input {
+    @extend .p1;
+    @extend .col-3;
+    @extend .mr1;
+  }
+
+  .search-submit {
+    @extend .button-like;
+    @extend .border;
+    @extend .h5;
+  }
+}
+
+@media (max-width: 52em) {
+  .homepage {
+    .about-inner {
+      p {
+        width: 100%;
+      }
+    }
+
+    .new-policies {
+      padding: 2rem 1rem;
+    }
+  }
+}

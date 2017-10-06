@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file requirements_dev.txt requirements_dev.in
 #
+argh==0.26.2              # via watchdog
 attrs==17.2.0             # via flake8-bugbear
 bandit==1.4.0
 boto3==1.4.7
@@ -11,7 +12,9 @@ botocore==1.7.4
 certifi==2017.7.27.1
 cfenv==0.5.3
 chardet==3.0.4
+colorama==0.3.9           # via pytest-watch
 coverage==4.4.1           # via pytest-cov
+decorator==4.1.2
 dj-database-url==0.4.2
 django-admin-interface==0.5.2
 django-cas-ng==3.5.8
@@ -23,9 +26,9 @@ django-flat-responsive==1.4.1
 django-flat-theme==1.1.4
 django-reversion==2.0.10
 django-storages==1.6.5
-django-taggit==0.22.0
 django==1.11.5
 djangorestframework==3.6.4
+docopt==0.6.2             # via pytest-watch
 docutils==0.13.1
 flake8-bugbear==17.4.0
 flake8-builtins==1.0
@@ -47,8 +50,10 @@ jedi==0.10.2
 jmespath==0.9.3
 mccabe==0.6.1             # via flake8
 model-mommy==1.3.2
+networkx==2.0
 newrelic==2.90.0.75
 orderedmultidict==0.7.11
+pathtools==0.1.2          # via watchdog
 pbr==3.1.1                # via stevedore
 pep8-naming==0.4.1
 psycopg2==2.7.3.1
@@ -58,11 +63,12 @@ pyflakes==1.5.0           # via flake8
 pyinotify==0.9.6
 pytest-cov==2.5.1
 pytest-django==3.1.2
+pytest-watch==4.1.0
 pytest==3.2.1
 python-cas==1.2.0
 python-dateutil==2.6.1
 pytz==2017.2
-pyyaml==3.12              # via bandit
+pyyaml==3.12              # via bandit, watchdog
 requests==2.18.4
 s3transfer==0.1.10
 six==1.10.0
@@ -71,4 +77,5 @@ sqlparse==0.2.3           # via django-debug-toolbar
 stevedore==1.26.0         # via bandit
 testfixtures==5.2.0       # via flake8-isort
 urllib3==1.22
+watchdog==0.8.3           # via pytest-watch
 whitenoise==3.3.0

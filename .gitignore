@@ -5,9 +5,11 @@
 node_modules
 reqs/static/js/bundle.js
 ui-dist
+ui/static/styles.css*
 jest*
 ui/lcov-report/
 ui/lcov.info
+.next
 
 # Data
 *.csv
@@ -52,6 +54,7 @@ pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
+coverage/
 .tox/
 .coverage
 .coverage.*

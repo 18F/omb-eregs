@@ -3,7 +3,10 @@ import axios from 'axios';
 import { Endpoint } from '../api';
 
 jest.mock('axios');
-jest.mock('../config', () => ({ apiRoot: 'http://example.com/root/' }));
+
+const ORIGINALENV = Object.assign({}, process.env);
+beforeEach(() => { process.env = {}; });
+afterEach(() => { process.env = ORIGINALENV; });
 
 
 function mockAxios(...resultSets) {
@@ -42,6 +45,7 @@ describe('Endpoint', () => {
   describe('fetchResults', () => {
     it('hits the correct api and transforms the results', () => {
       const getFn = mockAxios([2, 4, 6]);
+      process.env.API_URL = 'http://example.com/root/';
       const endpoint = new Endpoint('some/path');
 
       return endpoint.fetchResults({ some: 'param' }).then((result) => {

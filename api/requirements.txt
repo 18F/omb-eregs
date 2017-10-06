@@ -9,6 +9,7 @@ botocore==1.7.4           # via boto3, s3transfer
 certifi==2017.7.27.1      # via requests
 cfenv==0.5.3
 chardet==3.0.4            # via requests
+decorator==4.1.2          # via networkx
 dj-database-url==0.4.2
 django-admin-interface==0.5.2
 django-cas-ng==3.5.8
@@ -19,7 +20,6 @@ django-flat-responsive==1.4.1  # via django-admin-interface
 django-flat-theme==1.1.4  # via django-admin-interface
 django-reversion==2.0.10
 django-storages==1.6.5
-django-taggit==0.22.0
 django==1.11.5
 djangorestframework==3.6.4
 docutils==0.13.1          # via botocore
@@ -27,6 +27,7 @@ furl==1.0.0               # via cfenv
 gunicorn==19.7.1
 idna==2.6                 # via requests
 jmespath==0.9.3           # via boto3, botocore
+networkx==2.0
 newrelic==2.90.0.75
 orderedmultidict==0.7.11  # via furl
 psycopg2==2.7.3.1

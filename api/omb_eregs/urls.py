@@ -22,6 +22,7 @@ from reqs.router import router
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin_site.urls),
+    url(r'^document/', include('document.urls')),
 ]
 
 if settings.DEBUG:

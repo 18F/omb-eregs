@@ -1,0 +1,99 @@
+.usa-disclaimer {
+  background-color: $color-gray-lightest;
+  color: $color-gray-dark;
+  font-size: 0.75rem;
+  padding: 0.25rem 1rem;
+  line-height: 0.9375rem;
+}
+
+.usa-disclaimer-flag {
+  height: 13px;
+  width: 20px;
+  padding-right: 10px;
+}
+
+.usa-disclaimer-text {
+  padding-left: 30px;   // flag's dimensions
+  @media #{$breakpoint-sm} {
+    text-align: right;
+  }
+}
+
+.navbar {
+  background-color: $color-primary-darkest;
+}
+
+.navbar-title {
+  color: $color-white;
+  font-size: 1.75rem;
+  font-weight: bold;
+  line-height: 2.25rem;
+
+  sup {
+    font-size: 0.625rem;
+    padding-left: 0.2rem;
+  }
+}
+
+@media (max-width: 52em) {
+  .navbar {
+    display: block;
+    align-items: left;
+  }
+
+  .header-search {
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+.header-search-form {
+  @extend .pr2;
+  @extend .no-print;
+  position: absolute;
+  right: 0;
+
+  form {
+    @extend .mb0;
+    @extend .flex;
+    @extend .items-center;
+  }
+
+  .search-input {
+    @extend .gray-border;
+    @include font-source-sans-pro();
+    border: 1px solid;
+    border-right: 0;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    font-size: 0.75rem;
+    padding: 0.54rem;
+    width: 20rem;
+  }
+
+  .search-submit {
+    @extend .gray-border;
+    background-color: $color-white;
+    border: 1px solid;
+    border-left: 0;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 0.54rem;
+  }
+}
+
+@media (max-width: 52em) {
+  .header-search-form {
+    position: relative;
+
+    .search-input {
+      padding: 0.56rem;
+    }
+
+    .search-submit {
+      padding: 0.57rem;
+    }
+  }
+}

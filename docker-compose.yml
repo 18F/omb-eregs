@@ -20,7 +20,7 @@ services:
   python: &PYTHON     # This command is out of order to aid with config reuse
     image: python:3.6.2
     volumes:
-      - $PWD:/usr/src/app
+      - $PWD:/usr/src/app:delegated
     working_dir: /usr/src/app/api
     stdin_open: true
     tty: true
@@ -78,10 +78,10 @@ services:
   prod: &PROD_UI
     image: node:6
     volumes:
-      - $PWD:/usr/src/app
+      - $PWD:/usr/src/app:delegated
     working_dir: /usr/src/app/ui
     command: .docker/deps_ok_then npm start
-    environment: &UI_ENV
+    environment:
       PORT: 9002
       NODE_ENV: production
       API_URL: 'http://0.0.0.0:9001/'
@@ -96,9 +96,8 @@ services:
     <<: *PROD_UI
     command: .docker/deps_ok_then .docker/watch-run.sh
     environment:
-      <<: *UI_ENV
       PORT: 8002
-      NODE_ENV: ''
+      NODE_ENV: development
       API_URL: 'http://0.0.0.0:8001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
@@ -108,33 +107,21 @@ services:
 
 
   #---- Commands ----
-  flake8:
-    <<: *PYTHON
-    environment:
-      DEBUG: "true"
-    entrypoint: .docker/activate_then flake8
-
-  pip-compile:
-    <<: *PYTHON
-    environment:
-      DEBUG: "true"
-    entrypoint: .docker/activate_then pip-compile
-
   bandit:
     <<: *PYTHON
     environment:
       DEBUG: "true"
     entrypoint: .docker/activate_then bandit
 
+  flake8:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: .docker/activate_then flake8
 
   manage.py:
     <<: *DEV_API
     entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
-    command: ''
-
-  py.test:
-    <<: *DEV_API
-    entrypoint: .docker/wait_for_db_then .docker/activate_then py.test
     command: ''
 
   npm:
@@ -144,6 +131,28 @@ services:
     ports: []
     depends_on: []
 
+  pip-compile:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: .docker/activate_then pip-compile
+
+  psql:
+    image: postgres:9.4
+    entrypoint: 'psql -h persistent_db -U postgres'
+    depends_on: ['persistent_db']
+
+  ptw:
+    <<: *DEV_API
+    entrypoint: .docker/activate_then .docker/watch_tests.sh
+    command: ''
+    ports: []
+
+  py.test:
+    <<: *DEV_API
+    entrypoint: .docker/wait_for_db_then .docker/activate_then py.test
+    command: ''
+
   webpack:
     <<: *DEV_UI
     entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
@@ -151,10 +160,6 @@ services:
     ports: []
     depends_on: []
 
-  psql:
-    image: postgres:9.4
-    entrypoint: 'psql -h persistent_db -U postgres'
-    depends_on: ['persistent_db']
 
 volumes:
   database_data:
