@@ -3,8 +3,8 @@ import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
 import PagersContainer from '../components/pagers';
-import { apiNameField, redirectQuery } from '../lookup-search';
-import { cleanSearchParamTypes, searchRedirectData } from '../util/api/queries';
+import { apiNameField } from '../lookup-search';
+import { cleanSearchParamTypes, redirectQuery, searchRedirectData } from '../util/api/queries';
 import { Link } from '../routes';
 
 function Entry({ entry, userParams }) {
