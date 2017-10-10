@@ -81,4 +81,28 @@ describe('Endpoint', () => {
         });
     });
   });
+
+  describe('fetchOne', () => {
+    it('hits the correct url', () => {
+      const getFn = mockAxios('results!');
+      const endpoint = new Endpoint('some/path/');
+      return endpoint.fetchOne(44).then((data) => {
+        expect(data).toEqual({ results: 'results!' });
+        expect(getFn).toHaveBeenCalledWith('some/path/44/');
+      });
+    });
+    it('caches results', () => {
+      mockAxios('original!', 'call2');
+      const endpoint = new Endpoint('some/path/');
+      return endpoint.fetchOne('a').then((data) => {
+        expect(data).toEqual({ results: 'original!' });
+        return endpoint.fetchOne('a');
+      }).then((data) => {
+        expect(data).toEqual({ results: 'original!' });
+        return endpoint.fetchOne('b');
+      }).then((data) => {
+        expect(data).toEqual({ results: 'call2' });
+      });
+    });
+  });
 });

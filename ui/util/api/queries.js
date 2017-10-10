@@ -129,3 +129,17 @@ export function redirectQuery(query, insertParam, idToInsert) {
 
   return result;
 }
+
+export async function policyData({ query }) {
+  const reqQuery = {
+    policy_id: query.policyId,
+    page: query.page || '1',
+  };
+
+  const [pagedReqs, policy] = await Promise.all([
+    endpoints.requirements.fetch(reqQuery),
+    endpoints.policies.fetchOne(query.policyId),
+  ]);
+
+  return { pagedReqs, policy: formatIssuance(policy) };
+}
