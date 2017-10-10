@@ -25,13 +25,7 @@ Entry.propTypes = {
   userParams: cleanSearchParamTypes.isRequired,
 };
 
-export function LookupSearch({ pagedEntries, userParams }) {
-  let pager;
-  if (pagedEntries.count) {
-    pager = <PagersContainer count={pagedEntries.count} route="search-redirect" />;
-  } else {
-    pager = <div>No {userParams.lookup} found.</div>;
-  }
+export function SearchRedirect({ pagedEntries, userParams }) {
   const entries = pagedEntries.results.map(entry => (
     <Entry key={entry.id} entry={entry} userParams={userParams} />
   ));
@@ -44,11 +38,15 @@ export function LookupSearch({ pagedEntries, userParams }) {
         </Link>
       </div>
       <ul>{entries}</ul>
-      {pager}
+      {pagedEntries.count ? (
+        <PagersContainer count={pagedEntries.count} route="search-redirect" />
+      ) : (
+        <div>No {userParams.lookup} found.</div>
+      )}
     </div>
   );
 }
-LookupSearch.propTypes = {
+SearchRedirect.propTypes = {
   pagedEntries: PropTypes.shape({
     count: PropTypes.number.isRequired,
     results: PropTypes.arrayOf(
@@ -60,4 +58,4 @@ LookupSearch.propTypes = {
   userParams: cleanSearchParamTypes.isRequired,
 };
 
-export default wrapPage(LookupSearch, searchRedirectData);
+export default wrapPage(SearchRedirect, searchRedirectData);
