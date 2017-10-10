@@ -17,7 +17,7 @@ export default function PoliciesView({ policies, count, topicsIds }) {
           <Policy key={policy.id} policy={policy} topicsIds={topicsIds} />,
         )}
       </ul>
-      <PagersContainer count={count} route="polices" />
+      <PagersContainer count={count} route="policies" />
     </div>
   );
 }
