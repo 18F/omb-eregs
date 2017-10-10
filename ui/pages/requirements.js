@@ -9,7 +9,7 @@ import TabView from '../components/tab-view';
 import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
-import { requirementsData } from '../queries';
+import { requirementsData } from '../util/api/queries';
 
 export function PoliciesTab({ router }) {
   const reqQuery = router.query;
@@ -22,13 +22,7 @@ export function PoliciesTab({ router }) {
       policyQuery[`requirements__${key}`] = reqQuery[key];
     }
   });
-  return (
-    <TabView
-      active={false}
-      params={policyQuery}
-      route="policies"
-      tabName="Policies"
-    />);
+  return <TabView active={false} params={policyQuery} route="policies" tabName="Policies" />;
 }
 PoliciesTab.propTypes = {
   router: PropTypes.shape({
@@ -36,7 +30,6 @@ PoliciesTab.propTypes = {
   }).isRequired,
 };
 const PoliciesTabWithRouter = withRouter(PoliciesTab);
-
 
 const fieldNames = {
   agencies: 'all_agencies__id__in',
@@ -46,7 +39,11 @@ const fieldNames = {
 };
 
 export function RequirementsContainer({
-  existingAgencies, existingPolicies, existingTopics, pagedReqs }) {
+  existingAgencies,
+  existingPolicies,
+  existingTopics,
+  pagedReqs,
+}) {
   const filterControls = [
     <FilterListView
       heading="Topics"
@@ -65,11 +62,7 @@ export function RequirementsContainer({
   return (
     <SearchFilterView
       filterControls={filterControls}
-      pageContent={
-        <RequirementsView
-          requirements={pagedReqs.results}
-          count={pagedReqs.count}
-        />}
+      pageContent={<RequirementsView requirements={pagedReqs.results} count={pagedReqs.count} />}
       selectedFilters={
         <ExistingFilters
           agencies={existingAgencies}
@@ -77,7 +70,8 @@ export function RequirementsContainer({
           policies={existingPolicies}
           route="requirements"
           topics={existingTopics}
-        />}
+        />
+      }
       tabs={[
         <TabView active tabName="Requirements" key="Requirements" />,
         <PoliciesTabWithRouter key="Policies" />,
