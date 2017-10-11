@@ -20,7 +20,13 @@
     @include font-merriweather();
     letter-spacing: .5px;
     line-height: 1.375rem;
+  }
+
+  .gold-border {
     width: 50vmax;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 

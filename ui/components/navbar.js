@@ -19,15 +19,15 @@ export default function Navbar({ showSearch }) {
   return (
     <div className="overflow-auto">
       <div className="flex items-center navbar">
-        <img
-          className="pl2 pr1"
-          alt="US flag"
-          width="50"
-          height="50"
-          src="/static/img/omb-logo.png"
-        />
         <Link route="homepage">
-          <a className="text-decoration-none">
+          <a className="text-decoration-none flex navbar-link items-center">
+            <img
+              className="pl2 pr1"
+              alt="US flag"
+              width="50"
+              height="50"
+              src="/static/img/omb-logo.png"
+            />
             <h1 className="navbar-title">
                 OMB Policy Library <sup>BETA</sup>
             </h1>
