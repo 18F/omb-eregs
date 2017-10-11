@@ -67,6 +67,7 @@ class RequirementSerializer(serializers.ModelSerializer):
             'agencies',
             'agency_groups',
             'citation',
+            'id',
             'impacted_entity',
             'policy',
             'policy_section',
