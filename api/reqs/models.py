@@ -144,6 +144,7 @@ class Requirement(models.Model):
     all_agencies = models.ManyToManyField(
         Agency, through='RequirementAllAgencies',
         related_name='all_requirements')
+    docnode = models.OneToOneField('document.DocNode', blank=True, null=True)
 
     def __str__(self):
         text = self.req_text[:40]
