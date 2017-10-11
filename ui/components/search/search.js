@@ -13,7 +13,7 @@ export class Search extends React.Component {
 
   actionPath() {
     const path = this.props.router.pathname;
-    return path.includes('policies') || path.includes('requirements') ? path : '/requirements/';
+    return path.includes('requirements') || path.includes('policies') ? path : '/policies/';
   }
 
   hiddenFields() {
