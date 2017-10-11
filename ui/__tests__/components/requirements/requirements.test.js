@@ -7,7 +7,7 @@ describe('<Requirement />', () => {
   const baseReq = {
     req_id: '1.1',
     req_text: '',
-    policy: {},
+    policy: { id: 10, title_with_number: 'fake-text' },
     topics: [],
   };
 

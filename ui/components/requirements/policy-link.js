@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Link } from '../../routes';
+import Link from '../link';
 
 export function policyLinkTag(policy) {
   return (
     <Link route="policies" params={{ id__in: policy.id }}>
-      <a>{policy.title_with_number}</a>
+      {policy.title_with_number}
     </Link>
   );
 }

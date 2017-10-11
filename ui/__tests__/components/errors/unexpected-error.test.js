@@ -5,7 +5,7 @@ import UnexpectedError from '../../../components/errors/unexpected-error';
 
 describe('<UnexpectedError />', () => {
   it('has the correct status code', () => {
-    const text = shallow(<UnexpectedError statusCode={502} />).text();
+    const text = shallow(<UnexpectedError statusCode={502} />).html();
     expect(text).toMatch(/Bad Gateway/);
     expect(text).not.toMatch(/Unexpected error/);
     expect(text).toMatch(/homepage/);
@@ -13,7 +13,7 @@ describe('<UnexpectedError />', () => {
   });
 
   it('works without a status code', () => {
-    const text = shallow(<UnexpectedError />).text();
+    const text = shallow(<UnexpectedError />).html();
     expect(text).not.toMatch(/Bad Gateway/);
     expect(text).toMatch(/Unexpected error/);
     expect(text).toMatch(/homepage/);
