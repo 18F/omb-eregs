@@ -79,7 +79,6 @@ export function PoliciesContainer({
         />
       }
       tabs={[
-        <RequirementsTabWithRouter key="Requirements" />,
         <TabView active tabName="Policies" key="Policies" />,
       ]}
     />
