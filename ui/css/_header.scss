@@ -4,6 +4,7 @@
   font-size: 0.75rem;
   padding: 0.25rem 1rem;
   line-height: 0.9375rem;
+  align-items: center;
 }
 
 .usa-disclaimer-flag {
@@ -24,6 +25,7 @@
 }
 
 .navbar-title {
+  display: inline-block;
   color: $color-white;
   font-size: 1.75rem;
   font-weight: bold;
@@ -36,9 +38,11 @@
 }
 
 @media (max-width: 52em) {
+
   .navbar {
-    display: block;
-    align-items: left;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
   }
 
   .header-search {
@@ -47,12 +51,17 @@
     padding-bottom: 1rem;
     padding-left: 1rem;
   }
+
+  .header-search-form {
+    padding-bottom: 1rem;
+  }
 }
 
 .header-search-form {
-  @extend .pr2;
   @extend .no-print;
   position: absolute;
+  padding-left: 1rem;
+  padding-right: 1rem;
   right: 0;
 
   form {
