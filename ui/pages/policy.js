@@ -5,7 +5,7 @@ import wrapPage from '../components/app-wrapper';
 import Pagers from '../components/pagers';
 import { policyData } from '../util/api/queries';
 import { Router } from '../routes';
-import PageCounter from '../components/policy/page-counter';
+import PageCounter from '../components/page-counter';
 import Req from '../components/policy/req';
 
 
@@ -17,7 +17,19 @@ export class Policy extends React.Component {
     };
   }
 
-  get reqs() {
+  setHighlight(focusReq) {
+    // Update the browser's URL (we'll assume we're client-side)
+    const { policyId } = this.props.url.query;
+    const page = this.props.url.query.page || '1';
+    Router.router.changeState(
+      'replaceState',
+      `/policy?policyId=${policyId}&reqId=${focusReq}&page=${page}`,
+      this.urlForReq(focusReq),
+    );
+    this.setState({ focusReq });
+  }
+
+  reqs() {
     return this.props.pagedReqs.results.map((req) => {
       const props = {
         highlighted: `${req.id}` === this.state.focusReq,
@@ -31,19 +43,6 @@ export class Policy extends React.Component {
       };
       return <Req {...props} />;
     });
-  }
-
-
-  setHighlight(focusReq) {
-    // Update the browser's URL (we'll assume we're client-side)
-    const { policyId } = this.props.url.query;
-    const page = this.props.url.query.page || '1';
-    Router.router.changeState(
-      'replaceState',
-      `/policy?policyId=${policyId}&reqId=${focusReq}&page=${page}`,
-      this.urlForReq(focusReq),
-    );
-    this.setState({ focusReq });
   }
 
   urlForReq(reqId) {
@@ -66,7 +65,7 @@ export class Policy extends React.Component {
             <PageCounter count={pagedReqs.count} page={page} />
           </div>
         </div>
-        { this.reqs }
+        { this.reqs() }
         <Pagers count={pagedReqs.count} route="policy" />
       </div>
     );

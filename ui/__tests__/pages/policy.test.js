@@ -36,7 +36,7 @@ describe('<Policy />', () => {
     expect(result.state('focusReq')).toEqual('12');
   });
 
-  describe('reqs', () => {
+  describe('reqs()', () => {
     const props = {
       ...mockProps,
       pagedReqs: {

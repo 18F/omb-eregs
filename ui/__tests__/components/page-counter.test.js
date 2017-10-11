@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import PageCounter from '../../../components/policy/page-counter';
+import PageCounter from '../../components/page-counter';
 
 
 describe('<PageCounter />', () => {
