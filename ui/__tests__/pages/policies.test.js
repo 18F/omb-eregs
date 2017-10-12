@@ -20,13 +20,11 @@ describe('<PoliciesContainer />', () => {
     expect(selector.props.lookup).toEqual('topics');
   });
 
-  it('has two tabs with correct types', () => {
+  it('has one tabs with correct types', () => {
     const tabs = result.prop('tabs');
-    expect(tabs).toHaveLength(2);
+    expect(tabs).toHaveLength(1);
 
-    const [reqTab, policyTab] = tabs;
-
-    expect(reqTab.type.displayName).toEqual('withRoute(RequirementsTab)');
+    const [policyTab] = tabs;
 
     expect(policyTab.props.active).toBeTruthy();
     expect(policyTab.props.tabName).toBe('Policies');

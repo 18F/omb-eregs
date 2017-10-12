@@ -27,15 +27,10 @@ export default function Policy({ policy, topicsIds }) {
             {policy.total_reqs} requirements
              match your search
           </div>
-          <div className="external-link icon-links sm-col sm-col-12 md-col-3">
+          <div className="external-link icon-links sm-col sm-col-12 md-col-6">
             <ExternalLink href={policy.original_url}>
               View original
             </ExternalLink>
-          </div>
-          <div className="view-requirements-link icon-links sm-col sm-col-12 md-col-3">
-            <Link route="requirements" params={{ policy__id__in: policy.id }}>
-              <a>View all requirements</a>
-            </Link>
           </div>
         </div>
       </section>

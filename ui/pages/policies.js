@@ -1,4 +1,3 @@
-import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -29,7 +28,6 @@ RequirementsTab.propTypes = {
     query: PropTypes.shape({}).isRequired,
   }).isRequired,
 };
-const RequirementsTabWithRouter = withRouter(RequirementsTab);
 
 const fieldNames = {
   agencies: 'requirements__all_agencies__id__in',
@@ -79,7 +77,6 @@ export function PoliciesContainer({
         />
       }
       tabs={[
-        <RequirementsTabWithRouter key="Requirements" />,
         <TabView active tabName="Policies" key="Policies" />,
       ]}
     />

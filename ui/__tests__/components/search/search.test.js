@@ -8,11 +8,11 @@ const blankRouter = { pathname: '', query: {} };
 
 describe('<Search />', () => {
   describe('actionPath()', () => {
-    it('returns /requirements/ by default', () => {
+    it('returns /policies/ by default', () => {
       const router = { pathname: '/no-such-path', query: {} };
       const rendered = shallow(<Search router={router} />);
       const actual = rendered.instance().actionPath();
-      expect(actual).toEqual('/requirements/');
+      expect(actual).toEqual('/policies/');
     });
     it('returns the pathname if "policies" is in the pathname', () => {
       const router = { pathname: '/policies', query: {} };
