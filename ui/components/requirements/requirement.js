@@ -34,12 +34,21 @@ export default function Requirement({ requirement }) {
     </span>
   ));
 
-  const impacted_entity = function(requirement) {
-    if (requirement.impacted_entity == "") {
-      return "All agencies"
-    } else {
-      return requirement.impacted_entity;
+  const impacted_entity = function(impacted_entity) {
+    let impacted_entity_nodes;
+    if (impacted_entity) {
+      impacted_entity_nodes = (
+        <div>
+          <Metadata className="impacted-entity" name="Impacted entity" value={impacted_entity} />
+          <Metadata
+            className="applies-to mr2"
+            name="Applies to"
+            value={impacted_entity}
+          />
+        </div>
+      )
     }
+    return impacted_entity_nodes;
   }
 
   /* eslint-enable react/no-array-index-key */
@@ -54,12 +63,7 @@ export default function Requirement({ requirement }) {
             name="Requirement ID"
             value={filterAppliesTo(requirement.impacted_entity)}
           />
-          <Metadata className="impacted-entity" name="Impacted entity" value={requirement.impacted_entity} />
-          <Metadata
-            className="applies-to mr2"
-            name="Applies to"
-            value={impacted_entity(requirement)}
-          />
+          {impacted_entity(requirement.impacted_entity)}
           <Metadata
             className="omb-policy-id"
             name="OMB Policy ID"
