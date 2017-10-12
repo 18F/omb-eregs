@@ -13,7 +13,7 @@ export class Search extends React.Component {
 
   actionPath() {
     const path = this.props.router.pathname;
-    return path.includes('requirements') || path.includes('policies') ? path : '/policies/';
+    return path.includes('policies') || path.includes('requirements') ? path : '/policies/';
   }
 
   hiddenFields() {
@@ -33,7 +33,7 @@ export class Search extends React.Component {
 
   inputName() {
     const path = this.props.router.pathname;
-    return path.includes('policies') ? 'requirements__req_text__search' : 'req_text__search';
+    return path.includes('requirements') ? 'req_text__search' : 'requirements__req_text__search';
   }
 
   handleChange(e) {
