@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Metadata from './metadata';
-import PolicyLink from './policy-link';
 import TopicLink from './topic-link';
 
 const badEntities = [
@@ -34,23 +33,6 @@ export default function Requirement({ requirement }) {
     </span>
   ));
 
-  const impacted_entity = function(impacted_entity) {
-    let impacted_entity_nodes;
-    if (impacted_entity) {
-      impacted_entity_nodes = (
-        <div>
-          <Metadata className="impacted-entity" name="Impacted entity" value={impacted_entity} />
-          <Metadata
-            className="applies-to mr2"
-            name="Applies to"
-            value={impacted_entity}
-          />
-        </div>
-      )
-    }
-    return impacted_entity_nodes;
-  }
-
   /* eslint-enable react/no-array-index-key */
   return (
     <div className="req p2 clearfix max-width-3">
@@ -59,15 +41,9 @@ export default function Requirement({ requirement }) {
         <div className="clearfix mt3">
           <Metadata className="requirement-id" name="Requirement ID" value={requirement.req_id} />
           <Metadata
-            className="requirement-id mr2"
-            name="Requirement ID"
+            className="applies-to mr2"
+            name="Applies to"
             value={filterAppliesTo(requirement.impacted_entity)}
-          />
-          {impacted_entity(requirement.impacted_entity)}
-          <Metadata
-            className="omb-policy-id"
-            name="OMB Policy ID"
-            value={requirement.policy.omb_policy_id}
           />
           <div className="topics metadata">
             <span>Topics: </span>

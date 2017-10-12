@@ -11,19 +11,6 @@ describe('<Requirement />', () => {
     topics: [],
   };
 
-  it('links to the related policy', () => {
-    const req = Object.assign({}, baseReq, {
-      policy: { id: 4, title_with_number: 'Some Title Here' },
-    });
-
-    const result = mount(<Requirement requirement={req} />);
-    const link = result.find('.policy-title LinkRoutes').first();
-
-    expect(link.text()).toEqual('Some Title Here');
-    expect(link.prop('route')).toEqual('policies');
-    expect(link.prop('params')).toEqual({ id__in: 4 });
-  });
-
   it('includes links to topics', () => {
     const req = Object.assign({}, baseReq, {
       topics: [
@@ -38,7 +25,7 @@ describe('<Requirement />', () => {
     const [six, eight] = [links.first(), links.last()];
     expect(six.text()).toEqual('Six');
     expect(six.prop('params').topics__id__in).toEqual(6);
-    expect(eight.prop('route')).toEqual('requirements');
+    expect(eight.prop('route')).toEqual('policies');
   });
 
   it('filters out values in the "applies to" field', () => {
