@@ -3,7 +3,10 @@
     background-color: $color-primary;
     border-top: 1px solid $color-white;
     color: $color-white;
+    padding-left: .75rem;
+    padding-right: .75rem;
   }
+
 
   .filter-form-submit {
     background-color: $color-primary;
@@ -22,6 +25,18 @@
     line-height: 1.25em;
   }
 
+  @media (max-width: 52em) {
+    .filter {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .search-input {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  }
+
   .new-policies {
     background-color: $color-gray-lightest;
     border-top: 1px solid $color-gray-light;
@@ -29,15 +44,22 @@
   }
 
   .search-input {
-    @extend .p1;
-    @extend .col-3;
-    @extend .mr1;
+    width: 55%;
+    min-width: 260px;
+    max-width: 350px;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   .search-submit {
     @extend .button-like;
     @extend .border;
     @extend .h5;
+  }
+
+  .navbar {
+    flex-direction: row;
   }
 }
 

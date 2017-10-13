@@ -38,6 +38,18 @@ export class Endpoint {
     }
     return Promise.resolve([]);
   }
+
+  async fetchOne(id) {
+    const key = `fetchOne${id}`;
+    const cacheVal = this.cache.get(key);
+    if (cacheVal) {
+      return cacheVal;
+    }
+
+    const { data } = await this.client.get(`${this.endpoint}${id}/`);
+    this.cache.set(key, data);
+    return data;
+  }
 }
 
 export default {
