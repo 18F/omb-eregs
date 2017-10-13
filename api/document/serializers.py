@@ -12,6 +12,7 @@ class RequirementSerializer(serializers.ModelSerializer):
         model = Requirement
         fields = (
             'citation',
+            'id',
             'impacted_entity',
             'policy_section',
             'policy_sub_section',
