@@ -1,15 +1,64 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Metadata from '../requirements/metadata';
+import PolicyLink from '../requirements/policy-link';
+import TopicLink from '../requirements/topic-link';
+
+const badEntities = [
+  'NA',
+  'N/A',
+  'Not Applicable',
+  'None',
+  'None Specified',
+  'unknown',
+  'TBA',
+  'Cannot determine-Ask Mindy',
+].map(e => e.toLowerCase());
+
+export function filterAppliesTo(text) {
+  const normalized = (text || '').toLowerCase().trim();
+  if (badEntities.includes(normalized)) {
+    return null;
+  }
+  return text;
+}
+
 export default function Req({ highlighted, href, onClick, req }) {
   let meta = null;
   if (highlighted) {
     meta = (
-      <div className="col col-4">
-        Number: { req.req_id }
-        <ul>
-          { req.topics.map(t => <li key={t.id}>{t.name}</li>) }
-        </ul>
+      <div className="req col col-4">
+        <Metadata className="requirement-id" name="Requirement ID" value={req.req_id} />
+        <Metadata
+          className="omb-policy-id"
+          name="OMB Policy ID"
+          value={req.policy.omb_policy_id}
+        />
+        <Metadata
+          className="issuance"
+          name="Policy issuance"
+          value={req.policy.issuance}
+        />
+        <Metadata
+          className="applies-to mr2"
+          name="Applies to"
+          value={filterAppliesTo(req.impacted_entity)}
+        />
+        <Metadata className="issuing-body" name="Issuing body" value={req.issuing_body} />
+        <Metadata
+          className="sunset-date"
+          name="Sunset date"
+          value={req.policy.sunset}
+          nullValue="Sunset date: none"
+          separator=" by "
+        />
+        <div className="topics metadata">
+          <span>Topics: </span>
+          <ul className="topics-list list-reset inline">
+            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} />)}
+          </ul>
+        </div>
       </div>
     );
   }
