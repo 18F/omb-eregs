@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {filterAppliesTo} from '../requirements/requirement';
+import { filterAppliesTo } from '../requirements/requirement';
 import Metadata from '../requirements/metadata';
 import TopicLink from '../requirements/topic-link';
 
@@ -32,7 +32,7 @@ export default function Req({ highlighted, href, onClick, req }) {
         <div className="topics metadata">
           <span>Topics: </span>
           <ul className="topics-list list-reset inline">
-            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} route="route" />)}
+            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} route="policies" />)}
           </ul>
         </div>
       </div>

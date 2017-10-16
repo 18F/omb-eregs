@@ -26,7 +26,7 @@ describe('<Req />', () => {
   });
 
   it('includes topiclinks with data when highlighted', () => {
-    req.topics = [{id: 1, name: 'link 1'}, {id: 2, name: 'link 2'}];
+    req.topics = [{ id: 1, name: 'link 1' }, { id: 2, name: 'link 2' }];
     const normalText = mount(
       <Req highlighted href="" onClick={jest.fn()} req={req} />,
     ).find('.topics').text();
