@@ -8,17 +8,17 @@ const blankRouter = { pathname: '', query: {} };
 
 describe('<Search />', () => {
   describe('actionPath()', () => {
-    it('returns /policies/ by default', () => {
+    it('returns /policies by default', () => {
       const router = { pathname: '/no-such-path', query: {} };
       const rendered = shallow(<Search router={router} />);
       const actual = rendered.instance().actionPath();
-      expect(actual).toEqual('/policies/');
+      expect(actual).toEqual('/policies');
     });
-    it('returns the pathname if "policies" is in the pathname', () => {
-      const router = { pathname: '/policies', query: {} };
+    it('returns the current path if in our whitelist', () => {
+      const router = { pathname: '/requirements', query: {} };
       const rendered = shallow(<Search router={router} />);
       const actual = rendered.instance().actionPath();
-      expect(actual).toEqual('/policies');
+      expect(actual).toEqual('/requirements');
     });
   });
 
@@ -57,6 +57,15 @@ describe('<Search />', () => {
       someOther: 'parameter',
     });
   });
+  it('does not create hidden fields on other pages', () => {
+    const router = {
+      pathname: '/some-other-page',
+      query: { some: 'value' },
+    };
+    const rendered = shallow(<Search router={router} />);
+    const hidden = rendered.find('[type="hidden"]');
+    expect(hidden).toHaveLength(0);
+  });
 
   describe('if javascript is not enabled', () => {
     it('sets the form action', () => {
@@ -79,7 +88,7 @@ describe('<Search />', () => {
       expect(preventDefault).toHaveBeenCalled();
     });
 
-    it('router.push is called with all relevant fields', () => {
+    it('adds fields to router.push when on a whitelisted page', () => {
       const preventDefault = jest.fn();
       const push = jest.fn();
       const router = {
@@ -99,6 +108,25 @@ describe('<Search />', () => {
           requirements__req_text__search: '',
           topics__id__in: 36,
         },
+      });
+    });
+    it('does not add fields to router.push if not on a whitelist page', () => {
+      const preventDefault = jest.fn();
+      const push = jest.fn();
+      const router = {
+        pathname: '/about-stuff',
+        push,
+        query: {
+          topics__id__in: 36,
+        },
+      };
+      const rendered = shallow(<Search router={router} />);
+      const form = rendered.find('form[action="/policies"]');
+
+      form.simulate('submit', { preventDefault });
+      expect(push).toHaveBeenCalledWith({
+        pathname: '/policies',
+        query: { requirements__req_text__search: '' },
       });
     });
   });
