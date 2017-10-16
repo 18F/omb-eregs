@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import {filterAppliesTo} from '../requirements/requirement';
 import Metadata from '../requirements/metadata';
-import PolicyLink from '../requirements/policy-link';
 import TopicLink from '../requirements/topic-link';
 
 const badEntities = [
@@ -16,25 +16,12 @@ const badEntities = [
   'Cannot determine-Ask Mindy',
 ].map(e => e.toLowerCase());
 
-export function filterAppliesTo(text) {
-  const normalized = (text || '').toLowerCase().trim();
-  if (badEntities.includes(normalized)) {
-    return null;
-  }
-  return text;
-}
-
 export default function Req({ highlighted, href, onClick, req }) {
   let meta = null;
   if (highlighted) {
     meta = (
       <div className="req col col-4">
         <Metadata className="requirement-id" name="Requirement ID" value={req.req_id} />
-        <Metadata
-          className="omb-policy-id"
-          name="OMB Policy ID"
-          value={req.policy.omb_policy_id}
-        />
         <Metadata
           className="issuance"
           name="Policy issuance"
@@ -56,7 +43,7 @@ export default function Req({ highlighted, href, onClick, req }) {
         <div className="topics metadata">
           <span>Topics: </span>
           <ul className="topics-list list-reset inline">
-            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} />)}
+            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} route="policies" />)}
           </ul>
         </div>
       </div>
@@ -72,6 +59,7 @@ export default function Req({ highlighted, href, onClick, req }) {
     </div>
   );
 }
+
 Req.propTypes = {
   highlighted: PropTypes.bool,
   href: PropTypes.string.isRequired,
@@ -87,6 +75,7 @@ Req.propTypes = {
     ).isRequired,
   }).isRequired,
 };
+
 Req.defaultProps = {
   highlighted: false,
 };

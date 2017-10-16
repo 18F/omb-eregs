@@ -2,7 +2,6 @@ import { shallow, mount } from 'enzyme';
 import React from 'react';
 
 import Req from '../../../components/policy/req';
-import Metadata from '../../../components/requirements/metadata';
 
 describe('<Req />', () => {
   const req = {
@@ -27,11 +26,8 @@ describe('<Req />', () => {
 
   it('includes an anchor with the correct data', () => {
     const onClick = jest.fn();
-    const req = {
-      req_id: '1.1',
-      req_text: 'Text goes here',
-      topics: [],
-    };
+    req.req_id = '1.1';
+    req.req_text = 'Text goes here';
     const anchors = shallow(
       <Req href="/some/location" onClick={onClick} req={req} />,
     ).find('a');
