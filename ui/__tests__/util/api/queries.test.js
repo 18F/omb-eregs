@@ -122,7 +122,7 @@ describe('policyData()', () => {
     expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('3');
   });
   it('returns the correct results', async () => {
-    const results = await policyData({ query: { policyId: '3' } });
+    const results = await policyData({ query: {} });
     expect(results).toEqual({
       pagedReqs: { count: 1, results: 'data-goes-here' },
       policy: {
@@ -134,5 +134,16 @@ describe('policyData()', () => {
   it('will pass the page number', async () => {
     await policyData({ query: { page: '5', policyId: '3' } });
     expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '5' });
+  });
+  it('passes up 404s', async () => {
+    const err = new Error('Not found');
+    err.response = { status: 404 };
+    endpoints.policies.fetchOne.mockReset();
+    endpoints.policies.fetchOne.mockImplementationOnce(() => {
+      throw err;
+    });
+
+    const result = await policyData({ query: {} });
+    expect(result).toEqual({ statusCode: 404 });
   });
 });

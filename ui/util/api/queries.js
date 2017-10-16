@@ -137,10 +137,16 @@ export async function policyData({ query }) {
     page: query.page || '1',
   };
 
-  const [pagedReqs, policy] = await Promise.all([
-    endpoints.requirements.fetch(reqQuery),
-    endpoints.policies.fetchOne(query.policyId),
-  ]);
-
-  return { pagedReqs, policy: formatIssuance(policy) };
+  try {
+    const [pagedReqs, policy] = await Promise.all([
+      endpoints.requirements.fetch(reqQuery),
+      endpoints.policies.fetchOne(query.policyId),
+    ]);
+    return { pagedReqs, policy: formatIssuance(policy) };
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      return { statusCode: 404 };
+    }
+    throw err;
+  }
 }
