@@ -11,9 +11,10 @@ const NUM_POLICIES = 4;
 const DATE_FORMAT = 'MMMM D, YYYY';
 
 export function formatIssuance(policy) {
-  return Object.assign({}, policy, {
+  return {
+    ...policy,
     issuance_pretty: moment(policy.issuance).format(DATE_FORMAT),
-  });
+  };
 }
 
 export async function homepageData() {

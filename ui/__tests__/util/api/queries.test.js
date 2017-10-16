@@ -2,9 +2,10 @@ import {
   cleanSearchParams,
   formatIssuance,
   homepageData,
+  policyData,
   redirectQuery,
 } from '../../../util/api/queries';
-import api from '../../../util/api/endpoints';
+import endpoints from '../../../util/api/endpoints';
 
 jest.mock('../../../util/api/endpoints');
 
@@ -21,13 +22,13 @@ describe('formatIssuance', () => {
 
 describe('homepageData', () => {
   it('makes the correct request', () => {
-    api.topics.fetchResults.mockImplementationOnce(() => Promise.resolve([]));
+    endpoints.topics.fetchResults.mockImplementationOnce(() => Promise.resolve([]));
     return homepageData().then(() => {
-      expect(api.policies.fetchResults).toHaveBeenCalledWith({ ordering: '-issuance' });
+      expect(endpoints.policies.fetchResults).toHaveBeenCalledWith({ ordering: '-issuance' });
     });
   });
   it('trims to the appropriate length', () => {
-    api.topics.fetchResults.mockImplementationOnce(() =>
+    endpoints.topics.fetchResults.mockImplementationOnce(() =>
       Promise.resolve([1, 2, 3, 4, 5, 6, 7].map(id => ({ id }))),
     );
     return homepageData().then(({ recentPolicies }) => {
@@ -35,7 +36,7 @@ describe('homepageData', () => {
     });
   });
   it('formats issuance date', () => {
-    api.topics.fetchResults.mockImplementationOnce(() =>
+    endpoints.topics.fetchResults.mockImplementationOnce(() =>
       Promise.resolve([{ issuance: '2002-03-04' }, { issuance: '2020-11-10' }]),
     );
     return homepageData().then(({ recentPolicies }) => {
@@ -104,5 +105,34 @@ describe('redirectQuery()', () => {
     const query = { some: 'thing', myParam: '1,7,9' };
     const result = redirectQuery(query, 'myParam', 3);
     expect(result).toEqual({ some: 'thing', myParam: '1,7,9,3' });
+  });
+});
+
+describe('policyData()', () => {
+  beforeEach(() => {
+    endpoints.requirements.fetch.mockImplementationOnce(
+      () => Promise.resolve({ count: 1, results: 'data-goes-here' }));
+    endpoints.policies.fetchOne.mockImplementationOnce(
+      () => Promise.resolve({ issuance: '2000-01-02' }));
+  });
+
+  it('hits the correct urls', async () => {
+    await policyData({ query: { policyId: '3' } });
+    expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '1' });
+    expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('3');
+  });
+  it('returns the correct results', async () => {
+    const results = await policyData({ query: { policyId: '3' } });
+    expect(results).toEqual({
+      pagedReqs: { count: 1, results: 'data-goes-here' },
+      policy: {
+        issuance: '2000-01-02',
+        issuance_pretty: 'January 2, 2000',
+      },
+    });
+  });
+  it('will pass the page number', async () => {
+    await policyData({ query: { page: '5', policyId: '3' } });
+    expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '5' });
   });
 });
