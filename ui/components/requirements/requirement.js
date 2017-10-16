@@ -15,6 +15,7 @@ const badEntities = [
   'TBA',
   'Cannot determine-Ask Mindy',
 ].map(e => e.toLowerCase());
+
 /* Temporary "solution" to bad data: filter it out on the front end */
 export function filterAppliesTo(text) {
   const normalized = (text || '').toLowerCase().trim();

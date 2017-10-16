@@ -5,17 +5,6 @@ import {filterAppliesTo} from '../requirements/requirement';
 import Metadata from '../requirements/metadata';
 import TopicLink from '../requirements/topic-link';
 
-const badEntities = [
-  'NA',
-  'N/A',
-  'Not Applicable',
-  'None',
-  'None Specified',
-  'unknown',
-  'TBA',
-  'Cannot determine-Ask Mindy',
-].map(e => e.toLowerCase());
-
 export default function Req({ highlighted, href, onClick, req }) {
   let meta = null;
   if (highlighted) {
@@ -43,7 +32,6 @@ export default function Req({ highlighted, href, onClick, req }) {
         <div className="topics metadata">
           <span>Topics: </span>
           <ul className="topics-list list-reset inline">
-            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} route="policies" />)}
           </ul>
         </div>
       </div>

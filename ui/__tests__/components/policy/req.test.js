@@ -10,6 +10,7 @@ describe('<Req />', () => {
     topics: [],
     policy: [],
   };
+
   it('includes meta data when highlighted', () => {
     const normalText = mount(
       <Req href="" onClick={jest.fn()} req={req} />,
