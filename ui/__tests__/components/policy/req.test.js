@@ -1,19 +1,21 @@
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import React from 'react';
 
 import Req from '../../../components/policy/req';
+import Metadata from '../../../components/requirements/metadata';
 
 describe('<Req />', () => {
+  const req = {
+    req_id: '123.45',
+    req_text: 'Some text here',
+    topics: [],
+    policy: [],
+  };
   it('includes meta data when highlighted', () => {
-    const req = {
-      req_id: '123.45',
-      req_text: 'Some text here',
-      topics: [],
-    };
-    const normalText = shallow(
+    const normalText = mount(
       <Req href="" onClick={jest.fn()} req={req} />,
     ).text();
-    const hlText = shallow(
+    const hlText = mount(
       <Req highlighted href="" onClick={jest.fn()} req={req} />,
     ).text();
 
