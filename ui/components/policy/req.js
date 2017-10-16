@@ -32,6 +32,7 @@ export default function Req({ highlighted, href, onClick, req }) {
         <div className="topics metadata">
           <span>Topics: </span>
           <ul className="topics-list list-reset inline">
+            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} route="route" />)}
           </ul>
         </div>
       </div>
@@ -59,6 +60,7 @@ Req.propTypes = {
       PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
+        route: PropTypes.string,
       }),
     ).isRequired,
   }).isRequired,

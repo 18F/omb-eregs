@@ -83,6 +83,7 @@ Requirement.propTypes = {
       PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,
+        route: PropTypes.string,
       }),
     ),
     policy: PropTypes.shape({
