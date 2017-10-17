@@ -22,12 +22,13 @@ export default function RequirementsView({ requirements, count }) {
     </div>
   );
 }
+const requirementProps = PropTypes.shape({
+  id: PropTypes.number,
+  title: PropTypes.string,
+  relevant_reqs: PropTypes.number,
+});
 RequirementsView.propTypes = {
-  requirements: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    title: PropTypes.string,
-    relevant_reqs: PropTypes.number,
-  })),
+  requirements: PropTypes.arrayOf(requirementProps),
   count: PropTypes.number,
 };
 RequirementsView.defaultProps = {

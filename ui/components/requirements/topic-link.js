@@ -14,10 +14,12 @@ export default function TopicLink({ topic }) {
   );
 }
 
+const topicParams = {
+  id: PropTypes.number,
+  name: PropTypes.string,
+  route: PropTypes.string,
+};
+
 TopicLink.propTypes = {
-  topic: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    route: PropTypes.string,
-  }).isRequired,
+  topic: PropTypes.shape(topicParams).isRequired,
 };
