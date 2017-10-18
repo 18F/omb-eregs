@@ -2,6 +2,15 @@ import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import routes from '../../routes';
+
+const defaultRoute = 'policies';
+const inputNameMapping = {
+  policies: 'requirements__req_text__search',
+  requirements: 'req_text__search',
+};
+
+
 export class Search extends React.Component {
   constructor(props) {
     super(props);
@@ -11,9 +20,20 @@ export class Search extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  currentRoute() {
+    const route = routes.match(this.props.router.pathname).route;
+    if (route) {
+      return route.name;
+    }
+    return null;
+  }
+
   actionPath() {
-    const path = this.props.router.pathname;
-    return path.includes('policies') || path.includes('requirements') ? path : '/policies/';
+    const route = this.currentRoute();
+    if (Object.keys(inputNameMapping).includes(route)) {
+      return `/${route}`;
+    }
+    return `/${defaultRoute}`;
   }
 
   hiddenFields() {
@@ -24,16 +44,20 @@ export class Search extends React.Component {
   }
 
   query() {
-    const query = Object.assign({}, this.props.router.query);
-    delete query.page;
-    delete query[this.inputName()];
+    const route = this.currentRoute();
+    if (Object.keys(inputNameMapping).includes(route)) {
+      const query = { ...this.props.router.query };
+      delete query.page;
+      delete query[this.inputName()];
 
-    return query;
+      return query;
+    }
+    return {};
   }
 
   inputName() {
-    const path = this.props.router.pathname;
-    return path.includes('requirements') ? 'req_text__search' : 'requirements__req_text__search';
+    const route = this.currentRoute();
+    return inputNameMapping[route] || inputNameMapping[defaultRoute];
   }
 
   handleChange(e) {
