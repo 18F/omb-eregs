@@ -12,7 +12,7 @@ describe('<TopicLink />', () => {
     expect(basic.type()).toBe('li');
   });
   it('has the right route', () => {
-    expect(basic.find('LinkRoutes').props().route).toMatch('requirements');
+    expect(basic.find('LinkRoutes').prop('route')).toMatch('requirements');
   });
   it('has the right text content', () => {
     expect(basic.find('a').text()).toMatch('hello link 1');
@@ -23,7 +23,7 @@ describe('<TopicLink />', () => {
     <TopicLink topic={topic} />,
   );
   it('has the correct route', () => {
-    expect(definedRoute.find('LinkRoutes').props().route).toMatch('policies');
+    expect(definedRoute.find('LinkRoutes').prop('route')).toMatch('policies');
   });
   it('has the new content values', () => {
     expect(definedRoute.find('a').text()).toMatch('hello link 2');
