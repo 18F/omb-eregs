@@ -12,23 +12,11 @@ export default function Req({ highlighted, href, onClick, req }) {
       <div className="req col col-4">
         <Metadata className="requirement-id" name="Requirement ID" value={req.req_id} />
         <Metadata
-          className="issuance"
-          name="Policy issuance"
-          value={req.policy.issuance}
-        />
-        <Metadata
           className="applies-to mr2"
           name="Applies to"
           value={filterAppliesTo(req.impacted_entity)}
         />
         <Metadata className="issuing-body" name="Issuing body" value={req.issuing_body} />
-        <Metadata
-          className="sunset-date"
-          name="Sunset date"
-          value={req.policy.sunset}
-          nullValue="Sunset date: none"
-          separator=" by "
-        />
         <div className="topics metadata">
           <span>Topics: </span>
           <ul className="topics-list list-reset inline">
