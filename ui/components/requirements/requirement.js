@@ -58,6 +58,13 @@ export default function Requirement({ requirement }) {
             value={filterAppliesTo(requirement.impacted_entity)}
           />
           <Metadata className="issuing-body" name="Issuing body" value={requirement.issuing_body} />
+          <Metadata
+            className="sunset-date"
+            name="Sunset date"
+            value={requirement.policy.sunset}
+            nullValue="Sunset date: none"
+            separator=" by "
+          />
           <div className="topics metadata">
             <span>Topics: </span>
             <ul className="topics-list list-reset inline">
