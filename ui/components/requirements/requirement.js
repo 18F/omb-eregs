@@ -15,6 +15,7 @@ const badEntities = [
   'TBA',
   'Cannot determine-Ask Mindy',
 ].map(e => e.toLowerCase());
+
 /* Temporary "solution" to bad data: filter it out on the front end */
 export function filterAppliesTo(text) {
   const normalized = (text || '').toLowerCase().trim();
@@ -76,14 +77,16 @@ export default function Requirement({ requirement }) {
   );
 }
 
+const topicProps = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    route: PropTypes.string,
+  }),
+);
 Requirement.propTypes = {
   requirement: PropTypes.shape({
-    topics: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
-      }),
-    ),
+    topics: topicProps,
     policy: PropTypes.shape({
       sunset: PropTypes.string,
     }),

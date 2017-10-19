@@ -1,15 +1,28 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { filterAppliesTo } from '../requirements/requirement';
+import Metadata from '../requirements/metadata';
+import TopicLink from '../requirements/topic-link';
+
 export default function Req({ highlighted, href, onClick, req }) {
   let meta = null;
   if (highlighted) {
     meta = (
-      <div className="col col-4">
-        Number: { req.req_id }
-        <ul>
-          { req.topics.map(t => <li key={t.id}>{t.name}</li>) }
-        </ul>
+      <div className="req col col-4">
+        <Metadata className="requirement-id" name="Requirement ID" value={req.req_id} />
+        <Metadata
+          className="applies-to mr2"
+          name="Applies to"
+          value={filterAppliesTo(req.impacted_entity)}
+        />
+        <Metadata className="issuing-body" name="Issuing body" value={req.issuing_body} />
+        <div className="topics metadata">
+          <span>Topics: </span>
+          <ul className="topics-list list-reset inline">
+            {req.topics.map(topic => <TopicLink key={topic.id} topic={topic} route="policies" />)}
+          </ul>
+        </div>
       </div>
     );
   }
@@ -23,6 +36,7 @@ export default function Req({ highlighted, href, onClick, req }) {
     </div>
   );
 }
+
 Req.propTypes = {
   highlighted: PropTypes.bool,
   href: PropTypes.string.isRequired,
@@ -34,10 +48,12 @@ Req.propTypes = {
       PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
+        route: PropTypes.string,
       }),
     ).isRequired,
   }).isRequired,
 };
+
 Req.defaultProps = {
   highlighted: false,
 };
