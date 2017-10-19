@@ -26,9 +26,9 @@ describe('<Req />', () => {
   });
 
   it('includes topiclinks with data when highlighted', () => {
-    req.topics = [{ id: 1, name: 'link 1' }, { id: 2, name: 'link 2' }];
+    const topiclinksReq = { ...req, topics: [{ id: 1, name: 'link 1' }, { id: 2, name: 'link 2' }] };
     const normalText = shallow(
-      <Req highlighted href="" onClick={jest.fn()} req={req} />,
+      <Req highlighted href="" onClick={jest.fn()} req={topiclinksReq} />,
     ).find('.topics').html();
 
     expect(normalText).toMatch(/link 1/);
@@ -37,10 +37,9 @@ describe('<Req />', () => {
 
   it('includes an anchor with the correct data', () => {
     const onClick = jest.fn();
-    req.req_id = '1.1';
-    req.req_text = 'Text goes here';
+    const anchorReq = { ...req, req_id: '1.1', req_text: 'Text goes here' };
     const anchors = shallow(
-      <Req href="/some/location" onClick={onClick} req={req} />,
+      <Req href="/some/location" onClick={onClick} req={anchorReq} />,
     ).find('a');
     expect(anchors).toHaveLength(1);
 
