@@ -4,30 +4,10 @@ import React from 'react';
 import wrapPage from '../components/app-wrapper';
 import PoliciesView from '../components/policies/policies-view';
 import SearchFilterView from '../components/search-filter-view';
-import TabView from '../components/tab-view';
 import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
 import { policiesData } from '../util/api/queries';
-
-export function RequirementsTab({ router }) {
-  const policyQuery = router.query;
-  // Transform filter keys into the format expected by requirements
-  const reqQuery = {};
-  Object.keys(policyQuery).forEach((key) => {
-    if (key.startsWith('requirements__')) {
-      reqQuery[key.slice('requirements__'.length)] = policyQuery[key];
-    } else if (!['page', 'ordering', 'format'].includes(key)) {
-      reqQuery[`policy__${key}`] = policyQuery[key];
-    }
-  });
-  return <TabView active={false} params={reqQuery} route="requirements" tabName="Requirements" />;
-}
-RequirementsTab.propTypes = {
-  router: PropTypes.shape({
-    query: PropTypes.shape({}).isRequired,
-  }).isRequired,
-};
 
 const fieldNames = {
   agencies: 'requirements__all_agencies__id__in',
@@ -76,9 +56,6 @@ export function PoliciesContainer({
           topics={existingTopics}
         />
       }
-      tabs={[
-        <TabView active tabName="Policies" key="Policies" />,
-      ]}
     />
   );
 }

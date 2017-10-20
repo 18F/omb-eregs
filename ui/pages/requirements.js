@@ -59,6 +59,15 @@ export function RequirementsContainer({
       }
     />,
   ];
+  const tabs = (
+    <div className="tab-container no-print">
+      <span className="mr4">View:</span>
+      <ul className="organize-tabs list-reset inline-block">
+        <TabView active tabName="Requirements" key="Requirements" />
+        <PoliciesTabWithRouter key="Policies" />
+      </ul>
+    </div>
+  );
   return (
     <SearchFilterView
       filterControls={filterControls}
@@ -72,10 +81,7 @@ export function RequirementsContainer({
           topics={existingTopics}
         />
       }
-      tabs={[
-        <TabView active tabName="Requirements" key="Requirements" />,
-        <PoliciesTabWithRouter key="Policies" />,
-      ]}
+      tabs={tabs}
     />
   );
 }

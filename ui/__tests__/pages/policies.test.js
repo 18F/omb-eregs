@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import { PoliciesContainer, RequirementsTab } from '../../pages/policies';
+import { PoliciesContainer } from '../../pages/policies';
 
 describe('<PoliciesContainer />', () => {
   const pagedPolicies = {
@@ -20,14 +20,9 @@ describe('<PoliciesContainer />', () => {
     expect(selector.props.lookup).toEqual('topics');
   });
 
-  it('has one tabs with correct types', () => {
+  it('has no tabs', () => {
     const tabs = result.prop('tabs');
-    expect(tabs).toHaveLength(1);
-
-    const [policyTab] = tabs;
-
-    expect(policyTab.props.active).toBeTruthy();
-    expect(policyTab.props.tabName).toBe('Policies');
+    expect(tabs).toBeNull();
   });
 
   it('has correct pageContent', () => {
@@ -43,33 +38,5 @@ describe('<PoliciesContainer />', () => {
     expect(selectedFilters.props.fieldNames).toHaveProperty('policies');
     expect(selectedFilters.props.fieldNames).toHaveProperty('search');
     expect(selectedFilters.props.fieldNames).toHaveProperty('topics');
-  });
-});
-
-
-describe('<RequirementsTab />', () => {
-  const router = {
-    pathname: '',
-    query: {
-      issuance__gt: '2015-01-01',
-      requirements__verb__icontains: 'must',
-      requirements__topics__id__in: '1,6,9',
-      page: '5',
-    },
-  };
-  const result = shallow(<RequirementsTab router={router} />);
-
-  it('is a configured TabView', () => {
-    expect(result.name()).toBe('TabView');
-    expect(result.prop('active')).toBeFalsy();
-    expect(result.prop('route')).toBe('requirements');
-    expect(result.prop('tabName')).toBe('Requirements');
-  });
-  it('transforms the query', () => {
-    expect(result.prop('params')).toEqual({
-      policy__issuance__gt: '2015-01-01',
-      verb__icontains: 'must',
-      topics__id__in: '1,6,9',
-    });
   });
 });
