@@ -10,12 +10,7 @@ export default function SearchFilterView(
         {filterControls}
       </div>
       <div className="main col col-10 pl4 border-left max-width-3">
-        <div className="tab-container no-print">
-          <span className="mr4">View:</span>
-          <ul className="organize-tabs list-reset inline-block">
-            {tabs}
-          </ul>
-        </div>
+        { tabs }
         { selectedFilters }
         {/* page counts here */}
         { pageContent }
@@ -28,11 +23,11 @@ SearchFilterView.propTypes = {
   filterControls: PropTypes.arrayOf(PropTypes.node),
   pageContent: PropTypes.node,
   selectedFilters: PropTypes.node,
-  tabs: PropTypes.arrayOf(PropTypes.node),
+  tabs: PropTypes.node,
 };
 SearchFilterView.defaultProps = {
   filterControls: [],
   pageContent: null,
   selectedFilters: null,
-  tabs: [],
+  tabs: null,
 };

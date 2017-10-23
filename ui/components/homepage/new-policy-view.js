@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from '../../routes';
+import { policyLinkTag } from '../requirements/policy-link';
 
 export default function NewPolicyView({ policy }) {
+  const policyLink = policyLinkTag(policy);
   return (
     <li className="inline-block col col-6 pr2 mb2">
-      <Link route="policies" params={{ id__in: policy.id }}>
-        <a>{ policy.title_with_number }</a>
-      </Link>
+      { policyLink }
       <div className="h5">
         { policy.issuing_body }, { policy.issuance_pretty }
       </div>

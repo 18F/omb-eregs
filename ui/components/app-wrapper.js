@@ -3,7 +3,7 @@ import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ErrorPage from './error';
+import ErrorView from './error';
 import HeaderFooter from './header-footer';
 
 
@@ -22,21 +22,25 @@ Router.onRouteChangeStart = NProgress.start;
 export default function wrapPage(Page, dataFn, headerFooterParams) {
   const hfParams = headerFooterParams || { showSearch: true };
   function WrappedPage(props) {
-    if (props.err) return <ErrorPage err={props.err} />;
+    if (props.err || props.statusCode) {
+      return <ErrorView err={props.err} statusCode={props.statusCode} />;
+    }
     return <HeaderFooter {...hfParams}><Page {...props} /></HeaderFooter>;
   }
 
   WrappedPage.propTypes = {
     err: PropTypes.shape({}),
+    statusCode: PropTypes.number,
   };
 
   WrappedPage.defaultProps = {
     err: null,
+    statusCode: null,
   };
 
-  WrappedPage.getInitialProps = (ctx) => {
+  WrappedPage.getInitialProps = async (ctx) => {
     try {
-      return dataFn(ctx).catch(err => ({ err }));
+      return await dataFn(ctx);
     } catch (err) {
       return { err };
     }

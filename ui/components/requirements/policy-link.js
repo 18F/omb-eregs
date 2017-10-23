@@ -3,13 +3,19 @@ import React from 'react';
 
 import { Link } from '../../routes';
 
+export function policyLinkTag(policy) {
+  return (
+    <Link route="policies" params={{ id__in: policy.id }}>
+      <a>{policy.title_with_number}</a>
+    </Link>
+  );
+}
+
 export default function PolicyLink({ policy }) {
   return (
     <div className="policy-title metadata">
       Policy title:{' '}
-      <Link route="policies" params={{ id__in: policy.id }}>
-        <a>{policy.title_with_number}</a>
-      </Link>
+      { policyLinkTag(policy) }
     </div>
   );
 }

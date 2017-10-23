@@ -2,23 +2,23 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
-import api from './api';
-import { apiNameField, search } from './lookup-search';
-import { routes } from './routes';
+import endpoints from './endpoints';
+import { apiNameField, search } from '../../lookup-search';
+import { routes } from '../../routes';
 
 const NUM_POLICIES = 4;
 // See https://momentjs.com/docs/#/displaying/ for options
 const DATE_FORMAT = 'MMMM D, YYYY';
 
-
 export function formatIssuance(policy) {
-  return Object.assign({}, policy, {
+  return {
+    ...policy,
     issuance_pretty: moment(policy.issuance).format(DATE_FORMAT),
-  });
+  };
 }
 
 export async function homepageData() {
-  const results = await api.policies.fetchResults({ ordering: '-issuance' });
+  const results = await endpoints.policies.fetchResults({ ordering: '-issuance' });
   return {
     recentPolicies: results.slice(0, NUM_POLICIES).map(formatIssuance),
   };
@@ -26,10 +26,10 @@ export async function homepageData() {
 
 export async function policiesData({ query }) {
   const results = await Promise.all([
-    api.topics.withIds(query.requirements__all_agencies__id__in),
-    api.policies.withIds(query.id__in),
-    api.topics.withIds(query.requirements__topics__id__in),
-    api.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
+    endpoints.topics.withIds(query.requirements__all_agencies__id__in),
+    endpoints.policies.withIds(query.id__in),
+    endpoints.topics.withIds(query.requirements__topics__id__in),
+    endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
   ]);
   return {
     existingAgencies: results[0],
@@ -41,10 +41,10 @@ export async function policiesData({ query }) {
 
 export async function requirementsData({ query }) {
   const results = await Promise.all([
-    api.topics.withIds(query.all_agencies__id_in),
-    api.policies.withIds(query.policy__id__in),
-    api.topics.withIds(query.topics__id__in),
-    api.requirements.fetch(query),
+    endpoints.topics.withIds(query.all_agencies__id_in),
+    endpoints.policies.withIds(query.policy__id__in),
+    endpoints.topics.withIds(query.topics__id__in),
+    endpoints.requirements.fetch(query),
   ]);
   return {
     existingAgencies: results[0],
@@ -53,7 +53,6 @@ export async function requirementsData({ query }) {
     pagedReqs: results[3],
   };
 }
-
 
 /*
  * We expect a query like
@@ -112,7 +111,42 @@ export const cleanSearchParamTypes = PropTypes.shape({
 
 export async function searchRedirectData({ query }) {
   const userParams = cleanSearchParams(query);
-  const pagedEntries = await search(
-    userParams.lookup, userParams.q, userParams.page);
+  const pagedEntries = await search(userParams.lookup, userParams.q, userParams.page);
   return { pagedEntries, userParams };
+}
+
+/*
+ * Mix in the idToInsert into the original request parameters.
+ */
+export function redirectQuery(query, insertParam, idToInsert) {
+  const result = Object.assign({}, query);
+  const ids = (result[insertParam] || '').split(',').filter(i => i.length > 0);
+  delete result.page;
+
+  if (!ids.includes(idToInsert)) {
+    ids.push(idToInsert);
+  }
+  result[insertParam] = ids.join(',');
+
+  return result;
+}
+
+export async function policyData({ query }) {
+  const reqQuery = {
+    policy_id: query.policyId,
+    page: query.page || '1',
+  };
+
+  try {
+    const [pagedReqs, policy] = await Promise.all([
+      endpoints.requirements.fetch(reqQuery),
+      endpoints.policies.fetchOne(query.policyId),
+    ]);
+    return { pagedReqs, policy: formatIssuance(policy) };
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      return { statusCode: 404 };
+    }
+    throw err;
+  }
 }

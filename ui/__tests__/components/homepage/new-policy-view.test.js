@@ -3,7 +3,6 @@ import React from 'react';
 
 import NewPolicyView from '../../../components/homepage/new-policy-view';
 
-
 describe('<NewPolicyView />', () => {
   const policy = {
     id: 42,

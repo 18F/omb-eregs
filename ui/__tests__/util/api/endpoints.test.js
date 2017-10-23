@@ -1,22 +1,25 @@
 import axios from 'axios';
 
-import { Endpoint } from '../api';
+import { Endpoint } from '../../../util/api/endpoints';
 
 jest.mock('axios');
 
 const ORIGINALENV = Object.assign({}, process.env);
-beforeEach(() => { process.env = {}; });
-afterEach(() => { process.env = ORIGINALENV; });
-
+beforeEach(() => {
+  process.env = {};
+});
+afterEach(() => {
+  process.env = ORIGINALENV;
+});
 
 function mockAxios(...resultSets) {
   const get = jest.fn();
   resultSets.forEach(results =>
-    get.mockImplementationOnce(() => Promise.resolve({ data: { results } })));
+    get.mockImplementationOnce(() => Promise.resolve({ data: { results } })),
+  );
   axios.create.mockImplementationOnce(() => ({ get }));
   return get;
 }
-
 
 describe('Endpoint', () => {
   describe('withIds', () => {
@@ -36,8 +39,7 @@ describe('Endpoint', () => {
 
       return endpoint.withIds('ids,here').then((result) => {
         expect(result).toEqual([1, 2, 3]);
-        expect(endpoint.fetchResults).toHaveBeenCalledWith(
-          { id__in: 'ids,here' });
+        expect(endpoint.fetchResults).toHaveBeenCalledWith({ id__in: 'ids,here' });
       });
     });
   });
@@ -50,10 +52,8 @@ describe('Endpoint', () => {
 
       return endpoint.fetchResults({ some: 'param' }).then((result) => {
         expect(result).toEqual([2, 4, 6]);
-        expect(axios.create).toHaveBeenCalledWith(
-          { baseURL: 'http://example.com/root/' });
-        expect(getFn).toHaveBeenCalledWith(
-          'some/path', { params: { some: 'param' } });
+        expect(axios.create).toHaveBeenCalledWith({ baseURL: 'http://example.com/root/' });
+        expect(getFn).toHaveBeenCalledWith('some/path', { params: { some: 'param' } });
       });
     });
   });
@@ -65,7 +65,8 @@ describe('Endpoint', () => {
       const differentParams = { other: 'params' };
       const endpoint = new Endpoint('some/path');
 
-      return endpoint.fetchResults(sameParams)
+      return endpoint
+        .fetchResults(sameParams)
         .then((result) => {
           expect(result).toEqual([1, 3, 5]);
           return endpoint.fetchResults(sameParams);
@@ -78,6 +79,30 @@ describe('Endpoint', () => {
         .then((result) => {
           expect(result).toEqual([2, 4, 6]);
         });
+    });
+  });
+
+  describe('fetchOne', () => {
+    it('hits the correct url', () => {
+      const getFn = mockAxios('results!');
+      const endpoint = new Endpoint('some/path/');
+      return endpoint.fetchOne(44).then((data) => {
+        expect(data).toEqual({ results: 'results!' });
+        expect(getFn).toHaveBeenCalledWith('some/path/44/');
+      });
+    });
+    it('caches results', () => {
+      mockAxios('original!', 'call2');
+      const endpoint = new Endpoint('some/path/');
+      return endpoint.fetchOne('a').then((data) => {
+        expect(data).toEqual({ results: 'original!' });
+        return endpoint.fetchOne('a');
+      }).then((data) => {
+        expect(data).toEqual({ results: 'original!' });
+        return endpoint.fetchOne('b');
+      }).then((data) => {
+        expect(data).toEqual({ results: 'call2' });
+      });
     });
   });
 });

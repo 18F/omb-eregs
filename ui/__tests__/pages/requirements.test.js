@@ -21,15 +21,14 @@ describe('<RequirementsContainer />', () => {
   });
 
   it('has two tabs with correct types', () => {
-    const tabs = result.prop('tabs');
-    expect(tabs).toHaveLength(2);
+    const tabs = shallow(result.prop('tabs'));
 
-    const [reqTab, policyTab] = tabs;
+    expect(tabs.find('TabView')).toHaveLength(1);
+    const tabView = tabs.find('TabView').first();
+    expect(tabView.prop('active')).toBeTruthy();
+    expect(tabView.prop('tabName')).toBe('Requirements');
 
-    expect(reqTab.props.active).toBeTruthy();
-    expect(reqTab.props.tabName).toBe('Requirements');
-
-    expect(policyTab.type.displayName).toEqual('withRoute(PoliciesTab)');
+    expect(tabs.find('withRoute(PoliciesTab)')).toHaveLength(1);
   });
 
   it('has correct pageContent', () => {
