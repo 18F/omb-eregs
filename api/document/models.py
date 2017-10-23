@@ -39,6 +39,12 @@ class DocNode(models.Model):
         ))
         return DocCursor(tree, identifier)
 
+    def as_cursor(self):
+        """Generate a tree with this node as root (and no children)"""
+        tree = DiGraph()
+        tree.add_node(self.identifier, model=self)
+        return DocCursor(tree, self.identifier)
+
     def subtree(self, queryset=None):
         """Load this DocNode and all its children into a tree."""
         if queryset is None:
@@ -47,9 +53,7 @@ class DocNode(models.Model):
             left__gt=self.left, right__lt=self.right, policy_id=self.policy_id
         ).order_by('left')
 
-        tree = DiGraph()
-        tree.add_node(self.identifier, model=self)
-        root = DocCursor(tree, self.identifier)
+        root = self.as_cursor()
         root.add_models(descendant_models)
         return root
 
@@ -144,6 +148,6 @@ class DocCursor():
                 parent = parent.parent()
             self.tree.add_node(child.identifier, model=child)
             self.tree.add_edge(parent.identifier, child.identifier,
-                               sort_order=self.next_sort_order())
+                               sort_order=parent.next_sort_order())
             parent = self.__class__(self.tree, child.identifier)
         return self
