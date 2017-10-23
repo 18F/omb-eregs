@@ -29,7 +29,7 @@ class DocNode(models.Model):
         )
 
     @staticmethod
-    def new_tree(node_type: str, type_emblem: str, **attrs):
+    def new_tree(node_type: str, type_emblem: str='1', **attrs):
         tree = DiGraph()
         identifier = f"{node_type}_{type_emblem}"
         tree.add_node(identifier, model=DocNode(
