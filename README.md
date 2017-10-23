@@ -62,12 +62,13 @@ Then navigate to http://localhost:9002/ (prod and dev run on separate ports).
 
 ### Data
 
-Let's also load the requirements and agency data from OMB:
+Let's also load example requirements, agencies, and a whole document:
 
 ```bash
 docker-compose run --rm manage.py fetch_csv
 docker-compose run --rm manage.py import_reqs data.csv
 docker-compose run --rm manage.py sync_agencies
+docker-compose run --rm manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
 ```
 
 This may emit some warnings for improper input. The next time you visit the
