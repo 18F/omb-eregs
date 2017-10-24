@@ -2,6 +2,7 @@ import pytest
 from model_mommy import mommy
 
 from document import models
+from document.tests.utils import random_doc
 from reqs.models import Policy
 
 
@@ -151,3 +152,17 @@ def test_create_save_load():
     assert new_root['sect_1'].model.text == 'First Section'
     assert new_root['sect_1']['par_b'].model.text == 'Paragraph b'
     assert new_root['appendix_1']['apppar_i'].model.text == 'Appendix par i'
+
+
+def test_add_models():
+    """We can return to a tree structure from a sequence of models."""
+    root = random_doc(15)
+    root.nested_set_renumber()
+    models_created = [node.model for node in root.walk()]
+    correct_order = [node.identifier for node in root.walk()]
+
+    new_root = root.model.as_cursor()
+    new_root.add_models(models_created[1:])     # skip the root
+    current_order = [node.identifier for node in new_root.walk()]
+
+    assert current_order == correct_order
