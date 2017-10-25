@@ -131,18 +131,9 @@ export function redirectQuery(query, insertParam, idToInsert) {
   return result;
 }
 
-export async function policyData({ query }) {
-  const reqQuery = {
-    policy_id: query.policyId,
-    page: query.page || '1',
-  };
-
+async function propagate404(fn) {
   try {
-    const [pagedReqs, policy] = await Promise.all([
-      endpoints.requirements.fetch(reqQuery),
-      endpoints.policies.fetchOne(query.policyId),
-    ]);
-    return { pagedReqs, policy: formatIssuance(policy) };
+    return await fn();
   } catch (err) {
     if (err.response && err.response.status === 404) {
       return { statusCode: 404 };
@@ -151,14 +142,24 @@ export async function policyData({ query }) {
   }
 }
 
+export async function policyData({ query }) {
+  const reqQuery = {
+    policy_id: query.policyId,
+    page: query.page || '1',
+  };
+
+  return propagate404(async () => {
+    const [pagedReqs, policy] = await Promise.all([
+      endpoints.requirements.fetch(reqQuery),
+      endpoints.policies.fetchOne(query.policyId),
+    ]);
+    return { pagedReqs, policy: formatIssuance(policy) };
+  });
+}
+
 export async function documentData({ query }) {
-  try {
+  return propagate404(async () => {
     const docNode = await endpoints.document.fetchOne(query.policyId);
     return { docNode };
-  } catch (err) {
-    if (err.response && err.response.status === 404) {
-      return { statusCode: 404 };
-    }
-    throw err;
-  }
+  });
 }
