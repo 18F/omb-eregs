@@ -5,11 +5,11 @@ import UserError from '../../../components/errors/user-error';
 
 describe('<UserError />', () => {
   it('has expected milestones', () => {
-    const wrapped = shallow(<UserError message="This is my message" />);
-    expect(wrapped.name()).toBe('HeaderFooter');
-    const text = wrapped.childAt(0).text();
-    expect(text).toMatch(/Invalid Request/);
-    expect(text).toMatch(/This is my message/);
-    expect(text).toMatch(/Return home/);
+    const result = shallow(<UserError message="This is my message" />)
+      .children()
+      .first();
+    expect(result.text()).toMatch(/Invalid Request/);
+    expect(result.text()).toMatch(/This is my message/);
+    expect(result.find('Link').children().text()).toBe('Return home');
   });
 });

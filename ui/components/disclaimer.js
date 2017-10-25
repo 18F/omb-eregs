@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Link from './link';
+
 export default function Disclaimer() {
   return (
     <div className="sm-flex justify-between usa-disclaimer">
@@ -15,7 +17,7 @@ export default function Disclaimer() {
         We&apos;re designing the site and adding policies in phases.
         <br />
         Questions or comments?{' '}
-        <a href="mailto:ofcio@omb.eop.gov">Email ofcio@omb.eop.gov</a>.
+        <Link href="mailto:ofcio@omb.eop.gov">Email ofcio@omb.eop.gov</Link>.
       </div>
     </div>
   );

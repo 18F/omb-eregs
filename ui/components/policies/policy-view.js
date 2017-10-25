@@ -17,10 +17,13 @@ export default function Policy({ policy, topicsIds }) {
         <div className="clearfix">
           <div className="requirements-links mb1 sm-col sm-col-12 md-col-6">
             <div className="circle-bg border gray-border center p1">
-              <Link route="requirements" params={linkParams}>
-                <a aria-label="Relevant requirements" className={countClass}>
-                  {relevantReqCount}
-                </a>
+              <Link
+                route="requirements"
+                params={linkParams}
+                aria-label="Relevant requirements"
+                className={countClass}
+              >
+                {relevantReqCount}
               </Link>
             </div> of&nbsp;
             {policy.total_reqs} requirements

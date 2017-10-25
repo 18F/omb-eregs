@@ -10,13 +10,12 @@ export default function FourOhFour() {
         <div className="landing-section gold-border pb2">
           <h1 className="h2">We can&rsquo;t find the page you&rsquo;re looking for.</h1>
           <p className="content">
-            Visit our <Link route="homepage">homepage</Link> or <a href="mailto:ofcio@omb.eop.gov">contact us</a>{' '}
+            Visit our <Link route="homepage">homepage</Link> or
+            {' '}<Link href="mailto:ofcio@omb.eop.gov">contact us</Link>{' '}
             if you need additional help.
           </p>
           <div className="my3">
-            <a className="button-like" href="/">
-              Return home
-            </a>
+            <Link className="button-like" route="homepage">Return home</Link>
           </div>
         </div>
         <hr className="stars-divider" />

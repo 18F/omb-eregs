@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import HeaderFooter from '../header-footer';
+import Link from '../link';
 
 export default function UserError({ message }) {
   return (
@@ -11,9 +12,7 @@ export default function UserError({ message }) {
           <h1 className="h2">Invalid Request</h1>
           <p className="content">{message}</p>
           <div className="my3">
-            <a className="button-like" href="/">
-              Return home
-            </a>
+            <Link route="homepage" className="button-like">Return home</Link>
           </div>
         </div>
         <hr className="stars-divider" />

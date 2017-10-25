@@ -1,6 +1,7 @@
 import React from 'react';
 
 import HeaderFooter from '../components/header-footer';
+import Link from '../components/link';
 
 export function PrivacyView() {
   return (
@@ -56,21 +57,21 @@ export function PrivacyView() {
 
         Google Analytics does not collect personally identifiable information through its cookie(s).
          The program does not track individuals and anonymizes the IP addresses of visitors.
-        <a href="https://www.digitalgov.gov/services/dap/common-questions-about-dap-faq/">Common Questions about DAP (FAQ) provides more information about how Google Analytics handles IP addresses</a>. According to GSA’s Common Questions About DAP, “none of the federal government data tracked as part of the Data Analytics Program will be shared with or available to Google’s corporate advertising partners.”
+        <Link href="https://www.digitalgov.gov/services/dap/common-questions-about-dap-faq/">Common Questions about DAP (FAQ) provides more information about how Google Analytics handles IP addresses</Link>. According to GSA’s Common Questions About DAP, “none of the federal government data tracked as part of the Data Analytics Program will be shared with or available to Google’s corporate advertising partners.”
 
         A limited number of authorized individuals will have user accounts that will allow them to log in to the Google Analytics dashboard and view or run reports regarding visits to the OMB Policy Library and the other web metrics available from the DAP.
 
         Visitors who choose to disable this web measurement tool will still have full access to the OMB Policy Library.
         While the details vary from browser to browser, most modern browsers can be set up to accept, reject, or request user intervention when a site asks to set a cookie.
 
-        You can view web metrics information at <a href="https://analytics.usa.gov/">analytics.usa.gov</a>.
+        You can view web metrics information at <Link href="https://analytics.usa.gov/">analytics.usa.gov</Link>.
         {/* eslint-enable */}
       </p>
 
       <h4>Information you choose to give the OMB</h4>
       <p className="max-width-3">
         {/* eslint-disable */}
-        Users of this website may send the OMB feedback or report an issue by sending an email to <a href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</a>.
+        Users of this website may send the OMB feedback or report an issue by sending an email to <Link href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</Link>.
         If you choose to send us your personally identifiable information, we will only use that information to respond to your message.
          We only share the information you give us with another government agency if your question relates to that agency, or as otherwise required by law.
          The OMB Policy Library never collects information or creates individual profiles for the purposes of advertising, marketing, or any other commercial purpose.
@@ -86,14 +87,14 @@ export function PrivacyView() {
         We believe in the importance of protecting the privacy of children online.
          The Children’s Online Privacy Protection Act (COPPA) governs information gathered online from or about children under the age of 13.
          This site is not intended to solicit or collection information of any kind from children under age 13.
-         If you believe that we have received information from a child under age 13, please contact us at <a href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</a>.
+         If you believe that we have received information from a child under age 13, please contact us at <Link href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</Link>.
          {/* eslint-enable */}
       </p>
 
       <h4>Questions about the privacy policy</h4>
       <p className="max-width-3">
         {/* eslint-disable */}
-        If you have questions about this privacy policy or the privacy practices of the OMB, please submit your questions to <a href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</a>.
+        If you have questions about this privacy policy or the privacy practices of the OMB, please submit your questions to <Link href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</Link>.
         {/* eslint-enable */}
       </p>
 
