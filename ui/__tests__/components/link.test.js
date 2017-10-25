@@ -19,7 +19,7 @@ describe('<Link />', () => {
       expect(result.find('a').length).toEqual(1);
     });
     it('logs an error if the route is not registered', () => {
-      const spy = jest.spyOn(console, 'error');
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => null);
       shallow(<Link route={'homepage!'}>hi</Link>);
       expect(spy).toHaveBeenCalled();
     });
