@@ -17,27 +17,29 @@ export class Policy extends React.Component {
     };
   }
 
-  setHighlight(focusReq) {
+  setHighlight(focusReq, reqsReqId) {
     // Update the browser's URL (we'll assume we're client-side)
     const { policyId } = this.props.url.query;
     const page = this.props.url.query.page || '1';
     Router.router.changeState(
       'replaceState',
-      `/policy?policyId=${policyId}&reqId=${focusReq}&page=${page}`,
-      this.urlForReq(focusReq),
+      `/policy?policyId=${policyId}&reqId=${focusReq}&page=${page}#${reqsReqId}`,
+      this.urlForReq(focusReq, reqsReqId),
     );
     this.setState({ focusReq });
   }
 
   reqs() {
     return this.props.pagedReqs.results.map((req) => {
+      const reqId = req.id;
+      const reqsReqId = req.req_id;
       const props = {
-        highlighted: `${req.id}` === this.state.focusReq,
-        href: this.urlForReq(req.id),
+        highlighted: `${reqId}` === this.state.focusReq,
+        href: this.urlForReq(reqId, reqsReqId),
         key: req.id,
         onClick: (e) => {
           e.preventDefault();
-          this.setHighlight(`${req.id}`);
+          this.setHighlight(`${reqId}`, reqsReqId);
         },
         req,
       };
@@ -45,10 +47,10 @@ export class Policy extends React.Component {
     });
   }
 
-  urlForReq(reqId) {
+  urlForReq(reqId, reqsReqId) {
     const { policyId } = this.props.url.query;
     const page = this.props.url.query.page || '1';
-    return `/policy/${policyId}/${reqId}?page=${page}`;
+    return `/policy/${policyId}/${reqId}?page=${page}#${reqsReqId}`;
   }
 
   render() {
