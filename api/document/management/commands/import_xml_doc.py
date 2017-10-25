@@ -18,8 +18,33 @@ def fetch_policy(identifier: str):
         return Policy.objects.filter(omb_policy_id=identifier).first()
 
 
+def standardize_content(xml: etree.ElementBase):
+    """For ease of use, we don't require all text be wrapped in a "content"
+    tag. However, that idiom _is_ helpful when parsing, so let's add them
+    here."""
+    for element in xml.xpath('.//*[not(self::content) and not(./content)]'):
+        if element.text:
+            content_xml = etree.SubElement(element, 'content')
+            content_xml.text = element.text
+        element.text = None
+
+
+def clean_content(xml: etree.ElementBase):
+    """Remove beginning and trailing whitespace from <content> tags."""
+    for content_xml in xml.xpath('.//content'):
+        content_xml.text = (content_xml.text or '').lstrip()
+        last_child = content_xml.xpath('./*[last()]')
+        if last_child:
+            last_child = last_child[0]
+            last_child.tail = (last_child.tail or '').rstrip()
+        else:
+            content_xml.text = content_xml.text.rstrip()
+
+
 def import_xml_doc(policy: Policy, xml: etree.ElementBase):
     DocNode.objects.filter(policy=policy).delete()
+    standardize_content(xml)
+    clean_content(xml)
 
     root = convert_to_tree(xml, policy=policy)
     root.nested_set_renumber()
@@ -28,10 +53,20 @@ def import_xml_doc(policy: Policy, xml: etree.ElementBase):
                 policy.title_with_number)
 
 
+def content_text(xml_node: etree.ElementBase):
+    """Fetch just the text from a node. We'll assume it's been preprocessed to
+    have a single <content/> child."""
+    content_node = xml_node.find('./content')
+    if content_node is None:
+        return ''
+    else:
+        return ''.join(content_node.itertext())
+
+
 def convert_to_tree(xml_node, parent=None, **kwargs):
     cursor_args = {
         'node_type': xml_node.tag,
-        'text': (xml_node.text or '').strip(),
+        'text': content_text(xml_node),
         **kwargs,
     }
     if 'emblem' in xml_node.attrib:
@@ -41,7 +76,7 @@ def convert_to_tree(xml_node, parent=None, **kwargs):
     else:
         cursor = DocCursor.new_tree(**cursor_args)
 
-    for xml_child in xml_node:
+    for xml_child in xml_node.xpath('./*[not(self::content)]'):
         convert_to_tree(xml_child, cursor, **kwargs)
 
     return cursor

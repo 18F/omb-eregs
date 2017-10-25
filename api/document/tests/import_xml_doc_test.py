@@ -26,10 +26,10 @@ def test_import_xml_doc():
     xml = etree.fromstring("""
     <aroot>
         <subchild emblem="b">
-            Contents
+            <content>Contents</content>
         </subchild>
         <subchild>
-            Subchild 2 here
+            <content>Subchild 2 here</content>
             <subsubchild />
         </subchild>
     </aroot>
@@ -51,3 +51,67 @@ def test_convert_to_tree_root_emblems(xml_str, expected_emblem):
     xml = etree.fromstring(xml_str)
     result = import_xml_doc.convert_to_tree(xml)
     assert result.model.type_emblem == expected_emblem
+
+
+def test_standardize_content():
+    aroot = etree.fromstring("""
+    <aroot>
+        <childA>More text </childA>
+        <childB>
+            <content>Already exists</content>
+            <innerMost />
+        </childB>
+        <childC>
+            Something else
+        </childC>
+    </aroot>
+    """)
+    import_xml_doc.standardize_content(aroot)
+    assert aroot.findtext('./childA') == ''
+    assert aroot.findtext('./childA/content') == 'More text '
+    assert aroot.findtext('./childB/content') == 'Already exists'
+    assert aroot.findtext('./childB/innerMost') == ''
+    assert aroot.find('./childB/innerMost/content') is None
+    assert aroot.findtext('./childC') == ''
+    assert aroot.findtext('./childC/content').strip() == 'Something else'
+
+
+def test_clean_content():
+    aroot = etree.fromstring("""
+    <aroot>
+        <content> Some text <br />   </content>
+        <childA>
+            <content>
+                More    text
+            </content>
+        </childA>
+        <childB />
+    </aroot>
+    """)
+    import_xml_doc.clean_content(aroot)
+    assert aroot.findtext('./childA/content') == 'More    text'
+    content_xml = etree.tounicode(aroot.find('./content')).strip()
+    assert content_xml == '<content>Some text <br/></content>'
+
+
+def test_content_text():
+    xml = etree.fromstring("""
+    <element>
+        <content>Has <a>linked</a> text <strong>here</strong> there</content>
+    </element>
+    """)
+    expected = "Has linked text here there"
+    assert import_xml_doc.content_text(xml) == expected
+
+
+def test_content_text_no_content():
+    """When there is no immediate <content/> subchild, we shouldn't dive
+    deeper"""
+    xml = etree.fromstring("""
+    <element>
+        <subelement>
+            <content>Stuff</content>
+        </subelement>
+    </element>
+    """)
+    assert import_xml_doc.content_text(xml) == ''
