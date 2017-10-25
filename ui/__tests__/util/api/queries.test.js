@@ -1,5 +1,6 @@
 import {
   cleanSearchParams,
+  documentData,
   formatIssuance,
   homepageData,
   policyData,
@@ -144,6 +145,30 @@ describe('policyData()', () => {
     });
 
     const result = await policyData({ query: {} });
+    expect(result).toEqual({ statusCode: 404 });
+  });
+});
+
+describe('documentData()', () => {
+  beforeEach(() => {
+    endpoints.document.fetchOne.mockImplementationOnce(
+      () => Promise.resolve({ data: 'here' }),
+    );
+  });
+  it('hits the correct url', async () => {
+    const result = await documentData({ query: { policyId: '123' } });
+    expect(endpoints.document.fetchOne).toHaveBeenCalledWith('123');
+    expect(result).toEqual({ docNode: { data: 'here' } });
+  });
+  it('passes up 404s', async () => {
+    const err = new Error('Not found');
+    err.response = { status: 404 };
+    endpoints.document.fetchOne.mockReset();
+    endpoints.document.fetchOne.mockImplementationOnce(() => {
+      throw err;
+    });
+
+    const result = await documentData({ query: {} });
     expect(result).toEqual({ statusCode: 404 });
   });
 });

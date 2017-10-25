@@ -150,3 +150,15 @@ export async function policyData({ query }) {
     throw err;
   }
 }
+
+export async function documentData({ query }) {
+  try {
+    const docNode = await endpoints.document.fetchOne(query.policyId);
+    return { docNode };
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      return { statusCode: 404 };
+    }
+    throw err;
+  }
+}

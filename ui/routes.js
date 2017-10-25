@@ -6,6 +6,7 @@ const routes = Routes()
   .add('search-redirect', '/search-redirect/:lookup(agencies|policies|topics)', 'search-redirect')
   .add('policies')
   .add('policy', '/policy/:policyId(\\d+)/:reqId(\\d+)?', 'policy')
+  .add('document', '/document/:policyId(\\d+)', 'document')
   .add('privacy')
   .add('requirements');
 
