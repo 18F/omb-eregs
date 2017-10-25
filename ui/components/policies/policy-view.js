@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Link } from '../../routes';
-import ExternalLink from '../external-link';
+import Link from '../link';
 
 export default function Policy({ policy, topicsIds }) {
   const linkParams = {
@@ -18,19 +17,22 @@ export default function Policy({ policy, topicsIds }) {
         <div className="clearfix">
           <div className="requirements-links mb1 sm-col sm-col-12 md-col-6">
             <div className="circle-bg border gray-border center p1">
-              <Link route="requirements" params={linkParams}>
-                <a aria-label="Relevant requirements" className={countClass}>
-                  {relevantReqCount}
-                </a>
+              <Link
+                route="requirements"
+                params={linkParams}
+                aria-label="Relevant requirements"
+                className={countClass}
+              >
+                {relevantReqCount}
               </Link>
             </div> of&nbsp;
             {policy.total_reqs} requirements
              match your search
           </div>
           <div className="external-link icon-links sm-col sm-col-12 md-col-6">
-            <ExternalLink href={policy.original_url}>
+            <Link href={policy.original_url}>
               View original
-            </ExternalLink>
+            </Link>
           </div>
         </div>
       </section>

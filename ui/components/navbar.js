@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import Search from './search/search';
-import { Link } from '../routes';
+import Link from './link';
 
 export default function Navbar({ showSearch }) {
   let searchContainer;
@@ -19,19 +19,17 @@ export default function Navbar({ showSearch }) {
   return (
     <div className="overflow-auto">
       <div className="flex items-center navbar">
-        <Link route="homepage">
-          <a className="text-decoration-none flex navbar-link items-center">
-            <img
-              className="pl2 pr1"
-              alt="US flag"
-              width="50"
-              height="50"
-              src="/static/img/omb-logo.png"
-            />
-            <h1 className="navbar-title">
-                OMB Policy Library <sup>BETA</sup>
-            </h1>
-          </a>
+        <img
+          className="pl2 pr1"
+          alt="US flag"
+          width="50"
+          height="50"
+          src="/static/img/omb-logo.png"
+        />
+        <Link className="text-decoration-none" route="homepage">
+          <h1 className="navbar-title">
+              OMB Policy Library <sup>BETA</sup>
+          </h1>
         </Link>
         { searchContainer }
       </div>

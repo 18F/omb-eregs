@@ -2,7 +2,7 @@ import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Link } from '../routes';
+import Link from './link';
 
 export function Pagers({ count, route, router }) {
   let prevPage = null;
@@ -18,16 +18,16 @@ export function Pagers({ count, route, router }) {
   if (pageInt > 1) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt - 1 });
     prevPage = (
-      <Link route={route} params={modifiedQuery}>
-        <a aria-label="Previous page">&lt;</a>
+      <Link route={route} params={modifiedQuery} aria-label="Previous page">
+        &lt;
       </Link>
     );
   }
   if (nextOffset < count) {
     const modifiedQuery = Object.assign({}, query, { page: pageInt + 1 });
     nextPage = (
-      <Link route={route} params={modifiedQuery}>
-        <a aria-label="Next page">&gt;</a>
+      <Link route={route} params={modifiedQuery} aria-label="Next page">
+        &gt;
       </Link>
     );
   }

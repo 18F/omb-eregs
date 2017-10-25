@@ -27,6 +27,7 @@ export default function Req({ highlighted, href, onClick, req }) {
     );
   }
   const className = highlighted ? 'clearfix border' : 'clearfix';
+  // We avoid "Link" here as we don't want to trigger AJAXy loading
   return (
     <div id={req.req_id} className={className}>
       <p className="col col-8">

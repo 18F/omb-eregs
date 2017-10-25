@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Link } from '../routes';
+import Link from './link';
 
 export default function TabView({ active, params, route, tabName }) {
   if (active) {
@@ -9,9 +9,7 @@ export default function TabView({ active, params, route, tabName }) {
   }
   return (
     <li className="inline-block mr4">
-      <Link route={route} params={params}>
-        <a>{tabName}</a>
-      </Link>
+      <Link route={route} params={params}>{tabName}</Link>
     </li>
   );
 }
