@@ -54,6 +54,7 @@ export class Endpoint {
 
 export default {
   agencies: new Endpoint('agencies/'),
+  document: new Endpoint('document/'),
   policies: new Endpoint('policies/'),
   requirements: new Endpoint('requirements/'),
   topics: new Endpoint('topics/'),
