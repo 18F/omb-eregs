@@ -55,11 +55,11 @@ describe('<Policy />', () => {
 
       const [req123, req456] = [reqs.first(), reqs.last()];
       expect(req123.prop('highlighted')).toBeFalsy();
-      expect(req123.prop('href')).toEqual('/policy/5/123?page=8');
+      expect(req123.prop('href')).toEqual('/policy/5/123?page=8#11.22');
       expect(req123.prop('req').id).toEqual(123);
 
       expect(req456.prop('highlighted')).toBeTruthy();
-      expect(req456.prop('href')).toEqual('/policy/5/456?page=8');
+      expect(req456.prop('href')).toEqual('/policy/5/456?page=8#22.33');
       expect(req456.prop('req').id).toEqual(456);
     });
 
@@ -73,11 +73,11 @@ describe('<Policy />', () => {
       const clickEvent = { preventDefault: jest.fn() };
 
       req123.simulate('click', clickEvent);
-      expect(policy.setHighlight).toHaveBeenCalledWith('123');
+      expect(policy.setHighlight).toHaveBeenCalledWith('123', '11.22');
       expect(clickEvent.preventDefault).toHaveBeenCalled();
 
       req456.simulate('click', clickEvent);
-      expect(policy.setHighlight).toHaveBeenCalledWith('456');
+      expect(policy.setHighlight).toHaveBeenCalledWith('456', '22.33');
     });
   });
 
@@ -96,17 +96,17 @@ describe('<Policy />', () => {
     it('sets the appropriate state', () => {
       const policy = shallow(<Policy {...props} />);
       expect(policy.state('focusReq')).toBeUndefined();
-      policy.instance().setHighlight('123');
+      policy.instance().setHighlight('123', '11.22');
       expect(policy.state('focusReq')).toEqual('123');
     });
 
     it('calls the router', () => {
       const policy = shallow(<Policy {...props} />).instance();
-      policy.setHighlight('123');
+      policy.setHighlight('123', '11.22');
       expect(Router.router.changeState).toBeCalledWith(
         'replaceState',
-        '/policy?policyId=5&reqId=123&page=8',
-        '/policy/5/123?page=8',
+        '/policy?policyId=5&reqId=123&page=8#11.22',
+        '/policy/5/123?page=8#11.22',
       );
     });
   });
