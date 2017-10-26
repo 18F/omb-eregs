@@ -80,7 +80,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
     def get_object(self):
         """We'll allow fetching a single object matching multiple
         parameters."""
-        queryset = self.get_queryset()
+        queryset = Policy.objects.filter(public=True)
         identifier = self.kwargs.get('pk')  # the url parameter name
 
         obj = queryset.filter(omb_policy_id=identifier).first()
