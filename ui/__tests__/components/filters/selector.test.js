@@ -3,20 +3,18 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import { Selector } from '../../../components/filters/selector';
-import * as lookupSearch from '../../../lookup-search';
+import * as queries from '../../../util/api/queries';
 import { Router } from '../../../routes';
 
-jest.mock('../../../lookup-search', () => ({
-  apiNameField: { topics: null },
-  makeOptionLoader: jest.fn(() => () => []),
+jest.mock('../../../routes', () => ({ Router: { pushRoute: jest.fn() } }));
+jest.mock('../../../util/api/queries', () => ({
   redirectQuery: jest.fn(),
 }));
-jest.mock('../../../routes', () => ({ Router: { pushRoute: jest.fn() } }));
 
 
 describe('<Selector />', () => {
   it('changes the URL on selection', () => {
-    lookupSearch.redirectQuery.mockReturnValueOnce({ dummy: 'data' });
+    queries.redirectQuery.mockReturnValueOnce({ dummy: 'data' });
     const router = { pathname: '/some/path', query: { values: 'mocked' } };
 
     const el = shallow(
@@ -32,7 +30,7 @@ describe('<Selector />', () => {
     const autocompleter = el.childAt(1);
     autocompleter.prop('onChange')({ value: 8 });
 
-    expect(lookupSearch.redirectQuery).toHaveBeenCalledWith(
+    expect(queries.redirectQuery).toHaveBeenCalledWith(
       { values: 'mocked' }, 'insertHere', 8);
     expect(Router.pushRoute).toHaveBeenCalledWith(
       'requirements', { dummy: 'data' });
