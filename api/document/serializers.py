@@ -26,11 +26,12 @@ class RequirementSerializer(serializers.ModelSerializer):
 class DocCursorSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
     requirement = RequirementSerializer(read_only=True)
+    content = serializers.SerializerMethodField()
 
     class Meta:
         model = DocNode
         fields = ('identifier', 'node_type', 'type_emblem', 'text', 'depth',
-                  'children', 'requirement')
+                  'children', 'requirement', 'content')
 
     def to_representation(self, instance):
         """We want to serialize the wrapped model, not the cursor. However, we
@@ -42,3 +43,6 @@ class DocCursorSerializer(serializers.ModelSerializer):
         return self.__class__(
             self.context['cursor'].children(), many=True
         ).data
+
+    def get_content(self, instance):
+        return [c.serialize_content(instance) for c in instance.content()]

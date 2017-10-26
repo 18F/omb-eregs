@@ -23,6 +23,7 @@ def test_end_to_end():
         'text': '',
         'depth': 0,
         'requirement': None,
+        'content': [],
         'children': [
             {
                 'identifier': 'root_0__sect_1',
@@ -31,6 +32,10 @@ def test_end_to_end():
                 'text': 'Section 1',
                 'depth': 1,
                 'requirement': None,
+                'content': [{
+                    'content_type': '__text__',
+                    'text': 'Section 1',
+                }],
                 'children': [],
             },
             {
@@ -40,6 +45,7 @@ def test_end_to_end():
                 'text': '',
                 'depth': 1,
                 'requirement': None,
+                'content': [],
                 'children': [
                     {
                         'identifier': 'root_0__sect_2__par_a',
@@ -48,6 +54,7 @@ def test_end_to_end():
                         'text': '',
                         'depth': 2,
                         'requirement': None,
+                        'content': [],
                         'children': [
                             {
                                 'identifier': 'root_0__sect_2__par_a__par_1',
@@ -56,6 +63,10 @@ def test_end_to_end():
                                 'text': 'Paragraph (a)(1)',
                                 'depth': 3,
                                 'requirement': None,
+                                'content': [{
+                                    'content_type': '__text__',
+                                    'text': 'Paragraph (a)(1)',
+                                }],
                                 'children': [],
                             },
                         ],
@@ -67,6 +78,7 @@ def test_end_to_end():
                         'text': '',
                         'depth': 2,
                         'requirement': None,
+                        'content': [],
                         'children': [],
                     },
                 ],
@@ -118,3 +130,42 @@ def test_requirement():
         ],
         'verb': 'vvvv',
     }
+
+
+@pytest.mark.django_db
+def test_footnotes():
+    """The "content" field should contain serialized FootnoteCitations."""
+    policy = mommy.make(Policy)
+    para = DocNode.new_tree('para', '1', text='Some1 message2 here',
+                            policy=policy)
+    footnote1 = para.add_child('footnote', policy=policy).model
+    footnote2 = para.add_child('footnote', policy=policy).model
+    para.nested_set_renumber()
+    DocNode.objects.bulk_create(n.model for n in para.walk())
+    para.model.footnotecitations.create(
+        start=len('Some'), end=len('Some1'), footnote_node=footnote1)
+    para.model.footnotecitations.create(
+        start=len('Some1 message'), end=len('Some1 message2'),
+        footnote_node=footnote2)
+
+    result = serializers.DocCursorSerializer(para).data
+    assert result['content'] == [
+        {
+            'content_type': '__text__',
+            'text': 'Some',
+        }, {
+            'content_type': 'footnote_citation',
+            'text': '1',
+            'footnote_node': footnote1.identifier,
+        }, {
+            'content_type': '__text__',
+            'text': ' message',
+        }, {
+            'content_type': 'footnote_citation',
+            'text': '2',
+            'footnote_node': footnote2.identifier,
+        }, {
+            'content_type': '__text__',
+            'text': ' here',
+        }
+    ]

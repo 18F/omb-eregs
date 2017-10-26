@@ -2,6 +2,7 @@ from abc import abstractmethod
 from collections import Counter
 from typing import Optional
 
+from collections_extended import RangeMap
 from django.db import models
 from networkx import DiGraph
 from networkx.algorithms.dag import descendants
@@ -57,6 +58,44 @@ class DocNode(models.Model):
         root = self.as_cursor()
         root.add_models(descendant_models)
         return root
+
+    def flattened_annotations(self) -> RangeMap:
+        """Fetch all of our annotations and flatten overlaps arbitrarily (for
+        now)."""
+        annotations = RangeMap()
+        for fcite in self.footnotecitations.all():
+            annotations[fcite.start:fcite.end] = fcite    # flattens overlaps
+        return annotations
+
+    def content(self):
+        """Query all of our annotation types to markup the content of this
+        DocNode. Ensure all text is wrapped in an annotation by wrapping it in
+        the PlainText annotation. We'll flatten our overlaps arbitrarily for
+        now."""
+        if not self.text:
+            return []
+
+        annotations = self.flattened_annotations()
+        wrap_all_text(annotations, len(self.text))
+
+        return list(annotations.values())
+
+
+def wrap_all_text(annotations: RangeMap, text_length: int):
+    """Ensure that all text is in an annotation by wrapping it in
+    PlainText."""
+    ranges = list(annotations.ranges())     # make a copy
+    previous_end = 0
+    for next_start, next_end, _ in ranges:
+        if next_start != previous_end:
+            annotations[previous_end:next_start] = PlainText(
+                start=previous_end, end=next_start)
+        previous_end = next_end
+
+    # Account for trailing text
+    if previous_end != text_length:
+        annotations[previous_end:text_length] = PlainText(
+            start=previous_end, end=text_length)
 
 
 class DocCursor():
@@ -174,6 +213,13 @@ class Annotation(models.Model):
             'content_type': self.content_type,
             'text': doc_node.text[self.start:self.end],
         }
+
+
+class PlainText(Annotation):
+    content_type = '__text__'
+
+    class Meta:
+        abstract = True
 
 
 class FootnoteCitation(Annotation):

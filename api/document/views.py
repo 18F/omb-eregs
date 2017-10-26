@@ -16,6 +16,6 @@ class TreeView(RetrieveAPIView):
         else:
             query_args['depth'] = 0
         queryset = DocNode.objects.select_related('requirement').\
-            prefetch_related('requirement__topics')
+            prefetch_related('footnotecitations', 'requirement__topics')
         root_struct = get_object_or_404(queryset, **query_args)
         return root_struct.subtree(queryset)
