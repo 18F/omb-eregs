@@ -8,6 +8,7 @@ from model_mommy import mommy
 from document.models import DocNode
 from document.serializers import DocCursorSerializer
 from document.tests.utils import random_doc
+from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic
 
 
@@ -15,7 +16,7 @@ from reqs.models import Policy, Requirement, Topic
 @pytest.mark.urls('document.urls')
 def test_404s(client):
     policy = mommy.make(Policy)
-    root = DocNode.new_tree('root', '0', policy=policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sect', policy=policy)
     root.nested_set_renumber()
     DocNode.objects.bulk_create(n.model for n in root.walk())
@@ -32,7 +33,7 @@ def test_404s(client):
 @pytest.mark.urls('document.urls')
 def test_correct_data(client):
     policy = mommy.make(Policy)
-    root = DocNode.new_tree('root', '0', policy=policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
     sect1 = root.add_child('sect', policy=policy)
     root.add_child('sect', policy=policy)
     sect1.add_child('par', 'a', policy=policy)
