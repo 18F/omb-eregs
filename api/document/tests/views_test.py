@@ -78,6 +78,8 @@ def test_query_count(client):
     with CaptureQueriesContext(connection) as capture:
         client.get(f"/{policy.pk}")
         # Query 1: lookup root docnode by policy pk, joining w/ req
-        # 2: fetch child nodes, joining w/ requirements
-        # 3: fetch topics related to those requirements
-        assert len(capture) == 3
+        # 2: fetch footnote citations for the root
+        # 3: fetch child nodes, joining w/ requirements
+        # 4: fetch topics related to those requirements
+        # 5: fetch footnote citations for child nodes
+        assert len(capture) == 5
