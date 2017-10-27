@@ -4,6 +4,7 @@ from model_mommy import mommy
 
 from document.management.commands import import_xml_doc
 from document.models import DocNode
+from document.tree import DocCursor
 from reqs.models import Policy
 
 
@@ -36,7 +37,8 @@ def test_import_xml_doc():
 
     import_xml_doc.import_xml_doc(policy, xml)
     assert DocNode.objects.count() == 4
-    root = DocNode.objects.get(identifier='aroot_1').subtree()
+    root_model = DocNode.objects.get(identifier='aroot_1')
+    root = DocCursor.load_from_model(root_model)
     assert root['subchild_b'].model.text == 'Contents'
     assert root['subchild_2']['subsubchild_1'].model.node_type == 'subsubchild'
 
