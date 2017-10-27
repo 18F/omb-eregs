@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ContactEmail} from './contact-email';
+import { ContactEmail } from './contact-email';
 
 export default function Disclaimer() {
   return (
