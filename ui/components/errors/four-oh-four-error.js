@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { ContactEmail } from '../contact-email';
 import Link from '../link';
 import HeaderFooter from '../header-footer';
+
 
 export default function FourOhFour() {
   return (
@@ -11,7 +13,7 @@ export default function FourOhFour() {
           <h1 className="h2">We can&rsquo;t find the page you&rsquo;re looking for.</h1>
           <p className="content">
             Visit our <Link route="homepage">homepage</Link> or
-            {' '}<Link href="mailto:ofcio@omb.eop.gov">contact us</Link>{' '}
+            {' '}<ContactEmail text="contact us" />{' '}
             if you need additional help.
           </p>
           <div className="my3">

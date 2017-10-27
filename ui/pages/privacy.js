@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { email, ContactEmail } from '../components/contact-email';
 import HeaderFooter from '../components/header-footer';
 import Link from '../components/link';
 
@@ -89,7 +90,7 @@ export function PrivacyView() {
       <p className="max-width-3">
         Users of this website may send the OMB feedback or report an issue by
         sending an email to
-        {' '}<Link href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</Link>.
+        {' '}<ContactEmail text={email} />.
         If you choose to send us your personally identifiable information, we
         will only use that information to respond to your message. We only
         share the information you give us with another government agency if
@@ -113,14 +114,14 @@ export function PrivacyView() {
         13. This site is not intended to solicit or collection information of
         any kind from children under age 13. If you believe that we have
         received information from a child under age 13, please contact us at
-        {' '}<Link href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</Link>.
+        {' '}<ContactEmail text={email} />.
       </p>
 
       <h4>Questions about the privacy policy</h4>
       <p className="max-width-3">
         If you have questions about this privacy policy or the privacy
         practices of the OMB, please submit your questions to
-        {' '}<Link href="mailto:ofcio@omb.eop.gov">ofcio@omb.eop.gov</Link>.
+        {' '}<ContactEmail text={email} />.
       </p>
 
     </div>

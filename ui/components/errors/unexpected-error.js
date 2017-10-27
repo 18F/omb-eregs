@@ -2,6 +2,8 @@ import HTTPStatus from 'http-status';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { ContactEmail } from '../contact-email';
+
 /* Note that we intentionally avoid "Link" to minimize sources of error */
 
 export default function UnexpectedError({ statusCode }) {
@@ -10,7 +12,7 @@ export default function UnexpectedError({ statusCode }) {
       <h1>{HTTPStatus[statusCode] || 'Unexpected error'}</h1>
       <p>
         Visit our <a href="/">homepage</a> or{' '}
-        <a href="mailto:ofcio@omb.eop.gov">contact us</a> if{' '}
+        <ContactEmail text="contact us" /> if{' '}
         you need additional help.
       </p>
     </section>

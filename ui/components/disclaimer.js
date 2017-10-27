@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Link from './link';
+import {ContactEmail} from './contact-email';
 
 export default function Disclaimer() {
   return (
@@ -17,7 +17,7 @@ export default function Disclaimer() {
         We&apos;re designing the site and adding policies in phases.
         <br />
         Questions or comments?{' '}
-        <Link href="mailto:ofcio@omb.eop.gov">Email ofcio@omb.eop.gov</Link>.
+        <ContactEmail />.
       </div>
     </div>
   );
