@@ -3,12 +3,13 @@ from model_mommy import mommy
 
 from document import serializers
 from document.models import DocNode
+from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic
 
 
 def test_end_to_end():
     """Create a tree, then serialize it."""
-    root = DocNode.new_tree('root', '0')
+    root = DocCursor.new_tree('root', '0')
     root.add_child('sect', text='Section 1')
     sect2 = root.add_child('sect')
     pa = sect2.add_child('par', 'a')
@@ -92,7 +93,7 @@ def test_requirement():
     """The 'requirement' field should serialize an associated Requirement"""
     policy = mommy.make(Policy)
     topics = [mommy.make(Topic, name='AaA'), mommy.make(Topic, name='BbB')]
-    root = DocNode.new_tree('policy', '1', policy=policy)
+    root = DocCursor.new_tree('policy', '1', policy=policy)
     req_node = root.add_child('req', policy=policy)
     root.nested_set_renumber()
     root.model.save()
@@ -136,8 +137,8 @@ def test_requirement():
 def test_footnotes():
     """The "content" field should contain serialized FootnoteCitations."""
     policy = mommy.make(Policy)
-    para = DocNode.new_tree('para', '1', text='Some1 message2 here',
-                            policy=policy)
+    para = DocCursor.new_tree('para', '1', text='Some1 message2 here',
+                              policy=policy)
     footnote1 = para.add_child('footnote', policy=policy).model
     footnote2 = para.add_child('footnote', policy=policy).model
     para.nested_set_renumber()

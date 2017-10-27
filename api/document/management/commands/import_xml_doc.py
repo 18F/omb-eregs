@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from lxml import etree
 
 from document.models import DocNode
+from document.tree import DocCursor
 from reqs.models import Policy
 
 logger = logging.getLogger(__name__)
@@ -38,7 +39,7 @@ def convert_to_tree(xml_node, parent=None, **kwargs):
     if parent:
         cursor = parent.add_child(**cursor_args)
     else:
-        cursor = DocNode.new_tree(**cursor_args)
+        cursor = DocCursor.new_tree(**cursor_args)
 
     for xml_child in xml_node:
         convert_to_tree(xml_child, cursor, **kwargs)
