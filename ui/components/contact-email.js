@@ -3,7 +3,7 @@ import React from 'react';
 
 import Link from './link';
 
-export const email = 'ofcio@omb.eop.gov';
+export const email = 'PolicyLibrary@omb.eop.gov';
 const mailto = `mailto:${email}`;
 const mailtext =  `Email ${email}`;
 
