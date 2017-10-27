@@ -17,7 +17,7 @@ describe('<ContactEmail />', () => {
     });
   });
   describe('when given a text prop', () => {
-    const result = mount(<ContactEmail text='something'/>);
+    const result = mount(<ContactEmail text="something" />);
     it('Has the expected href value', () => {
       expect(result.find(expr).length).toEqual(1);
     });
@@ -25,6 +25,4 @@ describe('<ContactEmail />', () => {
       expect(result.find(expr).text()).toEqual('something');
     });
   });
-
 });
-

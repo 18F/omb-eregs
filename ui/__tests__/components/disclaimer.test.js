@@ -20,5 +20,4 @@ describe('<Disclaimer />', () => {
       expect(result.find(`a[href="mailto:${email}"]`).text()).toEqual(`Email ${email}`);
     });
   });
-
 });
