@@ -6,9 +6,9 @@ import { email } from '../../components/contact-email';
 
 describe('<Disclaimer />', () => {
   describe('returns the right contents', () => {
-    it('has the right number of div elements', () => {
+    it('contains an expected string', () => {
       const result = mount(<Disclaimer />);
-      expect(result.find('div').length).toEqual(3);
+      expect(result.text()).toMatch(/An official website of the United States government/);
     });
     it('has the disclaimer-flag img element', () => {
       const result = mount(<Disclaimer />);
