@@ -156,3 +156,27 @@ def test_nonpublic_reqs():
     assert policy.requirements.count() == 5
     assert response['results'][0]['relevant_reqs'] == 4
     assert response['results'][0]['total_reqs'] == 4
+
+
+@pytest.mark.django_db
+def test_omb_policy_id():
+    client = APIClient()
+    omb_policy_id = "M-123-4"
+    path = "/policies/{0}".format(omb_policy_id)
+    response = client.get(path)
+    assert response.status_code == 301
+    mommy.make(Policy, omb_policy_id=omb_policy_id)
+    response = client.get(path + '.json').json()
+    assert response['omb_policy_id'] == omb_policy_id
+
+
+@pytest.mark.django_db
+def test_pk_id():
+    client = APIClient()
+    pk_id = 123
+    path = "/policies/{0}".format(pk_id)
+    response = client.get(path)
+    assert response.status_code == 301
+    mommy.make(Policy, pk=pk_id)
+    response = client.get(path + '.json').json()
+    assert response['id'] == pk_id
