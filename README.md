@@ -6,7 +6,7 @@ The repository contains a Django application where requirements are maintained b
 Brought to you by the 18F [eRegulations](https://eregs.github.io) team.
 
 See our bi-weekly demos [on
-YouTube](https://www.youtube.com/playlist?list=PLd9b-GuOJ3nEJsDD5BZ5qlVkr9RZ0PivQ).
+YouTube](https://www.youtube.com/playlist?list=PLu2xTIVb2mmQb-QURyZQEoqK4c2XrW431).
 
 ## Status
 
@@ -245,7 +245,6 @@ And deploy!
 
 See the [eRegulations overview](https://eregs.github.io/) for context about eRegulations, which is a multi-agency project.
 
-To learn how to set up OMB eRegulations (locally or in production) and customize it/develop for it, see [the documentation hosted on Read the Docs](https://readthedocs.org/projects/omb-eregs/).
 
 If you're interested in contributing to OMB eRegulations, see [the contributing guidelines](CONTRIBUTING.md).
 
