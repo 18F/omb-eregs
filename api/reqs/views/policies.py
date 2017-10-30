@@ -1,4 +1,5 @@
 from django.db.models import Count, IntegerField, OuterRef, Subquery
+from django.http import Http404
 from rest_framework import viewsets
 
 from reqs.filtersets import (AgencyFilter, AgencyGroupFilter, PolicyFilter,
@@ -75,3 +76,19 @@ class PolicyViewSet(viewsets.ModelViewSet):
             relevant_reqs=relevant_reqs_count(self.request.GET),
         ).filter(relevant_reqs__gt=0)
         return queryset
+
+    def get_object(self):
+        """We'll allow fetching a single object matching multiple
+        parameters."""
+        queryset = Policy.objects.filter(public=True)
+        identifier = self.kwargs.get('pk')  # the url parameter name
+
+        obj = queryset.filter(omb_policy_id=identifier).first()
+        if not obj and identifier.isdigit():
+            obj = queryset.filter(pk=identifier).first()
+        if not obj:
+            raise Http404()
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj
