@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
-import Fallback from '../components/nodeRenderers/fallback';
-import heading from '../components/nodeRenderers/heading';
-import para from '../components/nodeRenderers/para';
-import policy from '../components/nodeRenderers/policy';
-import sec from '../components/nodeRenderers/sec';
+import Fallback from '../components/node-renderers/fallback';
+import heading from '../components/node-renderers/heading';
+import para from '../components/node-renderers/para';
+import policy from '../components/node-renderers/policy';
+import sec from '../components/node-renderers/sec';
 import { documentData } from '../util/api/queries';
 
 const componentMapping = {

@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import Heading from '../../../components/nodeRenderers/heading';
+import Heading from '../../../components/node-renderers/heading';
 
 describe('<Heading />', () => {
   it('includes node text and identifier', () => {

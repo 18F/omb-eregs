@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import Section from '../../../components/nodeRenderers/sec';
+import Section from '../../../components/node-renderers/sec';
 
 describe('<Section />', () => {
   const docNode = { identifier: 'aaa_1__bbb_2' };

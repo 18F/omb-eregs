@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import Paragraph from '../../../components/nodeRenderers/para';
+import Paragraph from '../../../components/node-renderers/para';
 
 describe('<Paragraph />', () => {
   const docNode = { identifier: 'aaa_1__bbb_2__ccc_3', text: 'Textextext' };

@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import Fallback from '../../../components/nodeRenderers/fallback';
+import Fallback from '../../../components/node-renderers/fallback';
 
 const ORIGINALENV = { ...process.env };
 beforeEach(() => {

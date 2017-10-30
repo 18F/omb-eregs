@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import Policy from '../../../components/nodeRenderers/policy';
+import Policy from '../../../components/node-renderers/policy';
 
 describe('<Policy />', () => {
   const docNode = { identifier: 'aaa_1__bbb_2' };
