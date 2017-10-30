@@ -6,7 +6,7 @@ The repository contains a Django application where requirements are maintained b
 Brought to you by the 18F [eRegulations](https://eregs.github.io) team.
 
 See our bi-weekly demos [on
-YouTube](https://www.youtube.com/playlist?list=PLd9b-GuOJ3nEJsDD5BZ5qlVkr9RZ0PivQ).
+YouTube](https://www.youtube.com/playlist?list=PLu2xTIVb2mmQb-QURyZQEoqK4c2XrW431).
 
 ## Status
 
