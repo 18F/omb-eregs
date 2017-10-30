@@ -20,7 +20,7 @@ services:
   python: &PYTHON     # This command is out of order to aid with config reuse
     image: python:3.6.2
     volumes:
-      - $PWD:/usr/src/app:delegated
+      - .:/usr/src/app:delegated
     working_dir: /usr/src/app/api
     stdin_open: true
     tty: true
@@ -78,7 +78,7 @@ services:
   prod: &PROD_UI
     image: node:6
     volumes:
-      - $PWD:/usr/src/app:delegated
+      - .:/usr/src/app:delegated
     working_dir: /usr/src/app/ui
     command: .docker/deps_ok_then npm start
     environment:

@@ -245,7 +245,6 @@ And deploy!
 
 See the [eRegulations overview](https://eregs.github.io/) for context about eRegulations, which is a multi-agency project.
 
-To learn how to set up OMB eRegulations (locally or in production) and customize it/develop for it, see [the documentation hosted on Read the Docs](https://readthedocs.org/projects/omb-eregs/).
 
 If you're interested in contributing to OMB eRegulations, see [the contributing guidelines](CONTRIBUTING.md).
 
