@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import Optional
+from typing import Callable, Optional
 
 from networkx import DiGraph
 from networkx.algorithms.dag import descendants
@@ -120,6 +120,12 @@ class DocCursor():
                                sort_order=parent.next_sort_order())
             parent = self.__class__(self.tree, child.identifier)
         return self
+
+    def filter(self, filter_fn: Callable[[DocNode], bool]):
+        """Find a model in the tree that matches our filtering function."""
+        for identifier, model in self.tree.nodes(data='model'):
+            if filter_fn(model):
+                yield self.__class__(self.tree, identifier)
 
 
 class XMLAwareCursor(DocCursor):
