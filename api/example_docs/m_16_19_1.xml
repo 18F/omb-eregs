@@ -11,13 +11,16 @@
   <sec>
     <heading>Background</heading>
     <para>
-      In 2010, the Office of Management and Budget (OMB) launched the Federal
-      Data Center Consolidation Initiative (FDCCI) to promote the use of green
-      IT by reducing the overall energy and real estate footprint of
-      government data centers; reduce the cost of data center hardware,
-      software, and operations; increase the overall IT security posture of
-      the Federal Government; and shift IT investments to more efficient
-      computing platforms and technologies.
+      <content>
+        In 2010, the Office of Management and Budget (OMB) launched the
+        Federal Data Center Consolidation Initiative (FDCCI) to promote the
+        use of green IT by reducing the overall energy and real estate
+        footprint of government data centers; reduce the cost of data center
+        hardware, software, and operations; increase the overall IT security
+        posture of the Federal Government; and shift IT investments to more
+        efficient computing platforms and
+        technologies.<footnote_citation>1</footnote_citation>
+      </content>
       <footnote emblem="1">
         The FDCCI was first established by OMB “Memo for CIOs: Federal Data
         Center Consolidation Initiative,” issued on February 26, 2010, and
@@ -25,26 +28,32 @@
       </footnote>
     </para>
     <para>
-      In December 2014, the President signed into law the Federal Information
-      Technology Acquisition Reform Act (FITARA), which enacts and builds
-      upon the requirements of the FDCCI. FITARA requires that agencies submit
-      annual reports that are to include: comprehensive data center
-      inventories, multi-year strategies to consolidate and optimize data
-      centers, performance metrics and a timeline for agency activities, and
-      yearly calculations of investment and cost savings.
+      <content>
+        In December 2014, the President signed into law the Federal
+        Information Technology Acquisition Reform Act
+        (FITARA),<footnote_citation>2</footnote_citation> which enacts and
+        builds upon the requirements of the FDCCI. FITARA requires that
+        agencies submit annual reports that are to include: comprehensive data
+        center inventories, multi-year strategies to consolidate and optimize
+        data centers, performance metrics and a timeline for agency
+        activities, and yearly calculations of investment and cost savings.
+      </content>
       <footnote emblem="2">
         Title VIII, Subtitle D of the National Defense Authorization Act
         (NDAA) for Fiscal Year 2015, Pub. L. No. 113-291.
       </footnote>
     </para>
     <para>
-      In addition, FITARA requires the Administrator of the Office of
-      E-Government and Information Technology (henceforth referred to as the
-      Office of the Federal Chief Information Officer (OFCIO)) to establish
-      and publish cost savings and optimization improvements, provide public
-      updates on cumulative cost savings and optimization improvements, and
-      review agencies’ data center inventories and the implementation of data
-      center management strategies.
+      <content>
+        In addition, FITARA requires the Administrator of the Office of
+        E-Government and Information Technology (henceforth referred to as the
+        Office of the Federal Chief Information Officer
+        (OFCIO)<footnote_citation>3</footnote_citation>) to establish and
+        publish cost savings and optimization improvements, provide public
+        updates on cumulative cost savings and optimization improvements, and
+        review agencies’ data center inventories and the implementation of
+        data center management strategies.
+      </content>
       <footnote emblem="3">
         This office was established in accordance with Section 101 of the
         E-government Act of 2002, codified at 44 U.S.C.  § 3602, and is headed
@@ -67,19 +76,25 @@
       Optimization Initiative (DCOI) established in this memorandum.
     </para>
     <para>
-      The DCOI, as described in this memorandum, requires agencies to develop
-      and report on data center strategies to consolidate inefficient
-      infrastructure, optimize existing facilities, improve security posture,
-      achieve cost savings, and transition to more efficient infrastructure,
-      such as cloud services and inter-agency shared services.
+      <content>
+        The DCOI, as described in this memorandum, requires agencies to
+        develop and report on data center strategies to consolidate
+        inefficient infrastructure, optimize existing facilities, improve
+        security posture, achieve cost savings, and transition to more
+        efficient infrastructure, such as cloud services and inter-agency
+        shared services.<footnote_citation>4</footnote_citation>
+      </content>
       <footnote emblem="4">
         Federal Information Technology Shared Services Strategy, May 2, 2012,
         https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/shared_services_strategy.pdf. 
       </footnote>
     </para>
     <para>
-      The requirements in this memorandum apply to all CFO Act agencies,
-      including the Department of Defense.
+      <content>
+        The requirements in this memorandum apply to all CFO Act
+        agencies,<footnote_citation>5</footnote_citation> including the
+        Department of Defense.<footnote_citation>6</footnote_citation>
+      </content>
       <footnote emblem="5">
         See Chief Financial Officers Act of 1990, Pub. L. No. 101–576.
       </footnote>
@@ -96,12 +111,16 @@
     <sec>
       <heading>Leadership and Responsibilities</heading>
       <para>
-        All data center infrastructure and services, including contracts for
-        third-party data centers and services agency-wide, shall be managed by
-        the agency CIO in a manner consistent with FITARA and OMB Memorandum
-        M-15-14, “Management and Oversight of Information Technology.” The
-        agency CIO shall be responsible for implementing and measuring
-        progress toward meeting the goals set forth in this memorandum.
+        <content>
+          All data center infrastructure and services, including contracts for
+          third-party data centers and services agency-wide, shall be managed
+          by the agency CIO in a manner consistent with
+          FITARA<footnote_citation>7</footnote_citation> and OMB Memorandum
+          M-15-14, “Management and Oversight of Information
+          Technology.”<footnote_citation>8</footnote_citation> The agency CIO
+          shall be responsible for implementing and measuring progress toward
+          meeting the goals set forth in this memorandum.
+        </content>
         <footnote emblem="7">
           Title VIII, Subtitle D of the National Defense Authorization Act
           (NDAA) for Fiscal Year 2015, Pub. L. No. 113-291.
@@ -118,17 +137,21 @@
       <sec>
         <heading>Development Freeze for New and Current Data Centers</heading>
         <para>
-          Beginning 180 days after issuance of this memorandum, agencies may
-          not budget any funds or resources toward initiating a new data
-          center or significantly expanding an existing data center without
-          approval from OMB OFCIO. To request such approval, agencies must
-          submit a written justification that includes an analysis of
-          alternatives (including opportunities for cloud services,
-          inter-agency shared services, and third party co-location) and an
-          explanation of the net reduction in the agency’s data center
-          inventory that will be facilitated by the new or expanded data
-          center (such as through consolidation of multiple existing data
-          centers into a single new data center).
+          <content>
+            Beginning 180 days after issuance of this memorandum, agencies may
+            not budget any funds or resources toward initiating a new data
+            center or significantly
+            expanding<footnote_citation>9</footnote_citation> an existing data
+            center without approval from OMB
+            OFCIO.<footnote_citation>10</footnote_citation> To request such
+            approval, agencies must submit a written justification that
+            includes an analysis of alternatives (including opportunities for
+            cloud services, inter-agency shared services, and third party
+            co-location) and an explanation of the net reduction in the
+            agency’s data center inventory that will be facilitated by the new
+            or expanded data center (such as through consolidation of multiple
+            existing data centers into a single new data center).
+          </content>
           <footnote emblem="9">
             The General Services Administration (GSA) Office of
             Government-wide Policy (OGP) will coordinate with OMB to define
@@ -144,24 +167,29 @@
       <sec>
         <heading>Consolidation and Closure of Existing Data Centers</heading>
         <para>
-          As previously required by the FDCCI, agencies shall continue to
-          principally reduce application, system, and database inventories to
-          essential enterprise levels by increasing the use of virtualization
-          to enable pooling of storage, network and computer resources, and
-          dynamic allocation on-demand. Thereafter, agencies shall evaluate
-          options for the consolidation and closure of existing data centers,
-          by (in order of priority):
+          <content>
+            As previously required by the FDCCI, agencies shall continue to
+            principally reduce application, system, and database inventories
+            to essential enterprise levels by increasing the use of
+            virtualization to enable pooling of storage, network and computer
+            resources, and dynamic allocation on-demand. Thereafter, agencies
+            shall evaluate options for the consolidation and closure of
+            existing data centers,<footnote_citation>11</footnote_citation> by
+            (in order of priority):
+          </content>
           <footnote emblem="11">
             This requirement does not apply to GSA OGP designated inter-agency
             shared services data centers.
           </footnote>
           <list>
             <listitem emblem="1">
-              1. Transitioning to provisioned services, including configurable
-              and flexible technology such as Software as a Service (SaaS),
-              Platform as a Service (PaaS), and Infrastructure as a Service
-              (IaaS) to the furthest extent practicable, consistent with the
-              Cloud First policy.
+              <content>
+                1. Transitioning to provisioned services, including configurable
+                and flexible technology such as Software as a Service (SaaS),
+                Platform as a Service (PaaS), and Infrastructure as a Service
+                (IaaS) to the furthest extent practicable, consistent with the
+                Cloud First policy.<footnote_citation>12</footnote_citation>
+              </content>
               <footnote emblem="12">
                 Federal Cloud Computing Strategy, February 8, 2011,
                 https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/federal-cloud-computing-strategy.pdf.
@@ -181,17 +209,21 @@
       <sec>
         <heading>Cloud Investment</heading>
         <para>
-          Cloud environments are scalable and allow agencies to provision
-          resources as required, ondemand.  Consistent with the Cloud First
-          policy, agencies shall use cloud infrastructure where possible when
-          planning new mission or support applications or consolidating
-          existing applications. Agencies should take into consideration cost,
-          security requirements, and application needs when evaluating cloud
-          environments. As required by FITARA, agencies utilizing cloud
-          services shall do so in a manner that is consistent with
-          requirements of the Federal Risk and Authorization Management
-          Program (FedRAMP) and National Institute of Standards and Technology
-          (NIST) guidance.
+          <content>
+            Cloud environments are scalable and allow agencies to provision
+            resources as required,
+            ondemand.<footnote_citation>13</footnote_citation> Consistent with
+            the Cloud First policy, agencies shall use cloud infrastructure
+            where possible when planning new mission or support applications
+            or consolidating existing applications. Agencies should take into
+            consideration cost, security requirements, and application needs
+            when evaluating cloud environments. As required by FITARA,
+            agencies utilizing cloud services shall do so in a manner that is
+            consistent with requirements of the Federal Risk and Authorization
+            Management Program (FedRAMP) and National Institute of Standards
+            and Technology (NIST)
+            guidance.<footnote_citation>14</footnote_citation>
+          </content>
           <footnote emblem="13">Ibid.</footnote>
           <footnote emblem="14">See FY2015 NDAA Sec. 834(3)(c).</footnote>
         </para>
@@ -199,14 +231,17 @@
       <sec>
         <heading>Shared Services Managing Partner</heading>
         <para>
-          To support the shared services efforts described by this memorandum,
-          the General Services Administration (GSA) Office of Government-wide
-          Policy (OGP) shall serve as the managing partner of the Federal
-          Government’s data center line of business and data center shared
-          services. OGP, in consultation with the Unified Shared Services
-          Management office, shall establish and maintain a data center shared
-          services marketplace and coordinate shared services for inter-agency
-          consumption by:
+          <content>
+            To support the shared services efforts described by this
+            memorandum, the General Services Administration (GSA) Office of
+            Government-wide Policy (OGP) shall serve as the managing partner
+            of the Federal Government’s data center line of
+            business<footnote_citation>15</footnote_citation> and data center
+            shared services. OGP, in consultation with the Unified Shared
+            Services Management office, shall establish and maintain a data
+            center shared services marketplace and coordinate shared services
+            for inter-agency consumption by:
+          </content>
           <footnote emblem="15">
             Formed in 2004, lines of business (LOB) are cross-agency
             initiatives to define, design, implement and monitor a set of
@@ -275,17 +310,19 @@
       <sec>
         <heading>Classification of Physical Data Centers</heading>
         <para>
-          For the purposes of this memorandum, rooms with at least one server,
-          providing services (whether in a production, test, staging,
-          development, or any other environment) are considered data centers.
-          However, rooms containing only print servers, routing equipment,
-          switches, security devices (such as firewalls), or other
-          telecommunications components shall not be considered data centers.
-          Agencies shall perform a comprehensive review of their data center
-          inventories and continue to maintain complete and updated data
-          center inventories. This comprehensive review shall be completed by
-          August 31, 2016, to align with the Integrated Data Collection (IDC)
-          process.
+          <content>
+            For the purposes of this memorandum, rooms with at least one server,
+            providing services (whether in a production, test, staging,
+            development, or any other environment) are considered data centers.
+            However, rooms containing only print servers, routing equipment,
+            switches, security devices (such as firewalls), or other
+            telecommunications components shall not be considered data centers.
+            Agencies shall perform a comprehensive review of their data center
+            inventories and continue to maintain complete and updated data
+            center inventories. This comprehensive review shall be completed by
+            August 31, 2016, to align with the Integrated Data Collection (IDC)
+            process.<footnote_citation>16</footnote_citation>
+          </content>
           <footnote emblem="16">
             Data centers containing only print servers that were previously
             reported as “closed” shall remain classified as closed data
@@ -293,16 +330,20 @@
           </footnote>
         </para>
         <para>
-          Data centers shall be categorized into two groups: tiered data
-          centers and non-tiered data centers. Tiered data centers are defined
-          as those that utilize each of the following: 1) a separate physical
-          space for IT infrastructure; 2) an uninterruptible power supply; 3)
-          a dedicated cooling system or zone; and 4) a backup power generator
-          for prolonged power outages. All other data centers shall be
-          considered non-tiered data centers.  Private sector-provided cloud
-          services are not considered data centers for the purposes of this
-          memorandum, but must continue to be included in agencies’ quarterly
-          inventory data submissions to OMB.
+          <content>
+            Data centers shall be categorized into two groups:
+            tiered<footnote_citation>17</footnote_citation> data centers and
+            non-tiered data centers. Tiered data centers are defined as those
+            that utilize each of the following: 1) a separate physical space
+            for IT infrastructure; 2) an uninterruptible power supply; 3) a
+            dedicated cooling system or zone; and 4) a backup power generator
+            for prolonged power outages. All other data centers shall be
+            considered non-tiered data
+            centers.<footnote_citation>18</footnote_citation> Private
+            sector-provided cloud services are not considered data centers for
+            the purposes of this memorandum, but must continue to be included
+            in agencies’ quarterly inventory data submissions to OMB.
+          </content>
           <footnote emblem="17">
             The term “tiered” and the definitions that follow are derived from
             the Uptime Institute’s Tier Classification System; however, this
@@ -330,12 +371,15 @@
       <sec>
         <heading>Energy Metering and Power Efficiency</heading>
         <para>
-          Agencies shall install automated energy metering tools and shall use
-          these to collect and report energy usage data in their data centers
-          to OMB. The March 19, 2015, Executive Order 13693, “Planning for
-          Federal Sustainability in the Next Decade,” requires agencies to
-          install and monitor advanced energy meters in data centers by
-          September 30, 2018.
+          <content>
+            Agencies shall install automated energy metering tools and shall
+            use these to collect and report energy usage data in their data
+            centers to OMB. The March 19, 2015, Executive Order 13693,
+            “Planning for Federal Sustainability in the Next Decade,” requires
+            agencies to install and monitor advanced energy meters in data
+            centers by September 30,
+            2018.<footnote_citation>19</footnote_citation>
+          </content>
           <footnote emblem="19">
             Executive Order, “Planning for Federal Sustainability in the Next
             Decade”
@@ -343,13 +387,17 @@
           </footnote>
         </para>
         <para>
-          Consistent with the Implementing Instructions for Executive Order
-          13693 (E.O. Implementing Instructions), energy metering tools shall
-          enable the active tracking of PUE for the data center and shall be
-          installed in all tiered Federal data centers by September 30, 2018.
-          The E.O. Implementing Instructions also advise that “[a]ll existing
-          and new data centers shall have at least one certified Data Center
-          Energy Practitioner (DCEP) assigned to manage its performance.”
+          <content>
+            Consistent with the Implementing Instructions for Executive Order
+            13693 (E.O. Implementing Instructions), energy metering tools
+            shall enable the active tracking of PUE for the data center and
+            shall be installed in all tiered Federal data centers by September
+            30, 2018.<footnote_citation>20</footnote_citation> The E.O.
+            Implementing Instructions also advise that “[a]ll existing and new
+            data centers shall have at least one certified Data Center Energy
+            Practitioner (DCEP) assigned to manage its
+            performance.”<footnote_citation>21</footnote_citation>
+          </content>
           <footnote emblem="20">
             While Executive Order 13693 requires advanced energy metering in
             all data centers, OMB will monitor PUE for tiered data centers
@@ -382,16 +430,19 @@
           than 1.2.
         </para>
         <para>
-          To the extent permissible under the Federal Acquisition Regulation
-          (FAR), agencies must include PUE requirements for all new data
-          center contracts or procurement vehicles. Further, any new data
-          center contract or procurement vehicle must require the contractor
-          to report the quarterly average PUE of the contracted facility to
-          the contracting agency, except where that data center’s PUE is
-          already being reported directly to OMB or GSA through participation
-          in a multi-agency service program. Agencies are encouraged to
-          require the same for extension of existing vehicles. PUE reporting
-          is not required for cloud services.
+          <content>
+            To the extent permissible under the Federal Acquisition Regulation
+            (FAR), agencies must include PUE requirements for all new data
+            center contracts or procurement vehicles. Further, any new data
+            center contract or procurement vehicle must require the contractor
+            to report the quarterly average PUE of the contracted
+            facility<footnote_citation>22</footnote_citation> to the
+            contracting agency, except where that data center’s PUE is already
+            being reported directly to OMB or GSA through participation in a
+            multi-agency service program. Agencies are encouraged to require
+            the same for extension of existing vehicles. PUE reporting is not
+            required for cloud services.
+          </content>
           <footnote emblem="22">
             This can be PUE for the facility as a whole in cases where the
             agency only contracts for a portion of a larger facility; however,
@@ -403,13 +454,16 @@
       <sec>
         <heading>Automated Infrastructure Management</heading>
         <para>
-          Agencies shall replace manual collections and reporting of systems,
-          software, and hardware inventory housed within data centers with
-          automated monitoring, inventory, and management tools (e.g., data
-          center infrastructure management) by the end of fiscal year 2018.
-          These tools shall provide the capability to, at a minimum, measure
-          progress toward the server utilization and virtualization metrics
-          defined in the Metric Target Values section of this memorandum.
+          <content>
+            Agencies shall replace manual collections and reporting of
+            systems, software, and hardware inventory housed within data
+            centers with automated monitoring, inventory, and management tools
+            (e.g., data center infrastructure management) by the end of fiscal
+            year 2018.  These tools shall provide the capability to, at a
+            minimum, measure progress toward the server utilization and
+            virtualization metrics defined in the Metric Target Values section
+            of this memorandum.<footnote_citation>23</footnote_citation>
+          </content>
           <footnote emblem="23">
             For non-tiered data centers, only automated monitoring of server
             utilization is required.
@@ -463,7 +517,10 @@
           end of fiscal year 2018:
           <table>
             <caption>
-              Table 1. Government-wide Optimization Targets for Tiered Data Centers
+              <content>
+                Table 1. Government-wide Optimization Targets for Tiered Data
+                Centers<footnote_citation>24</footnote_citation>
+              </content>
               <footnote emblem="24">
                 While agencies should strive to achieve each applicable
                 optimization target for each data center, only PUE targets
@@ -483,9 +540,12 @@
               <tr>
                 <th>Energy Metering</th>
                 <td>
-                  (%) Percent of total gross floor area (GFA) in an agency’s
-                  tiered data center inventory located in tiered data centers
-                  that have power metering.
+                  <content>
+                    (%) Percent of total gross floor area
+                    (GFA)<footnote_citation>25</footnote_citation> in an
+                    agency’s tiered data center inventory located in tiered
+                    data centers that have power metering.
+                  </content>
                   <footnote emblem="25">
                     “Total gross floor area” is defined as total square
                     footage available for IT equipment and includes all
@@ -515,7 +575,10 @@
               </tr>
               <tr>
                 <th>
-                  Power Usage Effectiveness (PUE)
+                  <content>
+                    Power Usage Effectiveness
+                    (PUE)<footnote_citation>26</footnote_citation>
+                  </content>
                   <footnote emblem="26">
                     PUE shall be calculated by OMB based on quarterly average
                     IT and facility electricity usage data.
@@ -569,10 +632,14 @@
               <tr>
                 <th>Server Utilization &amp; Automated Monitoring</th>
                 <td>
-                  (%) Percent of time busy (measured as 1 – percent of time
-                  spent idle), measured directly by continuous, automated
-                  monitoring software, discounted by the fraction of data
-                  centers fully equipped with automated monitoring.
+                  <content>
+                    (%) Percent of time busy (measured as 1 – percent of time
+                    spent idle), measured directly by continuous, automated
+                    monitoring
+                    software,<footnote_citation>27</footnote_citation>
+                    discounted by the fraction of data centers fully equipped
+                    with automated monitoring.
+                  </content>
                   <footnote emblem="27">
                     Server utilization shall be collected continuously and
                     reported as a quarterly average.
@@ -612,17 +679,19 @@
                 </td>
                 <td>
                   <math>
-                    \frac{
-                      \begin{matrix}
-                        \textit{Total Active}
-                        \\
-                        \textit{Rack Count}
-                      \end{matrix}
-                      *
-                      \textit{30 sq. ft.}
-                    }{
-                      \textit{Total Gross Floor Area}
-                    }
+                    <content>
+                      \frac{
+                        \begin{matrix}
+                          \textit{Total Active}
+                          \\
+                          \textit{Rack Count<footnote_citation>28</footnote_citation>}
+                        \end{matrix}
+                        *
+                        \textit{30 sq. ft.}
+                      }{
+                        \textit{Total Gross Floor Area}
+                      }
+                    </content>
                     <footnote emblem="28">
                       “Active” racks are those that have IT equipment
                       consuming electricity.
@@ -644,13 +713,17 @@
       <sec>
         <heading>Goal 2: Cost Savings and Avoidance</heading>
         <para>
-          Agencies shall, by the end of fiscal year 2018, reduce
-          Government-wide annual costs attributable to physical data centers
-          by at least 25%, relative to the fiscal year 2016 IT Infrastructure
-          Spending data submitted to the Federal IT Dashboard. Agencies shall
-          collectively achieve the following amounts of savings (combined cost
-          savings and cost avoidance)30 in each of fiscal years 2016, 2017,
-          and 2018:
+          <content>
+            Agencies shall, by the end of fiscal year 2018, reduce
+            Government-wide annual costs attributable to physical data centers
+            by at least 25%, relative to the fiscal year 2016 IT
+            Infrastructure Spending data submitted to the Federal IT
+            Dashboard.<footnote_citation>29</footnote_citation> Agencies shall
+            collectively achieve the following amounts of savings (combined
+            cost savings and cost
+            avoidance)<footnote_citation>30</footnote_citation> in each of
+            fiscal years 2016, 2017, and 2018:
+          </content>
           <footnote emblem="29">
             Benchmarked against the sum of all non-cloud data center costs
             (including data center labor, software, hardware, electricity, and
@@ -689,11 +762,14 @@
       <sec>
         <heading>Goal 3: Closed Data Centers</heading>
         <para>
-          In all cases, the term “closed” for data centers shall refer
-          exclusively to tiered or non-tiered data centers that: a) no longer
-          consume power for physical servers; or b) no longer house physical
-          servers (whether in a production, test, stage, development, or any
-          other environment).
+          <content>
+            In all cases, the term “closed” for data centers shall refer
+            exclusively to tiered or non-tiered data centers that: a) no
+            longer consume power for physical servers; or b) no longer house
+            physical servers (whether in a production, test, stage,
+            development, or any other
+            environment).<footnote_citation>31</footnote_citation>
+          </content>
           <footnote emblem="31">Excludes print servers.</footnote>
         </para>
         <para>
@@ -705,16 +781,20 @@
           exceeds, agencies’ existing closure plans.
         </para>
         <para>
-          By the end of fiscal year 2018, agencies shall close at least 25% of
-          tiered data centers government-wide, excluding those approved as
-          inter-agency shared services provider data centers. Furthermore,
-          agencies must close at least 60% of non-tiered data centers
-          governmentwide. This target will result in the closure of
-          approximately 52% of the overall Federal data center inventory and a
-          reduction of approximately 31% in the gross floor area occupied by
-          data centers government-wide. Agencies shall prioritize the closure
-          of data centers that are unable to meet applicable PUE optimization
-          targets and/or pose management or security challenges due to age.
+          <content>
+            By the end of fiscal year 2018, agencies shall close at least 25%
+            of tiered data centers government-wide, excluding those approved
+            as inter-agency shared services provider data centers.
+            Furthermore, agencies must close at least 60% of non-tiered data
+            centers governmentwide.<footnote_citation>32</footnote_citation>
+            This target will result in the closure of approximately 52% of the
+            overall Federal data center inventory and a reduction of
+            approximately 31%<footnote_citation>33</footnote_citation> in the
+            gross floor area occupied by data centers government-wide.
+            Agencies shall prioritize the closure of data centers that are
+            unable to meet applicable PUE optimization targets and/or pose
+            management or security challenges due to age.
+          </content>
           <footnote emblem="32">
             The baseline number of data centers is based on the agencies’
             August 31, 2015, data center inventory submissions, as collected
@@ -762,8 +842,11 @@
               on behalf of the agency.
             </listitem>
             <listitem emblem="2">
-              2. Agencies must include progress toward meeting all
-              optimization metric target values.
+              <content>
+                2. Agencies must include progress toward meeting all
+                optimization metric target
+                values.<footnote_citation>34</footnote_citation>
+              </content>
               <footnote emblem="34">
                 Note: Agencies participating as a tenant in an inter-agency
                 shared services provider data center are not required to
@@ -784,12 +867,15 @@
       <sec>
         <heading>Strategic Plan</heading>
         <para>
-          In accordance with FITARA, beginning in fiscal year 2016, each
-          agency head shall annually publish a Strategic Plan to describe the
-          agency’s consolidation and optimization strategy for fiscal years
-          2016, 2017, and 2018. The DCOI Strategic Plan and milestones
-          described below replace existing FDCCI requirements for
-          consolidation plans.
+          <content>
+            In accordance with
+            FITARA,<footnote_citation>35</footnote_citation> beginning in
+            fiscal year 2016, each agency head shall annually publish a
+            Strategic Plan to describe the agency’s consolidation and
+            optimization strategy for fiscal years 2016, 2017, and 2018. The
+            DCOI Strategic Plan and milestones described below replace
+            existing FDCCI requirements for consolidation plans.
+          </content>
           <footnote emblem="35">
             See FITARA Section 834(b)(1)(A)-(E).
           </footnote>
@@ -865,9 +951,11 @@
     <sec>
       <heading>Transparency</heading>
       <para>
-        Under FITARA, OMB must make publicly available agencies’ progress
-        toward the goals established herein and relative to agencies’
-        Strategic Plans.
+        <content>
+          Under FITARA,<footnote_citation>36</footnote_citation> OMB must make
+          publicly available agencies’ progress toward the goals established
+          herein and relative to agencies’ Strategic Plans.
+        </content>
         <footnote emblem="36">See 2015 NDAA Section 834(b)(2)(C).</footnote>
       </para>
       <para>
