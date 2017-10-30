@@ -3,6 +3,7 @@ import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
 import NewPolicyView from '../components/homepage/new-policy-view';
+import { ContactEmail } from '../components/contact-email';
 import Link from '../components/link';
 import Search from '../components/search/search';
 import { homepageData } from '../util/api/queries';
@@ -34,7 +35,7 @@ export function Homepage({ recentPolicies }) {
             <p className="content">
               This site does not include a comprehensive list of OMB policies. We are adding select
               policies on a rolling basis and working with users to make the site more useful.{' '}
-              <Link href="mailto:ofcio@omb.eop.gov">Tell us what you think!</Link>
+              <ContactEmail text="Tell us what you think!" />
             </p>
             <h3 className="h2">Disclaimer</h3>
             <p className="content">
