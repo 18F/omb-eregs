@@ -30,18 +30,25 @@ class AnnotationHandler:
             logger.warning("Can't find footnote: %s", repr(text))
 
 
+def noop_handler(cursor, xml_span, start):
+    pass
+
+
+def len_of_child_text(xml_node: etree.ElementBase):
+    return sum(len(txt) for txt in xml_node.itertext())
+
+
 def content_xml_annotations(
         content_xml: etree.ElementBase, cursor: XMLAwareCursor):
     """Derive all annotations from a <content/> tag, tracking their start/end
     position in the original string."""
     len_so_far = len(content_xml.text or '')
     for child_xml in content_xml:
-        if hasattr(AnnotationHandler, child_xml.tag):
-            annotation = getattr(AnnotationHandler, child_xml.tag)(
-                cursor, child_xml, len_so_far)
-            if annotation:
-                yield annotation
-        len_so_far += sum(len(txt) for txt in child_xml.itertext())
+        handler = getattr(AnnotationHandler, child_xml.tag, noop_handler)
+        annotation = handler(cursor, child_xml, len_so_far)
+        if annotation:
+            yield annotation
+        len_so_far += len_of_child_text(child_xml)
         len_so_far += len(child_xml.tail or '')
 
 
