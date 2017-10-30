@@ -54,7 +54,7 @@ services:
              "access_key_id": "LOCAL_ID",
              "bucket": "pdfs",
              "region": "irrelevant fake region",
-             "endpoint": "http://0.0.0.0:9100",
+             "endpoint": "http://localhost:9100",
              "secret_access_key": "LOCAL_KEY"
            },
            "label": "s3",
@@ -84,7 +84,7 @@ services:
     environment:
       PORT: 9002
       NODE_ENV: production
-      API_URL: 'http://0.0.0.0:9001/'
+      API_URL: 'http://localhost:9001/'
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
