@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from lxml import etree
 
 from document.models import DocNode
-from document.tree import DocCursor
+from document.tree import XMLAwareCursor
 from reqs.models import Policy
 
 logger = logging.getLogger(__name__)
@@ -63,7 +63,8 @@ def content_text(xml_node: etree.ElementBase):
         return ''.join(content_node.itertext())
 
 
-def convert_to_tree(xml_node, parent=None, **kwargs):
+def convert_to_tree(xml_node: etree.ElementBase, parent=None,
+                    **kwargs) -> XMLAwareCursor:
     cursor_args = {
         'node_type': xml_node.tag,
         'text': content_text(xml_node),
@@ -74,7 +75,8 @@ def convert_to_tree(xml_node, parent=None, **kwargs):
     if parent:
         cursor = parent.add_child(**cursor_args)
     else:
-        cursor = DocCursor.new_tree(**cursor_args)
+        cursor = XMLAwareCursor.new_tree(**cursor_args)
+    cursor.xml_node = xml_node
 
     for xml_child in xml_node.xpath('./*[not(self::content)]'):
         convert_to_tree(xml_child, cursor, **kwargs)

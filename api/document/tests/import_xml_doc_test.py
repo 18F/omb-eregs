@@ -35,7 +35,7 @@ def test_import_xml_doc():
     </aroot>
     """)
 
-    import_xml_doc.import_xml_doc(policy, xml)
+    root = import_xml_doc.import_xml_doc(policy, xml)
     assert DocNode.objects.count() == 4
     root_model = DocNode.objects.get(identifier='aroot_1')
     root = DocCursor.load_from_model(root_model)
@@ -51,6 +51,20 @@ def test_convert_to_tree_root_emblems(xml_str, expected_emblem):
     xml = etree.fromstring(xml_str)
     result = import_xml_doc.convert_to_tree(xml)
     assert result.model.type_emblem == expected_emblem
+
+
+def test_convert_to_tree_xml():
+    xml = etree.fromstring("""
+    <root>
+        <achild>
+            <subchild/>
+        </achild>
+    </root>
+    """)
+    root = import_xml_doc.convert_to_tree(xml)
+    assert root.xml_node.tag == 'root'
+    assert root['achild_1'].xml_node.tag == 'achild'
+    assert root['achild_1']['subchild_1'].xml_node.tag == 'subchild'
 
 
 def test_standardize_content():

@@ -120,3 +120,15 @@ class DocCursor():
                                sort_order=parent.next_sort_order())
             parent = self.__class__(self.tree, child.identifier)
         return self
+
+
+class XMLAwareCursor(DocCursor):
+    """Extension of DocCursor which also tracks the XML which created each
+    node."""
+    @property
+    def xml_node(self):
+        return self.tree.node[self.identifier].get('xml_node')
+
+    @xml_node.setter
+    def xml_node(self, value):
+        self.tree.node[self.identifier]['xml_node'] = value
