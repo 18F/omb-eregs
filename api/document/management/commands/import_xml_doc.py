@@ -4,8 +4,7 @@ import logging
 from django.core.management.base import BaseCommand
 from lxml import etree
 
-from document.models import DocNode
-from document.tree import DocCursor
+from document.xml_importer.importer import import_xml_doc
 from reqs.models import Policy
 
 logger = logging.getLogger(__name__)
@@ -18,35 +17,6 @@ def fetch_policy(identifier: str):
         return Policy.objects.filter(omb_policy_id=identifier).first()
 
 
-def import_xml_doc(policy: Policy, xml: etree.ElementBase):
-    DocNode.objects.filter(policy=policy).delete()
-
-    root = convert_to_tree(xml, policy=policy)
-    root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
-    logger.info('Created %s nodes for %s', root.subtree_size(),
-                policy.title_with_number)
-
-
-def convert_to_tree(xml_node, parent=None, **kwargs):
-    cursor_args = {
-        'node_type': xml_node.tag,
-        'text': (xml_node.text or '').strip(),
-        **kwargs,
-    }
-    if 'emblem' in xml_node.attrib:
-        cursor_args['type_emblem'] = xml_node.attrib['emblem']
-    if parent:
-        cursor = parent.add_child(**cursor_args)
-    else:
-        cursor = DocCursor.new_tree(**cursor_args)
-
-    for xml_child in xml_node:
-        convert_to_tree(xml_child, cursor, **kwargs)
-
-    return cursor
-
-
 class Command(BaseCommand):
     help = (  # noqa
     """
@@ -54,8 +24,12 @@ class Command(BaseCommand):
         assumptions:
         1. XML tags indicate node type
         2. an "emblem" attribute per tag indicates type_emblem (not required)
-        3. Text within a tag will be stripped; it must come before any
-        sub-tags
+        3. Node text can appear in two forms: as plain text before any child
+           tags or in a <content> sub-tag. Both forms will be stripped of
+           initial and trailing whitespace.
+        4. Within the <content> tag, we can expect indications of inline
+           information, including:
+           * footnote_citation: we expect it to wrap the referent footnote.
     """)
 
     def add_arguments(self, parser):

@@ -11,10 +11,11 @@ def node_type(length: int = None) -> str:
     return ''.join(random.choice(ascii_lowercase) for _ in range(length))
 
 
-def random_doc(num_nodes: int = 10, save: bool = False, **kwargs) -> DocCursor:
+def random_doc(num_nodes: int = 10, save: bool = False, cls=DocCursor,
+               **kwargs) -> DocCursor:
     """Generates a random document with the requested number of nodes. This
     makes no guarantees about the shape of the resulting tree."""
-    root = DocCursor.new_tree(node_type(), '0', **kwargs)
+    root = cls.new_tree(node_type(), '0', **kwargs)
     node_count = num_nodes - 1  # subtract one for the root
     to_process = [root]
     while to_process:

@@ -168,3 +168,20 @@ def test_add_models():
     current_order = [node.identifier for node in new_root.walk()]
 
     assert current_order == correct_order
+
+
+def test_filter():
+    root = tree.DocCursor.new_tree('root', '1')
+    root.add_child('sec')
+    root.add_child('sec')
+    root['sec_1'].add_child('para')
+    root['sec_1'].add_child('para')
+    root['sec_1']['para_2'].add_child('sec')
+
+    filtered = root.filter(lambda m: m.node_type == 'sec')
+    assert [n.identifier for n in filtered] == [
+        'root_1__sec_1', 'root_1__sec_2', 'root_1__sec_1__para_2__sec_1']
+
+    filtered = root.filter(lambda m: m.type_emblem == '2')
+    assert [n.identifier for n in filtered] == [
+        'root_1__sec_2', 'root_1__sec_1__para_2']
