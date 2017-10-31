@@ -25,18 +25,22 @@ export async function homepageData() {
 }
 
 export async function policiesData({ query }) {
-  const results = await Promise.all([
+  const [
+    topicsWithAllAgencyIds,
+    policiesWithIds,
+    topicsWithIds,
+    policiesOrderedByPolicyNumber,
+  ] = await Promise.all([
     endpoints.topics.withIds(query.requirements__all_agencies__id__in),
     endpoints.policies.withIds(query.id__in),
     endpoints.topics.withIds(query.requirements__topics__id__in),
     endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
-    endpoints.policies.withOmbPolicyIds(query.id__in),
   ]);
   return {
-    existingAgencies: results[0],
-    existingPolicies: results[4].length > 0 ? results[4] : results[1],
-    existingTopics: results[2],
-    pagedPolicies: results[3],
+    existingAgencies: topicsWithAllAgencyIds,
+    existingPolicies: policiesWithIds,
+    existingTopics: topicsWithIds,
+    pagedPolicies: policiesOrderedByPolicyNumber,
   };
 }
 
@@ -144,10 +148,16 @@ async function propagate404(fn) {
 }
 
 export async function policyData({ query }) {
+  let queryParam;
   const reqQuery = {
-    policy_id: query.policyId,
     page: query.page || '1',
   };
+  if (isNaN(query.policyId) === false) {
+    queryParam = { policy_id: query.policyId };
+  } else {
+    queryParam = { policy__omb_policy_id: query.policyId };
+  }
+  Object.assign(reqQuery, queryParam);
 
   return propagate404(async () => {
     const [pagedReqs, policy] = await Promise.all([
