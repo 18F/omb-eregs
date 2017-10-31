@@ -87,6 +87,8 @@ class PolicyViewSet(viewsets.ModelViewSet):
         if not obj and identifier.isdigit():
             obj = queryset.filter(pk=identifier).first()
         if not obj:
+            obj = queryset.filter(slug=identifier).first()
+        if not obj:
             raise Http404()
 
         self.check_object_permissions(self.request, obj)

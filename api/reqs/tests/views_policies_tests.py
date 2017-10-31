@@ -180,3 +180,15 @@ def test_pk_id():
     mommy.make(Policy, pk=pk_id)
     response = client.get(path + '.json').json()
     assert response['id'] == pk_id
+
+
+@pytest.mark.django_db
+def test_slug():
+    client = APIClient()
+    slug = "hello-there"
+    path = "/policies/{0}".format(slug)
+    response = client.get(path)
+    assert response.status_code == 301
+    mommy.make(Policy, slug=slug, pk=456)
+    response = client.get(path + '.json').json()
+    assert response['id'] == 456
