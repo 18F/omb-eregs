@@ -39,6 +39,13 @@ export class Endpoint {
     return Promise.resolve([]);
   }
 
+  withOmbPolicyIds(idString) {
+    if (idString) {
+      return this.fetchResults({ omb_policy_id: idString });
+    }
+    return Promise.resolve([]);
+  }
+
   async fetchOne(id) {
     const key = `fetchOne${id}`;
     const cacheVal = this.cache.get(key);

@@ -30,10 +30,11 @@ export async function policiesData({ query }) {
     endpoints.policies.withIds(query.id__in),
     endpoints.topics.withIds(query.requirements__topics__id__in),
     endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
+    endpoints.policies.withOmbPolicyIds(query.id__in),
   ]);
   return {
     existingAgencies: results[0],
-    existingPolicies: results[1],
+    existingPolicies: results[4].length > 0 ? results[4] : results[1],
     existingTopics: results[2],
     pagedPolicies: results[3],
   };
