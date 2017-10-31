@@ -87,7 +87,7 @@ class Policy(models.Model):
         max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
         blank=True
     )
-    slug = models.CharField(max_length=title.max_length, blank=True)
+    slug = models.SlugField(max_length=title.max_length, blank=True)
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
     policy_status = models.CharField(max_length=256, blank=True)

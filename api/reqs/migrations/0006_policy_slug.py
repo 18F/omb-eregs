@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='policy',
             name='slug',
-            field=models.CharField(blank=True, max_length=1024),
+            field=models.SlugField(blank=True, max_length=1024),
         ),
     ]
