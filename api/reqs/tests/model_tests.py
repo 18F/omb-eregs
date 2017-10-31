@@ -1,6 +1,7 @@
 from unittest.mock import Mock
-from model_mommy import mommy
+
 import pytest
+from model_mommy import mommy
 
 from reqs import models
 
