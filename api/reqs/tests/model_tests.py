@@ -1,4 +1,6 @@
 from unittest.mock import Mock
+from model_mommy import mommy
+import pytest
 
 from reqs import models
 
@@ -28,3 +30,12 @@ def test_original_url():
 
     policy.document_source = Mock(url='http://example.com/uploaded')
     assert policy.original_url == 'http://example.com/uploaded'
+
+
+@pytest.mark.django_db
+def test_slug_is_created_from_title_on_save_if_slug_is_empty():
+    policy = mommy.make(models.Policy)
+    policy.title = 'hello there'
+    policy.slug = ''
+    policy.save()
+    assert policy.slug == 'hello-there'

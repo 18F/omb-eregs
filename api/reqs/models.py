@@ -2,6 +2,7 @@ from enum import Enum, unique
 
 from django.db import models
 from django.utils.translation import ugettext_lazy
+from django.utils.text import slugify
 
 
 class Agency(models.Model):
@@ -86,6 +87,7 @@ class Policy(models.Model):
         max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
         blank=True
     )
+    slug = models.CharField(max_length=title.max_length, blank=True)
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
     policy_status = models.CharField(max_length=256, blank=True)
@@ -116,6 +118,11 @@ class Policy(models.Model):
         if len(text) > 100:
             text = text[:100] + '...'
         return '({0}) {1}'.format(self.policy_number, text)
+
+    def save(self):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save()
 
 
 class Requirement(models.Model):
