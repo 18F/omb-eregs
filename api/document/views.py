@@ -28,6 +28,7 @@ class TreeView(RetrieveAPIView):
         else:
             query_args['depth'] = 0
         root_doc = get_object_or_404(optimize(DocNode.objects), **query_args)
+        root_doc.policy = policy    # optimization to prevent hitting db again
         root = DocCursor.load_from_model(root_doc, subtree=False)
         root.add_models(optimize(root_doc.descendants()))
         return root
