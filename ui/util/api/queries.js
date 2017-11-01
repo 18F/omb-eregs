@@ -26,10 +26,10 @@ export async function homepageData() {
 
 export async function policiesData({ query }) {
   const [
-    topicsWithAllAgencyIds,
-    policiesWithIds,
-    topicsWithIds,
-    policiesOrderedByPolicyNumber,
+    existingAgencies,
+    existingPolicies,
+    existingTopics,
+    pagedPolicies,
   ] = await Promise.all([
     endpoints.topics.withIds(query.requirements__all_agencies__id__in),
     endpoints.policies.withIds(query.id__in),
@@ -37,10 +37,10 @@ export async function policiesData({ query }) {
     endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
   ]);
   return {
-    existingAgencies: topicsWithAllAgencyIds,
-    existingPolicies: policiesWithIds,
-    existingTopics: topicsWithIds,
-    pagedPolicies: policiesOrderedByPolicyNumber,
+    existingAgencies,
+    existingPolicies,
+    existingTopics,
+    pagedPolicies,
   };
 }
 
