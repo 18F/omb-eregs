@@ -171,6 +171,7 @@ export async function policyData({ query }) {
 export async function documentData({ query }) {
   return propagate404(async () => {
     const docNode = await endpoints.document.fetchOne(query.policyId);
+    docNode.policy = formatIssuance(docNode.policy);
     return { docNode };
   });
 }
