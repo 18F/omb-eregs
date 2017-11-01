@@ -29,8 +29,8 @@ class PolicySerializer(serializers.ModelSerializer):
         fields = (
             'issuance',
             'omb_policy_id',
+            'original_url',
             'title',
-            'uri',
         )
 
 

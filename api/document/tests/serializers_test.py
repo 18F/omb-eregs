@@ -35,8 +35,8 @@ def test_end_to_end():
         'policy': {     # Note this field does not appear on children
             'issuance': '2001-02-03',
             'omb_policy_id': 'M-18-18',
+            'original_url': 'http://example.com/thing.pdf',
             'title': 'Some Title',
-            'uri': 'http://example.com/thing.pdf',
         },
         'children': [
             {
