@@ -188,11 +188,11 @@ def test_pk_id():
 def test_slug():
     client = APIClient()
     slug = "hello-there"
-    path = "/policies/{0}".format(slug)
+    path = f"/policies/{slug}.json"
     response = client.get(path)
-    assert response.status_code == 301
+    assert response.status_code == 404
     mommy.make(Policy, slug=slug, pk=456)
-    response = client.get(path + '.json').json()
+    response = client.get(path).json()
     assert response['id'] == 456
 
 
