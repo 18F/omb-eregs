@@ -8,25 +8,24 @@
 @import '~nprogress/nprogress.css';
 
 // App-wide
-@import 'colors';
-@import 'layout';
-@import 'fonts';
-@import 'typography';
-@import 'header';
-@import 'base';
-@import 'footer';
-@import 'print';
-@import 'ie';
-@import 'stars-divider';
-@import 'button-like';
+@import 'base/colors';
+@import 'base/base';
+@import 'base/typography';
+@import 'base/fonts';
 
-// Reusable styles
-@import 'utils/landing';
+@import 'layout/layout';
 
-// Components
-@import 'requirements';
-@import 'req-filter-ui';
-@import 'search-autocomplete';
-@import 'policies';
-@import 'homepage';
-@import 'loading-indicator';
+@import 'module/header';
+@import 'module/footer';
+@import 'module/landing';
+@import 'module/stars-divider';
+@import 'module/button-like';
+@import 'module/requirements';
+@import 'module/req-filter-ui';
+@import 'module/search-autocomplete';
+@import 'module/policies';
+@import 'module/homepage';
+@import 'module/loading-indicator';
+
+@import 'state/print';
+@import 'state/ie';
