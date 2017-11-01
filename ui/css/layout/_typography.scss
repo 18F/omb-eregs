@@ -27,10 +27,54 @@ body {
   line-height: 1.25rem;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: black;
+}
+
+@media (min-width: 52em) {
+  h1 {
+    font-size: 1.5em;
+    line-height: 2em;
+  }
+
+  h2 {
+    font-size: 1.625em;
+    line-height: 1.6875em;
+  }
+
+  h3 {
+    font-size: 1.125em;
+    line-height: 1.5em;
+  }
+}
+
 h1 {
-  font-size: 1.75rem;
+  font-size: 2em;
+  line-height: 2.5em;
 }
 
 h2 {
-  font-size: 1.125rem;
+  font-size: 1.625em;
+  line-height: 2em;
+}
+
+h3 {
+  font-size: 1.625em;
+  line-height: 1.6875em;
+}
+
+h4 {
+  font-size: 1em;
+  line-height: 1.5em;
+  color: #8c7c2a;
+}
+
+h5 {
+  font-size: .875em;
+  line-height: 1.312em;
+}
+
+h6 {
+  font-size: .75em;
+  line-height: .875em;
 }
