@@ -20,61 +20,108 @@
   font-weight: 500;
 }
 
-body {
-  @include font-source-sans-pro();
-  color: $color-gray-dark;
-  font-size: 0.9375rem;
-  line-height: 1.25rem;
+.document-container {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    padding: 0;
+  }
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: black;
+body {
+  @include font-source-sans-pro();
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  color: $color-black;
+}
+
+.dark-back {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
+    color: $color-white;
+  }
 }
 
 @media (min-width: 52em) {
-  h1 {
+  h1,
+  .h1 {
     font-size: 1.5em;
     line-height: 2em;
   }
 
-  h2 {
+  h2,
+  .h2 {
     font-size: 1.625em;
     line-height: 1.6875em;
   }
 
-  h3 {
+  h3,
+  .h3 {
     font-size: 1.125em;
     line-height: 1.5em;
   }
 }
 
-h1 {
+h1,
+.h1 {
   font-size: 2em;
   line-height: 2.5em;
 }
 
-h2 {
+h2,
+.h2 {
   font-size: 1.625em;
   line-height: 2em;
 }
 
-h3 {
+h3,
+.h3 {
   font-size: 1.625em;
   line-height: 1.6875em;
 }
 
-h4 {
+h4,
+.h4 {
   font-size: 1em;
   line-height: 1.5em;
-  color: #8c7c2a;
+  color: $color-gold-dark;
 }
 
-h5 {
+h5,
+.h5 {
   font-size: .875em;
   line-height: 1.312em;
 }
 
-h6 {
+h6,
+.h6 {
   font-size: .75em;
   line-height: .875em;
 }
