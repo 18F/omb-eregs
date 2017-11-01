@@ -4,6 +4,7 @@ from rest_framework.generics import RetrieveAPIView
 from document.models import DocNode
 from document.serializers import DocCursorSerializer
 from document.tree import DocCursor
+from reqs.views.policies import policy_or_404
 
 
 def optimize(queryset):
@@ -20,12 +21,14 @@ class TreeView(RetrieveAPIView):
     queryset = DocNode.objects.none()   # Used to determine permissions
 
     def get_object(self):
-        query_args = {'policy_id': self.kwargs['policy_id']}
+        policy = policy_or_404(self.kwargs['policy_id'])
+        query_args = {'policy_id': policy.pk}
         if self.kwargs.get('identifier'):
             query_args['identifier'] = self.kwargs['identifier']
         else:
             query_args['depth'] = 0
         root_doc = get_object_or_404(optimize(DocNode.objects), **query_args)
+        root_doc.policy = policy    # optimization to prevent hitting db again
         root = DocCursor.load_from_model(root_doc, subtree=False)
         root.add_models(optimize(root_doc.descendants()))
         return root
