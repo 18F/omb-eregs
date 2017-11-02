@@ -3,9 +3,11 @@ import React from 'react';
 
 import { firstWithNodeType } from '../../util/document-node';
 import renderNode from '../../util/render-node';
+import LabeledText from '../labeled-text';
 import Link from '../link';
+import From from './from';
 
-export function findNodeText(docNode, nodeType, modelValue) {
+function findNodeText(docNode, nodeType, modelValue) {
   const containingNode = firstWithNodeType(docNode, nodeType);
   if (containingNode && containingNode.text.length > 0) {
     return containingNode.text;
@@ -13,8 +15,10 @@ export function findNodeText(docNode, nodeType, modelValue) {
   return modelValue;
 }
 
+
 /* Root of a policy document */
 export default function Policy({ docNode }) {
+  const fromNode = firstWithNodeType(docNode, 'from');
   return (
     <div className="node-policy" id={docNode.identifier}>
       <div className="clearfix">
@@ -26,12 +30,10 @@ export default function Policy({ docNode }) {
           { findNodeText(docNode, 'subject', docNode.policy.title) }
         </h2>
         <div><Link href={docNode.policy.original_url}>See original</Link></div>
-        <div>
-          <label className="bold pr1" htmlFor="issuance">Issued on:</label>
-          <span id="issuance">
-            { findNodeText(docNode, 'published', docNode.policy.issuance_pretty) }
-          </span>
-        </div>
+        { fromNode ? <From docNode={fromNode} /> : null }
+        <LabeledText id="issuance" label="Issued on:">
+          { findNodeText(docNode, 'published', docNode.policy.issuance_pretty) }
+        </LabeledText>
       </div>
       { docNode.children.map(renderNode) }
     </div>

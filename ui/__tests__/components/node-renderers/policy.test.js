@@ -30,10 +30,16 @@ describe('<Policy />', () => {
     const text = result.text();
     expect(text).toMatch(/M-44-55/);
     expect(text).toMatch(/Magistrate/);
-    expect(text).toMatch(/March 3, 2003/);
 
     expect(result.find('Link').first().prop('href')).toEqual(
       'http://example.com/thing.pdf');
+
+    expect(result.find('From')).toHaveLength(0);
+
+    const date = result.find('LabeledText').first();
+    expect(date.prop('id')).toEqual('issuance');
+    expect(date.prop('label')).toEqual('Issued on:');
+    expect(date.children().text()).toEqual('March 3, 2003');
   });
   it('can grab text from subnodes', () => {
     const docNode = {
@@ -43,6 +49,7 @@ describe('<Policy />', () => {
         { children: [], node_type: 'policyNum', text: 'some-m-number' },
         { children: [], node_type: 'published', text: 'some date here' },
         { children: [], node_type: 'policyTitle', text: 'a title!' },
+        { children: [], marker: 'Stuff:', node_type: 'from', text: 'Someone' },
       ],
       identifier: '',
       policy,
@@ -53,11 +60,15 @@ describe('<Policy />', () => {
     const text = result.text();
     expect(text).not.toMatch(/M-44-55/);
     expect(text).not.toMatch(/Magistrate/);
-    expect(text).not.toMatch(/March 3, 2003/);
     expect(text).toMatch(/subject-here/);
     expect(text).toMatch(/some-m-number/);
-    expect(text).toMatch(/some date here/);
     expect(text).toMatch(/a title!/);
     expect(text).not.toMatch(/other-text/); // not specifically searched for
+
+    const from = result.find('From').first();
+    expect(from.prop('docNode')).toEqual(docNode.children[5]);
+
+    const date = result.find('LabeledText').first();
+    expect(date.children().text()).toEqual('some date here');
   });
 });
