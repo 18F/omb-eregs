@@ -41,8 +41,17 @@ class DocCursorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DocNode
-        fields = ('identifier', 'node_type', 'type_emblem', 'text', 'depth',
-                  'children', 'requirement', 'content')
+        fields = (
+            'children',
+            'content',
+            'depth',
+            'identifier',
+            'marker',
+            'node_type',
+            'requirement',
+            'text',
+            'type_emblem',
+        )
 
     def to_representation(self, instance):
         """We want to serialize the wrapped model, not the cursor. However, we
