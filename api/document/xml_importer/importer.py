@@ -35,6 +35,7 @@ def convert_to_tree(xml_node: etree.ElementBase, parent=None,
                     **kwargs) -> XMLAwareCursor:
     cursor_args = {
         'node_type': xml_node.tag,
+        'marker': xml_node.attrib.get('marker', ''),
         'text': content_text(xml_node),
         **kwargs,
     }

@@ -15,6 +15,8 @@ class DocNode(models.Model):
     # e.g. b
     type_emblem = models.CharField(max_length=16)
     text = models.TextField(blank=True)
+    # e.g. "(a)", "From:", "1.", "•"
+    marker = models.CharField(max_length=64, blank=True)
 
     left = models.PositiveIntegerField()
     right = models.PositiveIntegerField()
