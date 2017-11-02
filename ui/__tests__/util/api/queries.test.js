@@ -117,11 +117,18 @@ describe('policyData()', () => {
       () => Promise.resolve({ issuance: '2000-01-02' }));
   });
 
-  it('hits the correct urls', async () => {
+  it('hits the correct url with OMB policy ID', async () => {
+    await policyData({ query: { policyId: 'M-123' } });
+    expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy__omb_policy_id: 'M-123', page: '1' });
+    expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('M-123');
+  });
+
+  it('hits the correct urls with policy ID', async () => {
     await policyData({ query: { policyId: '3' } });
     expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '1' });
     expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('3');
   });
+
   it('returns the correct results', async () => {
     const results = await policyData({ query: {} });
     expect(results).toEqual({
