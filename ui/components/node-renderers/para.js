@@ -5,7 +5,7 @@ import React from 'react';
 export default function Paragraph({ children, docNode, renderedContent }) {
   return (
     <div id={docNode.identifier}>
-      <p>{renderedContent}</p>
+      <p className="m0">{renderedContent}</p>
       { children }
     </div>
   );
