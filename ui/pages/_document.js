@@ -7,7 +7,7 @@ export default class LangDocument extends Document {
     return (
       <html lang="en-US">
         <Head />
-        <body className="document-container">
+        <body>
           <Main />
           <NextScript />
         </body>

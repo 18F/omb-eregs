@@ -21,6 +21,10 @@ const nodeMapping = {
 const contentMapping = {
   footnote_citation: FootnoteCitation,
 };
+const headerFooterParams = {
+  showSearch: true,
+  wrapperClassName: "document-container"
+}
 
 /* Recursively converts a docNode into React components, depending on each
  * node's node_type. Analogously, converts each node's "content" array
@@ -36,7 +40,7 @@ export function Document({ docNode }) {
   });
   return (
     <NodeComponent docNode={docNode} renderedContent={renderedContent}>
-      { docNode.children.map(c => <Document docNode={c} key={c.identifier} />) }
+      { docNode.children.map(c => <Document className="document-content" docNode={c} key={c.identifier} />) }
     </NodeComponent>
   );
 }
@@ -52,4 +56,4 @@ Document.propTypes = {
   }).isRequired,
 };
 
-export default wrapPage(Document, documentData);
+export default wrapPage(Document, documentData, headerFooterParams);
