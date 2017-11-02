@@ -20,8 +20,42 @@
   font-weight: 500;
 }
 
+@mixin font-source-sans-pro-bold() {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 800;
+}
+
+// Basic font mixins
+@mixin font-san-serif() {
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+}
+
+@mixin font-san-serif-bold() {
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-weight: 800;
+}
+
+@mixin font-san-serif-light() {
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-weight: 300;
+}
+
+@mixin font-serif() {
+  font-family: "Georgia", serif;
+}
+
+@mixin font-serif-bold() {
+  font-family: "Georgia", serif;
+  font-weight: 800;
+}
+
+@mixin font-serif-light() {
+  font-family: "Georgia", serif;
+  font-weight: 300;
+}
+
 body {
-  @include font-source-sans-pro();
+  @include font-san-serif();
 }
 
 h1,
@@ -36,6 +70,7 @@ h6,
 .h4,
 .h5,
 .h6 {
+  @include font-san-serif-bold();
   color: $color-black;
 }
 
@@ -121,6 +156,7 @@ h6,
 }
 
 p {
+  @include font-serif();
   font-size: 1em;
-  line-height: 1.25em;
+  line-height: 1.5em;
 }
