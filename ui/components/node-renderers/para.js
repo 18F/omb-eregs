@@ -3,9 +3,9 @@ import React from 'react';
 
 /* Paragraph of text */
 export default function Paragraph({ children, docNode, renderedContent }) {
-  const className = "node-" + docNode.node_type;
+  const klasses = ['node-', docNode.node_type].join('');
   return (
-    <div className={className} id={docNode.identifier}>
+    <div className={klasses} id={docNode.identifier}>
       <p>{renderedContent}</p>
       { children }
     </div>

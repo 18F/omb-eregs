@@ -9,7 +9,7 @@ export default function Fallback({ children, docNode, renderedContent }) {
     params.style = { backgroundColor: 'pink' };
     params.title = docNode.identifier;
   }
-  params.className = "node-" + docNode.node_type;
+  params.className = ['node-', docNode.node_type].join('');
   return (
     <div {...params}>
       <p style={{ margin: 0 }}>{ renderedContent }</p>
