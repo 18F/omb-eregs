@@ -12,7 +12,7 @@
     border-left: 0;
   }
 
-  ol.list-reset {
+  .list-reset {
     border-bottom: 1px solid $color-gray-darker;
   }
 

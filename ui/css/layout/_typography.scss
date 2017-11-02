@@ -20,19 +20,6 @@
   font-weight: 500;
 }
 
-.document-container {
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0;
-    padding: 0;
-  }
-}
-
 body {
   @include font-source-sans-pro();
 }
@@ -107,12 +94,19 @@ h3,
   line-height: 1.6875em;
 }
 
+.document-content{
+  h4,
+  .h4 {
+    color: $color-gold-dark;
+  }
+}
 h4,
 .h4 {
   font-size: 1em;
   line-height: 1.5em;
-  color: $color-gold-dark;
 }
+
+
 
 h5,
 .h5 {
@@ -124,4 +118,9 @@ h6,
 .h6 {
   font-size: .75em;
   line-height: .875em;
+}
+
+p {
+  font-size: 1em;
+  line-height: 1.25em;
 }
