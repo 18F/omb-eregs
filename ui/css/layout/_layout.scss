@@ -15,9 +15,7 @@ body {
     @extend .md-col-8;
     @extend .col;
   }
-}
 
-.document-container{
   @extend .clearfix;
   @extend .max-width-4;
   margin: 0 auto;
