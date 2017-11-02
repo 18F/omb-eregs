@@ -185,6 +185,18 @@ def test_pk_id():
 
 
 @pytest.mark.django_db
+def test_slug():
+    client = APIClient()
+    slug = "hello-there"
+    path = f"/policies/{slug}.json"
+    response = client.get(path)
+    assert response.status_code == 404
+    mommy.make(Policy, slug=slug, pk=456)
+    response = client.get(path).json()
+    assert response['id'] == 456
+
+
+@pytest.mark.django_db
 def test_policy_or_404():
     policy = mommy.make(Policy, omb_policy_id='AAA-BBB-CCC')
     assert policies_views.policy_or_404(f"{policy.pk}") == policy

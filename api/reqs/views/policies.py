@@ -68,6 +68,8 @@ def policy_or_404(identifier):
     if not policy and identifier.isdigit():
         policy = queryset.filter(pk=identifier).first()
     if not policy:
+        policy = queryset.filter(slug=identifier).first()
+    if not policy:
         raise Http404()
     return policy
 
