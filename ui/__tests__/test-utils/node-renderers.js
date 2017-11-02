@@ -3,21 +3,27 @@ import React from 'react';
 
 import renderNode from '../../util/render-node';
 
-export function itIncludesTheIdentifier(Component) {
+export function itIncludesTheIdentifier(Component, extraAttrs) {
   it('includes the identifier', () => {
     const docNode = {
       children: [],
       identifier: 'aaa_1__bbb_2__ccc_3',
       marker: '',
+      ...(extraAttrs || {}),
     };
     const result = shallow(<Component docNode={docNode} />);
     expect(result.prop('id')).toBe('aaa_1__bbb_2__ccc_3');
   });
 }
 
-export function itIncludesNodeText(Component) {
+export function itIncludesNodeText(Component, extraAttrs) {
   it('includes node text', () => {
-    const docNode = { children: [], identifier: '', marker: '' };
+    const docNode = {
+      children: [],
+      identifier: '',
+      marker: '',
+      ...(extraAttrs || {}),
+    };
     const result = shallow(
       <Component docNode={docNode}>
         <span id="some-contents">Textextext</span>
@@ -30,7 +36,7 @@ export function itIncludesNodeText(Component) {
   });
 }
 
-export function itRendersChildNodes(Component) {
+export function itRendersChildNodes(Component, extraAttrs) {
   it('renders child nodes', () => {
     // renderNode must be mocked
     expect(renderNode.mock).not.toBeUndefined();
@@ -41,15 +47,19 @@ export function itRendersChildNodes(Component) {
       () => <child key="2">second child</child>);
 
     const docNode = {
-      children: [{ first: 'child' }, { second: 'child' }],
+      children: [
+        { children: [], node_type: 'first-child' },
+        { children: [], node_type: 'second-child' },
+      ],
       identifier: '',
       marker: '',
+      ...(extraAttrs || {}),
     };
     const result = shallow(<Component docNode={docNode} />);
     expect(result.text()).toMatch(/first child.*second child/);
     expect(result.find('child')).toHaveLength(2);
     expect(renderNode).toHaveBeenCalledTimes(2);
-    expect(renderNode.mock.calls[0][0]).toEqual({ first: 'child' });
-    expect(renderNode.mock.calls[1][0]).toEqual({ second: 'child' });
+    expect(renderNode.mock.calls[0][0].node_type).toEqual('first-child');
+    expect(renderNode.mock.calls[1][0].node_type).toEqual('second-child');
   });
 }
