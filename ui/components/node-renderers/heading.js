@@ -8,7 +8,11 @@ export default function Heading({ docNode, renderedContent }) {
     .filter(e => e === 'sec')
     .length + 1;
   const Component = `h${hLevel}`;
-  return <Component id={docNode.identifier}>{ renderedContent }</Component>;
+  return (
+    <Component className="node-heading" id={docNode.identifier}>
+      { renderedContent }
+    </Component>
+  );
 }
 Heading.propTypes = {
   docNode: PropTypes.shape({

@@ -5,10 +5,11 @@ import FootnoteCitation from '../../../components/content-renderers/footnote-cit
 
 
 describe('<FootnoteCitation />', () => {
-  it('includes only and all of the text of the content', () => {
-    const content = { footnote_node: '', text: 'Some text here\n' };
+  it('includes all of the text of the content', () => {
+    const content = { footnote_node: '', text: 'Some text here ' };
     const text = mount(<FootnoteCitation content={content} />).text();
-    expect(text).toEqual('Some text here\n');
+    expect(text).toMatch(/Some text here /);
+    expect(text).toMatch(/Footnote /);
   });
   it('references the footnote node', () => {
     const content = { footnote_node: 'aaa_1__bbb_2', text: '' };

@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function ListItem({ children, docNode }) {
   return (
-    <li className="clearfix" id={docNode.identifier}>
+    <li className="clearfix node-list-item" id={docNode.identifier}>
       <span className="col col-1 right-align pr2">{ docNode.marker }</span>
       <div className="col col-11">{ children }</div>
     </li>

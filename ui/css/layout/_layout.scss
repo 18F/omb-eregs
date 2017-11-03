@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+}
+
+@media (max-width: 52em) {
+  .main {
+    border: 0;
+    padding: .5rem 1rem;
+    width: 100%;
+  }
+}
+
+.document-container {
+  .node-policy {
+    @extend .md-col-8;
+    @extend .col;
+  }
+
+  @extend .clearfix;
+  @extend .max-width-4;
+  margin: 0 auto;
+  padding-top: 2em;
+  padding-bottom: 4em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+@media (min-width: 32rem) {
+  .document-container {
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+}
+
+@media (min-width: 64rem) {
+  .document-container {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+  }
+}

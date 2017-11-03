@@ -64,7 +64,9 @@ function faviconTags() {
   ]);
 }
 
-export default function HeaderFooter({ children, showSearch }) {
+export default function HeaderFooter({ children, showSearch, wrapperClassName }) {
+  const klasses = ['container', wrapperClassName].join(' ');
+
   return (
     <div>
       <Head>
@@ -82,7 +84,7 @@ export default function HeaderFooter({ children, showSearch }) {
       </Head>
       <Disclaimer />
       <Navbar showSearch={showSearch} />
-      <div className="container">
+      <div className={klasses}>
         {children}
       </div>
       <Footer />
@@ -93,9 +95,11 @@ export default function HeaderFooter({ children, showSearch }) {
 
 HeaderFooter.propTypes = {
   showSearch: PropTypes.bool,
+  wrapperClassName: PropTypes.string,
   children: PropTypes.node.isRequired,
 };
 
 HeaderFooter.defaultProps = {
   showSearch: true,
+  wrapperClassName: '',
 };
