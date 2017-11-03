@@ -6,6 +6,8 @@ import FootnoteCitation from '../components/content-renderers/footnote-citation'
 import PlainText from '../components/content-renderers/plain-text';
 import Fallback from '../components/node-renderers/fallback';
 import heading from '../components/node-renderers/heading';
+import list from '../components/node-renderers/list';
+import listitem from '../components/node-renderers/list-item';
 import para from '../components/node-renderers/para';
 import policy from '../components/node-renderers/policy';
 import sec from '../components/node-renderers/sec';
@@ -14,6 +16,8 @@ import { documentData } from '../util/api/queries';
 
 const nodeMapping = {
   heading,
+  list,
+  listitem,
   para,
   policy,
   sec,

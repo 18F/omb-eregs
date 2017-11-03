@@ -1,10 +1,12 @@
 from collections import namedtuple
 
 import pytest
+from django.http import Http404
 from model_mommy import mommy
 from rest_framework.test import APIClient
 
 from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
+from reqs.views import policies as policies_views
 
 PolicySetup = namedtuple('PolicySetup', ('policies', 'reqs'))
 
@@ -180,3 +182,24 @@ def test_pk_id():
     mommy.make(Policy, pk=pk_id)
     response = client.get(path + '.json').json()
     assert response['id'] == pk_id
+
+
+@pytest.mark.django_db
+def test_slug():
+    client = APIClient()
+    slug = "hello-there"
+    path = f"/policies/{slug}.json"
+    response = client.get(path)
+    assert response.status_code == 404
+    mommy.make(Policy, slug=slug, pk=456)
+    response = client.get(path).json()
+    assert response['id'] == 456
+
+
+@pytest.mark.django_db
+def test_policy_or_404():
+    policy = mommy.make(Policy, omb_policy_id='AAA-BBB-CCC')
+    assert policies_views.policy_or_404(f"{policy.pk}") == policy
+    assert policies_views.policy_or_404("AAA-BBB-CCC") == policy
+    with pytest.raises(Http404):
+        policies_views.policy_or_404('does-not-exist')

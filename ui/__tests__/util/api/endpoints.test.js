@@ -37,9 +37,9 @@ describe('Endpoint', () => {
       const endpoint = new Endpoint('some/path');
       endpoint.fetchResults = jest.fn(() => Promise.resolve([1, 2, 3]));
 
-      return endpoint.withIds('ids,here').then((result) => {
+      return endpoint.withIds('1,3').then((result) => {
         expect(result).toEqual([1, 2, 3]);
-        expect(endpoint.fetchResults).toHaveBeenCalledWith({ id__in: 'ids,here' });
+        expect(endpoint.fetchResults).toHaveBeenCalledWith({ id__in: '1,3' });
       });
     });
   });

@@ -41,6 +41,12 @@ def test_convert_to_tree_root_emblems(xml_str, expected_emblem):
     assert result.model.type_emblem == expected_emblem
 
 
+def test_convert_to_tree_marker():
+    xml = etree.fromstring('<some_el marker="(1)" />')
+    result = importer.convert_to_tree(xml)
+    assert result.model.marker == '(1)'
+
+
 def test_convert_to_tree_xml():
     xml = etree.fromstring("""
     <root>

@@ -1,3 +1,5 @@
+from datetime import date
+
 import pytest
 from model_mommy import mommy
 
@@ -9,12 +11,16 @@ from reqs.models import Policy, Requirement, Topic
 
 def test_end_to_end():
     """Create a tree, then serialize it."""
-    root = DocCursor.new_tree('root', '0')
+    policy = mommy.prepare(
+        Policy, issuance=date(2001, 2, 3), omb_policy_id='M-18-18',
+        title='Some Title', uri='http://example.com/thing.pdf',
+    )
+    root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sect', text='Section 1')
     sect2 = root.add_child('sect')
-    pa = sect2.add_child('par', 'a')
-    pa.add_child('par', '1', text='Paragraph (a)(1)')
-    sect2.add_child('par', 'b')
+    pa = sect2.add_child('par', 'a', marker='(a)')
+    pa.add_child('par', '1', text='Paragraph (a)(1)', marker='(1)')
+    sect2.add_child('par', 'b', marker='b.')
 
     result = serializers.DocCursorSerializer(root).data
     assert result == {
@@ -22,15 +28,23 @@ def test_end_to_end():
         'node_type': 'root',
         'type_emblem': '0',
         'text': '',
+        'marker': '',
         'depth': 0,
         'requirement': None,
         'content': [],
+        'policy': {     # Note this field does not appear on children
+            'issuance': '2001-02-03',
+            'omb_policy_id': 'M-18-18',
+            'title': 'Some Title',
+            'uri': 'http://example.com/thing.pdf',
+        },
         'children': [
             {
                 'identifier': 'root_0__sect_1',
                 'node_type': 'sect',
                 'type_emblem': '1',
                 'text': 'Section 1',
+                'marker': '',
                 'depth': 1,
                 'requirement': None,
                 'content': [{
@@ -44,6 +58,7 @@ def test_end_to_end():
                 'node_type': 'sect',
                 'type_emblem': '2',
                 'text': '',
+                'marker': '',
                 'depth': 1,
                 'requirement': None,
                 'content': [],
@@ -53,6 +68,7 @@ def test_end_to_end():
                         'node_type': 'par',
                         'type_emblem': 'a',
                         'text': '',
+                        'marker': '(a)',
                         'depth': 2,
                         'requirement': None,
                         'content': [],
@@ -62,6 +78,7 @@ def test_end_to_end():
                                 'node_type': 'par',
                                 'type_emblem': '1',
                                 'text': 'Paragraph (a)(1)',
+                                'marker': '(1)',
                                 'depth': 3,
                                 'requirement': None,
                                 'content': [{
@@ -77,6 +94,7 @@ def test_end_to_end():
                         'node_type': 'par',
                         'type_emblem': 'b',
                         'text': '',
+                        'marker': 'b.',
                         'depth': 2,
                         'requirement': None,
                         'content': [],
