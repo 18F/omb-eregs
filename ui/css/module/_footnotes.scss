@@ -1,18 +1,13 @@
-.node-footnote {
-  display: none;
-}
-
-.footnote-link sup{
+.footnote-link sup {
+  @include font-san-serif-bold();
   border: 1px solid $color-cool-blue-lighter;
   border-radius: 4px;
-  padding: 1px 5px 2px;
-  font-family: "Helvetica Neue";
-  font-weight: 800;
+  padding: 1px 5px 5px 2px;
   font-size: 0.6em;
   margin-left: .3em;
 }
 
-.footnote-link.active sup{
+.footnote-link.active sup {
   background: $color-cool-blue;
-  color: white;
+  color: $color-white;
 }
