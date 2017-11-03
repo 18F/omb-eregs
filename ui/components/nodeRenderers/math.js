@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import katex from 'katex';
 
 
@@ -6,10 +7,9 @@ export default function TeXMath({ children, docNode }) {
   return (
     <div id={docNode.identifier}>
       { children }
-      <div dangerouslySetInnerHTML={{__html: katex.renderToString(docNode.text)}} />
+      <div dangerouslySetInnerHTML={{ __html: katex.renderToString(docNode.text) }} />
     </div>
   );
-
 }
 
 TeXMath.propTypes = {
