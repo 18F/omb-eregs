@@ -5,6 +5,7 @@ import wrapPage from '../components/app-wrapper';
 import FootnoteCitation from '../components/content-renderers/footnote-citation';
 import PlainText from '../components/content-renderers/plain-text';
 import Fallback from '../components/node-renderers/fallback';
+import caption from '../components/node-renderers/caption';
 import footnote from '../components/node-renderers/footnote';
 import heading from '../components/node-renderers/heading';
 import list from '../components/node-renderers/list';
@@ -13,10 +14,17 @@ import math from '../components/node-renderers/math';
 import para from '../components/node-renderers/para';
 import policy from '../components/node-renderers/policy';
 import sec from '../components/node-renderers/sec';
+import table from '../components/node-renderers/table';
+import tbody from '../components/node-renderers/tbody';
+import thead from '../components/node-renderers/thead';
+import td from '../components/node-renderers/td';
+import tr from '../components/node-renderers/tr';
+import th from '../components/node-renderers/th';
 import { documentData } from '../util/api/queries';
 
 
 const nodeMapping = {
+  caption,
   footnote,
   heading,
   list,
@@ -25,6 +33,12 @@ const nodeMapping = {
   para,
   policy,
   sec,
+  table,
+  tbody,
+  td,
+  thead,
+  tr,
+  th,
 };
 const contentMapping = {
   footnote_citation: FootnoteCitation,
