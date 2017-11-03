@@ -5,6 +5,7 @@ import wrapPage from '../components/app-wrapper';
 import FootnoteCitation from '../components/content-renderers/footnote-citation';
 import PlainText from '../components/content-renderers/plain-text';
 import Fallback from '../components/node-renderers/fallback';
+import footnote from '../components/node-renderers/footnote';
 import heading from '../components/node-renderers/heading';
 import list from '../components/node-renderers/list';
 import listitem from '../components/node-renderers/list-item';
@@ -16,6 +17,7 @@ import { documentData } from '../util/api/queries';
 
 
 const nodeMapping = {
+  footnote,
   heading,
   list,
   listitem,
