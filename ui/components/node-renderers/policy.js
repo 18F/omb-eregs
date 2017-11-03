@@ -3,7 +3,7 @@ import React from 'react';
 
 /* Root of a policy document */
 export default function Policy({ children, docNode }) {
-  return <div id={docNode.identifier}>{ children }</div>;
+  return <div className="node-policy" id={docNode.identifier}>{ children }</div>;
 }
 Policy.propTypes = {
   children: PropTypes.node,

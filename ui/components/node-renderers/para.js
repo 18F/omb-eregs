@@ -4,7 +4,7 @@ import React from 'react';
 /* Paragraph of text */
 export default function Paragraph({ children, docNode, renderedContent }) {
   return (
-    <div id={docNode.identifier}>
+    <div className="node-paragraph" id={docNode.identifier}>
       <p className="m0">{renderedContent}</p>
       { children }
     </div>

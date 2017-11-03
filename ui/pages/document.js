@@ -43,6 +43,10 @@ const nodeMapping = {
 const contentMapping = {
   footnote_citation: FootnoteCitation,
 };
+const headerFooterParams = {
+  showSearch: true,
+  wrapperClassName: 'document-container',
+};
 
 /* Recursively converts a docNode into React components, depending on each
  * node's node_type. Analogously, converts each node's "content" array
@@ -74,4 +78,4 @@ Document.propTypes = {
   }).isRequired,
 };
 
-export default wrapPage(Document, documentData);
+export default wrapPage(Document, documentData, headerFooterParams);

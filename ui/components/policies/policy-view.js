@@ -15,7 +15,7 @@ export default function Policy({ policy, topicsIds }) {
       <section className="policy border rounded gray-border p2">
         <h2 className="mt0 mb3">{policy.title_with_number}</h2>
         <div className="clearfix">
-          <div className="requirements-links mb1 sm-col sm-col-12 md-col-6">
+          <div className="requirements-links mb1 sm-col sm-col-12 md-col-8">
             <div className="circle-bg border gray-border center p1">
               <Link
                 route="requirements"
@@ -29,7 +29,7 @@ export default function Policy({ policy, topicsIds }) {
             {policy.total_reqs} requirements
              match your search
           </div>
-          <div className="external-link icon-links sm-col sm-col-12 md-col-6">
+          <div className="external-link icon-links sm-col sm-col-12 md-col-4">
             <Link href={policy.original_url}>
               View original
             </Link>

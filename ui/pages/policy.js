@@ -57,7 +57,7 @@ export class Policy extends React.Component {
     const { pagedReqs, policy } = this.props;
     const { page } = this.props.url.query;
     return (
-      <div className="px4">
+      <div className="contained-wrapper">
         <h2>{ policy.title_with_number }</h2>
         <div>
           <div className="col col-6">

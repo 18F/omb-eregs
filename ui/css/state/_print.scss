@@ -5,15 +5,15 @@
   }
 
   .usa-disclaimer, .navbar-title, .req .metadata, .req .req-text {
-    color: #111 !important;
+    color: $color-gray-darker !important;
   }
 
   .main {
     border-left: 0;
   }
 
-  ol.list-reset {
-    border-bottom: 1px solid #111;
+  .list-reset {
+    border-bottom: 1px solid $color-gray-darker;
   }
 
   .active-filter {
@@ -27,6 +27,6 @@
   }
 
   .topics-list a, a:link {
-   color: #111;
+   color: $color-gray-darker;
   }
 }

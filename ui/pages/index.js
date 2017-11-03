@@ -12,7 +12,7 @@ export function Homepage({ recentPolicies }) {
   return (
     <div className="homepage">
       <section className="filter-form py2 center">
-        <div className="sm-col-12 md-col-8 mx-auto center">
+        <div className="dark-back sm-col-12 md-col-8 mx-auto center">
           <h2 className="h1">Find policies and requirements that apply to your agency.</h2>
           <div className="filter px4 mb4">
             <h3 className="h3" id="topics_label">
