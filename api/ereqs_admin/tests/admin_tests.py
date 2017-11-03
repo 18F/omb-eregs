@@ -96,6 +96,7 @@ def test_pdf_upload(admin_client):
     data = {
         'policy_number': policy.policy_number,
         'title': 'First Policy Edited',
+        'slug': 'first-policy-edited',
         'uri': policy.uri,
         'omb_policy_id': policy.omb_policy_id,
         'policy_type': policy.policy_type,
