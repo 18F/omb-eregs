@@ -1,5 +1,6 @@
 boto3
 cfenv
+collections-extended
 django>=1.11,<1.12
 django-admin-interface
 django-cas-ng
@@ -10,6 +11,7 @@ django-storages
 djangorestframework
 dj-database-url
 gunicorn
+lxml
 networkx
 newrelic
 psycopg2

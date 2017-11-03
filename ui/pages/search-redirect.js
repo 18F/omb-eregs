@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
+import Link from '../components/link';
 import PagersContainer from '../components/pagers';
 import { apiNameField } from '../lookup-search';
 import { cleanSearchParamTypes, redirectQuery, searchRedirectData } from '../util/api/queries';
-import { Link } from '../routes';
 
 function Entry({ entry, userParams }) {
   const name = entry[apiNameField[userParams.lookup]];
@@ -13,7 +13,7 @@ function Entry({ entry, userParams }) {
   return (
     <li>
       <Link route={userParams.redirect.route} params={modifiedQuery}>
-        <a>{name}</a>
+        {name}
       </Link>
     </li>
   );
@@ -34,7 +34,7 @@ export function SearchRedirect({ pagedEntries, userParams }) {
     <div className="max-width-4 mx-auto my3">
       <div>
         <Link route={userParams.redirect.route} params={userParams.redirect.query}>
-          <a>Return to view requirements</a>
+          Return to view requirements
         </Link>
       </div>
       <ul>{entries}</ul>

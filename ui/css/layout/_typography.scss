@@ -1,0 +1,163 @@
+// Typograhy styles
+// ==========================================================================
+// typography.scss contains both global and application specific typography
+
+@mixin font-merriweather() {
+  font-family: "Merriweather", serif;
+}
+
+@mixin font-merriweather-light() {
+  font-family: "Merriweather", serif;
+  font-weight: 300;
+}
+
+@mixin font-source-sans-pro() {
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+@mixin font-source-sans-pro-semibold() {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 500;
+}
+
+@mixin font-source-sans-pro-bold() {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 800;
+}
+
+// Basic font mixins
+@mixin font-san-serif() {
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+}
+
+@mixin font-san-serif-bold() {
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-weight: 800;
+}
+
+@mixin font-san-serif-light() {
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-weight: 300;
+}
+
+@mixin font-serif() {
+  font-family: "Georgia", serif;
+}
+
+@mixin font-serif-bold() {
+  font-family: "Georgia", serif;
+  font-weight: 800;
+}
+
+@mixin font-serif-light() {
+  font-family: "Georgia", serif;
+  font-weight: 300;
+}
+
+body {
+  @include font-san-serif();
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  @include font-san-serif-bold();
+  color: $color-black;
+}
+
+.dark-back {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
+    color: $color-white;
+  }
+}
+
+@media (min-width: 52em) {
+  h1,
+  .h1 {
+    font-size: 1.5em;
+    line-height: 2em;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.625em;
+    line-height: 1.6875em;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.125em;
+    line-height: 1.5em;
+  }
+}
+
+h1,
+.h1 {
+  font-size: 2em;
+  line-height: 2.5em;
+}
+
+h2,
+.h2 {
+  font-size: 1.625em;
+  line-height: 2em;
+}
+
+h3,
+.h3 {
+  font-size: 1.625em;
+  line-height: 1.6875em;
+}
+
+.document-content {
+  h4,
+  .h4 {
+    color: $color-gold-dark;
+  }
+}
+
+h4,
+.h4 {
+  font-size: 1em;
+  line-height: 1.5em;
+}
+
+
+
+h5,
+.h5 {
+  font-size: .875em;
+  line-height: 1.312em;
+}
+
+h6,
+.h6 {
+  font-size: .75em;
+  line-height: .875em;
+}
+
+p {
+  @include font-serif();
+  font-size: 1em;
+  line-height: 1.5em;
+}

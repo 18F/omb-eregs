@@ -1,7 +1,14 @@
 $color-gray-lightest: #fafafa;
 
-:root {
+:root,
+html {
   font-size: 16px;
+}
+
+body {
+  font-size: 1rem;
+  line-height: 1.5em;
+  color: $color-black;
 }
 
 a,

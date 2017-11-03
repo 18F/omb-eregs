@@ -1,5 +1,6 @@
 import {
   cleanSearchParams,
+  documentData,
   formatIssuance,
   homepageData,
   policyData,
@@ -116,11 +117,18 @@ describe('policyData()', () => {
       () => Promise.resolve({ issuance: '2000-01-02' }));
   });
 
-  it('hits the correct urls', async () => {
+  it('hits the correct url with OMB policy ID', async () => {
+    await policyData({ query: { policyId: 'M-123' } });
+    expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy__omb_policy_id: 'M-123', page: '1' });
+    expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('M-123');
+  });
+
+  it('hits the correct urls with policy ID', async () => {
     await policyData({ query: { policyId: '3' } });
     expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '1' });
     expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('3');
   });
+
   it('returns the correct results', async () => {
     const results = await policyData({ query: {} });
     expect(results).toEqual({
@@ -144,6 +152,30 @@ describe('policyData()', () => {
     });
 
     const result = await policyData({ query: {} });
+    expect(result).toEqual({ statusCode: 404 });
+  });
+});
+
+describe('documentData()', () => {
+  beforeEach(() => {
+    endpoints.document.fetchOne.mockImplementationOnce(
+      () => Promise.resolve({ data: 'here' }),
+    );
+  });
+  it('hits the correct url', async () => {
+    const result = await documentData({ query: { policyId: '123' } });
+    expect(endpoints.document.fetchOne).toHaveBeenCalledWith('123');
+    expect(result).toEqual({ docNode: { data: 'here' } });
+  });
+  it('passes up 404s', async () => {
+    const err = new Error('Not found');
+    err.response = { status: 404 };
+    endpoints.document.fetchOne.mockReset();
+    endpoints.document.fetchOne.mockImplementationOnce(() => {
+      throw err;
+    });
+
+    const result = await documentData({ query: {} });
     expect(result).toEqual({ statusCode: 404 });
   });
 });

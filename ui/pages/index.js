@@ -3,6 +3,8 @@ import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
 import NewPolicyView from '../components/homepage/new-policy-view';
+import { ContactEmail } from '../components/contact-email';
+import Link from '../components/link';
 import Search from '../components/search/search';
 import { homepageData } from '../util/api/queries';
 
@@ -10,7 +12,7 @@ export function Homepage({ recentPolicies }) {
   return (
     <div className="homepage">
       <section className="filter-form py2 center">
-        <div className="sm-col-12 md-col-8 mx-auto center">
+        <div className="dark-back sm-col-12 md-col-8 mx-auto center">
           <h2 className="h1">Find policies and requirements that apply to your agency.</h2>
           <div className="filter px4 mb4">
             <h3 className="h3" id="topics_label">
@@ -33,15 +35,15 @@ export function Homepage({ recentPolicies }) {
             <p className="content">
               This site does not include a comprehensive list of OMB policies. We are adding select
               policies on a rolling basis and working with users to make the site more useful.{' '}
-              <a href="mailto:ofcio@omb.eop.gov">Tell us what you think!</a>
+              <ContactEmail text="Tell us what you think!" />
             </p>
             <h3 className="h2">Disclaimer</h3>
             <p className="content">
               The information appearing on this website is for general informational purposes only,
               intended to supplement official resources, including the Office of Management and
-              Budget’s (OMB) website (<a href="https://www.whitehouse.gov/omb">
+              Budget’s (OMB) website (<Link href="https://www.whitehouse.gov/omb">
                 www.whitehouse.gov/omb
-              </a>). This website does not provide legal advice to any individual or entity;
+              </Link>). This website does not provide legal advice to any individual or entity;
               establish, modify, or interpret any OMB policies; serve as a decision-making tool or a
               compliance check-list; or provide a comprehensive set of requirements applicable to
               agencies. This website should not be cited as the source of any policies or

@@ -22,9 +22,7 @@ describe('<SearchRedirect />', () => {
     expect(result.find('Entry')).toHaveLength(2);
   });
   it('has a "back" link', () => {
-    const link = shallow(<SearchRedirect {...params} />)
-      .find('LinkRoutes')
-      .first();
+    const link = shallow(<SearchRedirect {...params} />).find('Link').first();
     expect(link.prop('route')).toEqual('requirements');
     expect(link.prop('params')).toEqual({ some: 'field', page: '4' });
   });

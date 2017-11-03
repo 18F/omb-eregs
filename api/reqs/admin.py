@@ -28,6 +28,7 @@ class PolicyAdmin(EReqsVersionAdmin):
     list_filter = ['policy_type', 'policy_status', 'public']
     radio_fields = {'policy_type': admin.VERTICAL}
     search_fields = ['title', 'omb_policy_id']
+    prepopulated_fields = {"slug": ("title",)}
 
 
 @admin.register(Topic)

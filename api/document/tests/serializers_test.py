@@ -1,19 +1,26 @@
+from datetime import date
+
 import pytest
 from model_mommy import mommy
 
 from document import serializers
 from document.models import DocNode
+from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic
 
 
 def test_end_to_end():
     """Create a tree, then serialize it."""
-    root = DocNode.new_tree('root', '0')
+    policy = mommy.prepare(
+        Policy, issuance=date(2001, 2, 3), omb_policy_id='M-18-18',
+        title='Some Title', uri='http://example.com/thing.pdf',
+    )
+    root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sect', text='Section 1')
     sect2 = root.add_child('sect')
-    pa = sect2.add_child('par', 'a')
-    pa.add_child('par', '1', text='Paragraph (a)(1)')
-    sect2.add_child('par', 'b')
+    pa = sect2.add_child('par', 'a', marker='(a)')
+    pa.add_child('par', '1', text='Paragraph (a)(1)', marker='(1)')
+    sect2.add_child('par', 'b', marker='b.')
 
     result = serializers.DocCursorSerializer(root).data
     assert result == {
@@ -21,16 +28,29 @@ def test_end_to_end():
         'node_type': 'root',
         'type_emblem': '0',
         'text': '',
+        'marker': '',
         'depth': 0,
         'requirement': None,
+        'content': [],
+        'policy': {     # Note this field does not appear on children
+            'issuance': '2001-02-03',
+            'omb_policy_id': 'M-18-18',
+            'title': 'Some Title',
+            'uri': 'http://example.com/thing.pdf',
+        },
         'children': [
             {
                 'identifier': 'root_0__sect_1',
                 'node_type': 'sect',
                 'type_emblem': '1',
                 'text': 'Section 1',
+                'marker': '',
                 'depth': 1,
                 'requirement': None,
+                'content': [{
+                    'content_type': '__text__',
+                    'text': 'Section 1',
+                }],
                 'children': [],
             },
             {
@@ -38,24 +58,33 @@ def test_end_to_end():
                 'node_type': 'sect',
                 'type_emblem': '2',
                 'text': '',
+                'marker': '',
                 'depth': 1,
                 'requirement': None,
+                'content': [],
                 'children': [
                     {
                         'identifier': 'root_0__sect_2__par_a',
                         'node_type': 'par',
                         'type_emblem': 'a',
                         'text': '',
+                        'marker': '(a)',
                         'depth': 2,
                         'requirement': None,
+                        'content': [],
                         'children': [
                             {
                                 'identifier': 'root_0__sect_2__par_a__par_1',
                                 'node_type': 'par',
                                 'type_emblem': '1',
                                 'text': 'Paragraph (a)(1)',
+                                'marker': '(1)',
                                 'depth': 3,
                                 'requirement': None,
+                                'content': [{
+                                    'content_type': '__text__',
+                                    'text': 'Paragraph (a)(1)',
+                                }],
                                 'children': [],
                             },
                         ],
@@ -65,8 +94,10 @@ def test_end_to_end():
                         'node_type': 'par',
                         'type_emblem': 'b',
                         'text': '',
+                        'marker': 'b.',
                         'depth': 2,
                         'requirement': None,
+                        'content': [],
                         'children': [],
                     },
                 ],
@@ -80,7 +111,7 @@ def test_requirement():
     """The 'requirement' field should serialize an associated Requirement"""
     policy = mommy.make(Policy)
     topics = [mommy.make(Topic, name='AaA'), mommy.make(Topic, name='BbB')]
-    root = DocNode.new_tree('policy', '1', policy=policy)
+    root = DocCursor.new_tree('policy', '1', policy=policy)
     req_node = root.add_child('req', policy=policy)
     root.nested_set_renumber()
     root.model.save()
@@ -118,3 +149,42 @@ def test_requirement():
         ],
         'verb': 'vvvv',
     }
+
+
+@pytest.mark.django_db
+def test_footnotes():
+    """The "content" field should contain serialized FootnoteCitations."""
+    policy = mommy.make(Policy)
+    para = DocCursor.new_tree('para', '1', text='Some1 message2 here',
+                              policy=policy)
+    footnote1 = para.add_child('footnote', policy=policy).model
+    footnote2 = para.add_child('footnote', policy=policy).model
+    para.nested_set_renumber()
+    DocNode.objects.bulk_create(n.model for n in para.walk())
+    para.model.footnotecitations.create(
+        start=len('Some'), end=len('Some1'), footnote_node=footnote1)
+    para.model.footnotecitations.create(
+        start=len('Some1 message'), end=len('Some1 message2'),
+        footnote_node=footnote2)
+
+    result = serializers.DocCursorSerializer(para).data
+    assert result['content'] == [
+        {
+            'content_type': '__text__',
+            'text': 'Some',
+        }, {
+            'content_type': 'footnote_citation',
+            'text': '1',
+            'footnote_node': footnote1.identifier,
+        }, {
+            'content_type': '__text__',
+            'text': ' message',
+        }, {
+            'content_type': 'footnote_citation',
+            'text': '2',
+            'footnote_node': footnote2.identifier,
+        }, {
+            'content_type': '__text__',
+            'text': ' here',
+        }
+    ]

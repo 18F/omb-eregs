@@ -8,6 +8,7 @@ from model_mommy import mommy
 from document.models import DocNode
 from document.serializers import DocCursorSerializer
 from document.tests.utils import random_doc
+from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic
 
 
@@ -15,7 +16,7 @@ from reqs.models import Policy, Requirement, Topic
 @pytest.mark.urls('document.urls')
 def test_404s(client):
     policy = mommy.make(Policy)
-    root = DocNode.new_tree('root', '0', policy=policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sect', policy=policy)
     root.nested_set_renumber()
     DocNode.objects.bulk_create(n.model for n in root.walk())
@@ -32,7 +33,7 @@ def test_404s(client):
 @pytest.mark.urls('document.urls')
 def test_correct_data(client):
     policy = mommy.make(Policy)
-    root = DocNode.new_tree('root', '0', policy=policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
     sect1 = root.add_child('sect', policy=policy)
     root.add_child('sect', policy=policy)
     sect1.add_child('par', 'a', policy=policy)
@@ -54,8 +55,21 @@ def test_correct_data(client):
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
+def test_by_pretty_url(client):
+    policy = mommy.make(Policy, omb_policy_id='M-Something-18')
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.nested_set_renumber()
+    root.model.save()
+
+    result = json.loads(client.get("/M-Something-18").content.decode("utf-8"))
+
+    assert result == DocCursorSerializer(root).data
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
 def test_query_count(client):
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, omb_policy_id='M-O-A-R')
     root = random_doc(20, save=True, policy=policy)
     subtree_nodes = {
         root.tree.nodes[idx]['model']
@@ -76,8 +90,11 @@ def test_query_count(client):
     # test
     from django.db import connection
     with CaptureQueriesContext(connection) as capture:
-        client.get(f"/{policy.pk}")
-        # Query 1: lookup root docnode by policy pk, joining w/ req
-        # 2: fetch child nodes, joining w/ requirements
-        # 3: fetch topics related to those requirements
-        assert len(capture) == 3
+        client.get("/M-O-A-R")
+        # Query 1: Lookup the policy
+        # 2: Lookup the root docnode, joining w/ req
+        # 3: fetch footnote citations for the root
+        # 4: fetch child nodes, joining w/ requirements
+        # 5: fetch topics related to those requirements
+        # 6: fetch footnote citations for child nodes
+        assert len(capture) == 6

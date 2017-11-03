@@ -64,12 +64,15 @@ function faviconTags() {
   ]);
 }
 
-export default function HeaderFooter({ children, showSearch }) {
+export default function HeaderFooter({ children, showSearch, wrapperClassName }) {
+  const klasses = ['container', wrapperClassName].join(' ');
+
   return (
     <div>
       <Head>
         <title>OMB Policy Library (Beta)</title>
         <link rel="stylesheet" href="/static/styles.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha1/katex.min.css" integrity="sha384-8QOKbPtTFvh/lMY0qPVbXj9hDh+v8US0pD//FcoYFst2lCIf0BmT58+Heqj0IGyx" crossOrigin="anonymous" />
         <script
           async
           type="text/javascript"
@@ -81,7 +84,7 @@ export default function HeaderFooter({ children, showSearch }) {
       </Head>
       <Disclaimer />
       <Navbar showSearch={showSearch} />
-      <div className="container">
+      <div className={klasses}>
         {children}
       </div>
       <Footer />
@@ -92,9 +95,11 @@ export default function HeaderFooter({ children, showSearch }) {
 
 HeaderFooter.propTypes = {
   showSearch: PropTypes.bool,
+  wrapperClassName: PropTypes.string,
   children: PropTypes.node.isRequired,
 };
 
 HeaderFooter.defaultProps = {
   showSearch: true,
+  wrapperClassName: '',
 };

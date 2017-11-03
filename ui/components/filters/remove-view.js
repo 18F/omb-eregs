@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Link } from '../../routes';
+import Link from '../link';
 
 export default function FilterRemoveView({ heading, name, params, route }) {
   return (
@@ -9,8 +9,8 @@ export default function FilterRemoveView({ heading, name, params, route }) {
       <div className="filter-name left">
         {heading}:&nbsp;<strong>{name}</strong>
       </div>
-      <Link params={params} route={route}>
-        <a className="remove-filter-link block left">Remove filter</a>
+      <Link className="remove-filter-link block left" params={params} route={route}>
+        Remove filter
       </Link>
     </li>
   );

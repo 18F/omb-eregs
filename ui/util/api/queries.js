@@ -25,17 +25,22 @@ export async function homepageData() {
 }
 
 export async function policiesData({ query }) {
-  const results = await Promise.all([
+  const [
+    existingAgencies,
+    existingPolicies,
+    existingTopics,
+    pagedPolicies,
+  ] = await Promise.all([
     endpoints.topics.withIds(query.requirements__all_agencies__id__in),
     endpoints.policies.withIds(query.id__in),
     endpoints.topics.withIds(query.requirements__topics__id__in),
     endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
   ]);
   return {
-    existingAgencies: results[0],
-    existingPolicies: results[1],
-    existingTopics: results[2],
-    pagedPolicies: results[3],
+    existingAgencies,
+    existingPolicies,
+    existingTopics,
+    pagedPolicies,
   };
 }
 
@@ -131,22 +136,41 @@ export function redirectQuery(query, insertParam, idToInsert) {
   return result;
 }
 
-export async function policyData({ query }) {
-  const reqQuery = {
-    policy_id: query.policyId,
-    page: query.page || '1',
-  };
-
+async function propagate404(fn) {
   try {
-    const [pagedReqs, policy] = await Promise.all([
-      endpoints.requirements.fetch(reqQuery),
-      endpoints.policies.fetchOne(query.policyId),
-    ]);
-    return { pagedReqs, policy: formatIssuance(policy) };
+    return await fn();
   } catch (err) {
     if (err.response && err.response.status === 404) {
       return { statusCode: 404 };
     }
     throw err;
   }
+}
+
+export async function policyData({ query }) {
+  let queryParam;
+  const reqQuery = {
+    page: query.page || '1',
+  };
+  if (isNaN(query.policyId) === false) {
+    queryParam = { policy_id: query.policyId };
+  } else {
+    queryParam = { policy__omb_policy_id: query.policyId };
+  }
+  Object.assign(reqQuery, queryParam);
+
+  return propagate404(async () => {
+    const [pagedReqs, policy] = await Promise.all([
+      endpoints.requirements.fetch(reqQuery),
+      endpoints.policies.fetchOne(query.policyId),
+    ]);
+    return { pagedReqs, policy: formatIssuance(policy) };
+  });
+}
+
+export async function documentData({ query }) {
+  return propagate404(async () => {
+    const docNode = await endpoints.document.fetchOne(query.policyId);
+    return { docNode };
+  });
 }
