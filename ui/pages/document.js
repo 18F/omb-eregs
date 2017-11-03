@@ -4,6 +4,7 @@ import React from 'react';
 import wrapPage from '../components/app-wrapper';
 import Fallback from '../components/nodeRenderers/fallback';
 import heading from '../components/nodeRenderers/heading';
+import math from '../components/nodeRenderers/math';
 import para from '../components/nodeRenderers/para';
 import policy from '../components/nodeRenderers/policy';
 import sec from '../components/nodeRenderers/sec';
@@ -11,6 +12,7 @@ import { documentData } from '../util/api/queries';
 
 const componentMapping = {
   heading,
+  math,
   para,
   policy,
   sec,
