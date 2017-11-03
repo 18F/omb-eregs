@@ -4,12 +4,14 @@ import React from 'react';
 /* We've been asked to render a node we don't have a renderer for. We'll do
  * our best but flag it when in development mode */
 export default function Fallback({ children, docNode, renderedContent }) {
-  const params = { id: docNode.identifier };
+  const params = {
+    className: 'node-fallback',
+    id: docNode.identifier,
+  };
   if (process.env.NODE_ENV === 'development') {
     params.style = { backgroundColor: 'pink' };
     params.title = docNode.identifier;
   }
-  params.className = ['node-', docNode.node_type].join('');
   return (
     <div {...params}>
       <p style={{ margin: 0 }}>{ renderedContent }</p>

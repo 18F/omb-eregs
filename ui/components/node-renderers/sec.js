@@ -3,8 +3,7 @@ import React from 'react';
 
 /* Uses indentation and border to indicate separate sections */
 export default function Section({ children, docNode }) {
-  const klasses = ['node-', docNode.node_type].join('');
-  return <div className={klasses} id={docNode.identifier}>{children}</div>;
+  return <div className="node-section" id={docNode.identifier}>{children}</div>;
 }
 Section.propTypes = {
   children: PropTypes.node,

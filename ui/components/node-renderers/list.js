@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 export default function List({ children, docNode }) {
-  return <ol className="list-reset" id={docNode.identifier}>{ children }</ol>;
+  return <ol className="list-reset node-list" id={docNode.identifier}>{ children }</ol>;
 }
 List.propTypes = {
   children: PropTypes.node,
