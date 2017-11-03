@@ -35,8 +35,6 @@ def test_original_url():
 
 @pytest.mark.django_db
 def test_slug_is_created_from_title_on_save_if_slug_is_empty():
-    policy = mommy.make(models.Policy)
-    policy.title = 'hello there'
-    policy.slug = ''
+    policy = mommy.prepare(models.Policy, title="hello there", slug="")
     policy.save()
     assert policy.slug == 'hello-there'

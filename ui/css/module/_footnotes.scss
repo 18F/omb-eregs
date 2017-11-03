@@ -11,3 +11,13 @@
   background: $color-cool-blue;
   color: $color-white;
 }
+
+.node-footnote {
+  border-bottom: 1px solid $color-gray-dark;
+  border-top: 1px solid $color-gray-dark;
+  margin: 1em 2em;
+
+  .text {
+    color: $color-gray-medium;
+  }
+}
