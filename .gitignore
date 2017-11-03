@@ -1,6 +1,9 @@
 # No need to commit databases
 *.sqlite3
 
+# Mac stuff
+.DS_Store
+
 # Javascript stuff
 node_modules
 reqs/static/js/bundle.js
