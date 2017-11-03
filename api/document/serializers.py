@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from document.models import DocNode
-from reqs.models import Requirement
+from reqs.models import Policy, Requirement
 from reqs.serializers import TopicSerializer
 
 
@@ -23,6 +23,17 @@ class RequirementSerializer(serializers.ModelSerializer):
         )
 
 
+class PolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Policy
+        fields = (
+            'issuance',
+            'omb_policy_id',
+            'title',
+            'uri',
+        )
+
+
 class DocCursorSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
     requirement = RequirementSerializer(read_only=True)
@@ -30,18 +41,37 @@ class DocCursorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DocNode
-        fields = ('identifier', 'node_type', 'type_emblem', 'text', 'depth',
-                  'children', 'requirement', 'content')
+        fields = (
+            'children',
+            'content',
+            'depth',
+            'identifier',
+            'marker',
+            'node_type',
+            'requirement',
+            'text',
+            'type_emblem',
+        )
 
     def to_representation(self, instance):
         """We want to serialize the wrapped model, not the cursor. However, we
         need to hang on to that cursor for rendering our children."""
         self.context['cursor'] = instance
-        return super().to_representation(instance.model)
+        as_dict = super().to_representation(instance.model)
+        if self.context.get('is_root', True):
+            as_dict.update(self.root_only_attrs(instance))
+        return as_dict
+
+    @staticmethod
+    def root_only_attrs(cursor):
+        return {
+            'policy': PolicySerializer(cursor.model.policy).data
+        }
 
     def get_children(self, instance):
         return self.__class__(
-            self.context['cursor'].children(), many=True
+            self.context['cursor'].children(), many=True,
+            context={**self.context, 'is_root': False},
         ).data
 
     def get_content(self, instance):

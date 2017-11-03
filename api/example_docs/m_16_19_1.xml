@@ -5,8 +5,8 @@
     <policyTitle>
       MEMORANDUM FOR HEADS OF EXECUTIVE DEPARTMENTS AND AGENCIES
     </policyTitle>
-    <from>Tony Scott, Federal Chief Information Officer</from>
-    <subject>Data Center Optimization Initiative (DCOI)</subject>
+    <from marker="FROM:">Tony Scott, Federal Chief Information Officer</from>
+    <subject marker="SUBJECT:">Data Center Optimization Initiative (DCOI)</subject>
   </preamble>
   <sec>
     <heading>Background</heading>
@@ -21,7 +21,7 @@
         efficient computing platforms and
         technologies.<footnote_citation>1</footnote_citation>
       </content>
-      <footnote emblem="1">
+      <footnote emblem="1" marker="1">
         The FDCCI was first established by OMB “Memo for CIOs: Federal Data
         Center Consolidation Initiative,” issued on February 26, 2010, and
         modified by subsequent memoranda.
@@ -38,7 +38,7 @@
         data centers, performance metrics and a timeline for agency
         activities, and yearly calculations of investment and cost savings.
       </content>
-      <footnote emblem="2">
+      <footnote emblem="2" marker="2">
         Title VIII, Subtitle D of the National Defense Authorization Act
         (NDAA) for Fiscal Year 2015, Pub. L. No. 113-291.
       </footnote>
@@ -54,7 +54,7 @@
         review agencies’ data center inventories and the implementation of
         data center management strategies.
       </content>
-      <footnote emblem="3">
+      <footnote emblem="3" marker="3">
         This office was established in accordance with Section 101 of the
         E-government Act of 2002, codified at 44 U.S.C.  § 3602, and is headed
         by the Federal government Chief Information Officer. This office will
@@ -84,7 +84,7 @@
         efficient infrastructure, such as cloud services and inter-agency
         shared services.<footnote_citation>4</footnote_citation>
       </content>
-      <footnote emblem="4">
+      <footnote emblem="4" marker="4">
         Federal Information Technology Shared Services Strategy, May 2, 2012,
         https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/shared_services_strategy.pdf. 
       </footnote>
@@ -95,10 +95,10 @@
         agencies,<footnote_citation>5</footnote_citation> including the
         Department of Defense.<footnote_citation>6</footnote_citation>
       </content>
-      <footnote emblem="5">
+      <footnote emblem="5" marker="5">
         See Chief Financial Officers Act of 1990, Pub. L. No. 101–576.
       </footnote>
-      <footnote emblem="6">
+      <footnote emblem="6" marker="6">
         Per Sec. 834(b)(1)(C) of the FY2015 NDAA, the Department of Defense
         may submit to OMB, in lieu of the Strategic Plan described in this
         memorandum, the defense-wide plan and cost savings report required
@@ -121,11 +121,11 @@
           shall be responsible for implementing and measuring progress toward
           meeting the goals set forth in this memorandum.
         </content>
-        <footnote emblem="7">
+        <footnote emblem="7" marker="7">
           Title VIII, Subtitle D of the National Defense Authorization Act
           (NDAA) for Fiscal Year 2015, Pub. L. No. 113-291.
         </footnote>
-        <footnote emblem="8">
+        <footnote emblem="8" marker="8">
           OMB Memorandum M-15-14, “Management and Oversight of Federal
           Information Technology,” June 10, 2015,
           https://www.whitehouse.gov/sites/default/files/omb/memoranda/2015/m-15-14.pdf. 
@@ -152,13 +152,13 @@
             or expanded data center (such as through consolidation of multiple
             existing data centers into a single new data center).
           </content>
-          <footnote emblem="9">
+          <footnote emblem="9" marker="9">
             The General Services Administration (GSA) Office of
             Government-wide Policy (OGP) will coordinate with OMB to define
             thresholds for what constitutes “significant” expansion within 60
             days of publication of this memorandum.
           </footnote>
-          <footnote emblem="10">
+          <footnote emblem="10" marker="10">
             Data centers certified by GSA OGP as Inter-agency Shared Service
             Provider data centers are excluded from this development freeze.
           </footnote>
@@ -177,31 +177,38 @@
             existing data centers,<footnote_citation>11</footnote_citation> by
             (in order of priority):
           </content>
-          <footnote emblem="11">
+          <footnote emblem="11" marker="11">
             This requirement does not apply to GSA OGP designated inter-agency
             shared services data centers.
           </footnote>
           <list>
-            <listitem emblem="1">
-              <content>
-                1. Transitioning to provisioned services, including configurable
-                and flexible technology such as Software as a Service (SaaS),
-                Platform as a Service (PaaS), and Infrastructure as a Service
-                (IaaS) to the furthest extent practicable, consistent with the
-                Cloud First policy.<footnote_citation>12</footnote_citation>
-              </content>
-              <footnote emblem="12">
-                Federal Cloud Computing Strategy, February 8, 2011,
-                https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/federal-cloud-computing-strategy.pdf.
-              </footnote>
+            <listitem emblem="1" marker="1.">
+              <para>
+                <content>
+                  Transitioning to provisioned services, including
+                  configurable and flexible technology such as Software as a
+                  Service (SaaS), Platform as a Service (PaaS), and
+                  Infrastructure as a Service (IaaS) to the furthest extent
+                  practicable, consistent with the Cloud First
+                  policy.<footnote_citation>12</footnote_citation>
+                </content>
+                <footnote emblem="12" marker="12">
+                  Federal Cloud Computing Strategy, February 8, 2011,
+                  https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/federal-cloud-computing-strategy.pdf.
+                </footnote>
+              </para>
             </listitem>
-            <listitem emblem="2">
-              2. Migrating to inter-agency shared services or co-location data
-              centers.
+            <listitem emblem="2" marker="2.">
+              <para>
+                Migrating to inter-agency shared services or co-location data
+                centers.
+              </para>
             </listitem>
-            <listitem emblem="3">
-              3. Migrating to more optimized data centers within the agency’s
-              data center inventory.
+            <listitem emblem="3" marker="3.">
+              <para>
+                Migrating to more optimized data centers within the agency’s
+                data center inventory.
+              </para>
             </listitem>
           </list>
         </para>
@@ -224,8 +231,10 @@
             and Technology (NIST)
             guidance.<footnote_citation>14</footnote_citation>
           </content>
-          <footnote emblem="13">Ibid.</footnote>
-          <footnote emblem="14">See FY2015 NDAA Sec. 834(3)(c).</footnote>
+          <footnote emblem="13" marker="13">Ibid.</footnote>
+          <footnote emblem="14" marker="14">
+            See FY2015 NDAA Sec. 834(3)(c).
+          </footnote>
         </para>
       </sec>
       <sec>
@@ -242,7 +251,7 @@
             center shared services marketplace and coordinate shared services
             for inter-agency consumption by:
           </content>
-          <footnote emblem="15">
+          <footnote emblem="15" marker="15">
             Formed in 2004, lines of business (LOB) are cross-agency
             initiatives to define, design, implement and monitor a set of
             common solutions for government-wide business functions,
@@ -252,43 +261,57 @@
             community
           </footnote>
           <list>
-            <para>
-              • Coordinating with OMB to define qualifying operating standards
-              for inter-agency shared services providers, creating guidance
-              materials for becoming such a provider, and identifying and
-              approving candidate providers.
-            </para>
-            <para>
-              • Maintaining and monitoring inter-agency shared services
-              provider operating standards.
-            </para>
-            <para>
-              • Maintaining an online inventory of qualified inter-agency
-              shared services providers.
-            </para>
-            <para>
-              • Establishing an online decision support tool to facilitate
-              agency review, selection, and analysis of inter-agency shared
-              services providers.
-            </para>
-            <para>
-              • Coordinating with the GSA Federal Acquisition Service (FAS) to
-              create and maintain an inventory of acquisition tools and
-              products specific to the technology and services surrounding
-              data center optimization, including procurement vehicles for the
-              acquisition of automated infrastructure management and
-              monitoring tools.
-            </para>
-            <para>
-              • Developing, implementing, and maintaining financial and
-              service models, as well as contracts, pertaining to data center
-              procurement with customer/partner agencies and shared service
-              providers.
-            </para>
-            <para>
-              • Providing a forum for participating and interested agencies to
-              discuss the inter-agency shared services marketplace.
-            </para>
+            <listitem marker="•">
+              <para>
+                Coordinating with OMB to define qualifying operating standards
+                for inter-agency shared services providers, creating guidance
+                materials for becoming such a provider, and identifying and
+                approving candidate providers.
+              </para>
+            </listitem>
+            <listitem marker="•">
+              <para>
+                Maintaining and monitoring inter-agency shared services
+                provider operating standards.
+              </para>
+            </listitem>
+            <listitem marker="•">
+              <para>
+                Maintaining an online inventory of qualified inter-agency
+                shared services providers.
+              </para>
+            </listitem>
+            <listitem marker="•">
+              <para>
+                Establishing an online decision support tool to facilitate
+                agency review, selection, and analysis of inter-agency shared
+                services providers.
+              </para>
+            </listitem>
+            <listitem marker="•">
+              <para>
+                Coordinating with the GSA Federal Acquisition Service (FAS) to
+                create and maintain an inventory of acquisition tools and
+                products specific to the technology and services surrounding
+                data center optimization, including procurement vehicles for
+                the acquisition of automated infrastructure management and
+                monitoring tools.
+              </para>
+            </listitem>
+            <listitem marker="•">
+              <para>
+                Developing, implementing, and maintaining financial and
+                service models, as well as contracts, pertaining to data
+                center procurement with customer/partner agencies and shared
+                service providers.
+              </para>
+            </listitem>
+            <listitem marker="•">
+              <para>
+                Providing a forum for participating and interested agencies to
+                discuss the inter-agency shared services marketplace.
+              </para>
+            </listitem>
           </list>
         </para>
         <para>
@@ -323,7 +346,7 @@
             August 31, 2016, to align with the Integrated Data Collection (IDC)
             process.<footnote_citation>16</footnote_citation>
           </content>
-          <footnote emblem="16">
+          <footnote emblem="16" marker="16">
             Data centers containing only print servers that were previously
             reported as “closed” shall remain classified as closed data
             centers in agencies’ data center reporting.
@@ -344,13 +367,13 @@
             the purposes of this memorandum, but must continue to be included
             in agencies’ quarterly inventory data submissions to OMB.
           </content>
-          <footnote emblem="17">
+          <footnote emblem="17" marker="17">
             The term “tiered” and the definitions that follow are derived from
             the Uptime Institute’s Tier Classification System; however, this
             shall not be construed as requiring any certification in order for
             a data center to be considered tiered by OMB.
           </footnote>
-          <footnote emblem="18">
+          <footnote emblem="18" marker="18">
             Data centers previously classified as tiered in past inventories
             will automatically be classified as tiered under the DCOI.
           </footnote>
@@ -380,7 +403,7 @@
             centers by September 30,
             2018.<footnote_citation>19</footnote_citation>
           </content>
-          <footnote emblem="19">
+          <footnote emblem="19" marker="19">
             Executive Order, “Planning for Federal Sustainability in the Next
             Decade”
             https://www.whitehouse.gov/the-pressoffice/2015/03/19/executive-order-planning-federal-sustainability-next-decade.
@@ -398,12 +421,12 @@
             Practitioner (DCEP) assigned to manage its
             performance.”<footnote_citation>21</footnote_citation>
           </content>
-          <footnote emblem="20">
+          <footnote emblem="20" marker="20">
             While Executive Order 13693 requires advanced energy metering in
             all data centers, OMB will monitor PUE for tiered data centers
             only.
           </footnote>
-          <footnote emblem="21">
+          <footnote emblem="21" marker="21">
             See “Implementing Instructions for Executive Order 13693,
             ‘Planning for Federal Sustainability in the Next Decade’”
             https://www.whitehouse.gov/sites/default/files/docs/eo_13693_implementing_instructions_june_10_2015.pdf.
@@ -443,7 +466,7 @@
             the same for extension of existing vehicles. PUE reporting is not
             required for cloud services.
           </content>
-          <footnote emblem="22">
+          <footnote emblem="22" marker="22">
             This can be PUE for the facility as a whole in cases where the
             agency only contracts for a portion of a larger facility; however,
             if PUE metrics are available specific to the agency’s use, that is
@@ -464,7 +487,7 @@
             virtualization metrics defined in the Metric Target Values section
             of this memorandum.<footnote_citation>23</footnote_citation>
           </content>
-          <footnote emblem="23">
+          <footnote emblem="23" marker="23">
             For non-tiered data centers, only automated monitoring of server
             utilization is required.
           </footnote>
@@ -521,7 +544,7 @@
                 Table 1. Government-wide Optimization Targets for Tiered Data
                 Centers<footnote_citation>24</footnote_citation>
               </content>
-              <footnote emblem="24">
+              <footnote emblem="24" marker="24">
                 While agencies should strive to achieve each applicable
                 optimization target for each data center, only PUE targets
                 will be calculated on a per-data center basis. All other
@@ -546,7 +569,7 @@
                     agency’s tiered data center inventory located in tiered
                     data centers that have power metering.
                   </content>
-                  <footnote emblem="25">
+                  <footnote emblem="25" marker="25">
                     “Total gross floor area” is defined as total square
                     footage available for IT equipment and includes all
                     associated corridors, walkways, and air circulation
@@ -579,7 +602,7 @@
                     Power Usage Effectiveness
                     (PUE)<footnote_citation>26</footnote_citation>
                   </content>
-                  <footnote emblem="26">
+                  <footnote emblem="26" marker="26">
                     PUE shall be calculated by OMB based on quarterly average
                     IT and facility electricity usage data.
                   </footnote>
@@ -640,7 +663,7 @@
                     discounted by the fraction of data centers fully equipped
                     with automated monitoring.
                   </content>
-                  <footnote emblem="27">
+                  <footnote emblem="27" marker="27">
                     Server utilization shall be collected continuously and
                     reported as a quarterly average.
                   </footnote>
@@ -692,7 +715,7 @@
                         \textit{Total Gross Floor Area}
                       }
                     </content>
-                    <footnote emblem="28">
+                    <footnote emblem="28" marker="28">
                       “Active” racks are those that have IT equipment
                       consuming electricity.
                     </footnote>
@@ -724,13 +747,13 @@
             avoidance)<footnote_citation>30</footnote_citation> in each of
             fiscal years 2016, 2017, and 2018:
           </content>
-          <footnote emblem="29">
+          <footnote emblem="29" marker="29">
             Benchmarked against the sum of all non-cloud data center costs
             (including data center labor, software, hardware, electricity, and
             facility) found in physical data center fields of the IT Inventory
             Summary Table of the IT Dashboard
           </footnote>
-          <footnote emblem="30">
+          <footnote emblem="30" marker="30">
             Consistent with OMB Circular A-131, the term “cost savings” refers
             to “a reduction in actual expenditures below the projected level
             of costs to achieve a specific objective,” and the term “cost
@@ -770,7 +793,7 @@
             development, or any other
             environment).<footnote_citation>31</footnote_citation>
           </content>
-          <footnote emblem="31">Excludes print servers.</footnote>
+          <footnote emblem="31" marker="31">Excludes print servers.</footnote>
         </para>
         <para>
           Based on the number of data centers designated by the agencies as
@@ -795,12 +818,12 @@
             unable to meet applicable PUE optimization targets and/or pose
             management or security challenges due to age.
           </content>
-          <footnote emblem="32">
+          <footnote emblem="32" marker="32">
             The baseline number of data centers is based on the agencies’
             August 31, 2015, data center inventory submissions, as collected
             by OMB OFCIO through the Integrated Data Collection.
           </footnote>
-          <footnote emblem="33">
+          <footnote emblem="33" marker="33">
             Estimated reduction in gross floor area of data centers is
             approximate and has been based on the average size, in square
             feet, of the data centers of each type to be closed.
@@ -835,31 +858,38 @@
         <para>
           Data will be collected quarterly on an agency-by-agency basis through the IDC, as follows:
           <list>
-            <listitem emblem="1">
-              1. Agencies must continue to maintain complete inventories of
-              all data center facilities, closure/consolidation plans, and
-              properties of each facility owned, operated, or maintained by or
-              on behalf of the agency.
+            <listitem emblem="1" marker="1.">
+              <para>
+                Agencies must continue to maintain complete inventories of all
+                data center facilities, closure/consolidation plans, and
+                properties of each facility owned, operated, or maintained by
+                or on behalf of the agency.
+              </para>
             </listitem>
-            <listitem emblem="2">
-              <content>
-                2. Agencies must include progress toward meeting all
-                optimization metric target
-                values.<footnote_citation>34</footnote_citation>
-              </content>
-              <footnote emblem="34">
-                Note: Agencies participating as a tenant in an inter-agency
-                shared services provider data center are not required to
-                report metric values to OMB. The provider will report this
-                data to OMB.
-              </footnote>
+            <listitem emblem="2" marker="2.">
+              <para>
+                <content>
+                  Agencies must include progress toward meeting all
+                  optimization metric target
+                  values.<footnote_citation>34</footnote_citation>
+                </content>
+                <footnote emblem="34" marker="34">
+                  Note: Agencies participating as a tenant in an inter-agency
+                  shared services provider data center are not required to
+                  report metric values to OMB. The provider will report this
+                  data to OMB.
+                </footnote>
+              </para>
             </listitem>
-            <listitem emblem="3">
-              3. Agencies must evaluate the costs of operating and maintaining
-              current facilities and develop year-by-year targets for cost
-              savings and cost avoidance due to consolidation and optimization
-              for fiscal years 2016 through 2018. Agencies shall report all
-              realized cost savings and cost avoidance under the DCOI.
+            <listitem emblem="3" marker="3.">
+              <para>
+                Agencies must evaluate the costs of operating and maintaining
+                current facilities and develop year-by-year targets for cost
+                savings and cost avoidance due to consolidation and
+                optimization for fiscal years 2016 through 2018. Agencies
+                shall report all realized cost savings and cost avoidance
+                under the DCOI.
+              </para>
             </listitem>
           </list>
         </para>
@@ -876,7 +906,7 @@
             DCOI Strategic Plan and milestones described below replace
             existing FDCCI requirements for consolidation plans.
           </content>
-          <footnote emblem="35">
+          <footnote emblem="35" marker="35">
             See FITARA Section 834(b)(1)(A)-(E).
           </footnote>
         </para>
@@ -884,44 +914,58 @@
           Agencies DCOI Strategic Plans must include, at a minimum, the
           following:
           <list>
-            <listitem emblem="1">
-              1. Planned and achieved performance levels for each optimization
-              metric, by year;
+            <listitem emblem="1" marker="1.">
+              <para>
+                Planned and achieved performance levels for each optimization
+                metric, by year;
+              </para>
             </listitem>
-            <listitem emblem="2">
-              2. Planned and achieved closures, by year;
+            <listitem emblem="2" marker="2.">
+              <para>Planned and achieved closures, by year;</para>
             </listitem>
-            <listitem emblem="3">
-              3. An explanation for any optimization metrics and closures for
-              which the agency did not meet the planned level in a previous
-              Strategic Plan;
+            <listitem emblem="3" marker="3.">
+              <para>
+                An explanation for any optimization metrics and closures for
+                which the agency did not meet the planned level in a previous
+                Strategic Plan;
+              </para>
             </listitem>
-            <listitem emblem="4">
-              4. Year-by-year calculations of target and actual agency-wide
-              spending and cost savings on data centers from fiscal years 2016
-              through 2018, including:
+            <listitem emblem="4" marker="4.">
+              <para>
+                Year-by-year calculations of target and actual agency-wide
+                spending and cost savings on data centers from fiscal years
+                2016 through 2018, including:
+              </para>
               <list>
-                <listitem emblem="a">
-                  a. A description of any initial costs for data center
-                  consolidation and optimization; and
+                <listitem emblem="a" marker="a.">
+                  <para>
+                    A description of any initial costs for data center
+                    consolidation and optimization; and
+                  </para>
                 </listitem>
-                <listitem emblem="b">
-                  b. Life cycle cost savings and other improvements (including
-                  those beyond fiscal year 2018, if applicable);
+                <listitem emblem="b" marker="b.">
+                  <para>
+                    Life cycle cost savings and other improvements (including
+                    those beyond fiscal year 2018, if applicable);
+                  </para>
                 </listitem>
               </list>
             </listitem>
-            <listitem emblem="5">
-              5. Historical costs, cost savings, and cost avoidances due to
-              data center consolidation and optimization through fiscal year
-              2015; and
+            <listitem emblem="5" marker="5.">
+              <para>
+                Historical costs, cost savings, and cost avoidances due to
+                data center consolidation and optimization through fiscal year
+                2015; and
+              </para>
             </listitem>
-            <listitem emblem="6">
-              6. A statement from the agency CIO stating whether the agency
-              has complied with all reporting requirements in this memorandum
-              and the data center requirements of FITARA. If the agency has
-              not complied with all reporting requirements, the agency must
-              provide a statement describing the reasons for not complying.
+            <listitem emblem="6" marker="6.">
+              <para>
+                A statement from the agency CIO stating whether the agency has
+                complied with all reporting requirements in this memorandum
+                and the data center requirements of FITARA. If the agency has
+                not complied with all reporting requirements, the agency must
+                provide a statement describing the reasons for not complying.
+              </para>
             </listitem>
           </list>
         </para>
@@ -956,29 +1000,37 @@
           publicly available agencies’ progress toward the goals established
           herein and relative to agencies’ Strategic Plans.
         </content>
-        <footnote emblem="36">See 2015 NDAA Section 834(b)(2)(C).</footnote>
+        <footnote emblem="36" marker="36">
+          See 2015 NDAA Section 834(b)(2)(C).
+        </footnote>
       </para>
       <para>
         To this end, beginning in 2016, OMB will report on government-wide and
         agency-specific data center progress as part of the IT Dashboard,
         which will display:
         <list>
-          <listitem>
-            • Planned and achieved data center closures by agency;
+          <listitem marker="•">
+            <para>Planned and achieved data center closures by agency;</para>
           </listitem>
-          <listitem>
-            • Government-wide and agency progress toward meeting applicable
-            optimization targets;
+          <listitem marker="•">
+            <para>
+              Government-wide and agency progress toward meeting applicable
+              optimization targets;
+            </para>
           </listitem>
-          <listitem>
-            • Cumulative cost savings and cost avoidance realized through the
-            implementation of the DCOI and prior initiatives; and
+          <listitem marker="•">
+            <para>
+              Cumulative cost savings and cost avoidance realized through the
+              implementation of the DCOI and prior initiatives; and
+            </para>
           </listitem>
-          <listitem>
-            • Annual data center investment spending per agency, including
-            investment transition costs, cost savings projections, progress
-            made against projections and improvements realized through the
-            implementation of the strategy.
+          <listitem marker="•">
+            <para>
+              Annual data center investment spending per agency, including
+              investment transition costs, cost savings projections, progress
+              made against projections and improvements realized through the
+              implementation of the strategy.
+            </para>
           </listitem>
         </list>
       </para>

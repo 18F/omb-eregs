@@ -5,7 +5,9 @@ from lxml import etree
 from document.models import DocNode
 from document.tree import XMLAwareCursor
 from document.xml_importer.annotations import derive_annotations
-from document.xml_importer.preprocess import clean_content, standardize_content
+from document.xml_importer.preprocess import (clean_content,
+                                              standardize_content,
+                                              warn_about_mismatches)
 from reqs.models import Policy
 
 logger = logging.getLogger(__name__)
@@ -13,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 def import_xml_doc(policy: Policy, xml: etree.ElementBase):
     DocNode.objects.filter(policy=policy).delete()
+    warn_about_mismatches(policy, xml)
     standardize_content(xml)
     clean_content(xml)
 
@@ -32,6 +35,7 @@ def convert_to_tree(xml_node: etree.ElementBase, parent=None,
                     **kwargs) -> XMLAwareCursor:
     cursor_args = {
         'node_type': xml_node.tag,
+        'marker': xml_node.attrib.get('marker', ''),
         'text': content_text(xml_node),
         **kwargs,
     }
