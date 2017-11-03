@@ -8,7 +8,7 @@ import Fallback from '../components/node-renderers/fallback';
 import heading from '../components/node-renderers/heading';
 import list from '../components/node-renderers/list';
 import listitem from '../components/node-renderers/list-item';
-import math from '../components/nodeRenderers/math';
+import math from '../components/node-renderers/math';
 import para from '../components/node-renderers/para';
 import policy from '../components/node-renderers/policy';
 import sec from '../components/node-renderers/sec';
