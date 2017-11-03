@@ -707,7 +707,7 @@
                         \begin{matrix}
                           \textit{Total Active}
                           \\
-                          \textit{Rack Count<footnote_citation>28</footnote_citation>}
+                          \textit{Rack Count}
                         \end{matrix}
                         *
                         \textit{30 sq. ft.}
@@ -715,11 +715,14 @@
                         \textit{Total Gross Floor Area}
                       }
                     </content>
-                    <footnote emblem="28" marker="28">
-                      “Active” racks are those that have IT equipment
-                      consuming electricity.
-                    </footnote>
                   </math>
+                  <content>
+                    <footnote_citation>28</footnote_citation>
+                  </content>
+                  <footnote emblem="28" marker="28">
+                    “Active” racks are those that have IT equipment
+                    consuming electricity.
+                  </footnote>
                 </td>
                 <td>≥ 80%</td>
               </tr>
