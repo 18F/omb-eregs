@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Thead({ children, docNode }) {
-  return <thead className="basic-thead" id={docNode.identifier}>{ children }</thead>;
+import renderNode from '../../util/render-node';
+
+export default function Thead({ docNode }) {
+  return (
+    <thead className="basic-thead" id={docNode.identifier}>
+      { docNode.children.map(renderNode) }
+    </thead>
+  );
 }
 Thead.propTypes = {
-  children: PropTypes.node,
   docNode: PropTypes.shape({
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
     identifier: PropTypes.string.isRequired,
   }).isRequired,
-};
-Thead.defaultProps = {
-  children: null,
 };

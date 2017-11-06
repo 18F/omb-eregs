@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Tbody({ children, docNode }) {
-  return <tbody className="basic-tbody" id={docNode.identifier}>{ children }</tbody>;
+import renderNode from '../../util/render-node';
+
+export default function Tbody({ docNode }) {
+  return (
+    <tbody className="basic-tbody" id={docNode.identifier}>
+      { docNode.children.map(renderNode) }
+    </tbody>
+  );
 }
 Tbody.propTypes = {
-  children: PropTypes.node,
   docNode: PropTypes.shape({
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
     identifier: PropTypes.string.isRequired,
   }).isRequired,
-};
-Tbody.defaultProps = {
-  children: null,
 };
