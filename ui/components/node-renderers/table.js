@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Table({ children, docNode }) {
-  return <table className="basic-table" id={docNode.identifier}>{ children }</table>;
+import renderNode from '../../util/render-node';
+
+export default function Table({ docNode }) {
+  return (
+    <table className="basic-table" id={docNode.identifier}>
+      { docNode.children.map(renderNode) }
+    </table>
+  );
 }
 Table.propTypes = {
-  children: PropTypes.node,
   docNode: PropTypes.shape({
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
     identifier: PropTypes.string.isRequired,
   }).isRequired,
-};
-Table.defaultProps = {
-  children: null,
 };

@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Tr({ children, docNode }) {
-  return <tr className="basic-tr" id={docNode.identifier}>{ children }</tr>;
+import renderNode from '../../util/render-node';
+
+export default function Tr({ docNode }) {
+  return (
+    <tr className="basic-tr" id={docNode.identifier}>
+      { docNode.children.map(renderNode) }
+    </tr>
+  );
 }
 Tr.propTypes = {
-  children: PropTypes.node,
   docNode: PropTypes.shape({
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
     identifier: PropTypes.string.isRequired,
   }).isRequired,
-};
-Tr.defaultProps = {
-  children: null,
 };
