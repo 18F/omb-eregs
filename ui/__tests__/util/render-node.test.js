@@ -1,6 +1,7 @@
 import FootnoteCitation from '../../components/content-renderers/footnote-citation';
 import PlainText from '../../components/content-renderers/plain-text';
 import Fallback from '../../components/node-renderers/fallback';
+import Noop from '../../components/node-renderers/noop';
 import Paragraph from '../../components/node-renderers/para';
 import renderNode from '../../util/render-node';
 
@@ -64,5 +65,15 @@ describe('renderNode()', () => {
     expect(c3.type).toBe(FootnoteCitation);
     expect(c3.props.content).toEqual(docNode.content[3]);
   });
+  it('does not render preambles', () => {
+    const docNode = {
+      identifier: 'aaa_1__preamble_1',
+      node_type: 'preamble',
+      text: '',
+      content: [],
+      children: [],
+    };
+    const result = renderNode(docNode);
+    expect(result.type).toBe(Noop);
+  });
 });
-
