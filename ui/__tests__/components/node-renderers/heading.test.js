@@ -2,15 +2,14 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Heading from '../../../components/node-renderers/heading';
+import {
+  itIncludesNodeText,
+  itIncludesTheIdentifier,
+} from '../../test-utils/node-renderers';
 
 describe('<Heading />', () => {
-  it('includes node text and identifier', () => {
-    const docNode = { identifier: 'aaa_1__bbb_2' };
-    const result = shallow(
-      <Heading docNode={docNode}><span>More more</span></Heading>);
-    expect(result.prop('id')).toBe('aaa_1__bbb_2');
-    expect(result.text()).toBe('More more');
-  });
+  itIncludesNodeText(Heading);
+  itIncludesTheIdentifier(Heading);
   it('generates an h1 when there are no sections', () => {
     const docNode = { identifier: 'aaa_1__bbb_2__ccc_3' };
     const result = shallow(<Heading docNode={docNode} />);
