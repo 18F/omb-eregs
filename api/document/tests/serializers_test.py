@@ -112,7 +112,7 @@ def test_requirement():
     policy = mommy.make(Policy)
     topics = [mommy.make(Topic, name='AaA'), mommy.make(Topic, name='BbB')]
     root = DocCursor.new_tree('policy', '1', policy=policy)
-    req_node = root.add_child('req', policy=policy)
+    req_node = root.add_child('req')
     root.nested_set_renumber()
     root.model.save()
     req_node.model.save()
@@ -157,8 +157,8 @@ def test_footnotes():
     policy = mommy.make(Policy)
     para = DocCursor.new_tree('para', '1', text='Some1 message2 here',
                               policy=policy)
-    footnote1 = para.add_child('footnote', policy=policy).model
-    footnote2 = para.add_child('footnote', policy=policy).model
+    footnote1 = para.add_child('footnote').model
+    footnote2 = para.add_child('footnote').model
     para.nested_set_renumber()
     DocNode.objects.bulk_create(n.model for n in para.walk())
     para.model.footnotecitations.create(
