@@ -19,20 +19,21 @@ function findNodeText(docNode, nodeType, modelValue) {
 /* Root of a policy document */
 export default function Policy({ docNode }) {
   const fromNode = firstWithNodeType(docNode, 'from');
+  const policyMeta = docNode.meta.policy;
   return (
     <div className="node-policy" id={docNode.identifier}>
       <div className="clearfix">
         <div className="bold">
-          { findNodeText(docNode, 'policyNum', docNode.policy.omb_policy_id) }
+          { findNodeText(docNode, 'policyNum', policyMeta.omb_policy_id) }
         </div>
         <div>{ findNodeText(docNode, 'policyTitle', '') }</div>
         <h2 className="h1">
-          { findNodeText(docNode, 'subject', docNode.policy.title) }
+          { findNodeText(docNode, 'subject', policyMeta.title) }
         </h2>
-        <div><Link href={docNode.policy.original_url}>See original</Link></div>
+        <div><Link href={policyMeta.original_url}>See original</Link></div>
         { fromNode ? <From docNode={fromNode} /> : null }
         <LabeledText id="issuance" label="Issued on:">
-          { findNodeText(docNode, 'published', docNode.policy.issuance_pretty) }
+          { findNodeText(docNode, 'published', policyMeta.issuance_pretty) }
         </LabeledText>
       </div>
       { docNode.children.map(renderNode) }
@@ -43,11 +44,13 @@ Policy.propTypes = {
   docNode: PropTypes.shape({
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
     identifier: PropTypes.string.isRequired,
-    policy: PropTypes.shape({
-      issuance_pretty: PropTypes.string.isRequired,
-      omb_policy_id: PropTypes.string.isRequired,
-      original_url: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
+    meta: PropTypes.shape({
+      policy: PropTypes.shape({
+        issuance_pretty: PropTypes.string.isRequired,
+        omb_policy_id: PropTypes.string.isRequired,
+        original_url: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+      }).isRequired,
     }).isRequired,
   }).isRequired,
 };

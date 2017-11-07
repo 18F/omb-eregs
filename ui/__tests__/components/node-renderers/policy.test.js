@@ -10,20 +10,22 @@ import {
 jest.mock('../../../util/render-node');
 
 describe('<Policy />', () => {
-  const policy = {
-    issuance_pretty: 'March 3, 2003',
-    omb_policy_id: 'M-44-55',
-    original_url: 'http://example.com/thing.pdf',
-    title: 'Magistrate',
+  const meta = {
+    policy: {
+      issuance_pretty: 'March 3, 2003',
+      omb_policy_id: 'M-44-55',
+      original_url: 'http://example.com/thing.pdf',
+      title: 'Magistrate',
+    },
   };
-  itIncludesTheIdentifier(Policy, { policy });
-  itRendersChildNodes(Policy, { policy });
+  itIncludesTheIdentifier(Policy, { meta });
+  itRendersChildNodes(Policy, { meta });
 
   it('uses the policy for default text', () => {
     const docNode = {
       children: [],
       identifier: '',
-      policy,
+      meta,
       text: '',
     };
     const result = shallow(<Policy docNode={docNode} />);
@@ -52,7 +54,7 @@ describe('<Policy />', () => {
         { children: [], marker: 'Stuff:', node_type: 'from', text: 'Someone' },
       ],
       identifier: '',
-      policy,
+      meta,
       text: '',
     };
 

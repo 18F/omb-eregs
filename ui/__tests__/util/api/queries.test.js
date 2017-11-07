@@ -159,7 +159,7 @@ describe('policyData()', () => {
 describe('documentData()', () => {
   beforeEach(() => {
     endpoints.document.fetchOne.mockImplementationOnce(
-      () => Promise.resolve({ policy: { issuance: '2012-12-12' } }),
+      async () => ({ meta: { policy: { issuance: '2012-12-12' } } }),
     );
   });
   it('hits the correct url', async () => {
@@ -167,9 +167,11 @@ describe('documentData()', () => {
     expect(endpoints.document.fetchOne).toHaveBeenCalledWith('123');
     expect(result).toEqual({
       docNode: {
-        policy: {
-          issuance: '2012-12-12',
-          issuance_pretty: 'December 12, 2012',
+        meta: {
+          policy: {
+            issuance: '2012-12-12',
+            issuance_pretty: 'December 12, 2012',
+          },
         },
       },
     });
