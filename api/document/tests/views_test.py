@@ -70,7 +70,7 @@ def test_by_pretty_url(client):
 @pytest.mark.urls('document.urls')
 def test_query_count(client):
     policy = mommy.make(Policy, omb_policy_id='M-O-A-R')
-    root = random_doc(20, save=True, policy=policy)
+    root = random_doc(20, save=True, policy=policy, text='placeholder')
     subtree_nodes = {
         root.tree.nodes[idx]['model']
         for idx in root.tree.nodes()
@@ -85,6 +85,10 @@ def test_query_count(client):
             req.topics.add(mommy.make(Topic))
         req.docnode = req_node
         req.save()
+    # select 3 nodes as footnotes
+    for citing, footnote in zip(random.sample(subtree_nodes, 3),
+                                random.sample(subtree_nodes, 3)):
+        citing.footnotecitations.create(start=0, end=1, footnote_node=footnote)
 
     # pytest will alter the connection, so we only want to load it within this
     # test
@@ -93,8 +97,8 @@ def test_query_count(client):
         client.get("/M-O-A-R")
         # Query 1: Lookup the policy
         # 2: Lookup the root docnode, joining w/ req
-        # 3: fetch footnote citations for the root
+        # 3: fetch footnote citations _and_ referenced node for the root
         # 4: fetch child nodes, joining w/ requirements
         # 5: fetch topics related to those requirements
-        # 6: fetch footnote citations for child nodes
+        # 6: fetch footnote citations _and_ referenced node for child nodes
         assert len(capture) == 6
