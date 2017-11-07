@@ -12,12 +12,16 @@
   color: $color-white;
 }
 
-.node-footnote {
-  border-bottom: 1px solid $color-gray-dark;
+.bottom-footnotes {
   border-top: 1px solid $color-gray-dark;
-  margin: 1em 2em;
+  margin-top: 2.5em;
+  padding-top: .75em;
 
-  .text {
+  .node-footnote {
+    margin-bottom: .875em;
+  }
+
+  .footnote-text {
     color: $color-gray-medium;
   }
 }

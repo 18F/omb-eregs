@@ -6,11 +6,13 @@ import {
   itIncludesTheIdentifier,
   itRendersChildNodes,
 } from '../../test-utils/node-renderers';
+import { renderContent } from '../../../util/render-node';
 
 jest.mock('../../../util/render-node');
 
 describe('<Policy />', () => {
   const meta = {
+    descendant_footnotes: [],
     policy: {
       issuance_pretty: 'March 3, 2003',
       omb_policy_id: 'M-44-55',
@@ -72,5 +74,31 @@ describe('<Policy />', () => {
 
     const date = result.find('LabeledText').first();
     expect(date.children().text()).toEqual('some date here');
+  });
+  it('renders footnotes at the bottom', () => {
+    const docNode = {
+      children: [],
+      identifier: '',
+      text: '',
+      meta: {
+        ...meta,
+        descendant_footnotes: [
+          { identifier: '1', children: [], content: ['a'], marker: '' },
+          { identifier: '2', children: [], content: ['b', 'c'], marker: '' },
+          { identifier: '3', children: [], content: [], marker: '' },
+        ],
+      },
+    };
+
+    const result = shallow(<Policy docNode={docNode} />);
+    const footnotes = result.find('.bottom-footnotes Footnote');
+    expect(footnotes).toHaveLength(3);
+    expect(footnotes.at(0).prop('docNode').identifier).toBe('1');
+    expect(footnotes.at(1).prop('docNode').identifier).toBe('2');
+    expect(footnotes.at(2).prop('docNode').identifier).toBe('3');
+    expect(renderContent).toHaveBeenCalledTimes(3);
+    expect(renderContent.mock.calls[0][0]).toEqual(['a']);
+    expect(renderContent.mock.calls[1][0]).toEqual(['b', 'c']);
+    expect(renderContent.mock.calls[2][0]).toEqual([]);
   });
 });

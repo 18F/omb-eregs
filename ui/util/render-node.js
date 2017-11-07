@@ -4,7 +4,6 @@ import FootnoteCitation from '../components/content-renderers/footnote-citation'
 import PlainText from '../components/content-renderers/plain-text';
 import Fallback from '../components/node-renderers/fallback';
 import caption from '../components/node-renderers/caption';
-import footnote from '../components/node-renderers/footnote';
 import heading from '../components/node-renderers/heading';
 import list from '../components/node-renderers/list';
 import listitem from '../components/node-renderers/list-item';
@@ -23,7 +22,7 @@ import th from '../components/node-renderers/th';
 
 const nodeMapping = {
   caption,
-  footnote,
+  footnote: Noop,
   heading,
   list,
   listitem,

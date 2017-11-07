@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { firstWithNodeType } from '../../util/document-node';
-import renderNode from '../../util/render-node';
+import renderNode, { renderContent } from '../../util/render-node';
 import LabeledText from '../labeled-text';
 import Link from '../link';
+import Footnote from './footnote';
 import From from './from';
 
 function findNodeText(docNode, nodeType, modelValue) {
@@ -13,6 +14,22 @@ function findNodeText(docNode, nodeType, modelValue) {
     return containingNode.text;
   }
   return modelValue;
+}
+
+function footnotes(footnoteList) {
+  if (footnoteList.length === 0) {
+    return null;
+  }
+  const rendered = footnoteList.map(fn => (
+    <Footnote key={fn.identifier} docNode={fn}>
+      { renderContent(fn.content) }
+    </Footnote>
+  ));
+  return (
+    <div className="bottom-footnotes">
+      { rendered }
+    </div>
+  );
 }
 
 
@@ -37,6 +54,7 @@ export default function Policy({ docNode }) {
         </LabeledText>
       </div>
       { docNode.children.map(renderNode) }
+      { footnotes(docNode.meta.descendant_footnotes) }
     </div>
   );
 }
