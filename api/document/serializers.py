@@ -1,6 +1,9 @@
+from typing import Iterator
+
 from rest_framework import serializers
 
 from document.models import DocNode
+from document.tree import DocCursor
 from reqs.models import Policy, Requirement
 from reqs.serializers import TopicSerializer
 
@@ -32,6 +35,16 @@ class PolicySerializer(serializers.ModelSerializer):
             'original_url',
             'title',
         )
+
+
+def descendant_footnotes(cursor) -> Iterator[DocCursor]:
+    """Find all footnote nodes that are cited by this node or any of its
+    descendants."""
+    for node in cursor.walk():
+        for citation in node.model.footnotecitations.all():
+            subtree = DocCursor(cursor.tree,
+                                citation.footnote_node.identifier)
+            yield DocCursorSerializer(subtree, context={'is_root': False}).data
 
 
 class DocCursorSerializer(serializers.ModelSerializer):
@@ -74,9 +87,13 @@ class DocCursorSerializer(serializers.ModelSerializer):
         meta = {
             'requirement': None,
         }
+        is_root = self.context.get('is_root', True)
         if hasattr(instance, 'requirement'):
             meta['requirement'] = RequirementSerializer(
                 instance.requirement).data
-        if self.context.get('is_root', True):
+        if is_root:
             meta['policy'] = PolicySerializer(self.context['policy']).data
+        if is_root or instance.node_type == 'table':
+            meta['descendant_footnotes'] = list(
+                descendant_footnotes(self.context['cursor']))
         return meta

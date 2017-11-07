@@ -1,4 +1,5 @@
 from datetime import date
+from unittest.mock import Mock
 
 import pytest
 from model_mommy import mommy
@@ -33,6 +34,7 @@ def test_end_to_end():
         'depth': 0,
         'content': [],
         'meta': {
+            'descendant_footnotes': [],
             'policy': {     # Note this field does not appear on children
                 'issuance': '2001-02-03',
                 'omb_policy_id': 'M-18-18',
@@ -114,7 +116,7 @@ def test_requirement():
     """The 'requirement' field should serialize an associated Requirement"""
     policy = mommy.make(Policy)
     topics = [mommy.make(Topic, name='AaA'), mommy.make(Topic, name='BbB')]
-    root = DocCursor.new_tree('policy', '1', policy=policy)
+    root = DocCursor.new_tree('policy', policy=policy)
     req_node = root.add_child('req')
     root.nested_set_renumber()
     root.model.save()
@@ -156,10 +158,10 @@ def test_requirement():
 
 
 @pytest.mark.django_db
-def test_footnotes():
+def test_footnote_citations():
     """The "content" field should contain serialized FootnoteCitations."""
     policy = mommy.make(Policy)
-    para = DocCursor.new_tree('para', '1', text='Some1 message2 here',
+    para = DocCursor.new_tree('para', text='Some1 message2 here',
                               policy=policy)
     footnote1 = para.add_child('footnote').model
     footnote2 = para.add_child('footnote').model
@@ -193,3 +195,58 @@ def test_footnotes():
             'text': ' here',
         }
     ]
+
+
+@pytest.mark.parametrize('node_type', ('para', 'table', 'something-else'))
+@pytest.mark.parametrize('is_root', (True, False))
+def test_descendant_footnotes_meta(monkeypatch, node_type, is_root):
+    """Only the root and "table" nodes should get descendant_foonotes."""
+    monkeypatch.setattr(serializers, 'descendant_footnotes',
+                        Mock(return_value=['some', 'footnotes']))
+    node = DocCursor.new_tree(node_type)
+    result = serializers.DocCursorSerializer(
+        node, context={'policy': mommy.prepare(Policy), 'is_root': is_root}
+    ).data
+    if node_type == 'table' or is_root:
+        assert result['meta']['descendant_footnotes'] == ['some', 'footnotes']
+    else:
+        assert 'descendant_footnotes' not in result['meta']
+
+
+@pytest.mark.django_db
+def test_descendant_footnotes():
+    """We pull out footnotes of all descendants, and only descendants."""
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', policy=policy)
+    ftnt_a = root.add_child('footnote', 'a')
+    root.add_child('para')
+    ftnt_b = root['para_1'].add_child('footnote', 'b')
+    root.add_child('list')
+    root['list_1'].add_child('para')
+    root['list_1'].add_child('para')
+    root['list_1'].add_child('para')
+    ftnt_c = root['list_1']['para_3'].add_child('footnote', 'c')
+    root.nested_set_renumber()
+    DocNode.objects.bulk_create(node.model for node in root.walk())
+
+    root['para_1'].model.footnotecitations.create(
+        start=0, end=1, footnote_node=ftnt_a.model)
+    root['para_1'].model.footnotecitations.create(
+        start=1, end=2, footnote_node=ftnt_b.model)
+    root['list_1']['para_2'].model.footnotecitations.create(
+        start=0, end=1, footnote_node=ftnt_c.model)
+
+    def fts(cursor):
+        result = serializers.descendant_footnotes(cursor)
+        return [node['identifier'] for node in result]
+
+    assert fts(root) == ['root_1__footnote_a', 'root_1__para_1__footnote_b',
+                         'root_1__list_1__para_3__footnote_c']
+    assert fts(root['footnote_a']) == []
+    assert fts(root['para_1']) == ['root_1__footnote_a',
+                                   'root_1__para_1__footnote_b']
+    assert fts(root['list_1']) == ['root_1__list_1__para_3__footnote_c']
+    assert fts(root['list_1']['para_2']) == [
+        'root_1__list_1__para_3__footnote_c']
+    # no citations in para 3
+    assert fts(root['list_1']['para_3']) == []
