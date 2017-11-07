@@ -22,7 +22,8 @@ def test_end_to_end():
     pa.add_child('par', '1', text='Paragraph (a)(1)', marker='(1)')
     sect2.add_child('par', 'b', marker='b.')
 
-    result = serializers.DocCursorSerializer(root).data
+    result = serializers.DocCursorSerializer(root,
+                                             context={'policy': policy}).data
     assert result == {
         'identifier': 'root_0',
         'node_type': 'root',
@@ -30,13 +31,15 @@ def test_end_to_end():
         'text': '',
         'marker': '',
         'depth': 0,
-        'requirement': None,
         'content': [],
-        'policy': {     # Note this field does not appear on children
-            'issuance': '2001-02-03',
-            'omb_policy_id': 'M-18-18',
-            'original_url': 'http://example.com/thing.pdf',
-            'title': 'Some Title',
+        'meta': {
+            'policy': {     # Note this field does not appear on children
+                'issuance': '2001-02-03',
+                'omb_policy_id': 'M-18-18',
+                'original_url': 'http://example.com/thing.pdf',
+                'title': 'Some Title',
+            },
+            'requirement': None,
         },
         'children': [
             {
@@ -46,7 +49,7 @@ def test_end_to_end():
                 'text': 'Section 1',
                 'marker': '',
                 'depth': 1,
-                'requirement': None,
+                'meta': {'requirement': None},
                 'content': [{
                     'content_type': '__text__',
                     'text': 'Section 1',
@@ -60,7 +63,7 @@ def test_end_to_end():
                 'text': '',
                 'marker': '',
                 'depth': 1,
-                'requirement': None,
+                'meta': {'requirement': None},
                 'content': [],
                 'children': [
                     {
@@ -70,7 +73,7 @@ def test_end_to_end():
                         'text': '',
                         'marker': '(a)',
                         'depth': 2,
-                        'requirement': None,
+                        'meta': {'requirement': None},
                         'content': [],
                         'children': [
                             {
@@ -80,7 +83,7 @@ def test_end_to_end():
                                 'text': 'Paragraph (a)(1)',
                                 'marker': '(1)',
                                 'depth': 3,
-                                'requirement': None,
+                                'meta': {'requirement': None},
                                 'content': [{
                                     'content_type': '__text__',
                                     'text': 'Paragraph (a)(1)',
@@ -96,7 +99,7 @@ def test_end_to_end():
                         'text': '',
                         'marker': 'b.',
                         'depth': 2,
-                        'requirement': None,
+                        'meta': {'requirement': None},
                         'content': [],
                         'children': [],
                     },
@@ -132,10 +135,11 @@ def test_requirement():
     )
     req_node.model.refresh_from_db()
 
-    result = serializers.DocCursorSerializer(root).data
-    assert result['requirement'] is None
+    result = serializers.DocCursorSerializer(root,
+                                             context={'policy': policy}).data
+    assert result['meta']['requirement'] is None
     child_node = result['children'][0]
-    assert child_node['requirement'] == {
+    assert child_node['meta']['requirement'] == {
         'citation': 'citcitcit',
         'impacted_entity': 'imp',
         'id': req.id,
@@ -167,7 +171,8 @@ def test_footnotes():
         start=len('Some1 message'), end=len('Some1 message2'),
         footnote_node=footnote2)
 
-    result = serializers.DocCursorSerializer(para).data
+    result = serializers.DocCursorSerializer(para,
+                                             context={'policy': policy}).data
     assert result['content'] == [
         {
             'content_type': '__text__',

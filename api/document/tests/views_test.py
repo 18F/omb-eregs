@@ -43,14 +43,15 @@ def test_correct_data(client):
     def result(url):
         return json.loads(client.get(url).content.decode('utf-8'))
 
-    assert result(f"/{policy.pk}") == DocCursorSerializer(root).data
-    assert result(f"/{policy.pk}/root_0") == DocCursorSerializer(root).data
-    assert result(f"/{policy.pk}/root_0__sect_1") \
-        == DocCursorSerializer(root['sect_1']).data
-    assert result(f"/{policy.pk}/root_0__sect_2") \
-        == DocCursorSerializer(root['sect_2']).data
+    def serialize(node):
+        return DocCursorSerializer(node, context={'policy': policy}).data
+
+    assert result(f"/{policy.pk}") == serialize(root)
+    assert result(f"/{policy.pk}/root_0") == serialize(root)
+    assert result(f"/{policy.pk}/root_0__sect_1") == serialize(root['sect_1'])
+    assert result(f"/{policy.pk}/root_0__sect_2") == serialize(root['sect_2'])
     assert result(f"/{policy.pk}/root_0__sect_1__par_a") \
-        == DocCursorSerializer(root['sect_1']['par_a']).data
+        == serialize(root['sect_1']['par_a'])
 
 
 @pytest.mark.django_db
@@ -63,7 +64,8 @@ def test_by_pretty_url(client):
 
     result = json.loads(client.get("/M-Something-18").content.decode("utf-8"))
 
-    assert result == DocCursorSerializer(root).data
+    assert result == DocCursorSerializer(root,
+                                         context={'policy': policy}).data
 
 
 @pytest.mark.django_db
