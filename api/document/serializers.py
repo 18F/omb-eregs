@@ -106,9 +106,12 @@ def serialize_plaintext(content: PlainText, cursor: DocCursor):
 
 @serialize_content.register(FootnoteCitation)
 def serialize_footnote_citation(content: FootnoteCitation, cursor: DocCursor):
+    footnote_tree = DocCursor(cursor.tree, content.footnote_node.identifier)
+    footnote_node = DocCursorSerializer(footnote_tree,
+                                        context={'is_root': False}).data
     return {
         'content_type': 'footnote_citation',
-        'footnote_node': content.footnote_node.identifier,
+        'footnote_node': footnote_node,
         'text': cursor.model.text[content.start:content.end],
     }
 
