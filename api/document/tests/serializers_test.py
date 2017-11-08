@@ -1,5 +1,4 @@
 from datetime import date
-from unittest.mock import Mock
 
 import pytest
 from model_mommy import mommy
@@ -41,7 +40,6 @@ def test_end_to_end():
                 'original_url': 'http://example.com/thing.pdf',
                 'title': 'Some Title',
             },
-            'requirement': None,
         },
         'children': [
             {
@@ -51,7 +49,7 @@ def test_end_to_end():
                 'text': 'Section 1',
                 'marker': '',
                 'depth': 1,
-                'meta': {'requirement': None},
+                'meta': {},
                 'content': [{
                     'content_type': '__text__',
                     'text': 'Section 1',
@@ -65,7 +63,7 @@ def test_end_to_end():
                 'text': '',
                 'marker': '',
                 'depth': 1,
-                'meta': {'requirement': None},
+                'meta': {},
                 'content': [],
                 'children': [
                     {
@@ -75,7 +73,7 @@ def test_end_to_end():
                         'text': '',
                         'marker': '(a)',
                         'depth': 2,
-                        'meta': {'requirement': None},
+                        'meta': {},
                         'content': [],
                         'children': [
                             {
@@ -85,7 +83,7 @@ def test_end_to_end():
                                 'text': 'Paragraph (a)(1)',
                                 'marker': '(1)',
                                 'depth': 3,
-                                'meta': {'requirement': None},
+                                'meta': {},
                                 'content': [{
                                     'content_type': '__text__',
                                     'text': 'Paragraph (a)(1)',
@@ -101,7 +99,7 @@ def test_end_to_end():
                         'text': '',
                         'marker': 'b.',
                         'depth': 2,
-                        'meta': {'requirement': None},
+                        'meta': {},
                         'content': [],
                         'children': [],
                     },
@@ -139,7 +137,7 @@ def test_requirement():
 
     result = serializers.DocCursorSerializer(root,
                                              context={'policy': policy}).data
-    assert result['meta']['requirement'] is None
+    assert 'requirement' not in result['meta']
     child_node = result['children'][0]
     assert child_node['meta']['requirement'] == {
         'citation': 'citcitcit',
@@ -199,18 +197,17 @@ def test_footnote_citations():
 
 @pytest.mark.parametrize('node_type', ('para', 'table', 'something-else'))
 @pytest.mark.parametrize('is_root', (True, False))
-def test_descendant_footnotes_meta(monkeypatch, node_type, is_root):
-    """Only the root and "table" nodes should get descendant_foonotes."""
-    monkeypatch.setattr(serializers, 'descendant_footnotes',
-                        Mock(return_value=['some', 'footnotes']))
-    node = DocCursor.new_tree(node_type)
-    result = serializers.DocCursorSerializer(
-        node, context={'policy': mommy.prepare(Policy), 'is_root': is_root}
-    ).data
+@pytest.mark.django_db
+def test_descendant_footnotes_meta(node_type, is_root):
+    """Only the root and "table" nodes should get descendant_footnotes."""
+    policy = mommy.make(Policy)
+    cursor = DocCursor.new_tree(node_type, policy=policy)
+    meta = serializers.Meta(cursor, is_root, policy)
+    result = serializers.MetaSerializer(meta).data
     if node_type == 'table' or is_root:
-        assert result['meta']['descendant_footnotes'] == ['some', 'footnotes']
+        assert 'descendant_footnotes' in result
     else:
-        assert 'descendant_footnotes' not in result['meta']
+        assert 'descendant_footnotes' not in result
 
 
 @pytest.mark.django_db
@@ -237,8 +234,9 @@ def test_descendant_footnotes():
         start=0, end=1, footnote_node=ftnt_c.model)
 
     def fts(cursor):
-        result = serializers.descendant_footnotes(cursor)
-        return [node['identifier'] for node in result]
+        meta = serializers.Meta(cursor, is_root=True, policy=policy)
+        data = serializers.MetaSerializer(meta).data
+        return [node['identifier'] for node in data['descendant_footnotes']]
 
     assert fts(root) == ['root_1__footnote_a', 'root_1__para_1__footnote_b',
                          'root_1__list_1__para_3__footnote_c']
