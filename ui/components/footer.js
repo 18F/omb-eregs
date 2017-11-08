@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { ContactEmail } from './contact-email';
 import Link from './link';
 

@@ -1,7 +1,6 @@
 import HTTPStatus from 'http-status';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import { ContactEmail } from '../contact-email';
 
 /* Note that we intentionally avoid "Link" to minimize sources of error */

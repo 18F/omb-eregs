@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import LabeledText from '../labeled-text';
 
 export default function From({ docNode }) {

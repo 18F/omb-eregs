@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
-
 import React from 'react';
-import Search from './search/search';
 import Link from './link';
+import Search from './search/search';
 
 export default function Navbar({ showSearch }) {
   let searchContainer;

@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { Pagers } from '../../components/pagers';
 
 function pagerArgs(count, query = null) {

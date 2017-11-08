@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import From from '../../../components/node-renderers/from';
 
 describe('<From />', () => {

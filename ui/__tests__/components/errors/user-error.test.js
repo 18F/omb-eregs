@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import UserError from '../../../components/errors/user-error';
 
 describe('<UserError />', () => {

@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import Heading from '../../../components/node-renderers/heading';
 import {
   itIncludesNodeText,

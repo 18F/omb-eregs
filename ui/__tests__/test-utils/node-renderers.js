@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import renderNode from '../../util/render-node';
 
 export function itIncludesTheIdentifier(Component, extraAttrs) {

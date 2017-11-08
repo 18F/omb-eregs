@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import Req from '../../../components/policy/req';
 
 describe('<Req />', () => {

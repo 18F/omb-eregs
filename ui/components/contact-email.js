@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import Link from './link';
 
 export const email = 'PolicyLibrary@omb.eop.gov';

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import Metadata from './metadata';
 import PolicyLink from './policy-link';
 import TopicLink from './topic-link';

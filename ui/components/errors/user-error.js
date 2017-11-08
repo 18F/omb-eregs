@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import HeaderFooter from '../header-footer';
 import Link from '../link';
 

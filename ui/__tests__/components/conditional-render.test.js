@@ -1,6 +1,5 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
-
 import ConditionalRender from '../../components/conditional-render';
 
 

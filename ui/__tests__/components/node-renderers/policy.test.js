@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import Policy from '../../../components/node-renderers/policy';
 import {
   itIncludesTheIdentifier,

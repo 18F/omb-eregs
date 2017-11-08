@@ -1,9 +1,8 @@
 import React from 'react';
-
 import FootnoteCitation from '../components/content-renderers/footnote-citation';
 import PlainText from '../components/content-renderers/plain-text';
-import Fallback from '../components/node-renderers/fallback';
 import caption from '../components/node-renderers/caption';
+import Fallback from '../components/node-renderers/fallback';
 import heading from '../components/node-renderers/heading';
 import list from '../components/node-renderers/list';
 import listitem from '../components/node-renderers/list-item';
@@ -14,10 +13,10 @@ import policy from '../components/node-renderers/policy';
 import sec from '../components/node-renderers/sec';
 import table from '../components/node-renderers/table';
 import tbody from '../components/node-renderers/tbody';
-import thead from '../components/node-renderers/thead';
 import td from '../components/node-renderers/td';
-import tr from '../components/node-renderers/tr';
 import th from '../components/node-renderers/th';
+import thead from '../components/node-renderers/thead';
+import tr from '../components/node-renderers/tr';
 
 
 const nodeMapping = {

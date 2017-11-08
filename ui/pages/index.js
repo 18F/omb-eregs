@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import wrapPage from '../components/app-wrapper';
-import NewPolicyView from '../components/homepage/new-policy-view';
 import { ContactEmail } from '../components/contact-email';
+import NewPolicyView from '../components/homepage/new-policy-view';
 import Link from '../components/link';
 import Search from '../components/search/search';
 import { homepageData } from '../util/api/queries';

@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { PoliciesTab, RequirementsContainer } from '../../pages/requirements';
 
 describe('<RequirementsContainer />', () => {

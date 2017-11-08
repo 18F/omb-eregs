@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import wrapPage from '../components/app-wrapper';
-import PoliciesView from '../components/policies/policies-view';
-import SearchFilterView from '../components/search-filter-view';
 import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
+import PoliciesView from '../components/policies/policies-view';
+import SearchFilterView from '../components/search-filter-view';
 import { policiesData } from '../util/api/queries';
 
 const fieldNames = {

@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import UnexpectedError from '../../../components/errors/unexpected-error';
 
 describe('<UnexpectedError />', () => {

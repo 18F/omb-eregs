@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import Requirement from './requirement';
 import PagersContainer from '../pagers';
 import ThingCounterContainer from '../thing-counters';
+import Requirement from './requirement';
 
 export default function RequirementsView({ requirements, count }) {
   const singular = 'requirement';

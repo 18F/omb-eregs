@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import Navbar from '../../components/navbar';
 import SearchContainer from '../../components/search/search';
 

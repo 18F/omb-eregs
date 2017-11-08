@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import wrapPage from '../../components/app-wrapper';
 
 

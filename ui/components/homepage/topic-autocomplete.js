@@ -1,6 +1,5 @@
 import React from 'react';
 import { Async } from 'react-select';
-
 import { makeOptionLoader } from '../../lookup-search';
 
 

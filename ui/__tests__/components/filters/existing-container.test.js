@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import ExistingFiltersContainer from '../../../components/filters/existing-container';
 
 describe('<ExistingFiltersContainer />', () => {

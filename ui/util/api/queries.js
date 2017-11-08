@@ -1,10 +1,9 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-
-import endpoints from './endpoints';
 import { apiNameField, search } from '../../lookup-search';
 import { routes } from '../../routes';
+import endpoints from './endpoints';
 
 const NUM_POLICIES = 4;
 // See https://momentjs.com/docs/#/displaying/ for options

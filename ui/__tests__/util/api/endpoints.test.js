@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { Endpoint } from '../../../util/api/endpoints';
 
 jest.mock('axios');

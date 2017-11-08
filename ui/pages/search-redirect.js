@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import wrapPage from '../components/app-wrapper';
 import Link from '../components/link';
 import PagersContainer from '../components/pagers';

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import { firstWithNodeType } from '../../util/document-node';
 import renderNode, { renderContent } from '../../util/render-node';
 import LabeledText from '../labeled-text';

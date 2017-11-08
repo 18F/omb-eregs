@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { Search } from '../../../components/search/search';
 
 const blankRouter = { pathname: '', query: {} };

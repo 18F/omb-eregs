@@ -1,5 +1,4 @@
 import React from 'react';
-
 import ErrorView from '../components/error';
 
 export default function ErrorPage({ err, statusCode }) {
