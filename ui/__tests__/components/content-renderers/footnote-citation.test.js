@@ -25,7 +25,10 @@ describe('<FootnoteCitation />', () => {
   });
 
   it('expands on click', () => {
-    const content = { footnote_node: 'aaa_1__bbb_2', text: '' };
+    const content = {
+      footnote_node: { identifier: 'aaa_1__bbb_2' },
+      text: '',
+    };
     const footnote = mount(<FootnoteCitation content={content} />);
     footnote.find('a').simulate('click');
     expect(footnote.html()).toMatch(/active footnote-link/);
