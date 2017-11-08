@@ -39,7 +39,7 @@ export function renderContent(contents) {
 export default function renderNode(docNode) {
   const nodeMapping = {
     caption,
-    footnote,
+    footnote: Noop,
     heading,
     list,
     listitem,

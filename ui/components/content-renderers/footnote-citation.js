@@ -9,14 +9,14 @@ import Link from '../link';
 const demoData = {"children":[],"content":[{"content_type":"__text__","text":"The FDCCI was first established by OMB â€œMemo for CIOs: Federal Data\n        Center Consolidation Initiative,â€ issued on February 26, 2010, and\n        modified by subsequent memoranda."}],"depth":3,"identifier":"policy_1__sec_1__para_1__footnote_1","marker":"1","node_type":"footnote","requirement":null,"text":"The FDCCI was first established by OMB â€œMemo for CIOs: Federal Data\n        Center Consolidation Initiative,â€ issued on February 26, 2010, and\n        modified by subsequent memoranda.","type_emblem":"1","policy":{"issuance":"2016-08-01","omb_policy_id":"M-16-19","original_url":"https://www.whitehouse.gov/sites/default/files/omb/memoranda/2016/m_16_19_1.pdf","title":"Data Center Optimization Initiative (DCOI)"}};
 /* eslint-enable */
 
-export default class FootnoteCitation extends React.Component {
-  static propTypes = {
-    content: PropTypes.shape({
-      footnote_node: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    }).isRequired,
-  };
+const propTypes = {
+  content: PropTypes.shape({
+    footnote_node: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
+export default class FootnoteCitation extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,10 +29,6 @@ export default class FootnoteCitation extends React.Component {
   handleCitationClick(e) {
     e.preventDefault();
     this.setState({ expanded: !this.state.expanded });
-  }
-
-  renderFootnote() {
-    return renderNode(demoData);
   }
 
   render() {
@@ -48,8 +44,8 @@ export default class FootnoteCitation extends React.Component {
     if (expanded) {
       citation = (
         <span>
-          { this.renderFootnote() }
-          <span className="clearfix"></span>
+          { renderNode(demoData) }
+          <span className="clearfix" />
         </span>
       );
     }
@@ -61,3 +57,5 @@ export default class FootnoteCitation extends React.Component {
     );
   }
 }
+
+FootnoteCitation.propTypes = propTypes;
