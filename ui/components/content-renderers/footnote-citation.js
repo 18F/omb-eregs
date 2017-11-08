@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {renderNode, renderContent} from '../../util/render-node';
+import renderContent from '../../util/render-node';
 
 import Footnote from '../node-renderers/footnote';
 import Link from '../link';

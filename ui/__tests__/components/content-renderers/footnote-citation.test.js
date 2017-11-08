@@ -29,6 +29,7 @@ describe('<FootnoteCitation />', () => {
     const footnote = mount(<FootnoteCitation content={content} />);
     footnote.find('a').simulate('click');
     expect(footnote.html()).toMatch(/active footnote-link/);
+    expect(footnote.html()).toMatch(/node-footnote/);
   });
 });
 
