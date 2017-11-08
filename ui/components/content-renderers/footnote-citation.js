@@ -33,10 +33,6 @@ export default class FootnoteCitation extends React.Component {
     this.setState({ expanded: !this.state.expanded });
   }
 
-  renderFootnote() {
-    return renderNode(demoData);
-  }
-
   render() {
     let citation;
     const expanded = this.state.expanded;
@@ -50,8 +46,8 @@ export default class FootnoteCitation extends React.Component {
     if (expanded) {
       citation = (
         <span>
-          { this.renderFootnote() }
-          <span className="clearfix"></span>
+          { renderNode(demoData) }
+          <span className="clearfix" />
         </span>
       );
     }
