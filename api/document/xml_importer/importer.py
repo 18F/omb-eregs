@@ -21,7 +21,6 @@ def import_xml_doc(policy: Policy, xml: etree.ElementBase):
 
     root = convert_to_tree(xml, policy=policy)
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
     logger.info('Created %s nodes for %s', root.subtree_size(),
                 policy.title_with_number)
     annotations_by_cls = derive_annotations(root)
