@@ -17,7 +17,7 @@ from reqs.models import Policy, Requirement, Topic
 def test_404s(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
-    root.add_child('sect', policy=policy)
+    root.add_child('sect')
     root.nested_set_renumber()
     DocNode.objects.bulk_create(n.model for n in root.walk())
 
@@ -34,9 +34,9 @@ def test_404s(client):
 def test_correct_data(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
-    sect1 = root.add_child('sect', policy=policy)
-    root.add_child('sect', policy=policy)
-    sect1.add_child('par', 'a', policy=policy)
+    sect1 = root.add_child('sect')
+    root.add_child('sect')
+    sect1.add_child('par', 'a')
     root.nested_set_renumber()
     DocNode.objects.bulk_create(n.model for n in root.walk())
 

@@ -18,8 +18,10 @@ class DocCursor():
         self.identifier = identifier
 
     @classmethod
-    def new_tree(cls, node_type: str, type_emblem: str='1', **attrs):
-        tree = DiGraph()
+    def new_tree(cls, node_type: str, type_emblem: str='1', policy=None,
+                 **attrs):
+        attrs = {**attrs, 'policy': policy}
+        tree = DiGraph(policy=policy)
         identifier = f"{node_type}_{type_emblem}"
         tree.add_node(identifier, model=DocNode(
             identifier=identifier, node_type=node_type,
@@ -65,6 +67,8 @@ class DocCursor():
                   **attrs):
         if type_emblem is None:
             type_emblem = self.next_emblem(node_type)
+        if 'policy' not in attrs:
+            attrs = {**attrs, 'policy': self.tree.graph.get('policy')}
 
         identifier = f"{self.identifier}__{node_type}_{type_emblem}"
         self.tree.add_node(identifier, model=DocNode(
