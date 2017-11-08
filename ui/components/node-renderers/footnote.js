@@ -7,7 +7,7 @@ export default function Footnote({ children, docNode }) {
       <span className="bold col col-1 pr2 right-align">
         { docNode.marker }
       </span>
-      <p className="col col-11 m0 text">{ children }</p>
+      <p className="col col-11 m0 footnote-text">{ children }</p>
     </div>
   );
 }
