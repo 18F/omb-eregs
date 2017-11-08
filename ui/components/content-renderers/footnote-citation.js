@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import renderNode from '../../util/render-node';
+import {renderNode, renderContent} from '../../util/render-node';
 
+import Footnote from '../node-renderers/footnote';
 import Link from '../link';
 
 /* eslint-disable */
@@ -46,7 +47,9 @@ export default class FootnoteCitation extends React.Component {
     if (expanded) {
       citation = (
         <span>
-          { renderNode(demoData) }
+          <Footnote key={demoData.identifier} docNode={demoData}>
+            { renderContent(demoData.content) }
+          </Footnote>
           <span className="clearfix" />
         </span>
       );
