@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import wrapPage from '../components/app-wrapper';
 import { documentData } from '../util/api/queries';
+import DocumentNode from '../util/document-node';
 import renderNode from '../util/render-node';
 
 
@@ -11,18 +12,10 @@ const headerFooterParams = {
 };
 
 export function Document({ docNode }) {
-  return renderNode(docNode);
+  return renderNode(new DocumentNode(docNode));
 }
 Document.propTypes = {
-  docNode: PropTypes.shape({
-    children: PropTypes.arrayOf(PropTypes.shape({})), // recursive
-    content: PropTypes.arrayOf(PropTypes.shape({
-      content_type: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    })),
-    identifier: PropTypes.string.isRequired,
-    node_type: PropTypes.string.isRequired,
-  }).isRequired,
+  docNode: PropTypes.shape({}).isRequired,
 };
 
 export default wrapPage(Document, documentData, headerFooterParams);

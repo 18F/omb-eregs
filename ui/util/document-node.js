@@ -1,22 +1,29 @@
-export function linearize(docNode) {
-  return docNode.children.reduce(
-    (soFar, nextNode) => soFar.concat(linearize(nextNode)), [docNode]);
-}
-
-export function firstMatch(docNode, filterFn) {
-  if (filterFn(docNode)) {
-    return docNode;
+export default class DocumentNode {
+  constructor(docNode) {
+    Object.assign(this, docNode);
+    this.children = docNode.children.map(c => new DocumentNode(c));
   }
-  // Use for loop so we can short-circuit
-  for (let idx = 0; idx < docNode.children.length; idx += 1) {
-    const result = firstMatch(docNode.children[idx], filterFn);
-    if (result) {
-      return result;
+
+  linearize() {
+    return this.children.reduce(
+      (soFar, nextNode) => soFar.concat(nextNode.linearize()), [this]);
+  }
+
+  firstMatch(filterFn) {
+    if (filterFn(this)) {
+      return this;
     }
+    // Use for loop so we can short-circuit
+    for (let idx = 0; idx < this.children.length; idx += 1) {
+      const result = this.children[idx].firstMatch(filterFn);
+      if (result) {
+        return result;
+      }
+    }
+    return null;
   }
-  return null;
-}
 
-export function firstWithNodeType(docNode, nodeType) {
-  return firstMatch(docNode, n => n.node_type === nodeType);
+  firstWithNodeType(nodeType) {
+    return this.firstMatch(n => n.node_type === nodeType);
+  }
 }
