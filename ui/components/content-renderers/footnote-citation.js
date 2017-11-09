@@ -40,9 +40,11 @@ export default class FootnoteCitation extends React.Component {
     const klass = expanded ? 'active footnote-link' : 'footnote-link';
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
-      <Link onClick={this.handleCitationClick} href={href}>
-        <sup>Footnote { this.props.content.text }</sup>
-      </Link>
+      <sup>
+        <Link className={klass} onClick={this.handleCitationClick} href={href}>
+          Footnote { this.props.content.text }
+        </Link>
+      </sup>
     );
     if (expanded) {
       citation = (
@@ -55,7 +57,7 @@ export default class FootnoteCitation extends React.Component {
       );
     }
     return (
-      <cite className={klass} data-citation-target={href}>
+      <cite data-citation-target={href}>
         { link }
         { citation }
       </cite>

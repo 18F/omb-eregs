@@ -4,7 +4,10 @@
     display: none;
   }
 
-  .usa-disclaimer, .navbar-title, .req .metadata, .req .req-text {
+  .usa-disclaimer,
+  .navbar-title,
+  .req .metadata,
+  .req .req-text {
     color: $color-gray-darker !important;
   }
 
@@ -19,6 +22,7 @@
   .active-filter {
     margin: 0;
   }
+
   .requirement-list > li,
   .policy {
     border: 0;
@@ -26,7 +30,8 @@
     border-radius: 0;
   }
 
-  .topics-list a, a:link {
-   color: $color-gray-darker;
+  .topics-list a,
+  a:link {
+    color: $color-gray-darker;
   }
 }

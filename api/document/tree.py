@@ -91,7 +91,7 @@ class DocCursor():
             for cursor in child.walk():
                 yield cursor
 
-    def nested_set_renumber(self, left=1):
+    def nested_set_renumber(self, left=1, bulk_create=True):
         """The nested set model tracks parent/child relationships by requiring
         ancestors's left-right range strictly contain any descendant's
         left-right range. To set that up correctly, we need to renumber our
@@ -100,8 +100,14 @@ class DocCursor():
         self.model.right = left + 2 * self.subtree_size() - 1
 
         for child in self.children():
-            child.nested_set_renumber(left + 1)
+            child.nested_set_renumber(left + 1, bulk_create=False)
             left = child.model.right
+
+        if bulk_create:
+            self._bulk_create()
+
+    def _bulk_create(self):
+        DocNode.objects.bulk_create(node.model for node in self.walk())
 
     def next_sort_order(self):
         return self.tree.out_degree(self.identifier)

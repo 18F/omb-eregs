@@ -4,7 +4,6 @@ import pytest
 from model_mommy import mommy
 
 from document import serializers
-from document.models import DocNode
 from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic
 
@@ -117,8 +116,6 @@ def test_requirement():
     root = DocCursor.new_tree('policy', policy=policy)
     req_node = root.add_child('req')
     root.nested_set_renumber()
-    root.model.save()
-    req_node.model.save()
 
     req = mommy.make(
         Requirement,
@@ -164,7 +161,6 @@ def test_footnote_citations():
     footnote1 = para.add_child('footnote').model
     footnote2 = para.add_child('footnote').model
     para.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in para.walk())
     para.model.footnotecitations.create(
         start=len('Some'), end=len('Some1'), footnote_node=footnote1)
     para.model.footnotecitations.create(
@@ -230,7 +226,6 @@ def test_descendant_footnotes():
     root['list_1'].add_child('para')
     ftnt_c = root['list_1']['para_3'].add_child('footnote', 'c')
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(node.model for node in root.walk())
 
     root['para_1'].model.footnotecitations.create(
         start=0, end=1, footnote_node=ftnt_a.model)

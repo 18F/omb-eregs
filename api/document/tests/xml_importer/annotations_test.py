@@ -4,7 +4,7 @@ import pytest
 from lxml import etree
 from model_mommy import mommy
 
-from document.models import DocNode, FootnoteCitation, PlainText
+from document.models import FootnoteCitation, PlainText
 from document.tests.utils import random_doc
 from document.tree import DocCursor, XMLAwareCursor
 from document.xml_importer import annotations
@@ -21,7 +21,6 @@ def test_footnote_annotations():
     root['para_2'].add_child('footnote', '3')  # not 1
     root['para_4'].add_child('footnote', '1')  # is 1
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     result = annotations.AnnotationHandler.footnote_citation(
         root, xml_span, 4)
