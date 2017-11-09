@@ -91,25 +91,6 @@ h6,
   }
 }
 
-@media (min-width: 52em) {
-  h1,
-  .h1 {
-    font-size: 2em;
-    line-height: 2.5em;
-  }
-
-  h2,
-  .h2 {
-    line-height: 2em;
-  }
-
-  h3,
-  .h3 {
-    font-size: 1.625em;
-    line-height: 1.6875em;
-  }
-}
-
 h1,
 .h1 {
   font-size: 1.5em;
@@ -160,3 +141,24 @@ p {
   font-size: 1em;
   line-height: 1.5em;
 }
+
+
+@media (min-width: 52em) {
+  h1,
+  .h1 {
+    font-size: 2em;
+    line-height: 2.5em;
+  }
+
+  h2,
+  .h2 {
+    line-height: 2em;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.625em;
+    line-height: 1.6875em;
+  }
+}
+
