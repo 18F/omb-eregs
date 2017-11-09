@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import renderNode from '../../util/render-node';
+import renderNode from '../../../util/render-node';
+import Tfoot from './tfoot';
 
 export default function Table({ docNode }) {
   return (
     <table className="basic-table" id={docNode.identifier}>
       { docNode.children.map(renderNode) }
+      <Tfoot docNode={docNode} />
     </table>
   );
 }
