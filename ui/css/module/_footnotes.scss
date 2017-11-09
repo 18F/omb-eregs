@@ -5,11 +5,11 @@
   padding: 2px 4px;
   font-size: 0.6em;
   margin-left: .3em;
-}
 
-.footnote-link.active {
-  background: $color-cool-blue;
-  color: $color-white;
+  &.active {
+    background: $color-cool-blue;
+    color: $color-white;
+  }
 }
 
 .bottom-footnotes {
