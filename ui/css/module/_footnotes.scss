@@ -7,6 +7,7 @@
   margin-left: .3em;
 
   &.active {
+    border-color: $color-cool-blue;
     background: $color-cool-blue;
     color: $color-white;
   }
@@ -20,15 +21,19 @@
     margin-right: auto;
   }
 
-  .node-footnote {
-    font-size: 0.9em;
+  .citation-wrapper{
     display: block;
+    border-top: 1px solid $color-cool-blue-light;
+    border-bottom: 1px solid $color-cool-blue-light;
     margin-top: 1rem;
     margin-bottom: 2rem;
     padding-top: .75rem;
-    padding-bottom: .75rem;
-    border-top: 1px solid $color-cool-blue-light;
-    border-bottom: 1px solid $color-cool-blue-light;
+    padding-bottom: .5rem;
+  }
+
+  .node-footnote {
+    font-size: 0.9em;
+    display: block;
   }
 
   .citation-count {
@@ -47,7 +52,22 @@
     @extend .col-11;
     width: calc(100% - 1.5em);
     color: $color-gray-medium;
-    padding-left: .5em;
+  }
+
+  .close-button {
+    @include font-san-serif-bold();
+    color: $color-cool-blue-light;
+    font-style: normal;
+    font-size: .8em;
+    text-align: center;
+    display: block;
+    margin-top: 0.3rem;
+    cursor: pointer;
+    &:before {
+      content: "✕";
+      margin-right: 0.4em;
+      font-weight: 100;
+    }
   }
 }
 
