@@ -1,4 +1,4 @@
-from typing import Iterator
+from typing import NamedTuple
 
 from rest_framework import serializers
 
@@ -37,14 +37,57 @@ class PolicySerializer(serializers.ModelSerializer):
         )
 
 
-def descendant_footnotes(cursor) -> Iterator[DocCursor]:
-    """Find all footnote nodes that are cited by this node or any of its
-    descendants."""
-    for node in cursor.walk():
-        for citation in node.model.footnotecitations.all():
-            subtree = DocCursor(cursor.tree,
-                                citation.footnote_node.identifier)
-            yield DocCursorSerializer(subtree, context={'is_root': False}).data
+class Meta(NamedTuple):
+    """Package of all of the data needed to generate the "meta" field."""
+    cursor: DocCursor
+    is_root: bool
+    policy: Policy
+
+    @property
+    def model(self):
+        return self.cursor.model
+
+    @property
+    def node_type(self):
+        return self.model.node_type
+
+
+class MetaSerializer(serializers.Serializer):
+    descendant_footnotes = serializers.SerializerMethodField()
+    policy = serializers.SerializerMethodField()
+    requirement = serializers.SerializerMethodField()
+
+    def to_representation(self, instance):
+        """Remove fields that don't have data."""
+        result = super().to_representation(instance)
+        to_delete = {key for key, value in result.items() if value is None}
+        for key in to_delete:
+            del result[key]
+        return result
+
+    def get_descendant_footnotes(self, instance):
+        """Find all footnote nodes that are cited by this node or any of its
+        descendants."""
+        if not instance.is_root and instance.node_type != 'table':
+            return None
+        footnotes = []
+        for node in instance.cursor.walk():
+            for citation in node.model.footnotecitations.all():
+                subtree = DocCursor(instance.cursor.tree,
+                                    citation.footnote_node.identifier)
+                footnotes.append(
+                    DocCursorSerializer(subtree,
+                                        context={'is_root': False}).data
+                )
+        return footnotes
+
+    def get_policy(self, instance):
+        if instance.is_root:
+            return PolicySerializer(instance.policy).data
+
+    def get_requirement(self, instance):
+        if hasattr(instance.model, 'requirement'):
+            return RequirementSerializer(instance.model.requirement).data
 
 
 class DocCursorSerializer(serializers.ModelSerializer):
@@ -84,16 +127,9 @@ class DocCursorSerializer(serializers.ModelSerializer):
 
     def get_meta(self, instance):
         """Include meta data which applies to the whole node."""
-        meta = {
-            'requirement': None,
-        }
-        is_root = self.context.get('is_root', True)
-        if hasattr(instance, 'requirement'):
-            meta['requirement'] = RequirementSerializer(
-                instance.requirement).data
-        if is_root:
-            meta['policy'] = PolicySerializer(self.context['policy']).data
-        if is_root or instance.node_type == 'table':
-            meta['descendant_footnotes'] = list(
-                descendant_footnotes(self.context['cursor']))
-        return meta
+        meta = Meta(
+            self.context['cursor'],
+            self.context.get('is_root', True),
+            self.context.get('policy'),
+        )
+        return MetaSerializer(meta).data
