@@ -14,6 +14,7 @@ describe('<FootnoteCitation />', () => {
     expect(text).toMatch(/Some text here /);
     expect(text).toMatch(/Footnote /);
   });
+
   it('references the footnote node', () => {
     const content = {
       footnote_node: { identifier: 'aaa_1__bbb_2' },
@@ -21,6 +22,17 @@ describe('<FootnoteCitation />', () => {
     };
     const html = mount(<FootnoteCitation content={content} />).html();
     expect(html).toMatch(/aaa_1__bbb_2/);
+  });
+
+  it('expands on click', () => {
+    const content = {
+      footnote_node: { identifier: 'aaa_1__bbb_2' },
+      text: '',
+    };
+    const footnote = mount(<FootnoteCitation content={content} />);
+    footnote.find('a').simulate('click');
+    expect(footnote.html()).toMatch(/active footnote-link/);
+    expect(footnote.html()).toMatch(/node-footnote/);
   });
 });
 
