@@ -12,6 +12,7 @@ body {
 
 .document-container {
   .node-policy {
+    @extend .col-12;
     @extend .md-col-8;
     @extend .col;
   }
