@@ -13,4 +13,13 @@ module.exports = {
     }));
     return config;
   },
+  webpackDevMiddleware: (config) => {
+    if (process.env.USE_POLLING) {
+      config.watchOptions = {
+        poll: true
+      };
+    }
+
+    return config;
+  },
 };
