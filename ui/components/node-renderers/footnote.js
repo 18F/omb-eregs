@@ -3,12 +3,12 @@ import React from 'react';
 
 export default function Footnote({ children, docNode }) {
   return (
-    <div className="clearfix node-footnote" id={docNode.identifier}>
+    <span className="clearfix node-footnote" id={docNode.identifier}>
       <span className="bold col col-1 pr2 right-align">
         { docNode.marker }
       </span>
       <p className="col col-11 m0 footnote-text">{ children }</p>
-    </div>
+    </span>
   );
 }
 Footnote.propTypes = {

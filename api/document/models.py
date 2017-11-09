@@ -1,5 +1,3 @@
-from abc import abstractmethod
-
 from collections_extended import RangeMap
 from django.db import models
 
@@ -81,32 +79,12 @@ class Annotation(models.Model):
     class Meta:
         abstract = True
 
-    @property
-    @abstractmethod
-    def content_type(self):
-        raise NotImplementedError()
-
-    def serialize_content(self, doc_node=None):
-        doc_node = doc_node or self.doc_node
-        return {
-            'content_type': self.content_type,
-            'text': doc_node.text[self.start:self.end],
-        }
-
 
 class PlainText(Annotation):
-    content_type = '__text__'
-
     class Meta:
         abstract = True
 
 
 class FootnoteCitation(Annotation):
-    content_type = 'footnote_citation'
     footnote_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='+')
-
-    def serialize_content(self, doc_node=None):
-        result = super().serialize_content(doc_node)
-        result['footnote_node'] = self.footnote_node.identifier
-        return result

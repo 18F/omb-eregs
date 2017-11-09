@@ -1,7 +1,6 @@
 import random
 from string import ascii_lowercase
 
-from document.models import DocNode
 from document.tree import DocCursor
 
 
@@ -27,7 +26,5 @@ def random_doc(num_nodes: int = 10, save: bool = False, cls=DocCursor,
             # Still need to add more nodes, start from the top again
             to_process = [root]
 
-    root.nested_set_renumber()
-    if save:
-        DocNode.objects.bulk_create(n.model for n in root.walk())
+    root.nested_set_renumber(bulk_create=save)
     return root

@@ -95,7 +95,7 @@ def test_nested_sets():
     assert root.model.left is None
     assert root.model.right is None
 
-    root.nested_set_renumber()
+    root.nested_set_renumber(bulk_create=False)
 
     assert root.model.left == 1
     assert root['sect_1'].model.left == 2
@@ -142,7 +142,6 @@ def test_create_save_load():
     app1.add_child('apppar', 'i', text='Appendix par i')
 
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     assert DocNode.objects.count() == 7
     model_root = DocNode.objects.get(identifier='root_0')
@@ -158,7 +157,6 @@ def test_create_save_load():
 def test_add_models():
     """We can return to a tree structure from a sequence of models."""
     root = random_doc(15)
-    root.nested_set_renumber()
     models_created = [node.model for node in root.walk()]
     correct_order = [node.identifier for node in root.walk()]
 

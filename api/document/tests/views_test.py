@@ -5,7 +5,6 @@ import pytest
 from django.test.utils import CaptureQueriesContext
 from model_mommy import mommy
 
-from document.models import DocNode
 from document.serializers import DocCursorSerializer
 from document.tests.utils import random_doc
 from document.tree import DocCursor
@@ -19,7 +18,6 @@ def test_404s(client):
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sect')
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     assert client.get("/987654321").status_code == 404
     assert client.get(f"/{policy.pk}").status_code == 200
@@ -38,7 +36,6 @@ def test_correct_data(client):
     root.add_child('sect')
     sect1.add_child('par', 'a')
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     def result(url):
         return json.loads(client.get(url).content.decode('utf-8'))
@@ -60,7 +57,6 @@ def test_by_pretty_url(client):
     policy = mommy.make(Policy, omb_policy_id='M-Something-18')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.nested_set_renumber()
-    root.model.save()
 
     result = json.loads(client.get("/M-Something-18").content.decode("utf-8"))
 
@@ -87,10 +83,16 @@ def test_query_count(client):
             req.topics.add(mommy.make(Topic))
         req.docnode = req_node
         req.save()
-    # select 3 nodes as footnotes
-    for citing, footnote in zip(random.sample(subtree_nodes, 3),
-                                random.sample(subtree_nodes, 3)):
-        citing.footnotecitations.create(start=0, end=1, footnote_node=footnote)
+
+    # select 3 nodes to add footnote citations
+    citing_nodes = random.sample(list(root.walk()), 3)
+    footnotes = [citing.add_child('footnote') for citing in citing_nodes]
+    root.nested_set_renumber(bulk_create=False)
+    for node in root.walk():
+        node.model.save()
+    for citing, footnote in zip(citing_nodes, footnotes):
+        citing.model.footnotecitations.create(start=0, end=1,
+                                              footnote_node=footnote.model)
 
     # pytest will alter the connection, so we only want to load it within this
     # test
