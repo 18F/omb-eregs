@@ -26,12 +26,18 @@ export default class FootnoteCitation extends React.Component {
     this.state = {
       expanded: false,
     };
+    this.shrinkFootnote = this.shrinkFootnote.bind(this);
     this.handleCitationClick = this.handleCitationClick.bind(this);
   }
 
   handleCitationClick(e) {
     e.preventDefault();
     this.setState({ expanded: !this.state.expanded });
+  }
+
+  shrinkFootnote(e) {
+    e.preventDefault();
+    this.setState({ expanded: false });
   }
 
   render() {
@@ -48,11 +54,12 @@ export default class FootnoteCitation extends React.Component {
     );
     if (expanded) {
       citation = (
-        <span>
+        <span className="citation-wrapper">
           <Footnote key={demoData.identifier} docNode={demoData}>
             { renderContent(demoData.content) }
           </Footnote>
           <span className="clearfix" />
+          <button className="close-button" onClick={this.shrinkFootnote}>Close</button>
         </span>
       );
     }

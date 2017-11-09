@@ -10,6 +10,11 @@ body {
   }
 }
 
+.center-block {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .document-container {
   .node-policy {
     @extend .col-12;
@@ -38,4 +43,10 @@ body {
     padding-left: 2em;
     padding-right: 2em;
   }
+}
+
+.bland-box {
+  border: none;
+  box-shadow: none;
+  background: none;
 }
