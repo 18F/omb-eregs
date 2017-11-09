@@ -32,8 +32,8 @@ module.exports = [
   },
 ];
 
-if (process.env.USE_POLLING) {
+if (process.env.USE_POLLING === 'true') {
   module.exports[0].watchOptions = {
-    poll: true
+    poll: true,
   };
 }
