@@ -5,9 +5,10 @@ import katex from 'katex';
 
 export default function TeXMath({ docNode }) {
   /* eslint-disable react/no-danger */
+  const math = katex.renderToString(docNode.text, { displayMode: true });
   return (
     <div id={docNode.identifier}>
-      <div dangerouslySetInnerHTML={{ __html: katex.renderToString(docNode.text) }} />
+      <div dangerouslySetInnerHTML={{ __html: math }} />
     </div>
   );
   /* eslint-enable react/no-danger */
