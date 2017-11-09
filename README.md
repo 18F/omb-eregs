@@ -101,12 +101,23 @@ There are two types of entry points:
 
 ### Resolving common container issues
 
+#### Bundles aren't being rebuilt when I change them
+
+Try setting `USE_POLLING=true`, either in your host shell environment, or
+via an [`.env` file](https://docs.docker.com/compose/env-file/). This will
+force all the watchers to use filesystem polling instead of OS notifications,
+which works better on some platforms, such as Windows.
+
+#### Conflicting ports
+
 If you see an error about a conflicting port, try spinning down the running
 services (including those associated with integration tests).
 ```sh
 docker-compose down
 docker-compose -p integration_tests down
 ```
+
+#### Restarting from scratch
 
 If all it lost and you want to start from scratch, run
 ```sh

@@ -31,3 +31,9 @@ module.exports = [
     plugins: [new ExtractTextPlugin('styles.css')],
   },
 ];
+
+if (process.env.USE_POLLING === 'true') {
+  module.exports[0].watchOptions = {
+    poll: true,
+  };
+}
