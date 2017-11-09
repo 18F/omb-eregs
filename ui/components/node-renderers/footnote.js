@@ -4,10 +4,12 @@ import React from 'react';
 export default function Footnote({ children, docNode }) {
   return (
     <span className="clearfix node-footnote" id={docNode.identifier}>
-      <span className="bold col col-1 pr2 right-align">
-        { docNode.marker }
+      <span className="node-footnote-content">
+        <span className="citation-count">
+          { docNode.marker }
+        </span>
+        <p className="footnote-text">{ children }</p>
       </span>
-      <p className="col col-11 m0 footnote-text">{ children }</p>
     </span>
   );
 }

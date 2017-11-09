@@ -12,6 +12,45 @@
   }
 }
 
+.node-section {
+  .node-footnote-content {
+    display: block;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .node-footnote {
+    font-size: 0.9em;
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    border-top: 1px solid $color-cool-blue-light;
+    border-bottom: 1px solid $color-cool-blue-light;
+  }
+
+  .citation-count {
+    @include font-san-serif-bold();
+    @extend .col;
+    @extend .col-1;
+    font-style: normal;
+    width: 1em;
+    font-size: .9em;
+    line-height: 1.5em;
+  }
+
+  .footnote-text {
+    @extend .col;
+    @extend .m0;
+    @extend .col-11;
+    width: calc(100% - 1.5em);
+    color: $color-gray-medium;
+    padding-left: .5em;
+  }
+}
+
 .bottom-footnotes {
   border-top: 1px solid $color-gray-dark;
   margin-top: 2.5em;
@@ -22,7 +61,23 @@
     display: block;
   }
 
+  .citation-count {
+     @extend .col;
+     @extend .col-1;
+     @extend .pr2;
+     @extend .right-align;
+  }
+
   .footnote-text {
+    @extend .col;
+    @extend .col-11;
+    @extend .m0;
     color: $color-gray-medium;
   }
+}
+
+.footnote-text {
+  @include font-source-sans-pro();
+  font-style: normal;
+  color: $color-gray-medium;
 }
