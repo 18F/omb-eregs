@@ -40,13 +40,13 @@ describe('renderNode()', () => {
         { content_type: '__text__', text: 'Some highlighted' },
         {
           content_type: 'footnote_citation',
-          footnote_node: 'aaa_1__footnote_1',
+          footnote_node: { identifier: 'aaa_1__footnote_1' },
           text: '1',
         },
         { content_type: '__text__', text: ' text here' },
         {
           content_type: 'footnote_citation',
-          footnote_node: 'aaa_1__bbb_2__footnote_2',
+          footnote_node: { identifier: 'aaa_1__bbb_2__footnote_2' },
           text: '2',
         },
       ],

@@ -180,14 +180,20 @@ def test_footnote_citations():
         }, {
             'content_type': 'footnote_citation',
             'text': '1',
-            'footnote_node': footnote1.identifier,
+            'footnote_node': serializers.DocCursorSerializer(
+                para['footnote_1'],
+                context={'policy': policy, 'is_root': False},
+            ).data,
         }, {
             'content_type': '__text__',
             'text': ' message',
         }, {
             'content_type': 'footnote_citation',
             'text': '2',
-            'footnote_node': footnote2.identifier,
+            'footnote_node': serializers.DocCursorSerializer(
+                para['footnote_2'],
+                context={'policy': policy, 'is_root': False},
+            ).data,
         }, {
             'content_type': '__text__',
             'text': ' here',

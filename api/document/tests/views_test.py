@@ -87,10 +87,16 @@ def test_query_count(client):
             req.topics.add(mommy.make(Topic))
         req.docnode = req_node
         req.save()
-    # select 3 nodes as footnotes
-    for citing, footnote in zip(random.sample(subtree_nodes, 3),
-                                random.sample(subtree_nodes, 3)):
-        citing.footnotecitations.create(start=0, end=1, footnote_node=footnote)
+
+    # select 3 nodes to add footnote citations
+    citing_nodes = random.sample(list(root.walk()), 3)
+    footnotes = [citing.add_child('footnote') for citing in citing_nodes]
+    root.nested_set_renumber()
+    for node in root.walk():
+        node.model.save()
+    for citing, footnote in zip(citing_nodes, footnotes):
+        citing.model.footnotecitations.create(start=0, end=1,
+                                              footnote_node=footnote.model)
 
     # pytest will alter the connection, so we only want to load it within this
     # test

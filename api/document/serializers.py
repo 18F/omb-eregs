@@ -1,8 +1,9 @@
+from functools import singledispatch
 from typing import NamedTuple
 
 from rest_framework import serializers
 
-from document.models import DocNode
+from document.models import Annotation, DocNode, FootnoteCitation, PlainText
 from document.tree import DocCursor
 from reqs.models import Policy, Requirement
 from reqs.serializers import TopicSerializer
@@ -90,6 +91,31 @@ class MetaSerializer(serializers.Serializer):
             return RequirementSerializer(instance.model.requirement).data
 
 
+@singledispatch
+def serialize_content(content: Annotation, cursor: DocCursor):
+    raise NotImplementedError()
+
+
+@serialize_content.register(PlainText)
+def serialize_plaintext(content: PlainText, cursor: DocCursor):
+    return {
+        'content_type': '__text__',
+        'text': cursor.model.text[content.start:content.end],
+    }
+
+
+@serialize_content.register(FootnoteCitation)
+def serialize_footnote_citation(content: FootnoteCitation, cursor: DocCursor):
+    footnote_tree = DocCursor(cursor.tree, content.footnote_node.identifier)
+    footnote_node = DocCursorSerializer(footnote_tree,
+                                        context={'is_root': False}).data
+    return {
+        'content_type': 'footnote_citation',
+        'footnote_node': footnote_node,
+        'text': cursor.model.text[content.start:content.end],
+    }
+
+
 class DocCursorSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
     content = serializers.SerializerMethodField()
@@ -123,7 +149,8 @@ class DocCursorSerializer(serializers.ModelSerializer):
 
     def get_content(self, instance):
         """Include all annotations of the text."""
-        return [c.serialize_content(instance) for c in instance.content()]
+        cursor = self.context['cursor']
+        return [serialize_content(c, cursor) for c in instance.content()]
 
     def get_meta(self, instance):
         """Include meta data which applies to the whole node."""
