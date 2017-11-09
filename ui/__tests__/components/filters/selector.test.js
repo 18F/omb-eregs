@@ -1,10 +1,8 @@
-
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { Selector } from '../../../components/filters/selector';
-import * as queries from '../../../util/api/queries';
 import { Router } from '../../../routes';
+import * as queries from '../../../util/api/queries';
 
 jest.mock('../../../routes', () => ({ Router: { pushRoute: jest.fn() } }));
 jest.mock('../../../util/api/queries', () => ({

@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import FallbackView from '../../../components/filters/fallback-view';
 
 

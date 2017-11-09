@@ -1,7 +1,6 @@
 import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import FilterRemoveView from './remove-view';
 
 export function RemoveLinkContainer({ existing, field, heading, idToRemove, name, route, router }) {

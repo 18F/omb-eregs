@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import FourOhFour from './errors/four-oh-four-error';
 import UnexpectedError from './errors/unexpected-error';
 import UserError from './errors/user-error';

@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import PagersContainer from '../pagers';
-import Policy from './policy-view';
 import ThingCounterContainer from '../thing-counters';
+import Policy from './policy-view';
 
 export default function PoliciesView({ policies, count, topicsIds }) {
   const singular = 'policy';

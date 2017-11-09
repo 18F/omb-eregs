@@ -1,8 +1,7 @@
 import React from 'react';
-
 import { ContactEmail } from '../contact-email';
-import Link from '../link';
 import HeaderFooter from '../header-footer';
+import Link from '../link';
 
 
 export default function FourOhFour() {

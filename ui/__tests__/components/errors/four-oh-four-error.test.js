@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import FourOhFour from '../../../components/errors/four-oh-four-error';
 
 describe('<FourOhFour />', () => {

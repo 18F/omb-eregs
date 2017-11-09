@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import { filterAppliesTo } from '../requirements/requirement';
 import Metadata from '../requirements/metadata';
+import { filterAppliesTo } from '../requirements/requirement';
 import TopicLink from '../requirements/topic-link';
 
 export default function Req({ highlighted, href, onClick, req }) {

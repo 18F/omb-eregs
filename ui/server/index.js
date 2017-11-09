@@ -7,10 +7,9 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const next = require('next');
 const passport = require('passport');
-
+const routes = require('../routes');
 const setupAuth = require('./auth').default;
 const doNotCache = require('./do-not-cache');
-const routes = require('../routes');
 
 const expressApp = express();
 const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });

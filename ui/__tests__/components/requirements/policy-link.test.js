@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import PolicyLink from '../../../components/requirements/policy-link';
 
 describe('<PolicyLink />', () => {

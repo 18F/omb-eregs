@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import Fallback from '../../../components/node-renderers/fallback';
 import renderNode from '../../../util/render-node';
 

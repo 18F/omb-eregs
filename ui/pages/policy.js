@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import wrapPage from '../components/app-wrapper';
-import Pagers from '../components/pagers';
-import { policyData } from '../util/api/queries';
-import { Router } from '../routes';
 import PageCounter from '../components/page-counter';
+import Pagers from '../components/pagers';
 import Req from '../components/policy/req';
+import { Router } from '../routes';
+import { policyData } from '../util/api/queries';
 
 
 export class Policy extends React.Component {

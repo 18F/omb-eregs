@@ -1,6 +1,5 @@
 import { mount } from 'enzyme';
 import React from 'react';
-
 import NewPolicyView from '../../../components/homepage/new-policy-view';
 
 describe('<NewPolicyView />', () => {

@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { SearchRedirect } from '../../pages/search-redirect';
 
 describe('<SearchRedirect />', () => {

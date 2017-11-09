@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import PageCounter from '../../components/page-counter';
 
 

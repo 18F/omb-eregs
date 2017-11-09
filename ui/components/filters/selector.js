@@ -2,12 +2,11 @@ import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Async } from 'react-select';
-
-import FallbackView from './fallback-view';
 import ConditionalRender from '../conditional-render';
 import { apiNameField, makeOptionLoader } from '../../lookup-search';
-import { redirectQuery } from '../../util/api/queries';
 import { Router } from '../../routes';
+import { redirectQuery } from '../../util/api/queries';
+import FallbackView from './fallback-view';
 
 
 export function Selector(props) {

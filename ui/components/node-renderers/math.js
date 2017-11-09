@@ -1,6 +1,6 @@
+import katex from 'katex';
 import PropTypes from 'prop-types';
 import React from 'react';
-import katex from 'katex';
 
 
 export default function TeXMath({ docNode }) {

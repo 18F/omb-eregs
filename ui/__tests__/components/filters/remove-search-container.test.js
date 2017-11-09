@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { RemoveSearchContainer } from '../../../components/filters/remove-search-container';
 
 describe('<RemoveSearchContainer />', () => {

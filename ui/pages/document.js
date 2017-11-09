@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-
 import wrapPage from '../components/app-wrapper';
 import { documentData } from '../util/api/queries';
 import renderNode from '../util/render-node';

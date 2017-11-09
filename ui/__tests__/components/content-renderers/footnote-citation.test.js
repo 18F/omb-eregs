@@ -1,6 +1,5 @@
 import { mount } from 'enzyme';
 import React from 'react';
-
 import FootnoteCitation from '../../../components/content-renderers/footnote-citation';
 
 

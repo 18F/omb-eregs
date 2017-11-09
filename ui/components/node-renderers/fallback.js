@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import renderNode from '../../util/render-node';
 
 /* We've been asked to render a node we don't have a renderer for. We'll do

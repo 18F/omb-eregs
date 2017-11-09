@@ -1,6 +1,5 @@
 import { mount } from 'enzyme';
 import React from 'react';
-
 import { email, ContactEmail } from '../../components/contact-email';
 
 const expr = `a[href="mailto:${email}"]`;

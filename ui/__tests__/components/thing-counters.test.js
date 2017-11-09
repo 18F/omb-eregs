@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { ThingCounter } from '../../components/thing-counters';
 
 function makeReqThing(count, query = null) {

@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import Footnote from '../../../components/node-renderers/footnote';
 import {
   itIncludesNodeText,

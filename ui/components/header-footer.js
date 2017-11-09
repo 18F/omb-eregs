@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import Disclaimer from './disclaimer';
 import Navbar from './navbar';
 import Footer from './footer';

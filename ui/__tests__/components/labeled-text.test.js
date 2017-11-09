@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import LabeledText from '../../components/labeled-text';
 
 describe('<LabeledText />', () => {

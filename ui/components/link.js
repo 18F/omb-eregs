@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import { Link as RouterLink, routes } from '../routes';
 
 export default function Link({ children, href, params, route, ...otherProps }) {

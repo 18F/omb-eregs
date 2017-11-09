@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import TopicLink from '../../../components/requirements/topic-link';
 
 describe('<TopicLink />', () => {

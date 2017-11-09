@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import { Policy } from '../../pages/policy';
 import { Router } from '../../routes';
 

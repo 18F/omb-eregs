@@ -1,14 +1,13 @@
 import { withRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import wrapPage from '../components/app-wrapper';
-import RequirementsView from '../components/requirements/requirements-view';
-import SearchFilterView from '../components/search-filter-view';
-import TabView from '../components/tab-view';
 import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
+import RequirementsView from '../components/requirements/requirements-view';
+import SearchFilterView from '../components/search-filter-view';
+import TabView from '../components/tab-view';
 import { requirementsData } from '../util/api/queries';
 
 export function PoliciesTab({ router }) {

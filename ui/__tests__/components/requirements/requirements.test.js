@@ -1,6 +1,5 @@
 import { mount } from 'enzyme';
 import React from 'react';
-
 import Requirement from '../../../components/requirements/requirement';
 
 describe('<Requirement />', () => {

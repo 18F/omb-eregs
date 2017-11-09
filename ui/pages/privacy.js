@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { email, ContactEmail } from '../components/contact-email';
 import HeaderFooter from '../components/header-footer';
 import Link from '../components/link';

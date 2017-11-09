@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import renderNode from '../../util/render-node';
 
 export default function Caption({ children, docNode }) {

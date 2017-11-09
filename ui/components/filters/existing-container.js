@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 /* eslint-disable import/no-named-as-default */
 import RemoveLinkContainer from './remove-link-container';
 import RemoveSearchContainer from './remove-search-container';

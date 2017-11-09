@@ -1,8 +1,7 @@
 import { mount } from 'enzyme';
 import React from 'react';
-
-import Disclaimer from '../../components/disclaimer';
 import { email } from '../../components/contact-email';
+import Disclaimer from '../../components/disclaimer';
 
 describe('<Disclaimer />', () => {
   describe('returns the right contents', () => {

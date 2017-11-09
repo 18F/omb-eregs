@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-
 import ListItem from '../../../components/node-renderers/list-item';
 import {
   itIncludesTheIdentifier,

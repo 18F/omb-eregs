@@ -2,7 +2,6 @@ import Router from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import React from 'react';
-
 import ErrorView from './error';
 import HeaderFooter from './header-footer';
 
