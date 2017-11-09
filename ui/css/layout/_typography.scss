@@ -143,7 +143,7 @@ p {
 }
 
 
-@media (min-width: 52em) {
+@media #{$breakpoint-md} {
   h1,
   .h1 {
     font-size: 2em;
