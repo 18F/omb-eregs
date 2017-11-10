@@ -16,11 +16,18 @@ export default function Footnote({ children, docNode }) {
 Footnote.propTypes = {
   children: PropTypes.node,
   docNode: PropTypes.shape({
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     identifier: PropTypes.string.isRequired,
-    type_emblem: PropTypes.string.isRequired,
+    type_emblem: PropTypes.string,
+    marker: PropTypes.string,
   }).isRequired,
 };
 Footnote.defaultProps = {
   children: null,
+  docNode: {
+    children: [],
+    identifier: '',
+    marker: '',
+    type_emblem: '',
+  },
 };
