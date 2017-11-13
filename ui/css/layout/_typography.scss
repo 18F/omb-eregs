@@ -4,6 +4,7 @@
 
 @mixin font-merriweather() {
   font-family: "Merriweather", serif;
+  font-style: normal;
 }
 
 @mixin font-merriweather-light() {
@@ -13,6 +14,7 @@
 
 @mixin font-source-sans-pro() {
   font-family: "Source Sans Pro", sans-serif;
+  font-style: normal;
 }
 
 @mixin font-source-sans-pro-semibold() {
@@ -28,6 +30,7 @@
 // Basic font mixins
 @mixin font-san-serif() {
   font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-style: normal;
 }
 
 @mixin font-san-serif-bold() {
@@ -42,6 +45,7 @@
 
 @mixin font-serif() {
   font-family: "Georgia", serif;
+  font-style: normal;
 }
 
 @mixin font-serif-bold() {

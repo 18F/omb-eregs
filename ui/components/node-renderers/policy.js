@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { firstWithNodeType } from '../../util/document-node';
 import renderNode, { renderContent } from '../../util/render-node';
 import LabeledText from '../labeled-text';
 import Link from '../link';
@@ -9,7 +8,7 @@ import Footnote from './footnote';
 import From from './from';
 
 function findNodeText(docNode, nodeType, modelValue) {
-  const containingNode = firstWithNodeType(docNode, nodeType);
+  const containingNode = docNode.firstWithNodeType(nodeType);
   if (containingNode && containingNode.text.length > 0) {
     return containingNode.text;
   }
@@ -35,7 +34,7 @@ function footnotes(footnoteList) {
 
 /* Root of a policy document */
 export default function Policy({ docNode }) {
-  const fromNode = firstWithNodeType(docNode, 'from');
+  const fromNode = docNode.firstWithNodeType('from');
   const policyMeta = docNode.meta.policy;
   return (
     <div className="node-policy" id={docNode.identifier}>

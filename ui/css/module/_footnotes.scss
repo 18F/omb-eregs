@@ -1,5 +1,5 @@
 .footnote-link {
-  @include font-san-serif-bold();
+  @include font-san-serif();
   border: 1px solid $color-cool-blue-lighter;
   border-radius: 4px;
   padding: 2px 4px;
@@ -7,8 +7,70 @@
   margin-left: .3em;
 
   &.active {
-    background: $color-cool-blue;
+    border-color: $color-primary-darker;
+    background: $color-primary-darker;
     color: $color-white;
+  }
+}
+
+.inline-citation {
+  .node-footnote-content {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .citation-wrapper {
+    display: block;
+    border-top: 1px solid $color-primary-darker;
+    border-bottom: 1px solid $color-primary-darker;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 0.2em;
+  }
+
+  .node-footnote {
+    font-size: 0.9em;
+    display: block;
+  }
+
+  .citation-marker {
+    @include font-san-serif-bold();
+    @extend .col;
+    @extend .col-1;
+    width: 2.5em;
+    font-size: .9em;
+    line-height: 1.5em;
+    text-align: right;
+    padding-right: .5em;
+  }
+
+  .footnote-text {
+    @extend .col;
+    @extend .m0;
+    @extend .col-11;
+    width: calc(100% - 3em);
+    color: $color-gray-medium;
+  }
+
+  .close-button {
+    @extend .bland-box;
+    @extend .mx-auto;
+    @include font-san-serif-bold();
+    color: $color-primary-darker;
+    font-style: normal;
+    font-size: .8em;
+    display: block;
+    margin-top: 0.5rem;
+    cursor: pointer;
+
+    &::before {
+      content: '✕';
+      margin-right: 0.4em;
+      font-weight: 100;
+    }
   }
 }
 
@@ -22,7 +84,23 @@
     display: block;
   }
 
+  .citation-marker {
+    @extend .col;
+    @extend .col-1;
+    @extend .pr2;
+    @extend .right-align;
+  }
+
   .footnote-text {
+    @extend .col;
+    @extend .col-11;
+    @extend .m0;
     color: $color-gray-medium;
   }
+}
+
+.footnote-text {
+  @include font-source-sans-pro();
+  font-style: normal;
+  color: $color-gray-medium;
 }

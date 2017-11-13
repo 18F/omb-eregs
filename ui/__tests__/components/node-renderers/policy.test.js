@@ -6,6 +6,7 @@ import {
   itIncludesTheIdentifier,
   itRendersChildNodes,
 } from '../../test-utils/node-renderers';
+import DocumentNode from '../../../util/document-node';
 import { renderContent } from '../../../util/render-node';
 
 jest.mock('../../../util/render-node');
@@ -24,12 +25,12 @@ describe('<Policy />', () => {
   itRendersChildNodes(Policy, { meta });
 
   it('uses the policy for default text', () => {
-    const docNode = {
+    const docNode = new DocumentNode({
       children: [],
       identifier: '',
       meta,
       text: '',
-    };
+    });
     const result = shallow(<Policy docNode={docNode} />);
     const text = result.text();
     expect(text).toMatch(/M-44-55/);
@@ -46,7 +47,7 @@ describe('<Policy />', () => {
     expect(date.children().text()).toEqual('March 3, 2003');
   });
   it('can grab text from subnodes', () => {
-    const docNode = {
+    const docNode = new DocumentNode({
       children: [
         { children: [], node_type: 'other', text: 'other-text' },
         { children: [], node_type: 'subject', text: 'subject-here' },
@@ -58,7 +59,7 @@ describe('<Policy />', () => {
       identifier: '',
       meta,
       text: '',
-    };
+    });
 
     const result = shallow(<Policy docNode={docNode} />);
     const text = result.text();
@@ -76,19 +77,19 @@ describe('<Policy />', () => {
     expect(date.children().text()).toEqual('some date here');
   });
   it('renders footnotes at the bottom', () => {
-    const docNode = {
+    const docNode = new DocumentNode({
       children: [],
       identifier: '',
       text: '',
       meta: {
         ...meta,
         descendant_footnotes: [
-          { identifier: '1', children: [], content: ['a'], marker: '' },
-          { identifier: '2', children: [], content: ['b', 'c'], marker: '' },
-          { identifier: '3', children: [], content: [], marker: '' },
+          { identifier: '1', children: [], content: ['a'], marker: '', type_emblem: '' },
+          { identifier: '2', children: [], content: ['b', 'c'], marker: '', type_emblem: '' },
+          { identifier: '3', children: [], content: [], marker: '', type_emblem: '' },
         ],
       },
-    };
+    });
 
     const result = shallow(<Policy docNode={docNode} />);
     const footnotes = result.find('.bottom-footnotes Footnote');

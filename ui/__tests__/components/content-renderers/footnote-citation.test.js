@@ -26,13 +26,23 @@ describe('<FootnoteCitation />', () => {
 
   it('expands on click', () => {
     const content = {
-      footnote_node: { identifier: 'aaa_1__bbb_2' },
-      text: '',
+      footnote_node: {
+        children: [],
+        content: [],
+        identifier: '',
+        type_emblem: '10',
+      },
+      text: 'text content here',
     };
     const footnote = mount(<FootnoteCitation content={content} />);
+    expect(footnote.html()).toMatch(/footnote-link/);
+    expect(footnote.html()).not.toMatch(/node-footnote/);
+    expect(footnote.html()).not.toMatch(/active/);
+
     footnote.find('a').simulate('click');
-    expect(footnote.html()).toMatch(/active footnote-link/);
+    expect(footnote.html()).toMatch(/footnote-link/);
     expect(footnote.html()).toMatch(/node-footnote/);
+    expect(footnote.html()).toMatch(/active/);
   });
 });
 
