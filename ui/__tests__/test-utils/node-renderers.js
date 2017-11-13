@@ -1,16 +1,17 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
+import DocumentNode from '../../util/document-node';
 import renderNode from '../../util/render-node';
 
 export function itIncludesTheIdentifier(Component, extraAttrs) {
   it('includes the identifier', () => {
-    const docNode = {
+    const docNode = new DocumentNode({
       children: [],
       identifier: 'aaa_1__bbb_2__ccc_3',
       marker: '',
       ...(extraAttrs || {}),
-    };
+    });
     const result = shallow(<Component docNode={docNode} />);
     expect(result.prop('id')).toBe('aaa_1__bbb_2__ccc_3');
   });
@@ -18,12 +19,12 @@ export function itIncludesTheIdentifier(Component, extraAttrs) {
 
 export function itIncludesNodeText(Component, extraAttrs) {
   it('includes node text', () => {
-    const docNode = {
+    const docNode = new DocumentNode({
       children: [],
       identifier: '',
       marker: '',
       ...(extraAttrs || {}),
-    };
+    });
     const result = shallow(
       <Component docNode={docNode}>
         <span id="some-contents">Textextext</span>
@@ -46,7 +47,7 @@ export function itRendersChildNodes(Component, extraAttrs) {
     renderNode.mockImplementationOnce(
       () => <child key="2">second child</child>);
 
-    const docNode = {
+    const docNode = new DocumentNode({
       children: [
         { children: [], node_type: 'first-child' },
         { children: [], node_type: 'second-child' },
@@ -54,7 +55,7 @@ export function itRendersChildNodes(Component, extraAttrs) {
       identifier: '',
       marker: '',
       ...(extraAttrs || {}),
-    };
+    });
     const result = shallow(<Component docNode={docNode} />);
     expect(result.text()).toMatch(/first child.*second child/);
     expect(result.find('child')).toHaveLength(2);
