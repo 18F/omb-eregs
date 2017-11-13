@@ -1,11 +1,10 @@
 .footnote-link {
-  @include font-san-serif-bold();
+  @include font-san-serif();
   border: 1px solid $color-cool-blue-lighter;
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 0.6em;
   margin-left: .3em;
-  font-style: normal;
 
   &.active {
     border-color: $color-primary-darker;
@@ -37,11 +36,10 @@
     display: block;
   }
 
-  .citation-count {
+  .citation-marker {
     @include font-san-serif-bold();
     @extend .col;
     @extend .col-1;
-    font-style: normal;
     width: 2.5em;
     font-size: .9em;
     line-height: 1.5em;
@@ -59,7 +57,7 @@
 
   .close-button {
     @extend .bland-box;
-    @extend .center-block;
+    @extend .mx-auto;
     @include font-san-serif-bold();
     color: $color-primary-darker;
     font-style: normal;
@@ -86,7 +84,7 @@
     display: block;
   }
 
-  .citation-count {
+  .citation-marker {
     @extend .col;
     @extend .col-1;
     @extend .pr2;

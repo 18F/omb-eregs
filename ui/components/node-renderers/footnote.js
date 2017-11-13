@@ -5,8 +5,8 @@ export default function Footnote({ children, docNode }) {
   return (
     <span className="clearfix node-footnote" id={docNode.identifier}>
       <span className="node-footnote-content">
-        <span className="citation-count">
-          { docNode.type_emblem }
+        <span className="citation-marker">
+          { docNode.marker }
         </span>
         <p className="footnote-text">{ children }</p>
       </span>
@@ -18,7 +18,6 @@ Footnote.propTypes = {
   docNode: PropTypes.shape({
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     identifier: PropTypes.string.isRequired,
-    type_emblem: PropTypes.string,
     marker: PropTypes.string,
   }).isRequired,
 };
@@ -28,6 +27,5 @@ Footnote.defaultProps = {
     children: [],
     identifier: '',
     marker: '',
-    type_emblem: '',
   },
 };

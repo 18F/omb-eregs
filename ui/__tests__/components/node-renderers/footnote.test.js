@@ -17,7 +17,7 @@ describe('<Footnote />', () => {
         children: [],
         content: [],
         identifier: '',
-        type_emblem: '8',
+        marker: '8',
         text: 'test the content around',
       },
     };
@@ -33,12 +33,12 @@ describe('<Footnote />', () => {
         children: [],
         content: [],
         identifier: '',
-        type_emblem: '10',
+        marker: '10',
       },
     };
     const result = shallow(<Footnote {...params}>test the content around</Footnote>);
 
-    expect(result.html()).toMatch(/test the content around/);
+    expect(result.text()).toMatch(/test the content around/);
   });
 });
 

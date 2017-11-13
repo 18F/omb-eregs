@@ -37,7 +37,7 @@ export default class FootnoteCitation extends React.Component {
   }
 
   render() {
-    let citation;
+    let footnoteContent;
     const footnote = this.props.content.footnote_node;
     const expanded = this.state.expanded;
     const klass = expanded ? 'active footnote-link' : 'footnote-link';
@@ -50,9 +50,9 @@ export default class FootnoteCitation extends React.Component {
       </sup>
     );
     if (expanded) {
-      citation = (
+      footnoteContent = (
         <span className="citation-wrapper">
-          <Footnote key={footnote.identifier} docNode={footnote}>
+          <Footnote docNode={footnote}>
             { renderContent(footnote.content) }
           </Footnote>
           <span className="clearfix" />
@@ -63,10 +63,18 @@ export default class FootnoteCitation extends React.Component {
     return (
       <cite data-citation-target={href}>
         { link }
-        { citation }
+        { footnoteContent }
       </cite>
     );
   }
 }
 
 FootnoteCitation.propTypes = propTypes;
+FootnoteCitation.defaultProps = {
+  content: {
+    footnote_node: {
+      identifier: '',
+    },
+    text: '',
+  },
+};
