@@ -84,9 +84,9 @@ describe('<Policy />', () => {
       meta: {
         ...meta,
         descendant_footnotes: [
-          { identifier: '1', children: [], content: ['a'], marker: '' },
-          { identifier: '2', children: [], content: ['b', 'c'], marker: '' },
-          { identifier: '3', children: [], content: [], marker: '' },
+          { identifier: '1', children: [], content: ['a'], marker: '', type_emblem: '' },
+          { identifier: '2', children: [], content: ['b', 'c'], marker: '', type_emblem: '' },
+          { identifier: '3', children: [], content: [], marker: '', type_emblem: '' },
         ],
       },
     });

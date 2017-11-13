@@ -11,6 +11,7 @@ export default function ListItem({ docNode }) {
     </li>
   );
 }
+
 ListItem.propTypes = {
   docNode: PropTypes.shape({
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
