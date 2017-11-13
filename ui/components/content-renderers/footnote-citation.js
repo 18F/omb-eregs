@@ -61,7 +61,7 @@ export default class FootnoteCitation extends React.Component {
       );
     }
     return (
-      <cite data-citation-target={href}>
+      <cite className="inline-citation" data-citation-target={href}>
         { link }
         { footnoteContent }
       </cite>
