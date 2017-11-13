@@ -40,7 +40,7 @@ export default class FootnoteCitation extends React.Component {
     let footnoteContent;
     const footnote = this.props.content.footnote_node;
     const expanded = this.state.expanded;
-    const klass = expanded ? 'active footnote-link' : 'footnote-link';
+    const klass = `footnote-link nowrap${expanded ? ' active' : ''}`;
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
       <sup>
