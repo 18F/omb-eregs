@@ -31,6 +31,12 @@
     padding-bottom: 0.2em;
   }
 
+  /* It's ok to add outline: none here for accessibility purposes.
+   * For more details, see: https://youtu.be/ifW_oy9hajU */
+  .citation-wrapper[tabindex="-1"] {
+    outline: none;
+  }
+
   .node-footnote {
     font-size: 0.9em;
     display: block;

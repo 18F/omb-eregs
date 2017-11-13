@@ -33,7 +33,19 @@ export default class FootnoteCitation extends React.Component {
 
   shrinkFootnote(e) {
     e.preventDefault();
+    if (this.citationLink) {
+      // Focus on the citation button so keyboard focus isn't undefined.
+      this.citationLink.focus();
+    }
     this.setState({ expanded: false });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.expanded && this.state.expanded && this.citationWrapper) {
+      // Focus the footnote so screen-readers announce it, and to ensure
+      // that keyboard focus moves to it.
+      this.citationWrapper.focus();
+    }
   }
 
   render() {
@@ -44,14 +56,17 @@ export default class FootnoteCitation extends React.Component {
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
       <sup>
-        <Link className={klass} onClick={this.handleCitationClick} href={href}>
+        <a className={klass} onClick={this.handleCitationClick} href={href}
+          ref={(el) => { this.citationLink = el; }}>
           Footnote { this.props.content.text }
-        </Link>
+        </a>
       </sup>
     );
     if (expanded) {
       footnoteContent = (
-        <span className="citation-wrapper">
+        <span className="citation-wrapper" role="alertdialog"
+          aria-label={"Footnote " + footnote.marker} tabIndex="-1"
+          ref={(el) => { this.citationWrapper = el; }}>
           <Footnote docNode={footnote}>
             { renderContent(footnote.content) }
           </Footnote>
