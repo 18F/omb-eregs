@@ -74,8 +74,14 @@ h6,
 .h4,
 .h5,
 .h6 {
+  -webkit-margin-before: 0;
+  margin-after: 8px;
+  -webkit-margin-after: 8px;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
   @include font-san-serif-bold();
   color: $color-black;
+
 }
 
 .dark-back {
@@ -143,9 +149,8 @@ h6,
 p {
   @include font-serif();
   font-size: 1em;
-  line-height: 1.5em;
+  line-height: 1.69em;
 }
-
 
 @media #{$breakpoint-md} {
   h1,

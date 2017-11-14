@@ -3,9 +3,10 @@
   border: 1px solid $color-cool-blue-lighter;
   border-radius: 4px;
   padding: 2px 4px;
-  font-size: 0.6em;
+  font-size: 0.75em;
   margin-left: .3em;
-
+  color: $color-primary-darker;
+  font-weight: 500;
   &.active {
     border-color: $color-primary-darker;
     background: $color-primary-darker;
@@ -14,6 +15,8 @@
 }
 
 .inline-citation {
+  line-height: 1em;
+
   .node-footnote-content {
     display: block;
     width: 100%;
