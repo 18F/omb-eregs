@@ -3,11 +3,16 @@ import React from 'react';
 
 import renderContents from '../../util/render-contents';
 import renderNode from '../../util/render-node';
+import FootnoteCitationInTable from '../content-renderers/footnote-citation-in-table';
 
 export default function Th({ docNode }) {
+  const content = renderContents(
+    docNode.content,
+    { footnote_citation: FootnoteCitationInTable },
+  );
   return (
     <th className="basic-th" id={docNode.identifier}>
-      { renderContents(docNode.content) }
+      { content }
       { docNode.children.map(renderNode) }
     </th>
   );
