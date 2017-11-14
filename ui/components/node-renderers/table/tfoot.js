@@ -13,7 +13,7 @@ function deriveColspan(docNode) {
 
 export default function Tfoot({ docNode }) {
   const footnotes = docNode.meta.descendant_footnotes.map(ft => (
-    <div className="clearfix" key={ft.identifier}>
+    <div className="clearfix" key={ft.identifier} id={`${ft.identifier}-table`}>
       <div className="col col-1">{ft.marker}</div>
       <div className="col col-11">{ renderContents(ft.content) }</div>
     </div>

@@ -75,4 +75,16 @@ describe('<Tfoot />', () => {
     expect(texts.at(1).prop('content').text).toBe('bbb');
     expect(texts.at(2).prop('content').text).toBe('ccc');
   });
+  it('includes a mangled version of the footnote identifier', () => {
+    const docNode = new DocumentNode({
+      children: [],
+      meta: {
+        descendant_footnotes: [
+          { content: [], identifier: 'footnote_1', marker: '' },
+        ],
+      },
+    });
+    const result = shallow(<Tfoot docNode={docNode} />);
+    expect(result.find('#footnote_1-table')).toHaveLength(1);
+  });
 });
