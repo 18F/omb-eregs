@@ -2,6 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Footnote from '../../../components/node-renderers/footnote';
+import nodeFactory from '../../test-utils/node-factory';
 import {
   itIncludesNodeText,
   itIncludesTheIdentifier,
@@ -13,32 +14,12 @@ describe('<Footnote />', () => {
   it('includes the marker', () => {
     const params = {
       children: [],
-      docNode: {
-        children: [],
-        content: [],
-        identifier: '',
-        marker: '8',
-        text: 'test the content around',
-      },
+      docNode: nodeFactory({ marker: '8' }),
     };
     const result = shallow(<Footnote {...params} />);
 
     const marker = result.children().first();
     expect(marker.text()).toBe('8');
-  });
-
-  it('Properlly displays footnote_node content', () => {
-    const params = {
-      docNode: {
-        children: [],
-        content: [],
-        identifier: '',
-        marker: '10',
-      },
-    };
-    const result = shallow(<Footnote {...params}>test the content around</Footnote>);
-
-    expect(result.text()).toMatch(/test the content around/);
   });
 });
 
