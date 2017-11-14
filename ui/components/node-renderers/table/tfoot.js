@@ -14,8 +14,8 @@ function deriveColspan(docNode) {
 export default function Tfoot({ docNode }) {
   const footnotes = docNode.meta.descendant_footnotes.map(ft => (
     <div className="clearfix" key={ft.identifier} id={`${ft.identifier}-table`}>
-      <div className="col col-1">{ft.marker}</div>
-      <div className="col col-11">{ renderContents(ft.content) }</div>
+      <div className="footnote-marker">{ft.marker}</div>
+      <div className="footnote-text">{ renderContents(ft.content) }</div>
     </div>
   ));
   if (footnotes.length === 0) {
@@ -24,7 +24,7 @@ export default function Tfoot({ docNode }) {
   return (
     <tfoot>
       <tr>
-        <td colSpan={deriveColspan(docNode)} className="border">
+        <td colSpan={deriveColspan(docNode)} className="table-footer">
           <h1 className="h4">Footnotes for table</h1>
           { footnotes }
         </td>
