@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import renderContents from '../../util/render-contents';
+
 /* An h1/2/3/etc. depending on section depth */
-export default function Heading({ children, docNode }) {
+export default function Heading({ docNode }) {
   const hLevel = docNode.identifier
     .split('_')
     .filter(e => e === 'sec')
@@ -10,16 +12,16 @@ export default function Heading({ children, docNode }) {
   const Component = `h${hLevel}`;
   return (
     <Component className="node-heading" id={docNode.identifier}>
-      { children }
+      { renderContents(docNode.content) }
     </Component>
   );
 }
 Heading.propTypes = {
-  children: PropTypes.node,
   docNode: PropTypes.shape({
+    content: PropTypes.arrayOf(PropTypes.shape({
+      content_type: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    })).isRequired,
     identifier: PropTypes.string.isRequired,
   }).isRequired,
-};
-Heading.defaultProps = {
-  children: null,
 };
