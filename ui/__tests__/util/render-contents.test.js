@@ -31,5 +31,12 @@ describe('renderContents()', () => {
     expect(c3.type).toBe(FootnoteCitation);
     expect(c3.props.content).toEqual(content[3]);
   });
+
+  it('allows renderers to be overridden', () => {
+    const content = [{ content_type: 'footnote_citation', text: 'aaaa' }];
+    const override = jest.fn();
+    const result = renderContents(content, { footnote_citation: override });
+    expect(result[0].type).toBe(override);
+  });
 });
 
