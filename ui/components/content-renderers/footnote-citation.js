@@ -1,45 +1,37 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import { renderContent } from '../../util/render-node';
+import { openFootnote } from '../../store/actions';
 
 import Footnote from '../node-renderers/footnote';
 import Link from '../link';
 
-const propTypes = {
-  content: PropTypes.shape({
-    footnote_node: PropTypes.shape({
-      identifier: PropTypes.string.isRequired,
-    }).isRequired,
-    text: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-export default class FootnoteCitation extends React.Component {
+export class FootnoteCitation extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      expanded: false,
-    };
     this.shrinkFootnote = this.shrinkFootnote.bind(this);
     this.handleCitationClick = this.handleCitationClick.bind(this);
+    this.footnoteIdentifier = props.content.footnote_node.identifier;
   }
 
   handleCitationClick(e) {
     e.preventDefault();
-    this.setState({ expanded: !this.state.expanded });
+    this.props.openFootnote(this.footnoteIdentifier);
   }
 
   shrinkFootnote(e) {
     e.preventDefault();
-    this.setState({ expanded: false });
+    this.props.openFootnote(null);
   }
 
   render() {
     let footnoteContent;
     const footnote = this.props.content.footnote_node;
-    const expanded = this.state.expanded;
+    const expanded = this.props.expanded;
     const klass = `footnote-link nowrap${expanded ? ' active' : ''}`;
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
@@ -69,12 +61,24 @@ export default class FootnoteCitation extends React.Component {
   }
 }
 
-FootnoteCitation.propTypes = propTypes;
-FootnoteCitation.defaultProps = {
-  content: {
-    footnote_node: {
-      identifier: '',
-    },
-    text: '',
-  },
+FootnoteCitation.propTypes = {
+  content: PropTypes.shape({
+    footnote_node: PropTypes.shape({
+      identifier: PropTypes.string.isRequired,
+    }).isRequired,
+    text: PropTypes.string.isRequired,
+  }).isRequired,
+  expanded: PropTypes.bool.isRequired,
+  openFootnote: PropTypes.func.isRequired,
 };
+
+export function mapStateToProps({ openedFootnote }, { content }) {
+  return { expanded: openedFootnote === content.footnote_node.identifier };
+}
+
+function mapDispatchToProps(dispatch) {
+  return { openFootnote: bindActionCreators(openFootnote, dispatch) };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(FootnoteCitation);
