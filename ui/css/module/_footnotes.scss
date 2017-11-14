@@ -13,7 +13,7 @@
   }
 }
 
-.inline-citation {
+.inline-footnote {
   .node-footnote-content {
     display: block;
     width: 100%;
@@ -21,7 +21,7 @@
     margin-right: auto;
   }
 
-  .citation-wrapper {
+  .footnote-wrapper {
     display: block;
     border-top: 1px solid $color-primary-darker;
     border-bottom: 1px solid $color-primary-darker;
