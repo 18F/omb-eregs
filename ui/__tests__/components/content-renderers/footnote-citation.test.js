@@ -56,6 +56,41 @@ describe('<FootnoteCitation />', () => {
     expect(footnote.html()).toMatch(/active/);
   });
 
+  it('focuses on footnote link once "close" btn is clicked', () => {
+    const content = {
+      footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
+      text: '',
+    };
+    const props = {
+      ...exampleProps,
+      expanded: true,
+      content,
+      closeFootnote: jest.fn(),
+    };
+    const wrapper = mount(<FootnoteCitation {...props} />);
+    const link = wrapper.find('Link').getDOMNode();
+    const closeBtn = wrapper.find('.close-button');
+    closeBtn.simulate('click');
+    expect(global.window.document.activeElement).toEqual(link);
+    expect(props.closeFootnote).toHaveBeenCalledTimes(1);
+  });
+
+  it('focuses on citation once footnote opens', () => {
+    const content = {
+      footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
+      text: '',
+    };
+    const props = {
+      ...exampleProps,
+      expanded: false,
+      content,
+    };
+    const wrapper = mount(<FootnoteCitation {...props} />);
+    wrapper.setProps({ expanded: true });
+    const citation = wrapper.find('.citation-wrapper').getDOMNode();
+    expect(global.window.document.activeElement).toEqual(citation);
+  });
+
   it('triggers a state transition if clicked when closed', () => {
     const content = {
       footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
