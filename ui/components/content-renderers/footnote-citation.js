@@ -3,11 +3,11 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Link from '../link';
 import { renderContent } from '../../util/render-node';
 import { closeFootnote, openFootnote } from '../../store/actions';
 
 import Footnote from '../node-renderers/footnote';
-import Link from '../link';
 
 export class FootnoteCitation extends React.Component {
   constructor(props) {
@@ -16,6 +16,14 @@ export class FootnoteCitation extends React.Component {
     this.shrinkFootnote = this.shrinkFootnote.bind(this);
     this.handleCitationClick = this.handleCitationClick.bind(this);
     this.footnoteIdentifier = props.content.footnote_node.identifier;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.expanded && this.props.expanded && this.citationWrapper) {
+      // Focus the footnote so screen-readers announce it, and to ensure
+      // that keyboard focus moves to it.
+      this.citationWrapper.focus();
+    }
   }
 
   handleCitationClick(e) {
@@ -29,6 +37,10 @@ export class FootnoteCitation extends React.Component {
 
   shrinkFootnote(e) {
     e.preventDefault();
+    if (this.citationLink) {
+      // Focus on the citation button so keyboard focus isn't undefined.
+      this.citationLink.focus();
+    }
     this.props.closeFootnote();
   }
 
@@ -41,7 +53,12 @@ export class FootnoteCitation extends React.Component {
     const link = (
       <cite>
         <sup>
-          <Link className={klass} onClick={this.handleCitationClick} href={href}>
+          <Link
+            className={klass}
+            onClick={this.handleCitationClick}
+            href={href}
+            ref={(component) => { this.citationLink = component; }}
+          >
             Footnote { this.props.content.text }
           </Link>
         </sup>
@@ -49,7 +66,7 @@ export class FootnoteCitation extends React.Component {
     );
     if (expanded) {
       footnoteContent = (
-        <span className="footnote-wrapper">
+        <span className="citation-wrapper" role="alertdialog" aria-label={`Footnote ${footnote.marker}`} tabIndex="-1" ref={(el) => { this.citationWrapper = el; }}>
           <Footnote docNode={footnote}>
             { renderContent(footnote.content) }
           </Footnote>
