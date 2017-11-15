@@ -14,7 +14,7 @@ export default function Policy({ policy, topicsIds }) {
 
   if (policy.omb_policy_id && policy.boop) {
     policyTitle = (
-      <Link route="document" params={{policyId: policy.omb_policy_id}}>
+      <Link route="document" params={{ policyId: policy.omb_policy_id }}>
         {policyTitle}
       </Link>
     );
