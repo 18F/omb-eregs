@@ -62,6 +62,17 @@ def test_topics_counts_filter_req(policy_topic_setup):
 
 
 @pytest.mark.django_db
+def test_docnode_count_works(policy_topic_setup):
+    (_, reqs), topics = policy_topic_setup
+    client = APIClient()
+
+    path = "/policies/?requirements__topics__id__in={0}".format(topics[0].pk)
+    response = client.get(path).json()
+
+    assert response['results'][0]['boop'] == 0
+
+
+@pytest.mark.django_db
 def test_topics_counts_filter_by_one_topic(policy_topic_setup):
     """The API endpoint should include only relevant policies when we filter
     by a single topic"""

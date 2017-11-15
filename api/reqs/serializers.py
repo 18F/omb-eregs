@@ -24,6 +24,7 @@ class GroupWithAgenciesSerializer(serializers.ModelSerializer):
 
 
 class PolicySerializer(serializers.ModelSerializer):
+    boop = serializers.IntegerField(read_only=True)
     total_reqs = serializers.IntegerField(read_only=True)
     relevant_reqs = serializers.IntegerField(read_only=True)
     title_with_number = serializers.CharField(read_only=True)
@@ -46,6 +47,7 @@ class PolicySerializer(serializers.ModelSerializer):
             'title_with_number',
             'total_reqs',
             'uri',
+            'boop',
         )
 
 

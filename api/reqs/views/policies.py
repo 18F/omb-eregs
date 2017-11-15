@@ -84,6 +84,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         queryset = queryset.filter(public=True)
         queryset = queryset.annotate(
+            boop=Count('docnode'),
             total_reqs=relevant_reqs_count({}),
             relevant_reqs=relevant_reqs_count(self.request.GET),
         ).filter(relevant_reqs__gt=0)
