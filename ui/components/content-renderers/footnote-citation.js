@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Link from '../link';
 import { renderContent } from '../../util/render-node';
 
 import Footnote from '../node-renderers/footnote';
@@ -55,14 +56,14 @@ export default class FootnoteCitation extends React.Component {
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
       <sup>
-        <a
+        <Link
           className={klass}
           onClick={this.handleCitationClick}
           href={href}
-          ref={(el) => { this.citationLink = el; }}
+          ref={(component) => { this.citationLink = component; }}
         >
           Footnote { this.props.content.text }
-        </a>
+        </Link>
       </sup>
     );
     if (expanded) {
