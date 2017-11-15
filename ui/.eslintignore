@@ -1,2 +1,5 @@
 # Only syntax for an old browser
 static/ie.js
+
+# Auto-generated code from our code coverage reporter
+coverage/
