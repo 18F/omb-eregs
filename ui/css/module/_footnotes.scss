@@ -78,7 +78,7 @@
 }
 
 .bottom-footnotes {
-  border-top: 1px solid $color-gray-dark;
+  border-top: 1px solid $color-primary-darker;
   margin-top: 2.5em;
   padding-top: .75em;
 
@@ -89,9 +89,16 @@
 
   .citation-marker {
     @extend .col;
-    @extend .col-1;
     @extend .pr2;
     @extend .right-align;
+    width: 6%;
+    font-weight: bold;
+  }
+
+  .citation-marker,
+  .footnote-text {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
   }
 
   .footnote-text {
@@ -106,4 +113,5 @@
   @include font-source-sans-pro();
   font-style: normal;
   color: $color-gray-medium;
+  word-break: break-word;
 }
