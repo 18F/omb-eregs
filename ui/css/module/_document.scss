@@ -1,3 +1,30 @@
 .node-paragraph>p {
   margin-bottom: 16px;
 }
+
+.document-header {
+  margin-bottom: 40px;
+}
+
+.document-heading {
+  margin-top: 8px;
+}
+
+.document-heading .original-link {
+  margin-bottom: 8px;
+}
+
+.original-link::after {
+  content: "";
+  display: inline-block;
+  background: url('/static/img/linkout-icon.svg');
+  width: 16px;
+  height: 13px;
+  margin-left: 4px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.original-link-container {
+  margin-bottom: 8px;
+}

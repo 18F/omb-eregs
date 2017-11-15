@@ -38,20 +38,22 @@ export default function Policy({ docNode }) {
   const policyMeta = docNode.meta.policy;
   return (
     <div className="node-policy" id={docNode.identifier}>
-      <div className="clearfix">
-        <div className="bold">
-          { findNodeText(docNode, 'policyNum', policyMeta.omb_policy_id) }
+      <header className="document-header">
+        <div className="clearfix ">
+          <div className="bold">
+            { findNodeText(docNode, 'policyNum', policyMeta.omb_policy_id) }
+          </div>
+          <div>{ findNodeText(docNode, 'policyTitle', '') }</div>
+          <h2 className="h1 document-heading">
+            { findNodeText(docNode, 'subject', policyMeta.title) }
+          </h2>
+          <div className="original-link-container"><Link className="original-link" href={policyMeta.original_url}>See original</Link></div>
+          { fromNode ? <From docNode={fromNode} /> : null }
+          <LabeledText id="issuance" label="Issued on:">
+            { findNodeText(docNode, 'published', policyMeta.issuance_pretty) }
+          </LabeledText>
         </div>
-        <div>{ findNodeText(docNode, 'policyTitle', '') }</div>
-        <h2 className="h1">
-          { findNodeText(docNode, 'subject', policyMeta.title) }
-        </h2>
-        <div><Link href={policyMeta.original_url}>See original</Link></div>
-        { fromNode ? <From docNode={fromNode} /> : null }
-        <LabeledText id="issuance" label="Issued on:">
-          { findNodeText(docNode, 'published', policyMeta.issuance_pretty) }
-        </LabeledText>
-      </div>
+      </header>
       { docNode.children.map(renderNode) }
       { footnotes(docNode.meta.descendant_footnotes) }
     </div>
