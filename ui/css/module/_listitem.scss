@@ -1,30 +1,13 @@
 .node-list-item {
   @extend .clearfix;
   margin-bottom: 8px;
-  $marker-width-xs: 24px;
-  $marker-padding-xs: 4px;
-  $marker-width-md: $marker-width-xs + 8;
-  $marker-padding-md: $marker-padding-xs + 4;
 
   .list-item-marker {
-    @extend .right-align;
     @include font-san-serif-bold();
-    width: $marker-width-xs;
-    padding-right: $marker-padding-xs;
-    display: inline-block;
-    float: left;
-
-    @media #{$breakpoint-md} {
-      width: $marker-width-md;
-      padding-right: $marker-padding-md;
-    }
+    @include paragraph-marker();
   }
 
   .list-item-text {
-    margin-left: $marker-width-xs + $marker-padding-xs;
-
-    @media #{$breakpoint-md} {
-      margin-left: $marker-width-md + $marker-padding-md;
-    }
+    @include paragraph-with-marker();
   }
 }

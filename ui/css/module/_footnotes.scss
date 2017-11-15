@@ -13,7 +13,7 @@
   }
 }
 
-.inline-citation {
+.inline-footnote {
   .node-footnote-content {
     display: block;
     width: 100%;
@@ -21,7 +21,7 @@
     margin-right: auto;
   }
 
-  .citation-wrapper {
+  .footnote-wrapper {
     display: block;
     border-top: 1px solid $color-primary-darker;
     border-bottom: 1px solid $color-primary-darker;
@@ -81,32 +81,35 @@
 }
 
 .bottom-footnotes {
-  border-top: 1px solid $color-gray-dark;
+  border-top: 1px solid $pallet-blue;
   margin-top: 2.5em;
   padding-top: .75em;
 
   .node-footnote {
-    margin-bottom: .875em;
+    @extend .clearfix;
     display: block;
+    margin-bottom: .875em;
   }
 
   .citation-marker {
-    @extend .col;
-    @extend .col-1;
-    @extend .pr2;
-    @extend .right-align;
+    @include font-san-serif-bold();
+    @include paragraph-marker();
+    font-size: .875em;
+    line-height: 1em; // like font-text, except adjusting for bold
   }
 
-  .footnote-text {
-    @extend .col;
-    @extend .col-11;
+  .footnote-text,
+  p {
+    @include paragraph-with-marker();
     @extend .m0;
     color: $color-gray-medium;
+    font-size: .875em;
+    line-height: 1.125em;
   }
 }
 
 .footnote-text {
-  @include font-source-sans-pro();
+  @include font-san-serif();
   font-style: normal;
   color: $color-gray-medium;
 }

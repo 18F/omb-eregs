@@ -1,0 +1,28 @@
+$marker-width-xs: 24px;
+$marker-whitespace-xs: 4px;
+$marker-width-md: $marker-width-xs + 8;
+$marker-whitespace-md: $marker-whitespace-xs + 4;
+
+@mixin paragraph-marker() {
+  @extend .col;
+  @extend .right-align;
+  width: $marker-width-xs;
+  margin-right: $marker-whitespace-xs;
+  display: inline-block;
+
+  @media #{$breakpoint-md} {
+    width: $marker-width-md;
+    margin-right: $marker-whitespace-md;
+  }
+}
+
+@mixin paragraph-with-marker() {
+  @extend .col;
+  @extend .col-11;
+  width: calc(100% - #{$marker-width-xs + $marker-whitespace-xs});
+  word-wrap: break-word;
+
+  @media #{$breakpoint-md} {
+    width: calc(100% - #{$marker-width-md + $marker-whitespace-md});
+  }
+}
