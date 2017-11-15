@@ -1,33 +1,25 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import Link from '../link';
 import { renderContent } from '../../util/render-node';
+import { closeFootnote, openFootnote } from '../../store/actions';
 
 import Footnote from '../node-renderers/footnote';
 
-const propTypes = {
-  content: PropTypes.shape({
-    footnote_node: PropTypes.shape({
-      identifier: PropTypes.string.isRequired,
-    }).isRequired,
-    text: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-export default class FootnoteCitation extends React.Component {
+export class FootnoteCitation extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      expanded: false,
-    };
     this.shrinkFootnote = this.shrinkFootnote.bind(this);
     this.handleCitationClick = this.handleCitationClick.bind(this);
+    this.footnoteIdentifier = props.content.footnote_node.identifier;
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!prevState.expanded && this.state.expanded && this.citationWrapper) {
+    if (!prevProps.expanded && this.props.expanded && this.citationWrapper) {
       // Focus the footnote so screen-readers announce it, and to ensure
       // that keyboard focus moves to it.
       this.citationWrapper.focus();
@@ -36,7 +28,11 @@ export default class FootnoteCitation extends React.Component {
 
   handleCitationClick(e) {
     e.preventDefault();
-    this.setState({ expanded: !this.state.expanded });
+    if (this.props.expanded) {
+      this.props.closeFootnote();
+    } else {
+      this.props.openFootnote(this.footnoteIdentifier);
+    }
   }
 
   shrinkFootnote(e) {
@@ -45,13 +41,13 @@ export default class FootnoteCitation extends React.Component {
       // Focus on the citation button so keyboard focus isn't undefined.
       this.citationLink.focus();
     }
-    this.setState({ expanded: false });
+    this.props.closeFootnote();
   }
 
   render() {
     let footnoteContent;
     const footnote = this.props.content.footnote_node;
-    const expanded = this.state.expanded;
+    const expanded = this.props.expanded;
     const klass = `footnote-link nowrap${expanded ? ' active' : ''}`;
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
@@ -86,12 +82,28 @@ export default class FootnoteCitation extends React.Component {
   }
 }
 
-FootnoteCitation.propTypes = propTypes;
-FootnoteCitation.defaultProps = {
-  content: {
-    footnote_node: {
-      identifier: '',
-    },
-    text: '',
-  },
+FootnoteCitation.propTypes = {
+  closeFootnote: PropTypes.func.isRequired,
+  content: PropTypes.shape({
+    footnote_node: PropTypes.shape({
+      identifier: PropTypes.string.isRequired,
+    }).isRequired,
+    text: PropTypes.string.isRequired,
+  }).isRequired,
+  expanded: PropTypes.bool.isRequired,
+  openFootnote: PropTypes.func.isRequired,
 };
+
+export function mapStateToProps({ openedFootnote }, { content }) {
+  return { expanded: openedFootnote === content.footnote_node.identifier };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    closeFootnote: bindActionCreators(closeFootnote, dispatch),
+    openFootnote: bindActionCreators(openFootnote, dispatch),
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(FootnoteCitation);
