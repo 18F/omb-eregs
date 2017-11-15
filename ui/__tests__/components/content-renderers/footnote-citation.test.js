@@ -10,6 +10,7 @@ function footnoteNode(attrs = null) {
 
 describe('<FootnoteCitation />', () => {
   const exampleProps = {
+    closeFootnote: jest.fn(),
     content: { footnote_node: footnoteNode(), text: '' },
     expanded: false,
     openFootnote: jest.fn(),
@@ -55,19 +56,34 @@ describe('<FootnoteCitation />', () => {
     expect(footnote.html()).toMatch(/active/);
   });
 
-  it('triggers a state transition if clicked', () => {
+  it('triggers a state transition if clicked when closed', () => {
     const content = {
       footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
       text: '',
     };
     const props = {
       ...exampleProps,
+      expanded: false,
       content,
       openFootnote: jest.fn(),
     };
-    mount(<FootnoteCitation {...props} />).find('Link').simulate('click');
+    const link = mount(<FootnoteCitation {...props} />).find('Link');
+    link.simulate('click');
     expect(props.openFootnote).toHaveBeenCalledTimes(1);
     expect(props.openFootnote).toHaveBeenCalledWith('aaa_1__bbb_2');
+    expect(props.closeFootnote).not.toHaveBeenCalled();
+  });
+
+  it('triggers a state transition if clicked when open', () => {
+    const props = {
+      ...exampleProps,
+      closeFootnote: jest.fn(),
+      expanded: true,
+    };
+    const link = mount(<FootnoteCitation {...props} />).find('Link');
+    link.simulate('click');
+    expect(props.openFootnote).not.toHaveBeenCalled();
+    expect(props.closeFootnote).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { renderContent } from '../../util/render-node';
-import { openFootnote } from '../../store/actions';
+import { closeFootnote, openFootnote } from '../../store/actions';
 
 import Footnote from '../node-renderers/footnote';
 import Link from '../link';
@@ -20,12 +20,16 @@ export class FootnoteCitation extends React.Component {
 
   handleCitationClick(e) {
     e.preventDefault();
-    this.props.openFootnote(this.footnoteIdentifier);
+    if (this.props.expanded) {
+      this.props.closeFootnote();
+    } else {
+      this.props.openFootnote(this.footnoteIdentifier);
+    }
   }
 
   shrinkFootnote(e) {
     e.preventDefault();
-    this.props.openFootnote(null);
+    this.props.closeFootnote();
   }
 
   render() {
@@ -62,6 +66,7 @@ export class FootnoteCitation extends React.Component {
 }
 
 FootnoteCitation.propTypes = {
+  closeFootnote: PropTypes.func.isRequired,
   content: PropTypes.shape({
     footnote_node: PropTypes.shape({
       identifier: PropTypes.string.isRequired,
@@ -77,7 +82,10 @@ export function mapStateToProps({ openedFootnote }, { content }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return { openFootnote: bindActionCreators(openFootnote, dispatch) };
+  return {
+    closeFootnote: bindActionCreators(closeFootnote, dispatch),
+    openFootnote: bindActionCreators(openFootnote, dispatch),
+  };
 }
 
 

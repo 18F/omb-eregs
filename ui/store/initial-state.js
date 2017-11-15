@@ -1,1 +1,1 @@
-export default { openedFootnote: null };
+export default { openedFootnote: '' };
