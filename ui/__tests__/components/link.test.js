@@ -41,7 +41,7 @@ describe('<Link />', () => {
     // of the link on ATs. We might bring back this functionality in
     // a better way, though, so for now we'll skip it rather than deleting
     // it entirely. For more details, see:
-    // 
+    //
     //   https://github.com/18F/omb-eregs/issues/655
     it.skip('renders as an external link if the URL includes a protocol', () => {
       const externalUrl = 'https://www.other-site.gov';

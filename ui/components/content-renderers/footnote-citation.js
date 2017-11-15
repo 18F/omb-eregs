@@ -18,7 +18,7 @@ export class FootnoteCitation extends React.Component {
     this.footnoteIdentifier = props.content.footnote_node.identifier;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (!prevProps.expanded && this.props.expanded && this.citationWrapper) {
       // Focus the footnote so screen-readers announce it, and to ensure
       // that keyboard focus moves to it.
