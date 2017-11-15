@@ -47,3 +47,22 @@ describe('firstWithNodeType()', () => {
     expect(result).toBeNull();
   });
 });
+
+describe('hasAncestor()', () => {
+  it('must be present', () => {
+    const node = new DocumentNode({
+      children: [],
+      identifier: 'aaa_1__bbb_2__ccc_3',
+    });
+    expect(node.hasAncestor('ddd')).toBe(false);
+    expect(node.hasAncestor('bbb')).toBe(true);
+  });
+  it('must be an exact match', () => {
+    const node = new DocumentNode({
+      children: [],
+      identifier: 'aaa_1__bbbb_2__ccc_3',
+    });
+    expect(node.hasAncestor('bbb')).toBe(false);
+    expect(node.hasAncestor('bbbb')).toBe(true);
+  });
+});
