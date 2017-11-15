@@ -30,7 +30,6 @@
     "scanjs-rules/call_addEventListener" : 2,
     "scanjs-rules/call_addEventListener_deviceproximity" : 2,
     "scanjs-rules/call_addEventListener_message" : 2,
-    "scanjs-rules/call_connect" : 2,
     "scanjs-rules/call_eval" : 2,
     "scanjs-rules/call_execScript" : 2,
     "scanjs-rules/call_hide" : 2,
