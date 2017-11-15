@@ -26,4 +26,12 @@ export default class DocumentNode {
   firstWithNodeType(nodeType) {
     return this.firstMatch(n => n.node_type === nodeType);
   }
+
+  /* Cleanup: does this node have nodeType in its lineage/ as a parent.
+   * e.g. table */
+  hasAncestor(nodeType) {
+    const ancestorTypes = this.identifier.split('__').map(
+      ident => ident.split('_')[0]);
+    return ancestorTypes.includes(nodeType);
+  }
 }

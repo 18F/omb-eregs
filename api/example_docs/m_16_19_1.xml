@@ -708,6 +708,7 @@
                           \textit{Total Active}
                           \\
                           \textit{Rack Count}
+                          <footnote_citation>28</footnote_citation>
                         \end{matrix}
                         *
                         \textit{30 sq. ft.}
@@ -716,9 +717,6 @@
                       }
                     </content>
                   </math>
-                  <content>
-                    <footnote_citation>28</footnote_citation>
-                  </content>
                   <footnote emblem="28" marker="28">
                     “Active” racks are those that have IT equipment
                     consuming electricity.
