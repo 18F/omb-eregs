@@ -27,7 +27,6 @@ export default class Link extends React.Component {
       if (href.search(/^https|http|^\/\//) === 0) {
         props.target = '_blank';
         props.rel = 'noopener noreferrer';
-        props['aria-label'] = 'Link opens in a new window';
       }
       return <a {...props} ref={(el) => { this.el = el; }}>{children}</a>;
     }
