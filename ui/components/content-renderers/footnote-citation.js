@@ -39,15 +39,17 @@ export class FootnoteCitation extends React.Component {
     const klass = `footnote-link nowrap${expanded ? ' active' : ''}`;
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
-      <sup>
-        <Link className={klass} onClick={this.handleCitationClick} href={href}>
-          Footnote { this.props.content.text }
-        </Link>
-      </sup>
+      <cite>
+        <sup>
+          <Link className={klass} onClick={this.handleCitationClick} href={href}>
+            Footnote { this.props.content.text }
+          </Link>
+        </sup>
+      </cite>
     );
     if (expanded) {
       footnoteContent = (
-        <span className="citation-wrapper">
+        <span className="footnote-wrapper">
           <Footnote docNode={footnote}>
             { renderContent(footnote.content) }
           </Footnote>
@@ -57,10 +59,10 @@ export class FootnoteCitation extends React.Component {
       );
     }
     return (
-      <cite className="inline-citation" data-citation-target={href}>
+      <span className="inline-footnote" data-citation-target={href}>
         { link }
         { footnoteContent }
-      </cite>
+      </span>
     );
   }
 }
