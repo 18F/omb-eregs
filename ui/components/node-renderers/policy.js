@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import renderNode, { renderContent } from '../../util/render-node';
+import renderNode from '../../util/render-node';
 import LabeledText from '../labeled-text';
 import Link from '../link';
 import Footnote from './footnote';
@@ -20,9 +20,7 @@ function footnotes(footnoteList) {
     return null;
   }
   const rendered = footnoteList.map(fn => (
-    <Footnote key={fn.identifier} docNode={fn}>
-      { renderContent(fn.content) }
-    </Footnote>
+    <Footnote key={fn.identifier} docNode={fn} />
   ));
   return (
     <div className="bottom-footnotes">

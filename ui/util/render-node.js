@@ -1,7 +1,5 @@
 import React from 'react';
 
-import FootnoteCitation from '../components/content-renderers/footnote-citation';
-import PlainText from '../components/content-renderers/plain-text';
 import Fallback from '../components/node-renderers/fallback';
 import caption from '../components/node-renderers/caption';
 import heading from '../components/node-renderers/heading';
@@ -18,22 +16,6 @@ import thead from '../components/node-renderers/thead';
 import td from '../components/node-renderers/td';
 import tr from '../components/node-renderers/tr';
 import th from '../components/node-renderers/th';
-
-/* Looks up the React Component for each element in the contents field and
- * renders it */
-export function renderContent(contents) {
-  const contentMapping = {
-    footnote_citation: FootnoteCitation,
-  };
-
-  return contents.map((content, idx) => {
-    const ContentComponent = contentMapping[content.content_type] || PlainText;
-    // We're guaranteed these have a consistent order
-    /* eslint-disable react/no-array-index-key */
-    return <ContentComponent content={content} key={idx} />;
-    /* eslint-enable react/no-array-index-key */
-  });
-}
 
 /* Looks up the React Component for this type of docNode and renders it */
 export default function renderNode(docNode) {
@@ -57,9 +39,5 @@ export default function renderNode(docNode) {
   };
   const NodeComponent = nodeMapping[docNode.node_type] || Fallback;
   const props = { docNode, key: docNode.identifier };
-  return (
-    <NodeComponent {...props}>
-      { renderContent(docNode.content) }
-    </NodeComponent>
-  );
+  return <NodeComponent {...props} />;
 }

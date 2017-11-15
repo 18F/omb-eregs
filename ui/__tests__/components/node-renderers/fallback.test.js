@@ -3,6 +3,7 @@ import React from 'react';
 
 import Fallback from '../../../components/node-renderers/fallback';
 import renderNode from '../../../util/render-node';
+import nodeFactory from '../../test-utils/node-factory';
 
 jest.mock(
   '../../../util/render-node',
@@ -19,39 +20,30 @@ afterEach(() => {
 });
 
 describe('<Fallback />', () => {
-  const docNode = {
-    children: [{ first: 'child' }],
+  const docNode = nodeFactory({
+    content: [{ content_type: '__text__', text: 'Example content' }],
+    children: [nodeFactory({ first: 'child' })],
     identifier: 'aaa_1__bbb_2',
-  };
+  });
   it('includes text, children, id when not in dev mode', () => {
-    const result = shallow(
-      <Fallback docNode={docNode}>
-        <span>Example content</span>
-      </Fallback>);
+    const result = shallow(<Fallback docNode={docNode} />);
 
-    expect(result.text()).toMatch(/Example content.*some child/);
+    expect(result.text()).toMatch(/PlainText.*some child/);
     expect(result.prop('id')).toBe('aaa_1__bbb_2');
     expect(result.prop('style')).toBeUndefined();
     expect(result.prop('title')).toBeUndefined();
-    expect(result.find('span')).toHaveLength(1);
-    expect(result.find('child')).toHaveLength(1);
     expect(renderNode).toHaveBeenCalledTimes(1);
-    expect(renderNode.mock.calls[0][0]).toEqual({ first: 'child' });
+    expect(renderNode.mock.calls[0][0]).toEqual(docNode.children[0]);
   });
   it('includes that plus title text and a background when in dev mode', () => {
     process.env.NODE_ENV = 'development';
-    const result = shallow(
-      <Fallback docNode={docNode}>
-        <span>Example content</span>
-      </Fallback>);
+    const result = shallow(<Fallback docNode={docNode} />);
 
-    expect(result.text()).toMatch(/Example content.*some child/);
+    expect(result.text()).toMatch(/PlainText.*some child/);
     expect(result.prop('id')).toBe('aaa_1__bbb_2');
     expect(result.prop('style')).toEqual({ backgroundColor: 'pink' });
     expect(result.prop('title')).toBe('aaa_1__bbb_2');
-    expect(result.find('span')).toHaveLength(1);
-    expect(result.find('child')).toHaveLength(1);
     expect(renderNode).toHaveBeenCalledTimes(1);
-    expect(renderNode.mock.calls[0][0]).toEqual({ first: 'child' });
+    expect(renderNode.mock.calls[0][0]).toEqual(docNode.children[0]);
   });
 });

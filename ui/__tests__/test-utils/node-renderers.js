@@ -1,15 +1,13 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import DocumentNode from '../../util/document-node';
 import renderNode from '../../util/render-node';
+import nodeFactory from './node-factory';
 
 export function itIncludesTheIdentifier(Component, extraAttrs) {
   it('includes the identifier', () => {
-    const docNode = new DocumentNode({
-      children: [],
+    const docNode = nodeFactory({
       identifier: 'aaa_1__bbb_2__ccc_3',
-      marker: '',
       ...(extraAttrs || {}),
     });
     const result = shallow(<Component docNode={docNode} />);
@@ -19,21 +17,18 @@ export function itIncludesTheIdentifier(Component, extraAttrs) {
 
 export function itIncludesNodeText(Component, extraAttrs) {
   it('includes node text', () => {
-    const docNode = new DocumentNode({
-      children: [],
-      identifier: '',
-      marker: '',
+    const docNode = nodeFactory({
+      content: [
+        { content_type: '__text__', text: 'Textextext' },
+        { content_type: '__text__', text: 'Moreoreore' },
+      ],
       ...(extraAttrs || {}),
     });
-    const result = shallow(
-      <Component docNode={docNode}>
-        <span id="some-contents">Textextext</span>
-      </Component>);
-    expect(result.text()).toMatch(/Textextext/);
-    const content = result.find('#some-contents');
-    expect(content).toHaveLength(1);
-    expect(content.name()).toBe('span');
-    expect(content.text()).toBe('Textextext');
+    const result = shallow(<Component docNode={docNode} />);
+    const plainTexts = result.find('PlainText');
+    expect(plainTexts).toHaveLength(2);
+    expect(plainTexts.first().prop('content')).toEqual(docNode.content[0]);
+    expect(plainTexts.last().prop('content')).toEqual(docNode.content[1]);
   });
 }
 
@@ -47,13 +42,11 @@ export function itRendersChildNodes(Component, extraAttrs) {
     renderNode.mockImplementationOnce(
       () => <child key="2">second child</child>);
 
-    const docNode = new DocumentNode({
+    const docNode = nodeFactory({
       children: [
         { children: [], node_type: 'first-child' },
         { children: [], node_type: 'second-child' },
       ],
-      identifier: '',
-      marker: '',
       ...(extraAttrs || {}),
     });
     const result = shallow(<Component docNode={docNode} />);
