@@ -9,12 +9,18 @@ function footnoteNode(attrs = null) {
 }
 
 describe('<FootnoteCitation />', () => {
-  const exampleProps = {
-    closeFootnote: jest.fn(),
+  let exampleProps = {
     content: { footnote_node: footnoteNode(), text: '' },
     expanded: false,
-    openFootnote: jest.fn(),
   };
+  beforeEach(() => {
+    exampleProps = {
+      ...exampleProps,
+      closeFootnote: jest.fn(),
+      openFootnote: jest.fn(),
+    };
+  });
+
   it('includes all of the text of the content', () => {
     const props = {
       ...exampleProps,
@@ -57,37 +63,19 @@ describe('<FootnoteCitation />', () => {
   });
 
   it('focuses on footnote link once "close" btn is clicked', () => {
-    const content = {
-      footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
-      text: '',
-    };
-    const props = {
-      ...exampleProps,
-      expanded: true,
-      content,
-      closeFootnote: jest.fn(),
-    };
+    const props = { ...exampleProps, expanded: true };
     const wrapper = mount(<FootnoteCitation {...props} />);
     const link = wrapper.find('Link').getDOMNode();
     const closeBtn = wrapper.find('.close-button');
     closeBtn.simulate('click');
     expect(global.window.document.activeElement).toEqual(link);
-    expect(props.closeFootnote).toHaveBeenCalledTimes(1);
   });
 
   it('focuses on citation once footnote opens', () => {
-    const content = {
-      footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
-      text: '',
-    };
-    const props = {
-      ...exampleProps,
-      expanded: false,
-      content,
-    };
+    const props = { ...exampleProps, expanded: false };
     const wrapper = mount(<FootnoteCitation {...props} />);
     wrapper.setProps({ expanded: true });
-    const citation = wrapper.find('.citation-wrapper').getDOMNode();
+    const citation = wrapper.find('.footnote-wrapper').getDOMNode();
     expect(global.window.document.activeElement).toEqual(citation);
   });
 
@@ -100,7 +88,6 @@ describe('<FootnoteCitation />', () => {
       ...exampleProps,
       expanded: false,
       content,
-      openFootnote: jest.fn(),
     };
     const link = mount(<FootnoteCitation {...props} />).find('Link');
     link.simulate('click');
@@ -112,7 +99,6 @@ describe('<FootnoteCitation />', () => {
   it('triggers a state transition if clicked when open', () => {
     const props = {
       ...exampleProps,
-      closeFootnote: jest.fn(),
       expanded: true,
     };
     const link = mount(<FootnoteCitation {...props} />).find('Link');
