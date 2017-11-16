@@ -72,7 +72,7 @@
 
   .search-input {
     @extend .gray-border;
-    @include font-source-sans-pro();
+    @include font-san-serif();
     border: 1px solid;
     border-right: 0;
     border-bottom-left-radius: 5px;
