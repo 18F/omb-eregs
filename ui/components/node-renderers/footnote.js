@@ -13,6 +13,7 @@ export default function Footnote({ children, docNode }) {
     </span>
   );
 }
+
 Footnote.propTypes = {
   children: PropTypes.node,
   docNode: PropTypes.shape({

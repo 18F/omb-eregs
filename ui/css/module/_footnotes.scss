@@ -81,7 +81,10 @@
   border-top: 1px solid $color-primary-darker;
   margin-top: 2.5em;
   padding-top: .75em;
+}
 
+.table-bottom-footnotes,
+.bottom-footnotes {
   .node-footnote {
     margin-bottom: .875em;
     display: block;
@@ -89,10 +92,21 @@
 
   .citation-marker {
     @extend .col;
-    @extend .pr2;
     @extend .right-align;
-    width: 6%;
     font-weight: bold;
+  }
+
+  .footnote-text {
+    @extend .col;
+    @extend .col-11;
+    @extend .m0;
+  }
+}
+
+.bottom-footnotes {
+  .citation-marker {
+    @extend .pr2;
+    width: 6%;
   }
 
   .citation-marker,
@@ -102,10 +116,45 @@
   }
 
   .footnote-text {
-    @extend .col;
-    @extend .col-11;
-    @extend .m0;
     color: $color-gray-medium;
+  }
+}
+
+.table-bottom-footnotes{
+  .node-footnote {
+    margin-bottom: .6em;
+    display: block;
+    width: 100%;
+  }
+
+  .footnote-text {
+    font-style: italic;
+  }
+
+  .citation-marker{
+    padding-right: 10px;
+  }
+
+  .citation-marker,
+  .footnote-text {
+    line-height: 1.125rem;
+  }
+
+  .citation-marker {
+    font-size: 0.6rem;
+  }
+
+  .footnote-text {
+    font-size: 0.875rem;
+    color: $color-black;
+  }
+}
+
+@media #{$breakpoint-sm} {
+  .table-bottom-footnotes{
+    .node-footnote {
+      width: 80%;
+    }
   }
 }
 
