@@ -12,7 +12,7 @@ export default function Policy({ policy, topicsIds }) {
   const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
   let policyTitle = policy.title_with_number;
 
-  if (policy.omb_policy_id && policy.boop) {
+  if (policy.omb_policy_id && policy.has_docnode) {
     policyTitle = (
       <Link route="document" params={{ policyId: policy.omb_policy_id }}>
         {policyTitle}

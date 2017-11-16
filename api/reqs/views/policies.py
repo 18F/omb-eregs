@@ -85,7 +85,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         queryset = queryset.filter(public=True)
         queryset = queryset.annotate(
-            boop=Exists(DocNode.objects.filter(
+            has_docnode=Exists(DocNode.objects.filter(
                 policy=OuterRef('pk'),
             )),
             total_reqs=relevant_reqs_count({}),
