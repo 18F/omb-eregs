@@ -20,6 +20,7 @@ tfoot{
   td {
     border: 1px solid #f3ecc9;
   }
+  tr>td:first-child,
   th:first-child {
     border-left: 0px;
   }
