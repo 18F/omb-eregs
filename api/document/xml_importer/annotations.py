@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Type
 
 from lxml import etree
 
-from document.models import Annotation, FootnoteCitation
+from document.models import Annotation, ExternalLink, FootnoteCitation
 from document.tree import XMLAwareCursor
 
 logger = logging.getLogger(__name__)
@@ -26,6 +26,14 @@ def footnote_citation(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
         logger.warning("Can't find footnote: %s", repr(text))
 
 
+def anchor(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
+           start: int) -> Optional[ExternalLink]:
+    text = ''.join(xml_span.itertext())
+    href = xml_span.attrib.get('href', text)
+    return ExternalLink(doc_node=cursor.model, start=start,
+                        end=start + len(text), href=href)
+
+
 def noop_handler(cursor, xml_span, start):
     pass
 
@@ -33,6 +41,7 @@ def noop_handler(cursor, xml_span, start):
 annotation_mapping = defaultdict(
     lambda: noop_handler,
     footnote_citation=footnote_citation,
+    a=anchor,
 )
 
 

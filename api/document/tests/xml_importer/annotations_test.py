@@ -43,6 +43,28 @@ def test_footnote_annotations_missing(monkeypatch):
     assert annotations.logger.warning.called
 
 
+def test_anchor_with_href():
+    xml_span = etree.fromstring("""
+        <a href="http://example.com/path">Some where</a>
+    """)
+
+    result = annotations.anchor(random_doc(), xml_span, 2)
+    assert result is not None
+    assert result.start == 2
+    assert result.end == 2 + len('Some where')
+    assert result.href == 'http://example.com/path'
+
+
+def test_anchor_without_href():
+    xml_span = etree.fromstring("<a>http://example.com/thing</a>")
+
+    result = annotations.anchor(random_doc(), xml_span, 2)
+    assert result is not None
+    assert result.start == 2
+    assert result.end == 2 + len('http://example.com/thing')
+    assert result.href == 'http://example.com/thing'
+
+
 def test_content_xml_annotations(monkeypatch):
     """Passes the correct string indexes and annotations along."""
     aaa, bbb = Mock(), Mock()
