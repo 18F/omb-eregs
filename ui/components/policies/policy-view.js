@@ -56,6 +56,8 @@ Policy.propTypes = {
     title_with_number: PropTypes.string,
     relevant_reqs: PropTypes.number,
     total_reqs: PropTypes.number,
+    has_docnode: PropTypes.bool,
+    omb_policy_id: PropTypes.string,
   }),
   topicsIds: PropTypes.string,
 };
