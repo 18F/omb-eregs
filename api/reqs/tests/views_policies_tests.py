@@ -70,14 +70,14 @@ def test_docnode_count_works(policy_setup):
     path = "/policies/?requirements__req_id=" + reqs[1][1].req_id
     response = client.get(path).json()
 
-    assert response['results'][0]['boop'] == 0
+    assert response['results'][0]['boop'] is False
 
     policies[1].docnode = mommy.make(DocNode, policy=policies[1])
     policies[1].save()
 
     response = client.get(path).json()
 
-    assert response['results'][0]['boop'] == 1
+    assert response['results'][0]['boop'] is True
 
 
 @pytest.mark.django_db
