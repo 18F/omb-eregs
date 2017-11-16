@@ -11,3 +11,8 @@
     @include paragraph-with-marker();
   }
 }
+
+.list-style-bullet .list-item-marker {
+  font-size: 26px;
+  line-height: 1.5rem;
+}
