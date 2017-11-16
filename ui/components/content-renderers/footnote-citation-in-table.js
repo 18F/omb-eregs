@@ -5,7 +5,11 @@ import Link from '../link';
 
 export default function FootnoteCitationInTable({ content }) {
   const href = `#${content.footnote_node.identifier}-table`;
-  return <sup><Link href={href}>{ content.text }</Link></sup>;
+  return (
+    <sup className="footnote-citation-in-table">
+      <Link href={href}>{ content.text }</Link>
+    </sup>
+  );
 }
 FootnoteCitationInTable.propTypes = {
   content: PropTypes.shape({
