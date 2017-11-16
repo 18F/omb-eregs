@@ -1,75 +1,98 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import renderNode from '../../util/render-node';
-import LabeledText from '../labeled-text';
-import Link from '../link';
-import Footnote from './footnote';
-import From from './from';
+import wrapPage from '../components/app-wrapper';
+import Pagers from '../components/pagers';
+import { policyData } from '../util/api/queries';
+import { Router } from '../routes';
+import PageCounter from '../components/page-counter';
+import Req from '../components/policy/req';
 
-function findNodeText(docNode, nodeType, modelValue) {
-  const containingNode = docNode.firstWithNodeType(nodeType);
-  if (containingNode && containingNode.text.length > 0) {
-    return containingNode.text;
+
+export class Policy extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      focusReq: props.url.query.reqId,
+    };
   }
-  return modelValue;
-}
 
-function footnotes(footnoteList) {
-  if (footnoteList.length === 0) {
-    return null;
+  setHighlight(focusReq, reqsReqId) {
+    // Update the browser's URL (we'll assume we're client-side)
+    const { policyId } = this.props.url.query;
+    const page = this.props.url.query.page || '1';
+    Router.router.changeState(
+      'replaceState',
+      `/policy?policyId=${policyId}&reqId=${focusReq}&page=${page}#${reqsReqId}`,
+      this.urlForReq(focusReq, reqsReqId),
+    );
+    this.setState({ focusReq });
   }
-  const rendered = footnoteList.map(fn => (
-    <Footnote key={fn.identifier} docNode={fn} />
-  ));
-  return (
-    <div className="bottom-footnotes">
-      { rendered }
-    </div>
-  );
-}
 
+  reqs() {
+    return this.props.pagedReqs.results.map((req) => {
+      const reqId = req.id;
+      const reqsReqId = req.req_id;
+      const props = {
+        highlighted: `${reqId}` === this.state.focusReq,
+        href: this.urlForReq(reqId, reqsReqId),
+        key: req.id,
+        onClick: (e) => {
+          e.preventDefault();
+          this.setHighlight(`${reqId}`, reqsReqId);
+        },
+        req,
+      };
+      return <Req {...props} />;
+    });
+  }
 
-/* Root of a policy document */
-export default function Policy({ docNode }) {
-  const fromNode = docNode.firstWithNodeType('from');
-  const policyMeta = docNode.meta.policy;
-  return (
-    <div className="node-policy" id={docNode.identifier}>
-      <header className="document-header">
-        <div className="clearfix ">
-          <div className="bold">
-            { findNodeText(docNode, 'policyNum', policyMeta.omb_policy_id) }
+  urlForReq(reqId, reqsReqId) {
+    const { policyId } = this.props.url.query;
+    const page = this.props.url.query.page || '1';
+    return `/policy/${policyId}/${reqId}?page=${page}#${reqsReqId}`;
+  }
+
+  render() {
+    const { pagedReqs, policy } = this.props;
+    const { page } = this.props.url.query;
+    return (
+      <div className="contained-wrapper">
+        <h2>{ policy.title_with_number }</h2>
+        <div>
+          <div className="col col-6">
+            { policy.issuance_pretty }
           </div>
-          <div>{ findNodeText(docNode, 'policyTitle', '') }</div>
-          <h2 className="h1 document-heading">
-            { findNodeText(docNode, 'subject', policyMeta.title) }
-          </h2>
-          <div className="original-link-container">
-            <Link className="original-link" href={policyMeta.original_url}>See original</Link>
+          <div className="col col-6 right-align">
+            <PageCounter count={pagedReqs.count} page={page} />
           </div>
-          { fromNode ? <From docNode={fromNode} /> : null }
-          <LabeledText id="issuance" label="Issued on:">
-            { findNodeText(docNode, 'published', policyMeta.issuance_pretty) }
-          </LabeledText>
         </div>
-      </header>
-      { docNode.children.map(renderNode) }
-      { footnotes(docNode.meta.descendant_footnotes) }
-    </div>
-  );
+        { this.reqs() }
+        <Pagers count={pagedReqs.count} route="policy" />
+      </div>
+    );
+  }
 }
 Policy.propTypes = {
-  docNode: PropTypes.shape({
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
-    identifier: PropTypes.string.isRequired,
-    meta: PropTypes.shape({
-      policy: PropTypes.shape({
-        issuance_pretty: PropTypes.string.isRequired,
-        omb_policy_id: PropTypes.string.isRequired,
-        original_url: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-      }).isRequired,
-    }).isRequired,
+  pagedReqs: PropTypes.shape({
+    count: PropTypes.number.isRequired,
+    results: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
+  policy: PropTypes.shape({
+    issuance_pretty: PropTypes.string.isRequired,
+    title_with_number: PropTypes.string.isRequired,
+  }).isRequired,
+  url: PropTypes.shape({
+    query: PropTypes.shape({
+      page: PropTypes.string,
+      policyId: PropTypes.string.isRequired,
+      reqId: PropTypes.string,
+    }),
   }).isRequired,
 };
+
+export default wrapPage(Policy, policyData);
