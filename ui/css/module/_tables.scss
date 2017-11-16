@@ -1,0 +1,26 @@
+.table-footer {
+  background-color: $pallet-sunshine;
+  padding: 1em;
+
+  .h4 {
+    color: $color-black;
+    margin-top: 0;
+  }
+
+  .footnote-marker {
+    @include font-san-serif-bold();
+    @include paragraph-marker();
+    font-size: 0.75em;
+  }
+
+  .footnote-text {
+    @include paragraph-with-marker();
+    font-style: italic;
+  }
+}
+
+.footnote-citation-in-table {
+  font-size: 0.75em;
+  line-height: 1em;
+  margin-left: 0.25em;
+}

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { renderContent } from '../../../util/render-node';
+import renderContents from '../../../util/render-contents';
 
 /* We're assuming, for the time being, that all rows within a single table
  * have the same number of columns. */
@@ -13,9 +13,9 @@ function deriveColspan(docNode) {
 
 export default function Tfoot({ docNode }) {
   const footnotes = docNode.meta.descendant_footnotes.map(ft => (
-    <div className="clearfix" key={ft.identifier}>
-      <div className="col col-1">{ft.marker}</div>
-      <div className="col col-11">{ renderContent(ft.content) }</div>
+    <div className="clearfix" key={ft.identifier} id={`${ft.identifier}-table`}>
+      <div className="footnote-marker">{ft.marker}</div>
+      <div className="footnote-text">{ renderContents(ft.content) }</div>
     </div>
   ));
   if (footnotes.length === 0) {
@@ -24,7 +24,7 @@ export default function Tfoot({ docNode }) {
   return (
     <tfoot>
       <tr>
-        <td colSpan={deriveColspan(docNode)} className="border">
+        <td colSpan={deriveColspan(docNode)} className="table-footer">
           <h1 className="h4">Footnotes for table</h1>
           { footnotes }
         </td>
