@@ -3,8 +3,10 @@
   border: 1px solid $color-cool-blue-lighter;
   border-radius: 4px;
   padding: 2px 4px;
-  font-size: 0.6em;
+  font-size: 0.75em;
   margin-left: .3em;
+  color: $color-primary-darker;
+  font-weight: 500;
 
   &.active {
     border-color: $color-primary-darker;
@@ -14,6 +16,8 @@
 }
 
 .inline-footnote {
+  line-height: 1em;
+
   .node-footnote-content {
     display: block;
     width: 100%;
@@ -33,7 +37,7 @@
 
   // It's ok to add outline: none here for accessibility purposes.
   // For more details, see: https://youtu.be/ifW_oy9hajU
-  .citation-wrapper[tabindex="-1"] {
+  .footnote-wrapper[tabindex="-1"] {
     outline: none;
   }
 
@@ -48,7 +52,7 @@
     @extend .col-1;
     width: 2.5em;
     font-size: .9em;
-    line-height: 1.5em;
+    line-height: 1.69rem;
     text-align: right;
     padding-right: .5em;
   }
@@ -80,11 +84,8 @@
   }
 }
 
+.table-bottom-footnotes,
 .bottom-footnotes {
-  border-top: 1px solid $pallet-blue;
-  margin-top: 2.5em;
-  padding-top: .75em;
-
   .node-footnote {
     @extend .clearfix;
     display: block;
@@ -92,19 +93,67 @@
   }
 
   .citation-marker {
+    @extend .col;
+    @extend .right-align;
     @include font-san-serif-bold();
-    @include paragraph-marker();
-    font-size: .875em;
-    line-height: 1em; // like font-text, except adjusting for bold
   }
 
   .footnote-text,
   p {
     @include paragraph-with-marker();
     @extend .m0;
+  }
+}
+
+.bottom-footnotes {
+  border-top: 1px solid $color-primary-darker;
+  margin-top: 2.5em;
+  padding-top: .75em;
+
+  .citation-marker {
+    @extend .pr2;
+  }
+
+  .citation-marker,
+  .footnote-text {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+
+  .footnote-text {
     color: $color-gray-medium;
-    font-size: .875em;
-    line-height: 1.125em;
+  }
+}
+
+.table-bottom-footnotes {
+  .node-footnote {
+    margin-bottom: .6em;
+    display: block;
+    width: 100%;
+  }
+
+  .citation-marker,
+  .footnote-text {
+    line-height: 1.125rem;
+  }
+
+  .citation-marker {
+    font-size: 0.6rem;
+    padding-right: 10px;
+  }
+
+  .footnote-text {
+    font-size: 0.875rem;
+    font-style: italic;
+    color: $color-black;
+  }
+}
+
+@media #{$breakpoint-sm} {
+  .table-bottom-footnotes {
+    .node-footnote {
+      width: 80%;
+    }
   }
 }
 
@@ -112,4 +161,5 @@
   @include font-san-serif();
   font-style: normal;
   color: $color-gray-medium;
+  word-break: break-word;
 }

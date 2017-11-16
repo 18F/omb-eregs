@@ -15,6 +15,7 @@ export default function Footnote({ docNode }) {
     </span>
   );
 }
+
 Footnote.propTypes = {
   docNode: PropTypes.shape({
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

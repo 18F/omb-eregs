@@ -1,13 +1,45 @@
 .node-list-item {
   @extend .clearfix;
+  position: relative;
   margin-bottom: 8px;
+  $marker-width-xs: 24px;
+  $marker-padding-xs: 4px;
+  $marker-width-md: $marker-width-xs + 8;
+  $marker-padding-md: $marker-padding-xs + 4;
 
   .list-item-marker {
+    position: absolute;
+    @extend .right-align;
     @include font-san-serif-bold();
-    @include paragraph-marker();
+    width: calc(#{$marker-width-xs} + .8rem);
+    padding-right: $marker-padding-xs;
+    display: inline-block;
+
+    @media #{$breakpoint-md} {
+      width: calc(#{$marker-width-md} + .8rem);
+      padding-right: $marker-padding-md;
+    }
   }
 
   .list-item-text {
-    @include paragraph-with-marker();
+    margin-left: $marker-width-xs + $marker-padding-xs + 20px;
+
+    @media #{$breakpoint-md} {
+      margin-left: $marker-width-md + $marker-padding-md + 20px;
+    }
   }
+
+  .node-list {
+    margin-top: 8px;
+  }
+}
+
+.list-item-text p {
+  line-height: 1.5rem;
+  margin-bottom: 0;
+}
+
+.list-style-bullet .list-item-marker {
+  font-size: 26px;
+  line-height: 1.5rem;
 }

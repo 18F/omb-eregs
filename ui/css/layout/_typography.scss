@@ -74,8 +74,14 @@ h6,
 .h4,
 .h5,
 .h6 {
+  -webkit-margin-before: 0;
+  margin-after: 8px;
+  -webkit-margin-after: 8px;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
   @include font-san-serif-bold();
   color: $color-black;
+
 }
 
 .dark-back {
@@ -97,20 +103,20 @@ h6,
 
 h1,
 .h1 {
-  font-size: 1.5em;
-  line-height: 2em;
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 h2,
 .h2 {
-  font-size: 1.625em;
-  line-height: 1.6875em;
+  font-size: 1.625rem;
+  line-height: 1.6875rem;
 }
 
 h3,
 .h3 {
-  font-size: 1.125em;
-  line-height: 1.5em;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
 }
 
 .document-container {
@@ -122,47 +128,46 @@ h3,
 
 h4,
 .h4 {
-  font-size: 1em;
-  line-height: 1.5em;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 
 
 h5,
 .h5 {
-  font-size: .875em;
-  line-height: 1.312em;
+  font-size: .875rem;
+  line-height: 1.312rem;
 }
 
 h6,
 .h6 {
-  font-size: .75em;
-  line-height: .875em;
+  font-size: .75rem;
+  line-height: .875rem;
 }
 
 p {
   @include font-serif();
-  font-size: 1em;
-  line-height: 1.5em;
+  font-size: 1rem;
+  line-height: 1.69rem;
 }
-
 
 @media #{$breakpoint-md} {
   h1,
   .h1 {
-    font-size: 2em;
-    line-height: 2.5em;
+    font-size: 2rem;
+    line-height: 2.5rem;
   }
 
   h2,
   .h2 {
-    line-height: 2em;
+    line-height: 2rem;
   }
 
   h3,
   .h3 {
-    font-size: 1.625em;
-    line-height: 1.6875em;
+    font-size: 1.625rem;
+    line-height: 1.6875rem;
   }
 }
 
