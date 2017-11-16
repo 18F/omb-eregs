@@ -88,3 +88,7 @@ class PlainText(Annotation):
 class FootnoteCitation(Annotation):
     footnote_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='+')
+
+
+class ExternalLink(Annotation):
+    href = models.URLField()
