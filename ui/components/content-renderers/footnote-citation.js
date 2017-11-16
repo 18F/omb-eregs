@@ -4,9 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Link from '../link';
-import { renderContent } from '../../util/render-node';
 import { closeFootnote, openFootnote } from '../../store/actions';
-
 import Footnote from '../node-renderers/footnote';
 
 export class FootnoteCitation extends React.Component {
@@ -66,10 +64,8 @@ export class FootnoteCitation extends React.Component {
     );
     if (expanded) {
       footnoteContent = (
-        <span className="citation-wrapper" role="alertdialog" aria-label={`Footnote ${footnote.marker}`} tabIndex="-1" ref={(el) => { this.citationWrapper = el; }}>
-          <Footnote docNode={footnote}>
-            { renderContent(footnote.content) }
-          </Footnote>
+        <span className="footnote-wrapper" role="alertdialog" aria-label={`Footnote ${footnote.marker}`} tabIndex="-1" ref={(el) => { this.citationWrapper = el; }}>
+          <Footnote docNode={footnote} />
           <span className="clearfix" />
           <button className="close-button" onClick={this.shrinkFootnote}>Close</button>
         </span>
