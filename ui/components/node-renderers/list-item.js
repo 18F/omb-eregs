@@ -10,10 +10,9 @@ export default function ListItem({ docNode }) {
   } else if (docNode.marker.match(/\d+/g) != null) {
     markerType = 'list-style-number';
   }
-  const listKlass = 'node-list-item ' + markerType;
 
   return (
-    <li className={listKlass} id={docNode.identifier}>
+    <li className={`node-list-item ${markerType}`} id={docNode.identifier}>
       <span className="list-item-marker">{ docNode.marker }</span>
       <div className="list-item-text">{ docNode.children.map(renderNode) }</div>
     </li>
