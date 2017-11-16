@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import renderNode, { renderContent } from '../../util/render-node';
+import renderNode from '../../util/render-node';
 import LabeledText from '../labeled-text';
 import Link from '../link';
 import Footnote from './footnote';
@@ -20,9 +20,7 @@ function footnotes(footnoteList) {
     return null;
   }
   const rendered = footnoteList.map(fn => (
-    <Footnote key={fn.identifier} docNode={fn}>
-      { renderContent(fn.content) }
-    </Footnote>
+    <Footnote key={fn.identifier} docNode={fn} />
   ));
   return (
     <div className="bottom-footnotes">
@@ -47,7 +45,9 @@ export default function Policy({ docNode }) {
           <h2 className="h1 document-heading">
             { findNodeText(docNode, 'subject', policyMeta.title) }
           </h2>
-          <div className="original-link-container"><Link className="original-link" href={policyMeta.original_url}>See original</Link></div>
+          <div className="original-link-container">
+            <Link className="original-link" href={policyMeta.original_url}>See original</Link>
+          </div>
           { fromNode ? <From docNode={fromNode} /> : null }
           <LabeledText id="issuance" label="Issued on:">
             { findNodeText(docNode, 'published', policyMeta.issuance_pretty) }

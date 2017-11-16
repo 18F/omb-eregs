@@ -1,6 +1,6 @@
 .basic-thead,
-tfoot{
-  background: #fefae5;
+tfoot {
+  background: $pallet-yellow-pale;
 }
 
 .basic-th,
@@ -12,28 +12,26 @@ tfoot{
   vertical-align: middle;
 }
 
-.basic-table{
+.basic-table {
   font-size: .9rem;
   margin-bottom: 40px;
 
   th,
   td {
-    border: 1px solid #f3ecc9;
+    border: 1px solid $pallet-yellow-dark;
   }
-  tr>td:first-child,
+
+  td:first-child,
   th:first-child {
-    border-left: 0px;
+    border-left: 0;
   }
 
   th:last-child,
   td:last-child {
-    border-right: 0px;
-    border-left: 0px;
+    border-right: 0;
+    border-left: 0;
   }
 
-  tfoot .h4{
-    color: black;
-  }
 
   .node-caption {
     margin-bottom: 10px;
@@ -41,17 +39,21 @@ tfoot{
   }
 }
 
+.table-footer .h4 {
+  color: $color-black;
+}
+
 table {
   vertical-align: top;
   text-align: left;
   border-collapse: collapse;
-  border-spacing: 0px;
-  border-left-width: 0px;
-  border-right-width: 0px;
+  border-spacing: 0;
+  border-left-width: 0;
+  border-right-width: 0;
 }
 
 .basic-th,
 .basic-table td,
 tfoot td {
-    padding: 10px;
+  padding: 10px;
 }

@@ -11,13 +11,11 @@
     position: absolute;
     @extend .right-align;
     @include font-san-serif-bold();
-    width: $marker-width-xs;
     width: calc(#{$marker-width-xs} + .8rem);
     padding-right: $marker-padding-xs;
     display: inline-block;
 
     @media #{$breakpoint-md} {
-      width: $marker-width-md;
       width: calc(#{$marker-width-md} + .8rem);
       padding-right: $marker-padding-md;
     }
@@ -34,7 +32,7 @@
 
 .list-item-text p {
   line-height: 1.5rem;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .list-style-bullet .list-item-marker {

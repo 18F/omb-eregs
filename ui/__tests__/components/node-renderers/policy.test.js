@@ -2,12 +2,11 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Policy from '../../../components/node-renderers/policy';
+import nodeFactory from '../../test-utils/node-factory';
 import {
   itIncludesTheIdentifier,
   itRendersChildNodes,
 } from '../../test-utils/node-renderers';
-import DocumentNode from '../../../util/document-node';
-import { renderContent } from '../../../util/render-node';
 
 jest.mock('../../../util/render-node');
 
@@ -25,13 +24,7 @@ describe('<Policy />', () => {
   itRendersChildNodes(Policy, { meta });
 
   it('uses the policy for default text', () => {
-    const docNode = new DocumentNode({
-      children: [],
-      identifier: '',
-      meta,
-      text: '',
-    });
-    const result = shallow(<Policy docNode={docNode} />);
+    const result = shallow(<Policy docNode={nodeFactory({ meta })} />);
     const text = result.text();
     expect(text).toMatch(/M-44-55/);
     expect(text).toMatch(/Magistrate/);
@@ -47,7 +40,7 @@ describe('<Policy />', () => {
     expect(date.children().text()).toEqual('March 3, 2003');
   });
   it('can grab text from subnodes', () => {
-    const docNode = new DocumentNode({
+    const docNode = nodeFactory({
       children: [
         { children: [], node_type: 'other', text: 'other-text' },
         { children: [], node_type: 'subject', text: 'subject-here' },
@@ -56,9 +49,7 @@ describe('<Policy />', () => {
         { children: [], node_type: 'policyTitle', text: 'a title!' },
         { children: [], marker: 'Stuff:', node_type: 'from', text: 'Someone' },
       ],
-      identifier: '',
       meta,
-      text: '',
     });
 
     const result = shallow(<Policy docNode={docNode} />);
@@ -77,15 +68,12 @@ describe('<Policy />', () => {
     expect(date.children().text()).toEqual('some date here');
   });
   it('renders footnotes at the bottom', () => {
-    const docNode = new DocumentNode({
-      children: [],
-      identifier: '',
-      text: '',
+    const docNode = nodeFactory({
       meta: {
         ...meta,
         descendant_footnotes: [
-          { identifier: '1', children: [], content: ['a'], marker: '', type_emblem: '' },
-          { identifier: '2', children: [], content: ['b', 'c'], marker: '', type_emblem: '' },
+          { identifier: '1', children: [], content: [], marker: '', type_emblem: '' },
+          { identifier: '2', children: [], content: [], marker: '', type_emblem: '' },
           { identifier: '3', children: [], content: [], marker: '', type_emblem: '' },
         ],
       },
@@ -97,9 +85,5 @@ describe('<Policy />', () => {
     expect(footnotes.at(0).prop('docNode').identifier).toBe('1');
     expect(footnotes.at(1).prop('docNode').identifier).toBe('2');
     expect(footnotes.at(2).prop('docNode').identifier).toBe('3');
-    expect(renderContent).toHaveBeenCalledTimes(3);
-    expect(renderContent.mock.calls[0][0]).toEqual(['a']);
-    expect(renderContent.mock.calls[1][0]).toEqual(['b', 'c']);
-    expect(renderContent.mock.calls[2][0]).toEqual([]);
   });
 });

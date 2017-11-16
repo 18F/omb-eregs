@@ -5,14 +5,15 @@ import renderNode from '../../util/render-node';
 
 export default function ListItem({ docNode }) {
   let markerType;
-  if (docNode.marker == "•") {
-    markerType = "list-style-bullet";
+  if (docNode.marker === '•') {
+    markerType = 'list-style-bullet';
   } else if (docNode.marker.match(/\d+/g) != null) {
-    markerType = "list-style-number";
+    markerType = 'list-style-number';
   }
+  const listKlass = 'node-list-item ' + markerType;
 
   return (
-    <li className={"node-list-item " + markerType} id={docNode.identifier}>
+    <li className={listKlass} id={docNode.identifier}>
       <span className="list-item-marker">{ docNode.marker }</span>
       <div className="list-item-text">{ docNode.children.map(renderNode) }</div>
     </li>
