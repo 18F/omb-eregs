@@ -10,28 +10,30 @@ from document.tree import XMLAwareCursor
 logger = logging.getLogger(__name__)
 
 
-class AnnotationHandler:
-    """Collection of functions to convert XML spans into Annotations in a
-    single namespace."""
-    @staticmethod
-    def footnote_citation(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
-                          start: int) -> Optional[FootnoteCitation]:
-        text = ''.join(xml_span.itertext())
-        referencing = list(cursor.filter(
-            lambda m: m.node_type == 'footnote'
-            and m.type_emblem == text.strip()
-        ))
-        if referencing:
-            return FootnoteCitation(
-                doc_node=cursor.model, start=start, end=start + len(text),
-                footnote_node=referencing[0].model,
-            )
-        else:
-            logger.warning("Can't find footnote: %s", repr(text))
+def footnote_citation(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
+                      start: int) -> Optional[FootnoteCitation]:
+    text = ''.join(xml_span.itertext())
+    referencing = list(cursor.filter(
+        lambda m: m.node_type == 'footnote'
+        and m.type_emblem == text.strip()
+    ))
+    if referencing:
+        return FootnoteCitation(
+            doc_node=cursor.model, start=start, end=start + len(text),
+            footnote_node=referencing[0].model,
+        )
+    else:
+        logger.warning("Can't find footnote: %s", repr(text))
 
 
 def noop_handler(cursor, xml_span, start):
     pass
+
+
+annotation_mapping = defaultdict(
+    lambda: noop_handler,
+    footnote_citation=footnote_citation,
+)
 
 
 def len_of_child_text(xml_node: etree.ElementBase):
@@ -44,7 +46,7 @@ def content_xml_annotations(
     position in the original string."""
     len_so_far = len(content_xml.text or '')
     for child_xml in content_xml:
-        handler = getattr(AnnotationHandler, child_xml.tag, noop_handler)
+        handler = annotation_mapping[child_xml.tag]
         annotation = handler(cursor, child_xml, len_so_far)
         if annotation:
             yield annotation
