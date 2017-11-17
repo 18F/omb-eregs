@@ -59,7 +59,7 @@ table {
 
   .footnote-marker {
     @include font-san-serif-bold();
-    @include paragraph-marker();
+    @include paragraph-marker(auto);
     font-size: 0.75em;
   }
 
