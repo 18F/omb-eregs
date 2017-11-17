@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ExternalLink from '../components/content-renderers/external-link';
 import FootnoteCitation from '../components/content-renderers/footnote-citation';
 import PlainText from '../components/content-renderers/plain-text';
 
@@ -7,6 +8,7 @@ import PlainText from '../components/content-renderers/plain-text';
  * renders it */
 export default function renderContents(contents, overrideMapping = null) {
   const contentMapping = {
+    external_link: ExternalLink,
     footnote_citation: FootnoteCitation,
     ...(overrideMapping || {}),
   };
