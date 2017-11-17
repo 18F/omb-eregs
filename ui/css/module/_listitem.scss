@@ -11,3 +11,14 @@
     @include paragraph-with-marker();
   }
 }
+
+.node-paragraph {
+  .list-item-marker,
+  .list-item-text {
+    line-height: 1.69rem;
+  }
+
+  .list-item-marker {
+    font-size: .9rem;
+  }
+}
