@@ -10,6 +10,10 @@
   .list-item-text {
     @include paragraph-with-marker();
   }
+
+  .node-paragraph {
+    margin-bottom: 0;
+  }
 }
 
 .node-paragraph {
