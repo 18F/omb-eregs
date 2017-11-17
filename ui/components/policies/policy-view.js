@@ -10,10 +10,20 @@ export default function Policy({ policy, topicsIds }) {
   };
   const relevantReqCount = policy.relevant_reqs >= 100 ? '99+' : policy.relevant_reqs;
   const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
+  let policyTitle = policy.title_with_number;
+
+  if (policy.omb_policy_id && policy.has_docnode) {
+    policyTitle = (
+      <Link route="document" params={{ policyId: policy.omb_policy_id }}>
+        {policyTitle}
+      </Link>
+    );
+  }
+
   return (
     <li key={policy.id} className="my2">
       <section className="policy border rounded gray-border p2">
-        <h2 className="mt0 mb3">{policy.title_with_number}</h2>
+        <h2 className="mt0 mb3">{policyTitle}</h2>
         <div className="clearfix">
           <div className="requirements-links mb1 sm-col sm-col-12 md-col-8">
             <div className="circle-bg border gray-border center p1">
@@ -46,6 +56,8 @@ Policy.propTypes = {
     title_with_number: PropTypes.string,
     relevant_reqs: PropTypes.number,
     total_reqs: PropTypes.number,
+    has_docnode: PropTypes.bool,
+    omb_policy_id: PropTypes.string,
   }),
   topicsIds: PropTypes.string,
 };
