@@ -13,4 +13,15 @@ module.exports = {
     }));
     return config;
   },
+  webpackDevMiddleware: (config) => {
+    if (process.env.USE_POLLING === 'true') {
+      Object.assign(config, {
+        watchOptions: {
+          poll: true,
+        },
+      });
+    }
+
+    return config;
+  },
 };

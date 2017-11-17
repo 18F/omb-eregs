@@ -4,7 +4,7 @@ import pytest
 from lxml import etree
 from model_mommy import mommy
 
-from document.models import DocNode, FootnoteCitation, PlainText
+from document.models import FootnoteCitation, PlainText
 from document.tests.utils import random_doc
 from document.tree import DocCursor, XMLAwareCursor
 from document.xml_importer import annotations
@@ -17,11 +17,10 @@ def test_footnote_annotations():
     xml_span = etree.fromstring("<footnote_citation> 1  </footnote_citation>")
     root = DocCursor.new_tree('sect', '2', policy=policy)
     for _ in range(8):
-        root.add_child('para', policy=policy)
-    root['para_2'].add_child('footnote', '3', policy=policy)  # not 1
-    root['para_4'].add_child('footnote', '1', policy=policy)  # is 1
+        root.add_child('para')
+    root['para_2'].add_child('footnote', '3')  # not 1
+    root['para_4'].add_child('footnote', '1')  # is 1
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     result = annotations.AnnotationHandler.footnote_citation(
         root, xml_span, 4)

@@ -1,6 +1,10 @@
+from functools import singledispatch
+from typing import NamedTuple
+
 from rest_framework import serializers
 
-from document.models import DocNode
+from document.models import Annotation, DocNode, FootnoteCitation, PlainText
+from document.tree import DocCursor
 from reqs.models import Policy, Requirement
 from reqs.serializers import TopicSerializer
 
@@ -29,15 +33,93 @@ class PolicySerializer(serializers.ModelSerializer):
         fields = (
             'issuance',
             'omb_policy_id',
+            'original_url',
             'title',
-            'uri',
         )
+
+
+class Meta(NamedTuple):
+    """Package of all of the data needed to generate the "meta" field."""
+    cursor: DocCursor
+    is_root: bool
+    policy: Policy
+
+    @property
+    def model(self):
+        return self.cursor.model
+
+    @property
+    def node_type(self):
+        return self.model.node_type
+
+
+class MetaSerializer(serializers.Serializer):
+    descendant_footnotes = serializers.SerializerMethodField()
+    policy = serializers.SerializerMethodField()
+    requirement = serializers.SerializerMethodField()
+
+    def to_representation(self, instance):
+        """Remove fields that don't have data."""
+        result = super().to_representation(instance)
+        to_delete = {key for key, value in result.items() if value is None}
+        for key in to_delete:
+            del result[key]
+        return result
+
+    def get_descendant_footnotes(self, instance):
+        """Find all footnote nodes that are cited by this node or any of its
+        descendants."""
+        if not instance.is_root and instance.node_type != 'table':
+            return None
+        footnotes = []
+        for node in instance.cursor.walk():
+            for citation in node.model.footnotecitations.all():
+                subtree = DocCursor(instance.cursor.tree,
+                                    citation.footnote_node.identifier)
+                footnotes.append(
+                    DocCursorSerializer(subtree,
+                                        context={'is_root': False}).data
+                )
+        return footnotes
+
+    def get_policy(self, instance):
+        if instance.is_root:
+            return PolicySerializer(instance.policy).data
+
+    def get_requirement(self, instance):
+        if hasattr(instance.model, 'requirement'):
+            return RequirementSerializer(instance.model.requirement).data
+
+
+@singledispatch
+def serialize_content(content: Annotation, cursor: DocCursor):
+    raise NotImplementedError()
+
+
+@serialize_content.register(PlainText)
+def serialize_plaintext(content: PlainText, cursor: DocCursor):
+    return {
+        'content_type': '__text__',
+        'text': cursor.model.text[content.start:content.end],
+    }
+
+
+@serialize_content.register(FootnoteCitation)
+def serialize_footnote_citation(content: FootnoteCitation, cursor: DocCursor):
+    footnote_tree = DocCursor(cursor.tree, content.footnote_node.identifier)
+    footnote_node = DocCursorSerializer(footnote_tree,
+                                        context={'is_root': False}).data
+    return {
+        'content_type': 'footnote_citation',
+        'footnote_node': footnote_node,
+        'text': cursor.model.text[content.start:content.end],
+    }
 
 
 class DocCursorSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
-    requirement = RequirementSerializer(read_only=True)
     content = serializers.SerializerMethodField()
+    meta = serializers.SerializerMethodField()
 
     class Meta:
         model = DocNode
@@ -47,8 +129,8 @@ class DocCursorSerializer(serializers.ModelSerializer):
             'depth',
             'identifier',
             'marker',
+            'meta',
             'node_type',
-            'requirement',
             'text',
             'type_emblem',
         )
@@ -57,16 +139,7 @@ class DocCursorSerializer(serializers.ModelSerializer):
         """We want to serialize the wrapped model, not the cursor. However, we
         need to hang on to that cursor for rendering our children."""
         self.context['cursor'] = instance
-        as_dict = super().to_representation(instance.model)
-        if self.context.get('is_root', True):
-            as_dict.update(self.root_only_attrs(instance))
-        return as_dict
-
-    @staticmethod
-    def root_only_attrs(cursor):
-        return {
-            'policy': PolicySerializer(cursor.model.policy).data
-        }
+        return super().to_representation(instance.model)
 
     def get_children(self, instance):
         return self.__class__(
@@ -75,4 +148,15 @@ class DocCursorSerializer(serializers.ModelSerializer):
         ).data
 
     def get_content(self, instance):
-        return [c.serialize_content(instance) for c in instance.content()]
+        """Include all annotations of the text."""
+        cursor = self.context['cursor']
+        return [serialize_content(c, cursor) for c in instance.content()]
+
+    def get_meta(self, instance):
+        """Include meta data which applies to the whole node."""
+        meta = Meta(
+            self.context['cursor'],
+            self.context.get('is_root', True),
+            self.context.get('policy'),
+        )
+        return MetaSerializer(meta).data

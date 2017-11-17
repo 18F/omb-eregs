@@ -18,8 +18,10 @@ class DocCursor():
         self.identifier = identifier
 
     @classmethod
-    def new_tree(cls, node_type: str, type_emblem: str='1', **attrs):
-        tree = DiGraph()
+    def new_tree(cls, node_type: str, type_emblem: str='1', policy=None,
+                 **attrs):
+        attrs = {**attrs, 'policy': policy}
+        tree = DiGraph(policy=policy)
         identifier = f"{node_type}_{type_emblem}"
         tree.add_node(identifier, model=DocNode(
             identifier=identifier, node_type=node_type,
@@ -65,6 +67,8 @@ class DocCursor():
                   **attrs):
         if type_emblem is None:
             type_emblem = self.next_emblem(node_type)
+        if 'policy' not in attrs:
+            attrs = {**attrs, 'policy': self.tree.graph.get('policy')}
 
         identifier = f"{self.identifier}__{node_type}_{type_emblem}"
         self.tree.add_node(identifier, model=DocNode(
@@ -87,7 +91,7 @@ class DocCursor():
             for cursor in child.walk():
                 yield cursor
 
-    def nested_set_renumber(self, left=1):
+    def nested_set_renumber(self, left=1, bulk_create=True):
         """The nested set model tracks parent/child relationships by requiring
         ancestors's left-right range strictly contain any descendant's
         left-right range. To set that up correctly, we need to renumber our
@@ -96,8 +100,14 @@ class DocCursor():
         self.model.right = left + 2 * self.subtree_size() - 1
 
         for child in self.children():
-            child.nested_set_renumber(left + 1)
+            child.nested_set_renumber(left + 1, bulk_create=False)
             left = child.model.right
+
+        if bulk_create:
+            self._bulk_create()
+
+    def _bulk_create(self):
+        DocNode.objects.bulk_create(node.model for node in self.walk())
 
     def next_sort_order(self):
         return self.tree.out_degree(self.identifier)

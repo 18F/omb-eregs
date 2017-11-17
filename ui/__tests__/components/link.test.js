@@ -35,7 +35,15 @@ describe('<Link />', () => {
       expect(aProps.href).toEqual(url);
       expect(aProps['aria-label']).toEqual(undefined);
     });
-    it('renders as an external link if the URL includes a protocol', () => {
+
+    // TODO: We're skipping this for now, because setting the aria-label
+    // to "Link opens in a new window" obscured the actual destination
+    // of the link on ATs. We might bring back this functionality in
+    // a better way, though, so for now we'll skip it rather than deleting
+    // it entirely. For more details, see:
+    //
+    //   https://github.com/18F/omb-eregs/issues/655
+    it.skip('renders as an external link if the URL includes a protocol', () => {
       const externalUrl = 'https://www.other-site.gov';
       const result = shallow(<Link href={externalUrl}>hi</Link>);
       const aProps = result.find('a').props();

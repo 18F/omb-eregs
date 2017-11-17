@@ -5,6 +5,7 @@ from django.http import Http404
 from model_mommy import mommy
 from rest_framework.test import APIClient
 
+from document.models import DocNode
 from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
 from reqs.views import policies as policies_views
 
@@ -59,6 +60,24 @@ def test_topics_counts_filter_req(policy_topic_setup):
     assert response['count'] == 1
     assert response['results'][0]['total_reqs'] == len(reqs[1])
     assert response['results'][0]['relevant_reqs'] == 1
+
+
+@pytest.mark.django_db
+def test_has_docnode_works(policy_setup):
+    (policies, reqs) = policy_setup
+    client = APIClient()
+
+    path = "/policies/?requirements__req_id=" + reqs[1][1].req_id
+    response = client.get(path).json()
+
+    assert response['results'][0]['has_docnode'] is False
+
+    policies[1].docnode = mommy.make(DocNode, policy=policies[1])
+    policies[1].save()
+
+    response = client.get(path).json()
+
+    assert response['results'][0]['has_docnode'] is True
 
 
 @pytest.mark.django_db

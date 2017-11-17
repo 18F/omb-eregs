@@ -1,20 +1,28 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Footnote({ docNode, renderedContent }) {
+import renderContents from '../../util/render-contents';
+
+export default function Footnote({ docNode }) {
   return (
-    <div className="clearfix node-footnote" id={docNode.identifier}>
-      <span className="bold col col-1 pr2 right-align">
-        { docNode.marker }
+    <span className="clearfix node-footnote" id={docNode.identifier}>
+      <span className="node-footnote-content">
+        <span className="citation-marker">
+          { docNode.marker }
+        </span>
+        <p className="footnote-text">{ renderContents(docNode.content) }</p>
       </span>
-      <p className="col col-11 m0 text">{ renderedContent }</p>
-    </div>
+    </span>
   );
 }
 Footnote.propTypes = {
   docNode: PropTypes.shape({
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    content: PropTypes.arrayOf(PropTypes.shape({
+      content_type: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    })).isRequired,
     identifier: PropTypes.string.isRequired,
-    marker: PropTypes.string.isRequired,
+    marker: PropTypes.string,
   }).isRequired,
-  renderedContent: PropTypes.node.isRequired,
 };

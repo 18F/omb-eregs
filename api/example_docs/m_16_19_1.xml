@@ -261,7 +261,7 @@
             community
           </footnote>
           <list>
-            <listitem marker="•">
+            <listitem marker="●">
               <para>
                 Coordinating with OMB to define qualifying operating standards
                 for inter-agency shared services providers, creating guidance
@@ -269,26 +269,26 @@
                 approving candidate providers.
               </para>
             </listitem>
-            <listitem marker="•">
+            <listitem marker="●">
               <para>
                 Maintaining and monitoring inter-agency shared services
                 provider operating standards.
               </para>
             </listitem>
-            <listitem marker="•">
+            <listitem marker="●">
               <para>
                 Maintaining an online inventory of qualified inter-agency
                 shared services providers.
               </para>
             </listitem>
-            <listitem marker="•">
+            <listitem marker="●">
               <para>
                 Establishing an online decision support tool to facilitate
                 agency review, selection, and analysis of inter-agency shared
                 services providers.
               </para>
             </listitem>
-            <listitem marker="•">
+            <listitem marker="●">
               <para>
                 Coordinating with the GSA Federal Acquisition Service (FAS) to
                 create and maintain an inventory of acquisition tools and
@@ -298,7 +298,7 @@
                 monitoring tools.
               </para>
             </listitem>
-            <listitem marker="•">
+            <listitem marker="●">
               <para>
                 Developing, implementing, and maintaining financial and
                 service models, as well as contracts, pertaining to data
@@ -306,7 +306,7 @@
                 service providers.
               </para>
             </listitem>
-            <listitem marker="•">
+            <listitem marker="●">
               <para>
                 Providing a forum for participating and interested agencies to
                 discuss the inter-agency shared services marketplace.
@@ -708,6 +708,7 @@
                           \textit{Total Active}
                           \\
                           \textit{Rack Count}
+                          <footnote_citation>28</footnote_citation>
                         \end{matrix}
                         *
                         \textit{30 sq. ft.}
@@ -716,9 +717,6 @@
                       }
                     </content>
                   </math>
-                  <content>
-                    <footnote_citation>28</footnote_citation>
-                  </content>
                   <footnote emblem="28" marker="28">
                     “Active” racks are those that have IT equipment
                     consuming electricity.
@@ -1012,22 +1010,22 @@
         agency-specific data center progress as part of the IT Dashboard,
         which will display:
         <list>
-          <listitem marker="•">
+          <listitem marker="●">
             <para>Planned and achieved data center closures by agency;</para>
           </listitem>
-          <listitem marker="•">
+          <listitem marker="●">
             <para>
               Government-wide and agency progress toward meeting applicable
               optimization targets;
             </para>
           </listitem>
-          <listitem marker="•">
+          <listitem marker="●">
             <para>
               Cumulative cost savings and cost avoidance realized through the
               implementation of the DCOI and prior initiatives; and
             </para>
           </listitem>
-          <listitem marker="•">
+          <listitem marker="●">
             <para>
               Annual data center investment spending per agency, including
               investment transition costs, cost savings projections, progress

@@ -1,0 +1,13 @@
+.node-list-item {
+  @extend .clearfix;
+  margin-bottom: 8px;
+
+  .list-item-marker {
+    @include font-san-serif-bold();
+    @include paragraph-marker();
+  }
+
+  .list-item-text {
+    @include paragraph-with-marker();
+  }
+}

@@ -30,6 +30,10 @@
   font-size: 1.75rem;
   font-weight: bold;
   line-height: 2.25rem;
+  margin-bottom: .67em;
+  margin-top: .67em;
+  -webkit-margin-before: 0.67em;
+  -webkit-margin-after: 0.67em;
 
   sup {
     font-size: 0.625rem;
@@ -72,7 +76,7 @@
 
   .search-input {
     @extend .gray-border;
-    @include font-source-sans-pro();
+    @include font-san-serif();
     border: 1px solid;
     border-right: 0;
     border-bottom-left-radius: 5px;

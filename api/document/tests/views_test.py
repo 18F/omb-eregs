@@ -5,7 +5,6 @@ import pytest
 from django.test.utils import CaptureQueriesContext
 from model_mommy import mommy
 
-from document.models import DocNode
 from document.serializers import DocCursorSerializer
 from document.tests.utils import random_doc
 from document.tree import DocCursor
@@ -17,9 +16,8 @@ from reqs.models import Policy, Requirement, Topic
 def test_404s(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
-    root.add_child('sect', policy=policy)
+    root.add_child('sect')
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     assert client.get("/987654321").status_code == 404
     assert client.get(f"/{policy.pk}").status_code == 200
@@ -34,23 +32,23 @@ def test_404s(client):
 def test_correct_data(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
-    sect1 = root.add_child('sect', policy=policy)
-    root.add_child('sect', policy=policy)
-    sect1.add_child('par', 'a', policy=policy)
+    sect1 = root.add_child('sect')
+    root.add_child('sect')
+    sect1.add_child('par', 'a')
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     def result(url):
         return json.loads(client.get(url).content.decode('utf-8'))
 
-    assert result(f"/{policy.pk}") == DocCursorSerializer(root).data
-    assert result(f"/{policy.pk}/root_0") == DocCursorSerializer(root).data
-    assert result(f"/{policy.pk}/root_0__sect_1") \
-        == DocCursorSerializer(root['sect_1']).data
-    assert result(f"/{policy.pk}/root_0__sect_2") \
-        == DocCursorSerializer(root['sect_2']).data
+    def serialize(node):
+        return DocCursorSerializer(node, context={'policy': policy}).data
+
+    assert result(f"/{policy.pk}") == serialize(root)
+    assert result(f"/{policy.pk}/root_0") == serialize(root)
+    assert result(f"/{policy.pk}/root_0__sect_1") == serialize(root['sect_1'])
+    assert result(f"/{policy.pk}/root_0__sect_2") == serialize(root['sect_2'])
     assert result(f"/{policy.pk}/root_0__sect_1__par_a") \
-        == DocCursorSerializer(root['sect_1']['par_a']).data
+        == serialize(root['sect_1']['par_a'])
 
 
 @pytest.mark.django_db
@@ -59,18 +57,18 @@ def test_by_pretty_url(client):
     policy = mommy.make(Policy, omb_policy_id='M-Something-18')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.nested_set_renumber()
-    root.model.save()
 
     result = json.loads(client.get("/M-Something-18").content.decode("utf-8"))
 
-    assert result == DocCursorSerializer(root).data
+    assert result == DocCursorSerializer(root,
+                                         context={'policy': policy}).data
 
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_query_count(client):
     policy = mommy.make(Policy, omb_policy_id='M-O-A-R')
-    root = random_doc(20, save=True, policy=policy)
+    root = random_doc(20, save=True, policy=policy, text='placeholder')
     subtree_nodes = {
         root.tree.nodes[idx]['model']
         for idx in root.tree.nodes()
@@ -86,6 +84,16 @@ def test_query_count(client):
         req.docnode = req_node
         req.save()
 
+    # select 3 nodes to add footnote citations
+    citing_nodes = random.sample(list(root.walk()), 3)
+    footnotes = [citing.add_child('footnote') for citing in citing_nodes]
+    root.nested_set_renumber(bulk_create=False)
+    for node in root.walk():
+        node.model.save()
+    for citing, footnote in zip(citing_nodes, footnotes):
+        citing.model.footnotecitations.create(start=0, end=1,
+                                              footnote_node=footnote.model)
+
     # pytest will alter the connection, so we only want to load it within this
     # test
     from django.db import connection
@@ -93,8 +101,8 @@ def test_query_count(client):
         client.get("/M-O-A-R")
         # Query 1: Lookup the policy
         # 2: Lookup the root docnode, joining w/ req
-        # 3: fetch footnote citations for the root
+        # 3: fetch footnote citations _and_ referenced node for the root
         # 4: fetch child nodes, joining w/ requirements
         # 5: fetch topics related to those requirements
-        # 6: fetch footnote citations for child nodes
+        # 6: fetch footnote citations _and_ referenced node for child nodes
         assert len(capture) == 6

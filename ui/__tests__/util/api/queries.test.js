@@ -159,13 +159,22 @@ describe('policyData()', () => {
 describe('documentData()', () => {
   beforeEach(() => {
     endpoints.document.fetchOne.mockImplementationOnce(
-      () => Promise.resolve({ data: 'here' }),
+      async () => ({ meta: { policy: { issuance: '2012-12-12' } } }),
     );
   });
   it('hits the correct url', async () => {
     const result = await documentData({ query: { policyId: '123' } });
     expect(endpoints.document.fetchOne).toHaveBeenCalledWith('123');
-    expect(result).toEqual({ docNode: { data: 'here' } });
+    expect(result).toEqual({
+      docNode: {
+        meta: {
+          policy: {
+            issuance: '2012-12-12',
+            issuance_pretty: 'December 12, 2012',
+          },
+        },
+      },
+    });
   });
   it('passes up 404s', async () => {
     const err = new Error('Not found');

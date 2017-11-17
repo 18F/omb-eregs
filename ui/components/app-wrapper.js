@@ -1,8 +1,10 @@
 import Router from 'next/router';
+import withRedux from 'next-redux-wrapper';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import createStore from '../store';
 import ErrorView from './error';
 import HeaderFooter from './header-footer';
 
@@ -45,5 +47,8 @@ export default function wrapPage(Page, dataFn, headerFooterParams) {
       return { err };
     }
   };
-  return WrappedPage;
+  return withRedux({
+    createStore,
+    debug: process.env.NODE_ENV === 'development',
+  })(WrappedPage);
 }

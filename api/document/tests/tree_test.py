@@ -95,7 +95,7 @@ def test_nested_sets():
     assert root.model.left is None
     assert root.model.right is None
 
-    root.nested_set_renumber()
+    root.nested_set_renumber(bulk_create=False)
 
     assert root.model.left == 1
     assert root['sect_1'].model.left == 2
@@ -134,15 +134,14 @@ def test_create_save_load():
     data from the database."""
     policy = mommy.make(Policy)
     root = tree.DocCursor.new_tree('root', '0', text='Root', policy=policy)
-    sect1 = root.add_child('sect', text='First Section', policy=policy)
-    sect1.add_child('par', 'a', policy=policy)
-    sect1.add_child('par', 'b', text='Paragraph b', policy=policy)
-    root.add_child('sect', policy=policy)
-    app1 = root.add_child('appendix', policy=policy)
-    app1.add_child('apppar', 'i', text='Appendix par i', policy=policy)
+    sect1 = root.add_child('sect', text='First Section')
+    sect1.add_child('par', 'a')
+    sect1.add_child('par', 'b', text='Paragraph b')
+    root.add_child('sect')
+    app1 = root.add_child('appendix')
+    app1.add_child('apppar', 'i', text='Appendix par i')
 
     root.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in root.walk())
 
     assert DocNode.objects.count() == 7
     model_root = DocNode.objects.get(identifier='root_0')
@@ -158,7 +157,6 @@ def test_create_save_load():
 def test_add_models():
     """We can return to a tree structure from a sequence of models."""
     root = random_doc(15)
-    root.nested_set_renumber()
     models_created = [node.model for node in root.walk()]
     correct_order = [node.identifier for node in root.walk()]
 
@@ -185,3 +183,15 @@ def test_filter():
     filtered = root.filter(lambda m: m.type_emblem == '2')
     assert [n.identifier for n in filtered] == [
         'root_1__sec_2', 'root_1__sec_1__para_2']
+
+
+@pytest.mark.django_db
+def test_default_policy():
+    policy1, policy2 = mommy.make(Policy, _quantity=2)
+    root = tree.DocCursor.new_tree('root', policy=policy1)
+    root.add_child('sec')
+    root.add_child('sec', policy=policy2)
+
+    assert root.model.policy == policy1
+    assert root['sec_1'].model.policy == policy1
+    assert root['sec_2'].model.policy == policy2

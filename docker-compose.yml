@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
   # This service is a shared network stack (i.e. shared "localhost") for all
   # external-facing services. It allows "localhost" links to work correctly
@@ -99,6 +99,7 @@ services:
       PORT: 8002
       NODE_ENV: development
       API_URL: 'http://localhost:8001/'
+      USE_POLLING: ${USE_POLLING:-false}
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}

@@ -12,6 +12,7 @@ body {
 
 .document-container {
   .node-policy {
+    @extend .col-12;
     @extend .md-col-8;
     @extend .col;
   }
@@ -25,16 +26,22 @@ body {
   padding-right: 1em;
 }
 
-@media (min-width: 32rem) {
+@media #{$breakpoint-sm} {
+  .document-container {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+  }
+}
+
+@media #{$breakpoint-lg} {
   .document-container {
     padding-left: 2em;
     padding-right: 2em;
   }
 }
 
-@media (min-width: 64rem) {
-  .document-container {
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-  }
+.bland-box {
+  border: none;
+  box-shadow: none;
+  background: none;
 }

@@ -4,7 +4,6 @@ import pytest
 from model_mommy import mommy
 
 from document import serializers
-from document.models import DocNode
 from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic
 
@@ -22,7 +21,8 @@ def test_end_to_end():
     pa.add_child('par', '1', text='Paragraph (a)(1)', marker='(1)')
     sect2.add_child('par', 'b', marker='b.')
 
-    result = serializers.DocCursorSerializer(root).data
+    result = serializers.DocCursorSerializer(root,
+                                             context={'policy': policy}).data
     assert result == {
         'identifier': 'root_0',
         'node_type': 'root',
@@ -30,13 +30,15 @@ def test_end_to_end():
         'text': '',
         'marker': '',
         'depth': 0,
-        'requirement': None,
         'content': [],
-        'policy': {     # Note this field does not appear on children
-            'issuance': '2001-02-03',
-            'omb_policy_id': 'M-18-18',
-            'title': 'Some Title',
-            'uri': 'http://example.com/thing.pdf',
+        'meta': {
+            'descendant_footnotes': [],
+            'policy': {     # Note this field does not appear on children
+                'issuance': '2001-02-03',
+                'omb_policy_id': 'M-18-18',
+                'original_url': 'http://example.com/thing.pdf',
+                'title': 'Some Title',
+            },
         },
         'children': [
             {
@@ -46,7 +48,7 @@ def test_end_to_end():
                 'text': 'Section 1',
                 'marker': '',
                 'depth': 1,
-                'requirement': None,
+                'meta': {},
                 'content': [{
                     'content_type': '__text__',
                     'text': 'Section 1',
@@ -60,7 +62,7 @@ def test_end_to_end():
                 'text': '',
                 'marker': '',
                 'depth': 1,
-                'requirement': None,
+                'meta': {},
                 'content': [],
                 'children': [
                     {
@@ -70,7 +72,7 @@ def test_end_to_end():
                         'text': '',
                         'marker': '(a)',
                         'depth': 2,
-                        'requirement': None,
+                        'meta': {},
                         'content': [],
                         'children': [
                             {
@@ -80,7 +82,7 @@ def test_end_to_end():
                                 'text': 'Paragraph (a)(1)',
                                 'marker': '(1)',
                                 'depth': 3,
-                                'requirement': None,
+                                'meta': {},
                                 'content': [{
                                     'content_type': '__text__',
                                     'text': 'Paragraph (a)(1)',
@@ -96,7 +98,7 @@ def test_end_to_end():
                         'text': '',
                         'marker': 'b.',
                         'depth': 2,
-                        'requirement': None,
+                        'meta': {},
                         'content': [],
                         'children': [],
                     },
@@ -111,11 +113,9 @@ def test_requirement():
     """The 'requirement' field should serialize an associated Requirement"""
     policy = mommy.make(Policy)
     topics = [mommy.make(Topic, name='AaA'), mommy.make(Topic, name='BbB')]
-    root = DocCursor.new_tree('policy', '1', policy=policy)
-    req_node = root.add_child('req', policy=policy)
+    root = DocCursor.new_tree('policy', policy=policy)
+    req_node = root.add_child('req')
     root.nested_set_renumber()
-    root.model.save()
-    req_node.model.save()
 
     req = mommy.make(
         Requirement,
@@ -132,10 +132,11 @@ def test_requirement():
     )
     req_node.model.refresh_from_db()
 
-    result = serializers.DocCursorSerializer(root).data
-    assert result['requirement'] is None
+    result = serializers.DocCursorSerializer(root,
+                                             context={'policy': policy}).data
+    assert 'requirement' not in result['meta']
     child_node = result['children'][0]
-    assert child_node['requirement'] == {
+    assert child_node['meta']['requirement'] == {
         'citation': 'citcitcit',
         'impacted_entity': 'imp',
         'id': req.id,
@@ -152,22 +153,22 @@ def test_requirement():
 
 
 @pytest.mark.django_db
-def test_footnotes():
+def test_footnote_citations():
     """The "content" field should contain serialized FootnoteCitations."""
     policy = mommy.make(Policy)
-    para = DocCursor.new_tree('para', '1', text='Some1 message2 here',
+    para = DocCursor.new_tree('para', text='Some1 message2 here',
                               policy=policy)
-    footnote1 = para.add_child('footnote', policy=policy).model
-    footnote2 = para.add_child('footnote', policy=policy).model
+    footnote1 = para.add_child('footnote').model
+    footnote2 = para.add_child('footnote').model
     para.nested_set_renumber()
-    DocNode.objects.bulk_create(n.model for n in para.walk())
     para.model.footnotecitations.create(
         start=len('Some'), end=len('Some1'), footnote_node=footnote1)
     para.model.footnotecitations.create(
         start=len('Some1 message'), end=len('Some1 message2'),
         footnote_node=footnote2)
 
-    result = serializers.DocCursorSerializer(para).data
+    result = serializers.DocCursorSerializer(para,
+                                             context={'policy': policy}).data
     assert result['content'] == [
         {
             'content_type': '__text__',
@@ -175,16 +176,76 @@ def test_footnotes():
         }, {
             'content_type': 'footnote_citation',
             'text': '1',
-            'footnote_node': footnote1.identifier,
+            'footnote_node': serializers.DocCursorSerializer(
+                para['footnote_1'],
+                context={'policy': policy, 'is_root': False},
+            ).data,
         }, {
             'content_type': '__text__',
             'text': ' message',
         }, {
             'content_type': 'footnote_citation',
             'text': '2',
-            'footnote_node': footnote2.identifier,
+            'footnote_node': serializers.DocCursorSerializer(
+                para['footnote_2'],
+                context={'policy': policy, 'is_root': False},
+            ).data,
         }, {
             'content_type': '__text__',
             'text': ' here',
         }
     ]
+
+
+@pytest.mark.parametrize('node_type', ('para', 'table', 'something-else'))
+@pytest.mark.parametrize('is_root', (True, False))
+@pytest.mark.django_db
+def test_descendant_footnotes_meta(node_type, is_root):
+    """Only the root and "table" nodes should get descendant_footnotes."""
+    policy = mommy.make(Policy)
+    cursor = DocCursor.new_tree(node_type, policy=policy)
+    meta = serializers.Meta(cursor, is_root, policy)
+    result = serializers.MetaSerializer(meta).data
+    if node_type == 'table' or is_root:
+        assert 'descendant_footnotes' in result
+    else:
+        assert 'descendant_footnotes' not in result
+
+
+@pytest.mark.django_db
+def test_descendant_footnotes():
+    """We pull out footnotes of all descendants, and only descendants."""
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', policy=policy)
+    ftnt_a = root.add_child('footnote', 'a')
+    root.add_child('para')
+    ftnt_b = root['para_1'].add_child('footnote', 'b')
+    root.add_child('list')
+    root['list_1'].add_child('para')
+    root['list_1'].add_child('para')
+    root['list_1'].add_child('para')
+    ftnt_c = root['list_1']['para_3'].add_child('footnote', 'c')
+    root.nested_set_renumber()
+
+    root['para_1'].model.footnotecitations.create(
+        start=0, end=1, footnote_node=ftnt_a.model)
+    root['para_1'].model.footnotecitations.create(
+        start=1, end=2, footnote_node=ftnt_b.model)
+    root['list_1']['para_2'].model.footnotecitations.create(
+        start=0, end=1, footnote_node=ftnt_c.model)
+
+    def fts(cursor):
+        meta = serializers.Meta(cursor, is_root=True, policy=policy)
+        data = serializers.MetaSerializer(meta).data
+        return [node['identifier'] for node in data['descendant_footnotes']]
+
+    assert fts(root) == ['root_1__footnote_a', 'root_1__para_1__footnote_b',
+                         'root_1__list_1__para_3__footnote_c']
+    assert fts(root['footnote_a']) == []
+    assert fts(root['para_1']) == ['root_1__footnote_a',
+                                   'root_1__para_1__footnote_b']
+    assert fts(root['list_1']) == ['root_1__list_1__para_3__footnote_c']
+    assert fts(root['list_1']['para_2']) == [
+        'root_1__list_1__para_3__footnote_c']
+    # no citations in para 3
+    assert fts(root['list_1']['para_3']) == []
