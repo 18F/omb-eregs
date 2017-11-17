@@ -1,7 +1,7 @@
 .req {
 
   .req-id {
-    @include font-source-sans-pro-semibold();
+    @include font-san-serif();
     color: $color-gray;
   }
 
@@ -10,7 +10,7 @@
   }
 
   .metadata {
-    @include font-source-sans-pro();
+    @include font-san-serif();
     color: $color-gray;
     font-size: 0.8125rem;
   }
