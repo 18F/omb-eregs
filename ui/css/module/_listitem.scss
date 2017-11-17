@@ -11,7 +11,11 @@
     @include paragraph-with-marker();
   }
 
-  .node-paragraph {
+  .node-paragraph{
+    margin-bottom: 8px;
+  }
+
+  .node-paragraph::last-child {
     margin-bottom: 0;
   }
 }
