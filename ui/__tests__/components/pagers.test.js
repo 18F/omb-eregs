@@ -15,19 +15,19 @@ describe('<Pagers />', () => {
   it('shows zero pages when there are no results', () => {
     const result = shallow(<Pagers {...pagerArgs(0)} />);
     expect(result.text()).toMatch(/0 of 0/);
-    expect(result.find('LinkRoutes').length).toEqual(0);
+    expect(result.find('LinkRoutes')).toHaveLength(0);
   });
 
   it('shows one page when there are less than 25 results', () => {
     const result = shallow(<Pagers {...pagerArgs(10)} />);
     expect(result.text()).toMatch(/1 of 1/);
-    expect(result.find('LinkRoutes').length).toEqual(0);
+    expect(result.find('LinkRoutes')).toHaveLength(0);
   });
 
   it('shows a right arrow but no left arrow when on page 1', () => {
     const result = shallow(<Pagers {...pagerArgs(100, { page: '1' })} />);
     expect(result.text()).toMatch(/1 of 4/);
-    expect(result.find('Link').length).toEqual(1);
+    expect(result.find('Link')).toHaveLength(1);
     expect(result.childAt(0).name()).toBeNull();
     expect(result.childAt(1).name()).toEqual('Link');
   });
@@ -35,7 +35,7 @@ describe('<Pagers />', () => {
   it('shows a left arrow but no right arrow when on final page', () => {
     const result = shallow(<Pagers {...pagerArgs(100, { page: '4' })} />);
     expect(result.text()).toMatch(/4 of 4/);
-    expect(result.find('Link').length).toEqual(1);
+    expect(result.find('Link')).toHaveLength(1);
     expect(result.childAt(0).name()).toEqual('Link');
     expect(result.childAt(1).name()).toBeNull();
   });
@@ -43,7 +43,7 @@ describe('<Pagers />', () => {
   it('shows both arrows if on an intermediary page', () => {
     const result = shallow(<Pagers {...pagerArgs(100, { page: '2' })} />);
     expect(result.text()).toMatch(/2 of 4/);
-    expect(result.find('Link').length).toEqual(2);
+    expect(result.find('Link')).toHaveLength(2);
     expect(result.childAt(0).name()).toEqual('Link');
     expect(result.childAt(1).name()).toBeNull();
     expect(result.childAt(2).name()).toEqual('Link');

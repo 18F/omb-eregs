@@ -11,7 +11,7 @@ describe('<PrivacyView />', () => {
   });
   it('has the right header', () => {
     const result = shallow(<PrivacyView />);
-    expect(result.find('h2').length).toEqual(1);
+    expect(result.find('h2')).toHaveLength(1);
     expect(result.find('h2').text()).toEqual('Privacy Policy');
   });
 });
