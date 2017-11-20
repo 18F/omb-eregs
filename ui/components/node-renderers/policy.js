@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import DocumentNode from '../../util/document-node';
 import renderNode from '../../util/render-node';
 import LabeledText from '../labeled-text';
 import Link from '../link';
@@ -53,21 +54,10 @@ export default function Policy({ docNode }) {
         </LabeledText>
       </header>
       { docNode.children.map(renderNode) }
-      { footnotes(docNode.meta.descendant_footnotes) }
+      { footnotes(docNode.meta.descendant_footnotes.map(f => new DocumentNode(f))) }
     </div>
   );
 }
 Policy.propTypes = {
-  docNode: PropTypes.shape({
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
-    identifier: PropTypes.string.isRequired,
-    meta: PropTypes.shape({
-      policy: PropTypes.shape({
-        issuance_pretty: PropTypes.string.isRequired,
-        omb_policy_id: PropTypes.string.isRequired,
-        original_url: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-      }).isRequired,
-    }).isRequired,
-  }).isRequired,
+  docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };

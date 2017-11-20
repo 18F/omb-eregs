@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import DocumentNode from '../../util/document-node';
 import renderNode from '../../util/render-node';
 
 /* Uses indentation and border to indicate separate sections */
@@ -12,8 +13,5 @@ export default function Section({ docNode }) {
   );
 }
 Section.propTypes = {
-  docNode: PropTypes.shape({
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
-    identifier: PropTypes.string.isRequired,
-  }).isRequired,
+  docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };

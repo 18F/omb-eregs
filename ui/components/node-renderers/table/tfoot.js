@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import DocumentNode from '../../../util/document-node';
 import renderContents from '../../../util/render-contents';
 
 /* We're assuming, for the time being, that all rows within a single table
@@ -33,13 +34,5 @@ export default function Tfoot({ docNode }) {
   );
 }
 Tfoot.propTypes = {
-  docNode: PropTypes.shape({
-    meta: PropTypes.shape({
-      descendant_footnotes: PropTypes.arrayOf(PropTypes.shape({
-        content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-        identifier: PropTypes.string.isRequired,
-        marker: PropTypes.string.isRequired,
-      })).isRequired,
-    }).isRequired,
-  }).isRequired,
+  docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };

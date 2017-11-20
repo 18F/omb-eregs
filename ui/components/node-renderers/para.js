@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import DocumentNode from '../../util/document-node';
 import renderContents from '../../util/render-contents';
 import renderNode from '../../util/render-node';
 
@@ -14,12 +15,5 @@ export default function Paragraph({ docNode }) {
   );
 }
 Paragraph.propTypes = {
-  docNode: PropTypes.shape({
-    content: PropTypes.arrayOf(PropTypes.shape({
-      content_type: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    })).isRequired,
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
-    identifier: PropTypes.string.isRequired,
-  }).isRequired,
+  docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };

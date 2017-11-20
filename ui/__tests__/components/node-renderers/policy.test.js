@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Policy from '../../../components/node-renderers/policy';
-import nodeFactory from '../../test-utils/node-factory';
+import DocumentNode from '../../../util/document-node';
 import {
   itIncludesTheIdentifier,
   itRendersChildNodes,
@@ -24,7 +24,7 @@ describe('<Policy />', () => {
   itRendersChildNodes(Policy, { meta });
 
   it('uses the policy for default text', () => {
-    const result = shallow(<Policy docNode={nodeFactory({ meta })} />);
+    const result = shallow(<Policy docNode={new DocumentNode({ meta })} />);
     const text = result.text();
     expect(text).toMatch(/M-44-55/);
     expect(text).toMatch(/Magistrate/);
@@ -40,7 +40,7 @@ describe('<Policy />', () => {
     expect(date.children().text()).toEqual('March 3, 2003');
   });
   it('can grab text from subnodes', () => {
-    const docNode = nodeFactory({
+    const docNode = new DocumentNode({
       children: [
         { children: [], node_type: 'other', text: 'other-text' },
         { children: [], node_type: 'subject', text: 'subject-here' },
@@ -68,13 +68,13 @@ describe('<Policy />', () => {
     expect(date.children().text()).toEqual('some date here');
   });
   it('renders footnotes at the bottom', () => {
-    const docNode = nodeFactory({
+    const docNode = new DocumentNode({
       meta: {
         ...meta,
         descendant_footnotes: [
-          { identifier: '1', children: [], content: [], marker: '', type_emblem: '' },
-          { identifier: '2', children: [], content: [], marker: '', type_emblem: '' },
-          { identifier: '3', children: [], content: [], marker: '', type_emblem: '' },
+          new DocumentNode({ identifier: '1' }),
+          new DocumentNode({ identifier: '2' }),
+          new DocumentNode({ identifier: '3' }),
         ],
       },
     });

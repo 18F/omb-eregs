@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Footnote from '../../../components/node-renderers/footnote';
-import nodeFactory from '../../test-utils/node-factory';
+import DocumentNode from '../../../util/document-node';
 import {
   itIncludesNodeText,
   itIncludesTheIdentifier,
@@ -14,7 +14,7 @@ describe('<Footnote />', () => {
   it('includes the marker', () => {
     const params = {
       children: [],
-      docNode: nodeFactory({ marker: '8' }),
+      docNode: new DocumentNode({ marker: '8' }),
     };
     const result = shallow(<Footnote {...params} />);
 
