@@ -1,94 +1,8 @@
-from typing import NamedTuple
-
 from rest_framework import serializers
 
 from document.models import DocNode
 from document.serializers.content import serialize_content
-from document.tree import DocCursor
-from reqs.models import Policy, Requirement
-from reqs.serializers import TopicSerializer
-
-
-class RequirementSerializer(serializers.ModelSerializer):
-    topics = TopicSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = Requirement
-        fields = (
-            'citation',
-            'id',
-            'impacted_entity',
-            'policy_section',
-            'policy_sub_section',
-            'req_deadline',
-            'req_id',
-            'topics',
-            'verb',
-        )
-
-
-class PolicySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Policy
-        fields = (
-            'issuance',
-            'omb_policy_id',
-            'original_url',
-            'title',
-        )
-
-
-class Meta(NamedTuple):
-    """Package of all of the data needed to generate the "meta" field."""
-    cursor: DocCursor
-    is_root: bool
-    policy: Policy
-
-    @property
-    def model(self):
-        return self.cursor.model
-
-    @property
-    def node_type(self):
-        return self.model.node_type
-
-
-class MetaSerializer(serializers.Serializer):
-    descendant_footnotes = serializers.SerializerMethodField()
-    policy = serializers.SerializerMethodField()
-    requirement = serializers.SerializerMethodField()
-
-    def to_representation(self, instance):
-        """Remove fields that don't have data."""
-        result = super().to_representation(instance)
-        to_delete = {key for key, value in result.items() if value is None}
-        for key in to_delete:
-            del result[key]
-        return result
-
-    def get_descendant_footnotes(self, instance):
-        """Find all footnote nodes that are cited by this node or any of its
-        descendants."""
-        if not instance.is_root and instance.node_type != 'table':
-            return None
-        footnotes = []
-        for node in instance.cursor.walk():
-            for citation in node.model.footnotecitations.all():
-                subtree = DocCursor(instance.cursor.tree,
-                                    citation.footnote_node.identifier)
-                footnotes.append(
-                    DocCursorSerializer(subtree,
-                                        context={'is_root': False}).data
-                )
-        return footnotes
-
-    def get_policy(self, instance):
-        if instance.is_root:
-            return PolicySerializer(instance.policy).data
-
-    def get_requirement(self, instance):
-        if hasattr(instance.model, 'requirement'):
-            return RequirementSerializer(instance.model.requirement).data
+from document.serializers.meta import Meta, MetaSerializer
 
 
 class DocCursorSerializer(serializers.ModelSerializer):
@@ -135,4 +49,4 @@ class DocCursorSerializer(serializers.ModelSerializer):
             self.context.get('is_root', True),
             self.context.get('policy'),
         )
-        return MetaSerializer(meta).data
+        return MetaSerializer(meta, context={'parent_serializer': self}).data
