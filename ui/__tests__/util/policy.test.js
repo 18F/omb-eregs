@@ -18,6 +18,12 @@ describe('Policy', () => {
     expect(policy({ id: 4 }).id).toBe(4);
   });
 
+  it('Serializes (via JSON) to the original passed-in object', () => {
+    expect(JSON.parse(JSON.stringify(new Policy({ blah: 1 })))).toEqual({
+      blah: 1,
+    });
+  });
+
   describe('hasDocument()', () => {
     it('returns false if the policy has no document', () => {
       expect(policy({ has_docnode: false }).hasDocument()).toBe(false);
