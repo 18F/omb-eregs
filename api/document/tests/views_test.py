@@ -5,7 +5,7 @@ import pytest
 from django.test.utils import CaptureQueriesContext
 from model_mommy import mommy
 
-from document.serializers import DocCursorSerializer
+from document.serializers.doc_cursor import DocCursorSerializer
 from document.tests.utils import random_doc
 from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic

@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import RetrieveAPIView
 
 from document.models import DocNode, FootnoteCitation
-from document.serializers import DocCursorSerializer
+from document.serializers.doc_cursor import DocCursorSerializer
 from document.tree import DocCursor
 from reqs.views.policies import policy_or_404
 
