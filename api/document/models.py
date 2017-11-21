@@ -1,3 +1,5 @@
+import itertools
+
 from collections_extended import RangeMap
 from django.db import models
 
@@ -35,8 +37,9 @@ class DocNode(models.Model):
         """Fetch all of our annotations and flatten overlaps arbitrarily (for
         now)."""
         annotations = RangeMap()
-        for fcite in self.footnotecitations.all():
-            annotations[fcite.start:fcite.end] = fcite    # flattens overlaps
+        for anote in itertools.chain(self.footnotecitations.all(),
+                                     self.externallinks.all()):
+            annotations[anote.start:anote.end] = anote    # flattens overlaps
         return annotations
 
     def content(self):
@@ -88,3 +91,7 @@ class PlainText(Annotation):
 class FootnoteCitation(Annotation):
     footnote_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='+')
+
+
+class ExternalLink(Annotation):
+    href = models.URLField()

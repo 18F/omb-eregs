@@ -35,11 +35,11 @@ def test_content_middle_annotation():
 @pytest.mark.django_db
 def test_content_outside():
     node = mommy.make(models.DocNode, text='Some text here')
-    node.footnotecitations.create(start=0, end=len('Some '),
-                                  footnote_node=mommy.make(models.DocNode))
-    node.footnotecitations.create(
+    node.externallinks.create(start=0, end=len('Some '),
+                              href='http://example.com/aaa')
+    node.externallinks.create(
         start=len('Some text'), end=len('Some text here'),
-        footnote_node=mommy.make(models.DocNode),
+        href='http://example.com/bbb'
     )
     content = node.content()
 
@@ -47,6 +47,6 @@ def test_content_outside():
     assert [node.text[c.start:c.end] for c in content] == [
         'Some ', 'text', ' here'
     ]
-    assert isinstance(content[0], models.FootnoteCitation)
+    assert isinstance(content[0], models.ExternalLink)
     assert isinstance(content[1], models.PlainText)
-    assert isinstance(content[2], models.FootnoteCitation)
+    assert isinstance(content[2], models.ExternalLink)
