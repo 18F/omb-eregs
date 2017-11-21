@@ -3,7 +3,8 @@ from typing import NamedTuple
 
 from rest_framework import serializers
 
-from document.models import Annotation, DocNode, FootnoteCitation, PlainText
+from document.models import (Annotation, DocNode, ExternalLink,
+                             FootnoteCitation, PlainText)
 from document.tree import DocCursor
 from reqs.models import Policy, Requirement
 from reqs.serializers import TopicSerializer
@@ -112,6 +113,15 @@ def serialize_footnote_citation(content: FootnoteCitation, cursor: DocCursor):
     return {
         'content_type': 'footnote_citation',
         'footnote_node': footnote_node,
+        'text': cursor.model.text[content.start:content.end],
+    }
+
+
+@serialize_content.register(ExternalLink)
+def serialize_external_link(content: ExternalLink, cursor: DocCursor):
+    return {
+        'content_type': 'external_link',
+        'href': content.href,
         'text': cursor.model.text[content.start:content.end],
     }
 
