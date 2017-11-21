@@ -22,8 +22,7 @@ def test_footnote_annotations():
     root['para_4'].add_child('footnote', '1')  # is 1
     root.nested_set_renumber()
 
-    result = annotations.AnnotationHandler.footnote_citation(
-        root, xml_span, 4)
+    result = annotations.footnote_citation(root, xml_span, 4)
     assert result is not None
     assert result.doc_node == root.model
     assert result.start == 4
@@ -39,31 +38,50 @@ def test_footnote_annotations_missing(monkeypatch):
         root.add_child('para')
     root['para_2'].add_child('footnote', '3')  # not 1
 
-    result = annotations.AnnotationHandler.footnote_citation(
-        root, xml_span, 4)
+    result = annotations.footnote_citation(root, xml_span, 4)
     assert result is None
     assert annotations.logger.warning.called
 
 
+def test_anchor_with_href():
+    xml_span = etree.fromstring("""
+        <a href="http://example.com/path">Some where</a>
+    """)
+
+    result = annotations.anchor(random_doc(), xml_span, 2)
+    assert result is not None
+    assert result.start == 2
+    assert result.end == 2 + len('Some where')
+    assert result.href == 'http://example.com/path'
+
+
+def test_anchor_without_href():
+    xml_span = etree.fromstring("<a>http://example.com/thing</a>")
+
+    result = annotations.anchor(random_doc(), xml_span, 2)
+    assert result is not None
+    assert result.start == 2
+    assert result.end == 2 + len('http://example.com/thing')
+    assert result.href == 'http://example.com/thing'
+
+
 def test_content_xml_annotations(monkeypatch):
     """Passes the correct string indexes and annotations along."""
-    monkeypatch.setattr(annotations, 'AnnotationHandler',
-                        Mock(spec_set=['aaa', 'bbb']))
+    aaa, bbb = Mock(), Mock()
+    monkeypatch.setitem(annotations.annotation_mapping, 'aaa', aaa)
+    monkeypatch.setitem(annotations.annotation_mapping, 'bbb', bbb)
     xml = etree.fromstring(
         # being careful about whitespace
         "<content>Some <aaa>span</aaa> of <bbb>text</bbb> here "
         "<nonono>there</nonono>:<empty />!</content>")
     result = list(annotations.content_xml_annotations(xml, Mock()))
-    assert result == [annotations.AnnotationHandler.aaa.return_value,
-                      annotations.AnnotationHandler.bbb.return_value]
+    assert result == [aaa.return_value, bbb.return_value]
 
-    aaa_call = annotations.AnnotationHandler.aaa.call_args[0]
-    assert aaa_call[1].tag == 'aaa'
-    assert aaa_call[2] == len('Some ')
+    assert aaa.call_args[0][1].tag == 'aaa'
+    assert aaa.call_args[0][2] == len('Some ')
 
-    bbb_call = annotations.AnnotationHandler.bbb.call_args[0]
-    assert bbb_call[1].tag == 'bbb'
-    assert bbb_call[2] == len('Some span of ')
+    assert bbb.call_args[0][1].tag == 'bbb'
+    assert bbb.call_args[0][2] == len('Some span of ')
 
 
 def test_derive_annotations(monkeypatch):

@@ -12,11 +12,11 @@ describe('<Disclaimer />', () => {
     });
     it('has the disclaimer-flag img element', () => {
       const result = mount(<Disclaimer />);
-      expect(result.find('img.usa-disclaimer-flag').length).toEqual(1);
+      expect(result.find('img.usa-disclaimer-flag')).toHaveLength(1);
     });
     it('has the right contact email', () => {
       const result = mount(<Disclaimer />);
-      expect(result.find('a').length).toEqual(1);
+      expect(result.find('a')).toHaveLength(1);
       expect(result.find(`a[href="mailto:${email}"]`).text()).toEqual(`Email ${email}`);
     });
   });
