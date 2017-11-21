@@ -9,20 +9,20 @@ from reqs.models import Agency
 
 @pytest.mark.django_db
 def test_filter_agency_by_abbr():
-    # This is a workaround for https://github.com/18F/omb-eregs/issues/673.
-    random.seed(1)
-
     mommy.make(Agency)
-    fbi = mommy.make(Agency, abbr='FBI')
+
+    pclob = mommy.make(Agency, abbr='PCLOB',
+                       name='Privacy and Civil Liberties Oversight Board')
+
     gsa = mommy.make(Agency, name='General Services Administration')
     client = APIClient()
 
     response = client.get('/agencies/').json()
     assert response['count'] == 3
 
-    response = client.get('/agencies/?search=fbi').json()
+    response = client.get('/agencies/?search=pclob').json()
     assert response['count'] == 1
-    assert response['results'][0]['id'] == fbi.id
+    assert response['results'][0]['id'] == pclob.id
 
     response = client.get('/agencies/?search=general').json()
     assert response['count'] == 1
