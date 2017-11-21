@@ -1,12 +1,12 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
+import DocumentNode from '../../util/document-node';
 import renderNode from '../../util/render-node';
-import nodeFactory from './node-factory';
 
 export function itIncludesTheIdentifier(Component, extraAttrs) {
   it('includes the identifier', () => {
-    const docNode = nodeFactory({
+    const docNode = new DocumentNode({
       identifier: 'aaa_1__bbb_2__ccc_3',
       ...(extraAttrs || {}),
     });
@@ -17,7 +17,7 @@ export function itIncludesTheIdentifier(Component, extraAttrs) {
 
 export function itIncludesNodeText(Component, extraAttrs) {
   it('includes node text', () => {
-    const docNode = nodeFactory({
+    const docNode = new DocumentNode({
       content: [
         { content_type: '__text__', text: 'Textextext' },
         { content_type: '__text__', text: 'Moreoreore' },
@@ -42,10 +42,10 @@ export function itRendersChildNodes(Component, extraAttrs) {
     renderNode.mockImplementationOnce(
       () => <child key="2">second child</child>);
 
-    const docNode = nodeFactory({
+    const docNode = new DocumentNode({
       children: [
-        { children: [], node_type: 'first-child' },
-        { children: [], node_type: 'second-child' },
+        { children: [], node_type: 'first_child' },
+        { children: [], node_type: 'second_child' },
       ],
       ...(extraAttrs || {}),
     });
@@ -53,7 +53,7 @@ export function itRendersChildNodes(Component, extraAttrs) {
     expect(result.text()).toMatch(/first child.*second child/);
     expect(result.find('child')).toHaveLength(2);
     expect(renderNode).toHaveBeenCalledTimes(2);
-    expect(renderNode.mock.calls[0][0].node_type).toEqual('first-child');
-    expect(renderNode.mock.calls[1][0].node_type).toEqual('second-child');
+    expect(renderNode.mock.calls[0][0].nodeType).toEqual('first_child');
+    expect(renderNode.mock.calls[1][0].nodeType).toEqual('second_child');
   });
 }

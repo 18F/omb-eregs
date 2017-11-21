@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import DocumentNode from '../../util/document-node';
 import renderContents from '../../util/render-contents';
 
 export default function Footnote({ docNode }) {
@@ -16,13 +17,5 @@ export default function Footnote({ docNode }) {
   );
 }
 Footnote.propTypes = {
-  docNode: PropTypes.shape({
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    content: PropTypes.arrayOf(PropTypes.shape({
-      content_type: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    })).isRequired,
-    identifier: PropTypes.string.isRequired,
-    marker: PropTypes.string,
-  }).isRequired,
+  docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };
