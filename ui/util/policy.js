@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 export default class Policy {
   constructor(policy) {
+    PropTypes.checkPropTypes(Policy.propTypes, policy, 'property', 'Policy');
     Object.assign(this, policy);
     Object.freeze(this);
   }
@@ -27,11 +28,13 @@ export default class Policy {
   }
 }
 
-Policy.shape = PropTypes.shape({
+Policy.propTypes = {
   id: PropTypes.number,
   title_with_number: PropTypes.string,
   relevant_reqs: PropTypes.number,
   total_reqs: PropTypes.number,
   has_docnode: PropTypes.bool,
   omb_policy_id: PropTypes.string,
-});
+};
+
+Policy.shape = PropTypes.shape(Policy.propTypes);
