@@ -1,3 +1,4 @@
+import ExternalLink from '../../components/content-renderers/external-link';
 import FootnoteCitation from '../../components/content-renderers/footnote-citation';
 import PlainText from '../../components/content-renderers/plain-text';
 import renderContents from '../../util/render-contents';
@@ -12,11 +13,11 @@ describe('renderContents()', () => {
         footnote_node: { identifier: 'aaa_1__footnote_1' },
         text: '1',
       },
-      { content_type: '__text__', text: ' text here' },
+      { content_type: '__text__', text: ' text here then a ' },
       {
-        content_type: 'footnote_citation',
-        footnote_node: { identifier: 'aaa_1__bbb_2__footnote_2' },
-        text: '2',
+        content_type: 'external_link',
+        href: 'http://example.com/aaa',
+        text: 'link',
       },
     ];
     const result = renderContents(content);
@@ -28,7 +29,7 @@ describe('renderContents()', () => {
     expect(c1.props.content).toEqual(content[1]);
     expect(c2.type).toBe(PlainText);
     expect(c2.props.content).toEqual(content[2]);
-    expect(c3.type).toBe(FootnoteCitation);
+    expect(c3.type).toBe(ExternalLink);
     expect(c3.props.content).toEqual(content[3]);
   });
 

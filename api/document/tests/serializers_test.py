@@ -197,6 +197,34 @@ def test_footnote_citations():
     ]
 
 
+@pytest.mark.django_db
+def test_external_links():
+    """The "content" field should contain serialized ExternalLinks."""
+    policy = mommy.make(Policy)
+    para = DocCursor.new_tree('para', text='Go over there!',
+                              policy=policy)
+    para.nested_set_renumber()
+    para.model.externallinks.create(
+        start=len('Go over '), end=len('Go over there'),
+        href='http://example.com/aaa')
+
+    result = serializers.DocCursorSerializer(para,
+                                             context={'policy': policy}).data
+    assert result['content'] == [
+        {
+            'content_type': '__text__',
+            'text': 'Go over '
+        }, {
+            'content_type': 'external_link',
+            'href': 'http://example.com/aaa',
+            'text': 'there',
+        }, {
+            'content_type': '__text__',
+            'text': '!',
+        }
+    ]
+
+
 @pytest.mark.parametrize('node_type', ('para', 'table', 'something-else'))
 @pytest.mark.parametrize('is_root', (True, False))
 @pytest.mark.django_db

@@ -18,7 +18,8 @@ def optimize(queryset):
     )
     return queryset.\
         select_related('requirement').\
-        prefetch_related('requirement__topics', footnote_prefetch)
+        prefetch_related('requirement__topics', footnote_prefetch,
+                         'externallinks')
 
 
 class TreeView(RetrieveAPIView):

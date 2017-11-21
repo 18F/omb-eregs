@@ -85,8 +85,12 @@
         shared services.<footnote_citation>4</footnote_citation>
       </content>
       <footnote emblem="4" marker="4">
-        Federal Information Technology Shared Services Strategy, May 2, 2012,
-        https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/shared_services_strategy.pdf. 
+        <content>
+          <a 
+            href="https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/shared_services_strategy.pdf"
+            >Federal Information Technology Shared Services Strategy</a>,
+          May 2, 2012.
+        </content>
       </footnote>
     </para>
     <para>
@@ -126,9 +130,13 @@
           (NDAA) for Fiscal Year 2015, Pub. L. No. 113-291.
         </footnote>
         <footnote emblem="8" marker="8">
-          OMB Memorandum M-15-14, “Management and Oversight of Federal
-          Information Technology,” June 10, 2015,
-          https://www.whitehouse.gov/sites/default/files/omb/memoranda/2015/m-15-14.pdf. 
+          <content>
+            OMB Memorandum M-15-14, 
+            “<a 
+              href="https://www.whitehouse.gov/sites/default/files/omb/memoranda/2015/m-15-14.pdf"
+              >Management and Oversight of Federal Information Technology</a>,”
+            June 10, 2015.
+          </content>
         </footnote>
       </para>
     </sec>
@@ -193,8 +201,12 @@
                   policy.<footnote_citation>12</footnote_citation>
                 </content>
                 <footnote emblem="12" marker="12">
-                  Federal Cloud Computing Strategy, February 8, 2011,
-                  https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/federal-cloud-computing-strategy.pdf.
+                  <content>
+                    <a 
+                      href="https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/federal-cloud-computing-strategy.pdf"
+                      >Federal Cloud Computing Strategy</a>,
+                    February 8, 2011.
+                  </content>
                 </footnote>
               </para>
             </listitem>
@@ -404,9 +416,12 @@
             2018.<footnote_citation>19</footnote_citation>
           </content>
           <footnote emblem="19" marker="19">
-            Executive Order, “Planning for Federal Sustainability in the Next
-            Decade”
-            https://www.whitehouse.gov/the-pressoffice/2015/03/19/executive-order-planning-federal-sustainability-next-decade.
+            <content>
+              Executive Order,
+              “<a
+                href="https://www.whitehouse.gov/the-pressoffice/2015/03/19/executive-order-planning-federal-sustainability-next-decade"
+                >Planning for Federal Sustainability in the Next Decade</a>”.
+            </content>
           </footnote>
         </para>
         <para>
@@ -427,9 +442,13 @@
             only.
           </footnote>
           <footnote emblem="21" marker="21">
-            See “Implementing Instructions for Executive Order 13693,
-            ‘Planning for Federal Sustainability in the Next Decade’”
-            https://www.whitehouse.gov/sites/default/files/docs/eo_13693_implementing_instructions_june_10_2015.pdf.
+            <content>
+              See
+              “<a
+                href="https://www.whitehouse.gov/sites/default/files/docs/eo_13693_implementing_instructions_june_10_2015.pdf"
+                >Implementing Instructions for Executive Order 13693,
+                ‘Planning for Federal Sustainability in the Next Decade’</a>”.
+            </content>
           </footnote>
         </para>
         <para>
@@ -971,16 +990,18 @@
           </list>
         </para>
         <para>
-          Agencies are required to publish their Strategic Plans at
-          [agency].gov/digitalstrategy under a section entitled, “Data Center
-          Optimization Initiative Strategic Plans,” within 60 days of the
-          issuance of this memorandum. Subsequent Strategic Plan updates shall
-          be due on April 14, 2017 and April 13, 2018. Strategic plans shall
-          also be made available in a machine-readable JSON format at
-          [agency].gov/digitalstrategy/datacenteroptimizationstrategicplan.json.
-          OMB will provide instructions to agencies, including a schema, at
-          https://management.cio.gov/schema within 5 days of the issuance of
-          this memorandum.
+          <content>
+            Agencies are required to publish their Strategic Plans at
+            [agency].gov/digitalstrategy under a section entitled, “Data
+            Center Optimization Initiative Strategic Plans,” within 60 days of
+            the issuance of this memorandum. Subsequent Strategic Plan updates
+            shall be due on April 14, 2017 and April 13, 2018. Strategic plans
+            shall also be made available in a machine-readable JSON format at
+            [agency].gov/digitalstrategy/datacenteroptimizationstrategicplan.json.
+            OMB will provide instructions to agencies, including a schema, at
+            <a>https://management.cio.gov/schema</a>
+            within 5 days of the issuance of this memorandum.
+          </content>
         </para>
         <para>
           Agencies shall furthermore update their
@@ -1044,9 +1065,11 @@
         datacenters” in the body (from a .gov or .mil email address only).
       </para>
       <para>
-        In addition to addressing questions and comments via the Data Centers
-        listserv, https://management.cio.gov will be updated with best
-        practices and other resources as they become available.
+        <content>
+          In addition to addressing questions and comments via the Data
+          Centers listserv, <a>https://management.cio.gov</a> will be updated
+          with best practices and other resources as they become available.
+        </content>
       </para>
     </sec>
   </sec>
