@@ -210,7 +210,7 @@ docker-compose run --rm ptw     # watch command to run tests whenever a file cha
 
 For JS unit tests, run:
 ```sh
-docker-compose run --rm webpack             # lints (and builds)
+docker-compose run --rm npm run lint        # linting
 docker-compose run --rm npm test            # run tests once
 docker-compose run --rm npm run test:watch  # watch command to run tests whenever a file changes
 ```
