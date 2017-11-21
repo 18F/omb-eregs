@@ -1,3 +1,5 @@
+import random
+
 import pytest
 from model_mommy import mommy
 from rest_framework.test import APIClient
@@ -7,6 +9,9 @@ from reqs.models import Agency
 
 @pytest.mark.django_db
 def test_filter_agency_by_abbr():
+    # This is a workaround for https://github.com/18F/omb-eregs/issues/673.
+    random.seed(1)
+
     mommy.make(Agency)
     fbi = mommy.make(Agency, abbr='FBI')
     gsa = mommy.make(Agency, name='General Services Administration')
