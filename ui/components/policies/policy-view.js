@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Policy from '../../util/policy';
 import Link from '../link';
 
-export default function Policy({ policy, topicsIds }) {
+export default function PolicyView({ policy, topicsIds }) {
   const linkParams = {
     policy__id__in: policy.id,
     topics__id__in: topicsIds,
@@ -12,9 +13,9 @@ export default function Policy({ policy, topicsIds }) {
   const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
   let policyTitle = policy.title_with_number;
 
-  if (policy.omb_policy_id && policy.has_docnode) {
+  if (policy.hasDocument()) {
     policyTitle = (
-      <Link route="document" params={{ policyId: policy.omb_policy_id }}>
+      <Link {...policy.getDocumentLinkProps()}>
         {policyTitle}
       </Link>
     );
@@ -50,19 +51,12 @@ export default function Policy({ policy, topicsIds }) {
   );
 }
 
-Policy.propTypes = {
-  policy: PropTypes.shape({
-    id: PropTypes.number,
-    title_with_number: PropTypes.string,
-    relevant_reqs: PropTypes.number,
-    total_reqs: PropTypes.number,
-    has_docnode: PropTypes.bool,
-    omb_policy_id: PropTypes.string,
-  }),
+PolicyView.propTypes = {
+  policy: PropTypes.instanceOf(Policy),
   topicsIds: PropTypes.string,
 };
 
-Policy.defaultProps = {
+PolicyView.defaultProps = {
   policy: {},
   topicsIds: '',
 };
