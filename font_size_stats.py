@@ -1,10 +1,23 @@
 import sys
 from decimal import Decimal
-from collections import Counter
+from collections import Counter, namedtuple
 
 from pdfminer import layout
 
 import pdfutil
+
+
+class FontSize(namedtuple('FontSize', ['font', 'size'])):
+    __slots__ = ()
+
+    @classmethod
+    def from_ltchar(cls, ltchar):
+        # There can be *really* close font sizes, like
+        # 16.163999999999987 vs. 16.164000000000044, so we're
+        # just going to round to the nearest tenth.
+        size = Decimal(ltchar.size).quantize(Decimal('.1'))
+
+        return cls(ltchar.fontname, size)
 
 
 def get_font_size_stats(ltpages):
@@ -12,12 +25,7 @@ def get_font_size_stats(ltpages):
 
     for item in pdfutil.iter_flattened_layout(ltpages):
         if isinstance(item, layout.LTChar):
-            # There can be *really* close font sizes, like
-            # 16.163999999999987 vs. 16.164000000000044, so we're
-            # just going to round to the nearest tenth.
-            size = Decimal(item.size).quantize(Decimal('.1'))
-
-            stats[(item.fontname, size)] += 1
+            stats[FontSize.from_ltchar(item)] += 1
 
     return stats
 
