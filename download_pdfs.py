@@ -38,6 +38,8 @@ def download(relpath, base_url=BASE_URL, domain=DOMAIN):
                 fd.write(chunk)
                 pbar.update(len(chunk))
 
+    return path
+
 
 if __name__ == '__main__':
     for relpath in PDFS:
