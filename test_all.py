@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 
 import font_size_stats
@@ -23,5 +25,5 @@ def m_16_19_pages():
 def test_font_size_stats_works(m_16_19_pages):
     stats = font_size_stats.get_font_size_stats(m_16_19_pages)
     assert stats.most_common(1) == [
-        (('TimesNewRomanPSMT', 16), 21557),
+        (('TimesNewRomanPSMT', Decimal('16.2')), 21557),
     ]

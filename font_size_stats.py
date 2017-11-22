@@ -1,4 +1,5 @@
 import sys
+from decimal import Decimal
 from collections import Counter
 
 from pdfminer import layout
@@ -11,7 +12,12 @@ def get_font_size_stats(ltpages):
 
     for item in pdfutil.iter_flattened_layout(ltpages):
         if isinstance(item, layout.LTChar):
-            stats[(item.fontname, int(item.size))] += 1
+            # There can be *really* close font sizes, like
+            # 16.163999999999987 vs. 16.164000000000044, so we're
+            # just going to round to the nearest tenth.
+            size = Decimal(item.size).quantize(Decimal('.1'))
+
+            stats[(item.fontname, size)] += 1
 
     return stats
 
