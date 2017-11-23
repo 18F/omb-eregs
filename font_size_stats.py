@@ -1,10 +1,43 @@
 import sys
+import re
 from decimal import Decimal
 from collections import Counter, namedtuple
 
 from pdfminer import layout
 
 import pdfutil
+
+
+class FontName(str):
+    BOLD_RE = re.compile(r'bold', re.I)
+    ITALIC_RE = re.compile(r'(italic|oblique)', re.I)
+
+    @property
+    def is_bold(self):
+        '''
+        >>> FontName('Times').is_bold
+        False
+
+        >>> FontName('Times Bold').is_bold
+        True
+        '''
+
+        return bool(self.BOLD_RE.search(self))
+
+    @property
+    def is_italic(self):
+        '''
+        >>> FontName('Times').is_italic
+        False
+
+        >>> FontName('Times Italic').is_italic
+        True
+
+        >>> FontName('Times Oblique').is_italic
+        True
+        '''
+
+        return bool(self.ITALIC_RE.search(self))
 
 
 class FontSize(namedtuple('FontSize', ['font', 'size'])):
@@ -17,7 +50,7 @@ class FontSize(namedtuple('FontSize', ['font', 'size'])):
         # just going to round to the nearest tenth.
         size = Decimal(ltchar.size).quantize(Decimal('.1'))
 
-        return cls(ltchar.fontname, size)
+        return cls(FontName(ltchar.fontname), size)
 
 
 def get_font_size_stats(ltpages):
