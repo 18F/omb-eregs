@@ -42,8 +42,9 @@ OMBFootnote = namedtuple('OMBFootnote', ['number', 'text'])
 
 class AnnotatableMixin:
     def set_annotation(self, annotation):
-        if self.annotation is not None:
-            raise AssertionError(f"Document item already has annotation")
+        if self.annotation is not None and self.annotation != annotation:
+            raise AssertionError(f"Document item already has a different "
+                                 f"annotation")
         self.annotation = annotation
 
 

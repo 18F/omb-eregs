@@ -54,3 +54,7 @@ def test_footnotes_find_footnotes_works(m_16_19_pages):
             'Federal Data Center Consolidation Initiative,” issued '
             'on February 26, 2010, and modified by subsequent memoranda. '),
     ]
+
+
+def test_footnotes_main_works(m_16_19_pages):
+    footnotes.main(document.OMBDocument(m_16_19_pages))

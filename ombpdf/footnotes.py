@@ -1,5 +1,6 @@
 import sys
 import re
+from textwrap import TextWrapper
 
 from pdfminer import layout
 
@@ -80,8 +81,22 @@ def find_footnotes(doc):
     return footnotes
 
 
+def main(doc):
+    print("Citations:")
+    for c in find_citations(doc):
+        preceding_words = ' '.join(c.preceding_text.split(' ')[-3:])
+        print(f"  #{c.number} appears after the text '{preceding_words}'")
+
+    indent = "    "
+    wrapper = TextWrapper(initial_indent=indent, subsequent_indent=indent)
+
+    print("\nFootnotes:")
+    for f in find_footnotes(doc):
+        print(f"  #{f.number}:")
+        print('\n'.join(wrapper.wrap(f.text)))
+        print()
+
+
 if __name__ == "__main__":
     with open(sys.argv[1], 'rb') as infile:
-        doc = OMBDocument.from_file(infile)
-        print(find_citations(doc))
-        print(find_footnotes(doc))
+        main(OMBDocument.from_file(infile))
