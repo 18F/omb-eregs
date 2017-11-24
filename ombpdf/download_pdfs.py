@@ -4,7 +4,7 @@ import requests
 from tqdm import tqdm
 
 
-ROOT_DIR = Path('.').parent / 'data'
+ROOT_DIR = Path(__file__).parent.parent / 'data'
 
 DOMAIN = "obamawhitehouse.archives.gov"
 
