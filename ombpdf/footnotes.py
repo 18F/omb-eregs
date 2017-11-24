@@ -3,7 +3,7 @@ import re
 
 from pdfminer import layout
 
-from .document import OMBDocument
+from .document import OMBDocument, OMBFootnoteCitation, OMBFootnote
 from . import util
 from .fontsize import FontSize
 
@@ -17,19 +17,22 @@ def find_citations(doc):
     citations = []
     for line in doc.lines:
         prev_paragraph_chars = ''
-        curr_citation = ''
+        curr_citation = []
 
         def add_citation():
-            citations.append((int(curr_citation), prev_paragraph_chars))
+            citation = OMBFootnoteCitation(curr_citation, prev_paragraph_chars)
+            for char in curr_citation:
+                char.set_annotation(citation)
+            citations.append(citation)
 
         for char in line:
             if char.fontsize.size < doc.paragraph_fontsize.size:
                 if NUMBER_RE.match(char):
                     if prev_paragraph_chars:
-                        curr_citation += char
+                        curr_citation.append(char)
             elif curr_citation:
                 add_citation()
-                curr_citation = ''
+                curr_citation = []
                 prev_paragraph_chars = ''
             else:
                 prev_paragraph_chars += char
@@ -46,7 +49,11 @@ def find_footnotes(doc):
         nonlocal curr_footnote
 
         if curr_footnote:
-            footnotes.append(tuple(curr_footnote))
+            number, text, lines = curr_footnote
+            footnote = OMBFootnote(number, text)
+            for line in lines:
+                line.set_annotation(footnote)
+            footnotes.append(footnote)
         curr_footnote = None
 
     for line in doc.lines:
@@ -60,9 +67,10 @@ def find_footnotes(doc):
             if match:
                 finish_footnote()
                 footnote, desc = match.groups()
-                curr_footnote = [int(footnote), desc]
+                curr_footnote = [int(footnote), desc, [line]]
             elif curr_footnote:
                 curr_footnote[1] += chars
+                curr_footnote[2].append(line)
         else:
             finish_footnote()
     finish_footnote()
