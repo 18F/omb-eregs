@@ -4,7 +4,7 @@ import requests
 from tqdm import tqdm
 
 
-ROOT_DIR = Path("pdf")
+ROOT_DIR = Path('.').parent / 'data'
 
 DOMAIN = "obamawhitehouse.archives.gov"
 
@@ -44,3 +44,4 @@ def download(relpath, base_url=BASE_URL, domain=DOMAIN):
 if __name__ == '__main__':
     for relpath in PDFS:
         download(relpath)
+    print(f"Finished downloading PDFs into '{ROOT_DIR}' directory.")

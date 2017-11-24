@@ -25,5 +25,9 @@ Then run tests:
 pytest
 ```
 
+Many modules in the `ombpdf` package can be run as scripts. To do this
+from the root directory, run the relevant module as a script, e.g.
+`python -m ombpdf.download_pdfs`.
+
 [pdfminer]: https://github.com/pdfminer/pdfminer.six
 [OMB Policy Library]: https://github.com/18F/omb-eregs

@@ -5,7 +5,7 @@ from collections import Counter, namedtuple
 
 from pdfminer import layout
 
-import pdfutil
+from . import pdfutil
 
 
 class FontName(str):

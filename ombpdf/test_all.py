@@ -2,9 +2,9 @@ from decimal import Decimal
 
 import pytest
 
-import font_size_stats
-import pdfutil
-from download_pdfs import download
+from . import font_size_stats
+from . import pdfutil
+from .download_pdfs import download
 
 
 pages_cache = {}
