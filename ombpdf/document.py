@@ -55,6 +55,7 @@ class OMBFootnote(OMBAnnotation):
     def __repr__(self):
         return (f'<OMBFootnote #{self.number} "{self.text}">')
 
+
 class AnnotatableMixin:
     def set_annotation(self, annotation):
         if self.annotation is not None:
