@@ -1,4 +1,3 @@
-import sys
 import re
 import weakref
 from decimal import Decimal
@@ -71,9 +70,4 @@ def main(ltpages):
     stats = get_font_size_stats(ltpages)
 
     for ((fontname, size), count) in stats.most_common(5):
-        print(f"{fontname} {size}: {count}")
-
-
-if __name__ == "__main__":
-    with open(sys.argv[1], 'rb') as infile:
-        main(util.get_ltpages(infile))
+        print(f"{fontname} @ {size}: {count} characters")

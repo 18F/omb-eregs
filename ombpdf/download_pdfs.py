@@ -41,7 +41,7 @@ def download(relpath, base_url=BASE_URL, domain=DOMAIN):
     return path
 
 
-if __name__ == '__main__':
+def main():
     for relpath in PDFS:
         download(relpath)
     print(f"Finished downloading PDFs into '{ROOT_DIR}' directory.")

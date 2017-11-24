@@ -95,8 +95,3 @@ def main(doc):
         print(f"  #{f.number}:")
         print('\n'.join(wrapper.wrap(f.text)))
         print()
-
-
-if __name__ == "__main__":
-    with open(sys.argv[1], 'rb') as infile:
-        main(OMBDocument.from_file(infile))
