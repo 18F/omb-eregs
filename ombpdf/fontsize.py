@@ -1,5 +1,6 @@
 import sys
 import re
+import weakref
 from decimal import Decimal
 from collections import Counter, namedtuple
 
@@ -43,14 +44,18 @@ class FontName(str):
 class FontSize(namedtuple('FontSize', ['font', 'size'])):
     __slots__ = ()
 
+    __cache = weakref.WeakKeyDictionary()
+
     @classmethod
     def from_ltchar(cls, ltchar):
-        # There can be *really* close font sizes, like
-        # 16.163999999999987 vs. 16.164000000000044, so we're
-        # just going to round to the nearest tenth.
-        size = Decimal(ltchar.size).quantize(Decimal('.1'))
+        if ltchar not in cls.__cache:
+            # There can be *really* close font sizes, like
+            # 16.163999999999987 vs. 16.164000000000044, so we're
+            # just going to round to the nearest tenth.
+            size = Decimal(ltchar.size).quantize(Decimal('.1'))
 
-        return cls(FontName(ltchar.fontname), size)
+            cls.__cache[ltchar] = cls(FontName(ltchar.fontname), size)
+        return cls.__cache[ltchar]
 
 
 def get_font_size_stats(ltpages):
