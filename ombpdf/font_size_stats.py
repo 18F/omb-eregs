@@ -56,9 +56,8 @@ class FontSize(namedtuple('FontSize', ['font', 'size'])):
 def get_font_size_stats(ltpages):
     stats = Counter()
 
-    for item in util.iter_flattened_layout(ltpages):
-        if isinstance(item, layout.LTChar):
-            stats[FontSize.from_ltchar(item)] += 1
+    for item in util.iter_flattened_layout(ltpages, layout.LTChar):
+        stats[FontSize.from_ltchar(item)] += 1
 
     return stats
 

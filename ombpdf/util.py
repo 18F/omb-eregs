@@ -15,7 +15,7 @@ def get_ltpages(infile, caching=True):
     return ltpages
 
 
-def iter_flattened_layout(ltpages):
+def iter_flattened_layout(ltpages, class_filter=object):
     stack = ltpages[:]
     stack.reverse()
 
@@ -24,4 +24,5 @@ def iter_flattened_layout(ltpages):
         if isinstance(item, layout.LTContainer):
             for child in item:
                 stack.append(child)
-        yield item
+        if isinstance(item, class_filter):
+            yield item
