@@ -27,3 +27,7 @@ def test_font_size_stats_works(m_16_19_pages):
     assert stats.most_common(1) == [
         (('TimesNewRomanPSMT', Decimal('16.2')), 21557),
     ]
+
+
+def test_font_size_stats_main_works(m_16_19_pages):
+    font_size_stats.main(m_16_19_pages)

@@ -62,10 +62,13 @@ def get_font_size_stats(ltpages):
     return stats
 
 
+def main(ltpages):
+    stats = get_font_size_stats(ltpages)
+
+    for ((fontname, size), count) in stats.most_common(5):
+        print(f"{fontname} {size}: {count}")
+
+
 if __name__ == "__main__":
     with open(sys.argv[1], 'rb') as infile:
-        ltpages = util.get_ltpages(infile)
-        stats = get_font_size_stats(ltpages)
-
-        for ((fontname, size), count) in stats.most_common(5):
-            print(f"{fontname} {size}: {count}")
+        main(util.get_ltpages(infile))
