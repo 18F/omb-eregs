@@ -14,7 +14,7 @@ NUMBER_RE = re.compile(r'[0-9]')
 FOOTNOTE_RE = re.compile(r'([0-9]+) (.+)')
 
 
-def find_citations(doc):
+def annotate_citations(doc):
     citations = []
     for line in doc.lines:
         prev_paragraph_chars = ''
@@ -45,7 +45,7 @@ def find_citations(doc):
     return citations
 
 
-def find_footnotes(doc):
+def annotate_footnotes(doc):
     footnotes = []
     curr_footnote = None
 
@@ -83,7 +83,7 @@ def find_footnotes(doc):
 
 def main(doc):
     print("Citations:")
-    for c in find_citations(doc):
+    for c in annotate_citations(doc):
         preceding_words = ' '.join(c.preceding_text.split(' ')[-3:])
         print(f"  #{c.number} appears after the text '{preceding_words}'")
 
@@ -91,7 +91,7 @@ def main(doc):
     wrapper = TextWrapper(initial_indent=indent, subsequent_indent=indent)
 
     print("\nFootnotes:")
-    for f in find_footnotes(doc):
+    for f in annotate_footnotes(doc):
         print(f"  #{f.number}:")
         print('\n'.join(wrapper.wrap(f.text)))
         print()

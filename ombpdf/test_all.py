@@ -35,9 +35,9 @@ def test_fontsize_main_works(m_16_19_pages):
     fontsize.main(m_16_19_pages)
 
 
-def test_footnotes_find_citations_works(m_16_19_pages):
+def test_footnotes_annotate_citations_works(m_16_19_pages):
     doc = document.OMBDocument(m_16_19_pages)
-    citations = footnotes.find_citations(doc)
+    citations = footnotes.annotate_citations(doc)
     assert citations[:3] == [
         (1, 'shift IT investments to more efficient computing '
             'platforms and technologies.'),
@@ -46,9 +46,9 @@ def test_footnotes_find_citations_works(m_16_19_pages):
     ]
 
 
-def test_footnotes_find_footnotes_works(m_16_19_pages):
+def test_footnotes_annotate_footnotes_works(m_16_19_pages):
     doc = document.OMBDocument(m_16_19_pages)
-    notes = footnotes.find_footnotes(doc)
+    notes = footnotes.annotate_footnotes(doc)
     assert notes[:1] == [
         (1, 'The FDCCI was first established by OMB “Memo for CIOs: '
             'Federal Data Center Consolidation Initiative,” issued '
