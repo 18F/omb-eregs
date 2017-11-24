@@ -5,7 +5,7 @@ from collections import Counter, namedtuple
 
 from pdfminer import layout
 
-from . import pdfutil
+from . import util
 
 
 class FontName(str):
@@ -56,7 +56,7 @@ class FontSize(namedtuple('FontSize', ['font', 'size'])):
 def get_font_size_stats(ltpages):
     stats = Counter()
 
-    for item in pdfutil.iter_flattened_layout(ltpages):
+    for item in util.iter_flattened_layout(ltpages):
         if isinstance(item, layout.LTChar):
             stats[FontSize.from_ltchar(item)] += 1
 
@@ -65,7 +65,7 @@ def get_font_size_stats(ltpages):
 
 if __name__ == "__main__":
     with open(sys.argv[1], 'rb') as infile:
-        ltpages = pdfutil.get_ltpages(infile)
+        ltpages = util.get_ltpages(infile)
         stats = get_font_size_stats(ltpages)
 
         for ((fontname, size), count) in stats.most_common(5):

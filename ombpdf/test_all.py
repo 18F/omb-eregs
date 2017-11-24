@@ -3,7 +3,7 @@ from decimal import Decimal
 import pytest
 
 from . import font_size_stats
-from . import pdfutil
+from . import util
 from .download_pdfs import download
 
 
@@ -13,7 +13,7 @@ pages_cache = {}
 def read_pages(relpath):
     if relpath not in pages_cache:
         with download(relpath).open('rb') as fp:
-            pages_cache[relpath] = pdfutil.get_ltpages(fp)
+            pages_cache[relpath] = util.get_ltpages(fp)
     return pages_cache[relpath]
 
 
