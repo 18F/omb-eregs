@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from pdfminer import layout
 
 from . import fontsize
@@ -32,28 +34,10 @@ class OMBPage(list):
         self.ltpage = ltpage
 
 
-class OMBAnnotation:
-    pass
+OMBFootnoteCitation = namedtuple('OMBFootnoteCitation', ['number',
+                                                         'preceding_text'])
 
-
-class OMBFootnoteCitation(OMBAnnotation):
-    def __init__(self, chars, text_before):
-        self.chars = chars
-        self.number = int(''.join(chars))
-        self.text_before = text_before
-
-    def __repr__(self):
-        return (f'<OMBFootnoteCitation #{self.number} after text '
-                f'"{self.text_before}">')
-
-
-class OMBFootnote(OMBAnnotation):
-    def __init__(self, number, text):
-        self.number = number
-        self.text = text
-
-    def __repr__(self):
-        return (f'<OMBFootnote #{self.number} "{self.text}">')
+OMBFootnote = namedtuple('OMBFootnote', ['number', 'text'])
 
 
 class AnnotatableMixin:

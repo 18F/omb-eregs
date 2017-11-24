@@ -20,7 +20,10 @@ def find_citations(doc):
         curr_citation = []
 
         def add_citation():
-            citation = OMBFootnoteCitation(curr_citation, prev_paragraph_chars)
+            citation = OMBFootnoteCitation(
+                int(''.join(curr_citation)),
+                prev_paragraph_chars
+            )
             for char in curr_citation:
                 char.set_annotation(citation)
             citations.append(citation)
