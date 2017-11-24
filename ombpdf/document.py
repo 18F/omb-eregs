@@ -8,18 +8,28 @@ class OMBDocument:
     def __init__(self, ltpages):
         stats = fontsize.get_font_size_stats(ltpages)
         self.paragraph_fontsize = stats.most_common(1)[0][0]
-        self.ltpages = ltpages
-        self.lines = [
-            OMBTextLine(line)
-            for line in self.iter_flattened(layout.LTTextLineHorizontal)
-        ]
+        self.pages = [OMBPage(page) for page in ltpages]
 
-    def iter_flattened(self, class_filter=object):
-        return util.iter_flattened_layout(self.ltpages, class_filter)
+    @property
+    def lines(self):
+        for page in self.pages:
+            for line in page:
+                yield line
 
     @classmethod
     def from_file(cls, fp):
         return cls(util.get_ltpages(fp))
+
+
+class OMBPage(list):
+    def __init__(self, ltpage):
+        super().__init__([
+            OMBTextLine(line)
+            for line in util.iter_flattened_layout(
+                ltpage,
+                layout.LTTextLineHorizontal)
+        ])
+        self.ltpage = ltpage
 
 
 class OMBTextCharacter(str):
