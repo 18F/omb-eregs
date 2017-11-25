@@ -48,18 +48,33 @@ class AnnotatableMixin:
         self.annotation = annotation
 
 
-class OMBTextCharacter(str, AnnotatableMixin):
-    def __new__(cls, ltchar):
-        obj = str.__new__(cls, ltchar.get_text())
-        obj.ltchar = ltchar
-        obj.fontsize = fontsize.FontSize.from_ltchar(ltchar)
-        obj.annotation = None
-        obj.is_underlined = False
-        return obj
+class OMBTextCharacter(AnnotatableMixin):
+    def __init__(self, ltchar):
+        self.char = ltchar.get_text()
+        self.ltchar = ltchar
+        self.fontsize = fontsize.FontSize.from_ltchar(ltchar)
+        self.annotation = None
+        self.is_underlined = False
+
+    def __str__(self):
+        return self.char
 
     def set_underlined(self):
         self.is_underlined = True
 
+    def is_like(self, char):
+        """
+        Returns whether the character has the same style and annotation
+        as another character. The other character may represent a different
+        actual character, however, e.g. while we may represent a 'g', the
+        other may represent an 'e'.
+        """
+
+        return (
+            self.is_underlined == char.is_underlined and
+            self.annotation == char.annotation and
+            self.fontsize == char.fontsize
+        )
 
 class OMBTextLine(list, AnnotatableMixin):
     def __init__(self, lttextline):
@@ -70,5 +85,40 @@ class OMBTextLine(list, AnnotatableMixin):
         self.lttextline = lttextline
         self.annotation = None
 
+    def iter_char_chunks(self):
+        """
+        Iterate over all "chunks" of characters that share the same
+        fundamental style/annotation. Yields (char, text) tuples, where
+        'char' is the first OMBTextCharacter of the chunk and 'text' is
+        the string representation of the chunk.
+        """
+
+        curr_style = None
+        chars = []
+        i = 0
+
+        def make_item():
+            return (curr_style, ''.join([str(c) for c in chars]))
+
+        for item in self.lttextline:
+            if isinstance(item, layout.LTAnno):
+                chars.append(item.get_text())
+
+            if not isinstance(item, layout.LTChar):
+                continue
+
+            char = self[i]
+            if curr_style is None:
+                curr_style = char
+            if char.is_like(curr_style):
+                chars.append(char)
+            else:
+                yield make_item()
+                chars = [char]
+                curr_style = char
+            i += 1
+        if chars:
+            yield make_item()
+
     def __str__(self):
-        return ''.join([char for char in self])
+        return ''.join([str(char) for char in self])

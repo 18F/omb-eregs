@@ -1,3 +1,5 @@
+import sys
+
 import click
 
 import ombpdf.download_pdfs
@@ -6,6 +8,7 @@ import ombpdf.util
 import ombpdf.document
 import ombpdf.footnotes
 import ombpdf.underlines
+import ombpdf.html
 
 
 def get_doc(filename):
@@ -52,6 +55,15 @@ def underlines(filename):
     "Show underlined words in a PDF."
 
     ombpdf.underlines.main(get_doc(filename))
+
+
+@cli.command()
+@click.argument('filename')
+def html(filename):
+    "Convert the given PDF to HTML."
+
+    content = ombpdf.html.to_html(get_doc(filename)).encode('utf-8')
+    sys.stdout.buffer.write(content)
 
 
 if __name__ == '__main__':

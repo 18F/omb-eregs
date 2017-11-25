@@ -3,7 +3,7 @@ from ombpdf import underlines
 
 def underlines_in_page(page):
     return [
-        ''.join(chars) for chars in
+        ''.join([str(c) for c in chars]) for chars in
         underlines.set_underlines_in_page(page)
     ]
 

@@ -47,7 +47,7 @@ def set_underlines_in_page(page):
                             break
                         else:
                             chars.append(char)
-                    elif (char != ' ' and
+                    elif (str(char) != ' ' and
                           char.ltchar.x0 + EPSILON >= hline.start):
                         in_underline = True
                         chars.append(char)
@@ -62,5 +62,5 @@ def main(doc):
     underlines = set_underlines(doc)
     print("Underlined words:")
     for chars in underlines:
-        text = ''.join(chars)
+        text = ''.join([str(c) for c in chars])
         print(f"  {text}")

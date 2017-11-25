@@ -11,6 +11,19 @@ from . import util
 class FontName(str):
     BOLD_RE = re.compile(r'bold', re.I)
     ITALIC_RE = re.compile(r'(italic|oblique)', re.I)
+    SANS_SERIF_RE = re.compile(r'(arial|helvetica)', re.I)
+
+    @property
+    def is_sans_serif(self):
+        '''
+        >>> FontName('Times').is_sans_serif
+        False
+
+        >>> FontName('Arial').is_sans_serif
+        True
+        '''
+
+        return bool(self.SANS_SERIF_RE.search(self))
 
     @property
     def is_bold(self):

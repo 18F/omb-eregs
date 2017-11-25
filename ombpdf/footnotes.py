@@ -22,7 +22,7 @@ def annotate_citations(doc):
 
         def add_citation():
             citation = OMBFootnoteCitation(
-                int(''.join(curr_citation)),
+                int(''.join([str(c) for c in curr_citation])),
                 prev_paragraph_chars
             )
             for char in curr_citation:
@@ -31,7 +31,7 @@ def annotate_citations(doc):
 
         for char in line:
             if char.fontsize.size < doc.paragraph_fontsize.size:
-                if NUMBER_RE.match(char):
+                if NUMBER_RE.match(str(char)):
                     if prev_paragraph_chars:
                         curr_citation.append(char)
             elif curr_citation:
@@ -39,7 +39,7 @@ def annotate_citations(doc):
                 curr_citation = []
                 prev_paragraph_chars = ''
             else:
-                prev_paragraph_chars += char
+                prev_paragraph_chars += str(char)
         if curr_citation:
             add_citation()
     return citations
