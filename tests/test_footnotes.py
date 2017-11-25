@@ -1,7 +1,7 @@
 from ombpdf import footnotes
 
 
-def test_footnotes_annotate_citations_works(m_16_19_doc):
+def test_annotate_citations_works(m_16_19_doc):
     citations = footnotes.annotate_citations(m_16_19_doc)
     assert citations[:3] == [
         (1, 'shift IT investments to more efficient computing '
@@ -11,7 +11,7 @@ def test_footnotes_annotate_citations_works(m_16_19_doc):
     ]
 
 
-def test_footnotes_annotate_footnotes_works(m_16_19_doc):
+def test_annotate_footnotes_works(m_16_19_doc):
     notes = footnotes.annotate_footnotes(m_16_19_doc)
     assert notes[:1] == [
         (1, 'The FDCCI was first established by OMB “Memo for CIOs: '
@@ -20,5 +20,5 @@ def test_footnotes_annotate_footnotes_works(m_16_19_doc):
     ]
 
 
-def test_footnotes_main_works(m_16_19_doc):
+def test_main_works(m_16_19_doc):
     footnotes.main(m_16_19_doc)

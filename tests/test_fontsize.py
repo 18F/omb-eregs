@@ -10,5 +10,5 @@ def test_get_font_size_stats_works(m_16_19_pages):
     ]
 
 
-def test_fontsize_main_works(m_16_19_pages):
+def test_main_works(m_16_19_pages):
     fontsize.main(m_16_19_pages)
