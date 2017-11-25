@@ -4,7 +4,7 @@ from .document import OMBFootnoteCitation, OMBFootnote
 from . import footnotes, underlines
 
 
-HTML_INTRO = """
+HTML_INTRO = """\
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
