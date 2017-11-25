@@ -54,7 +54,11 @@ class OMBTextCharacter(str, AnnotatableMixin):
         obj.ltchar = ltchar
         obj.fontsize = fontsize.FontSize.from_ltchar(ltchar)
         obj.annotation = None
+        obj.is_underlined = False
         return obj
+
+    def set_underlined(self):
+        self.is_underlined = True
 
 
 class OMBTextLine(list, AnnotatableMixin):

@@ -5,6 +5,7 @@ import ombpdf.fontsize
 import ombpdf.util
 import ombpdf.document
 import ombpdf.footnotes
+import ombpdf.underlines
 
 
 def get_doc(filename):
@@ -43,6 +44,14 @@ def footnotes(filename):
     "Show footnote details for a PDF."
 
     ombpdf.footnotes.main(get_doc(filename))
+
+
+@cli.command()
+@click.argument('filename')
+def underlines(filename):
+    "Show underlined words in a PDF."
+
+    ombpdf.underlines.main(get_doc(filename))
 
 
 if __name__ == '__main__':
