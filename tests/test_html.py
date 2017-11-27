@@ -20,11 +20,11 @@ def test_to_html_works(m_16_19_doc):
     expected_html = expected_html_path.read_text(encoding='utf-8')
 
     if expected_html != html:
-        print(''.join(difflib.unified_diff(
-            html.splitlines(),
+        print('\n'.join(difflib.unified_diff(
             expected_html.splitlines(),
+            html.splitlines(),
+            tofile=f'Current HTML output',
             fromfile=str(expected_html_path),
-            tofile='Current HTML output',
         )))
         raise AssertionError(
             'Current HTML output does not match snapshot. If '
