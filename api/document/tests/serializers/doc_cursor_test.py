@@ -3,6 +3,7 @@ from datetime import date
 import pytest
 from model_mommy import mommy
 
+from document.models import DocNode
 from document.serializers import doc_cursor
 from document.tree import DocCursor
 from reqs.models import Policy, Requirement, Topic
@@ -222,4 +223,53 @@ def test_external_links():
             'content_type': '__text__',
             'text': '!',
         }
+    ]
+
+
+@pytest.mark.django_db
+def test_content_no_annotations():
+    node = mommy.make(DocNode, text='Some text here')
+    cursor = DocCursor.load_from_model(node)
+    content = doc_cursor.DocCursorSerializer(cursor).data['content']
+    assert len(content) == 1
+    assert content[0]['text'] == 'Some text here'
+    assert content[0]['content_type'] == '__text__'
+
+
+@pytest.mark.django_db
+def test_content_middle_annotation():
+    cursor = DocCursor.new_tree(
+        'policy', policy=mommy.make(Policy), text='Some text here')
+    footnote_cursor = cursor.add_child('child')
+    cursor.nested_set_renumber()
+    cursor.model.footnotecitations.create(
+        start=len('Some '), end=len('Some text'),
+        footnote_node=footnote_cursor.model)
+    content = doc_cursor.DocCursorSerializer(cursor).data['content']
+
+    assert len(content) == 3
+    assert [c['text'] for c in content] == ['Some ', 'text', ' here']
+    assert [c['content_type'] for c in content] == [
+        '__text__', 'footnote_citation', '__text__',
+    ]
+    assert content[1]['footnote_node'] == doc_cursor.DocCursorSerializer(
+        footnote_cursor, context={'is_root': False}).data
+
+
+@pytest.mark.django_db
+def test_content_outside():
+    node = mommy.make(DocNode, text='Some text here')
+    node.externallinks.create(start=0, end=len('Some '),
+                              href='http://example.com/aaa')
+    node.externallinks.create(
+        start=len('Some text'), end=len('Some text here'),
+        href='http://example.com/bbb'
+    )
+    cursor = DocCursor.load_from_model(node)
+    content = doc_cursor.DocCursorSerializer(cursor).data['content']
+
+    assert len(content) == 3
+    assert [c['text'] for c in content] == ['Some ', 'text', ' here']
+    assert [c['content_type'] for c in content] == [
+        'external_link', '__text__', 'external_link',
     ]

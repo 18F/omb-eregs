@@ -1,5 +1,7 @@
 from functools import singledispatch
-from typing import Type
+from typing import Iterator, Type
+
+from collections_extended import RangeMap
 
 from document.models import (Annotation, ExternalLink, FootnoteCitation,
                              PlainText)
@@ -43,3 +45,25 @@ def serialize_external_link(content: ExternalLink, cursor: DocCursor,
         'href': content.href,
         'text': cursor.model.text[content.start:content.end],
     }
+
+
+def wrap_all_text(annotations: Iterator[Annotation], text_length: int):
+    """Ensure that all text is in an annotation by wrapping it in
+    PlainText."""
+    flattened = RangeMap()
+    for anote in annotations:
+        flattened[anote.start:anote.end] = anote    # flattens overlaps
+    ranges = list(flattened.ranges())     # make a copy
+    previous_end = 0
+    for next_start, next_end, _ in ranges:
+        if next_start != previous_end:
+            flattened[previous_end:next_start] = PlainText(
+                start=previous_end, end=next_start)
+        previous_end = next_end
+
+    # Account for trailing text
+    if previous_end != text_length:
+        flattened[previous_end:text_length] = PlainText(
+            start=previous_end, end=text_length)
+
+    return flattened.values()
