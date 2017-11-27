@@ -54,6 +54,7 @@ def to_html(doc):
     footnotes_defined = []
     chunks = [f'<title>HTML output for {doc.filename}</title>\n']
     for page in doc.pages:
+        chunks.append(f'<!-- \n\n*** Page {page.number} ***\n\n -->')
         for line in page:
             line_classes = []
             line_attrs = []
