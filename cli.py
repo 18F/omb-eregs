@@ -9,6 +9,7 @@ import ombpdf.document
 import ombpdf.footnotes
 import ombpdf.underlines
 import ombpdf.html
+import ombpdf.pagenumbers
 
 
 def get_doc(filename):
@@ -55,6 +56,14 @@ def underlines(filename):
     "Show underlined words in a PDF."
 
     ombpdf.underlines.main(get_doc(filename))
+
+
+@cli.command()
+@click.argument('filename')
+def pagenumbers(filename):
+    "Show page numbers in a PDF."
+
+    ombpdf.pagenumbers.main(get_doc(filename))
 
 
 @cli.command()
