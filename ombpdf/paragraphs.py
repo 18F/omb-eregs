@@ -1,11 +1,11 @@
-from .document import OMBParagraph, OMBFootnote
+from .document import OMBParagraph
 
 
 def cull_footer(page):
     lines = page[:]
     to_remove = []
     for line in reversed(lines):
-        if isinstance(line.annotation, OMBFootnote) or line.is_blank():
+        if line.annotation or line.is_blank():
             to_remove.append(line)
         else:
             break
@@ -17,17 +17,20 @@ def cull_footer(page):
 def annotate_paragraphs(doc):
     in_paragraph = False
     paragraph_id = 0
+    lines = []
     for page in doc.pages:
         for line in cull_footer(page):
             if line.is_blank():
-                if in_paragraph:
-                    print()
                 in_paragraph = False
-            elif line.annotation is None:
+            elif line.annotation is None and doc.is_at_left_edge(line):
                 first_char = line[0]
                 if first_char.fontsize == doc.paragraph_fontsize:
                     if not in_paragraph:
                         in_paragraph = True
                         paragraph_id += 1
                     line.set_annotation(OMBParagraph(paragraph_id))
-                    print(str(line).strip())
+                    lines.append(line)
+        if in_paragraph:
+            if str(line).strip()[-1] == '.':
+                in_paragraph = False
+    return lines

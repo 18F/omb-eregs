@@ -75,7 +75,14 @@ def paragraphs(filename):
     doc = get_doc(filename)
     ombpdf.footnotes.annotate_footnotes(doc)
     ombpdf.pagenumbers.annotate_page_numbers(doc)
-    ombpdf.paragraphs.annotate_paragraphs(doc)
+    lines = ombpdf.paragraphs.annotate_paragraphs(doc)
+    pnum = None
+    for line in lines:
+        if pnum is not None:
+            if line.annotation.id != pnum:
+                print()
+        pnum = line.annotation.id
+        print(str(line).strip())
 
 
 @cli.command()
