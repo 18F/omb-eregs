@@ -125,3 +125,6 @@ class OMBTextLine(list, AnnotatableMixin):
 
     def __str__(self):
         return ''.join([str(char) for char in self])
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__} with text "{str(self)}">'
