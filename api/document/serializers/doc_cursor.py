@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from document.models import DocNode
-from document.serializers.content import serialize_content, wrap_all_text
+from document.serializers.content import ContentSerializer
 from document.serializers.meta import Meta, MetaSerializer
 
 
@@ -24,6 +24,10 @@ class DocCursorSerializer(serializers.ModelSerializer):
             'type_emblem',
         )
 
+    @property
+    def cursor(self):
+        return self.context['cursor']
+
     def to_representation(self, instance):
         """We want to serialize the wrapped model, not the cursor. However, we
         need to hang on to that cursor for rendering our children."""
@@ -32,22 +36,22 @@ class DocCursorSerializer(serializers.ModelSerializer):
 
     def get_children(self, instance):
         return self.__class__(
-            self.context['cursor'].children(), many=True,
+            self.cursor.children(), many=True,
             context={**self.context, 'is_root': False},
         ).data
 
     def get_content(self, instance):
         """Include all annotations of the text."""
-        all_annotations = wrap_all_text(instance.annotations(),
-                                        len(instance.text))
-        cursor = self.context['cursor']
-        return [serialize_content(anote, cursor, type(self))
-                for anote in all_annotations]
+        return ContentSerializer(
+            instance.annotations(),
+            context={'cursor': self.cursor, 'parent_serializer': self},
+            many=True,
+        ).data
 
     def get_meta(self, instance):
         """Include meta data which applies to the whole node."""
         meta = Meta(
-            self.context['cursor'],
+            self.cursor,
             self.context.get('is_root', True),
             self.context.get('policy'),
         )
