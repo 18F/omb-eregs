@@ -20,7 +20,7 @@ def annotate_page_numbers(doc):
             continue
         match = PAGE_NUMBER_RE.match(str(line).strip())
         if match:
-            line.set_annotation(OMBPageNumber(match.group(1)))
+            line.set_annotation(OMBPageNumber(int(match.group(1))))
             lines.append(line)
     return lines
 

@@ -1,7 +1,7 @@
 from html import escape
 
-from .document import OMBFootnoteCitation, OMBFootnote
-from . import footnotes, underlines
+from .document import OMBFootnoteCitation, OMBFootnote, OMBPageNumber
+from . import footnotes, underlines, pagenumbers
 
 
 HTML_INTRO = """\
@@ -33,6 +33,10 @@ html {
     border-left: 4px solid gray;
     padding-left: 1em;
 }
+
+.page-number {
+    color: lightgray;
+}
 </style>
 <title>HTML output</title>
 """
@@ -46,6 +50,7 @@ def to_html(doc):
     footnotes.annotate_citations(doc)
     footnotes.annotate_footnotes(doc)
     underlines.set_underlines(doc)
+    pagenumbers.annotate_page_numbers(doc)
 
     footnotes_defined = []
     chunks = []
@@ -60,8 +65,10 @@ def to_html(doc):
                 if fnum not in footnotes_defined:
                     footnotes_defined.append(fnum)
                     line_attrs.append(f'id="{id_for_footnote(fnum)}"')
+            elif isinstance(line.annotation, OMBPageNumber):
+                line_classes.append('page-number')
             elif line.annotation is not None:
-                raise Exception(f'Unknown annotation for {line}')
+                raise Exception(f'Unknown annotation: {line.annotation}')
 
             if line_classes:
                 line_attrs.append(f'class="{" ".join(line_classes)}"')
