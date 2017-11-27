@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from document.models import DocNode
-from document.serializers.content import ContentSerializer
+from document.serializers.content import ContentListSerializer
 from document.serializers.meta import Meta, MetaSerializer
 
 
@@ -42,10 +42,9 @@ class DocCursorSerializer(serializers.ModelSerializer):
 
     def get_content(self, instance):
         """Include all annotations of the text."""
-        return ContentSerializer(
+        return ContentListSerializer(
             instance.annotations(),
             context={'cursor': self.cursor, 'parent_serializer': self},
-            many=True,
         ).data
 
     def get_meta(self, instance):

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Iterator, List
 
 from collections_extended import RangeMap
@@ -6,12 +7,6 @@ from rest_framework import serializers
 from document.models import (Annotation, ExternalLink, FootnoteCitation,
                              PlainText)
 from document.tree import DocCursor
-
-content_type_mapping = {
-    PlainText: '__text__',
-    FootnoteCitation: 'footnote_citation',
-    ExternalLink: 'external_link',
-}
 
 
 def wrap_all_text(annotations: Iterator[Annotation], text_length: int):
@@ -36,7 +31,13 @@ def wrap_all_text(annotations: Iterator[Annotation], text_length: int):
     return flattened.values()
 
 
-class ContentListSerializer(serializers.ListSerializer):
+class ContentListSerializer(serializers.BaseSerializer):
+    """Figures out which AnnotationSerializer to use when serializing
+    content."""
+    serializer_mapping = defaultdict(
+        lambda: BaseAnnotationSerializer,   # will raise an exception when used
+    )
+
     @property
     def total_text_length(self):
         return len(self.context['cursor'].model.text)
@@ -44,16 +45,22 @@ class ContentListSerializer(serializers.ListSerializer):
     def to_representation(self, data: List[Annotation]):
         """In addition to the materialized annotations, we need to wrap the
         remaining text in the virtual PlainText annotation."""
+        serialized_content = []
         data = wrap_all_text(data, self.total_text_length)
-        return super().to_representation(data)
+        for anote in data:
+            serializer = self.serializer_mapping[type(anote)]
+            serialized = serializer(anote, context=self.context).data
+            serialized_content.append(serialized)
+        return serialized_content
 
 
-class ContentSerializer(serializers.Serializer):
+class BaseAnnotationSerializer(serializers.Serializer):
     text = serializers.SerializerMethodField()
     content_type = serializers.SerializerMethodField()
 
-    class Meta:
-        list_serializer_class = ContentListSerializer
+    @property
+    def CONTENT_TYPE(self):     # noqa; this is a constant
+        raise NotImplementedError('Unknown annotation type')
 
     @property
     def doc_node_text(self):
@@ -63,31 +70,36 @@ class ContentSerializer(serializers.Serializer):
     def cursor_tree(self):
         return self.context['cursor'].tree
 
+    def get_content_type(self, instance: Annotation):
+        return self.CONTENT_TYPE
+
     def get_text(self, instance: Annotation):
         return self.doc_node_text[instance.start:instance.end]
 
-    def get_content_type(self, instance: Annotation):
-        content_type = content_type_mapping.get(type(instance))
-        if not content_type:
-            raise NotImplementedError(f'Bad annotation: {type(instance)}')
-        return content_type
 
-    def to_representation(self, instance: Annotation):
-        """Different annotations will have different attributes to display. To
-        allow that, we check for a corresponding method name."""
-        representation = super().to_representation(instance)
-        method_name = f"{representation['content_type']}_attrs"
-        if hasattr(self, method_name):
-            representation.update(getattr(self, method_name)(instance))
-        return representation
+class PlainTextSerializer(BaseAnnotationSerializer):
+    CONTENT_TYPE = '__text__'
 
-    def footnote_citation_attrs(self, instance: FootnoteCitation):
+
+class FootnoteCitationSerializer(BaseAnnotationSerializer):
+    CONTENT_TYPE = 'footnote_citation'
+    footnote_node = serializers.SerializerMethodField()
+
+    def get_footnote_node(self, instance: FootnoteCitation):
         footnote_tree = DocCursor(self.cursor_tree,
                                   instance.footnote_node.identifier)
         cursor_serializer = type(self.context['parent_serializer'])
-        footnote_node = cursor_serializer(footnote_tree,
-                                          context={'is_root': False}).data
-        return {'footnote_node': footnote_node}
+        return cursor_serializer(
+            footnote_tree, context={'is_root': False}).data
 
-    def external_link_attrs(self, annotation: ExternalLink):
-        return {'href': annotation.href}
+
+class ExternalLinkSerializer(BaseAnnotationSerializer):
+    CONTENT_TYPE = 'external_link'
+    href = serializers.URLField()
+
+
+ContentListSerializer.serializer_mapping.update({
+    PlainText: PlainTextSerializer,
+    FootnoteCitation: FootnoteCitationSerializer,
+    ExternalLink: ExternalLinkSerializer,
+})
