@@ -84,6 +84,11 @@ def test_query_count(client):
         req.docnode = req_node
         req.save()
 
+    # select 3 nodes to have external links
+    for node in random.sample(list(root.walk()), 3):
+        node.model.externallinks.create(start=1, end=2,
+                                        href='http://example.com/')
+
     # select 3 nodes to add footnote citations
     citing_nodes = random.sample(list(root.walk()), 3)
     footnotes = [citing.add_child('footnote') for citing in citing_nodes]
@@ -93,11 +98,6 @@ def test_query_count(client):
     for citing, footnote in zip(citing_nodes, footnotes):
         citing.model.footnotecitations.create(start=0, end=1,
                                               footnote_node=footnote.model)
-    # select 3 nodes to have external links
-    for node in random.sample(list(root.walk()), 3):
-        node.model.externallinks.create(start=1, end=2,
-                                        href='http://example.com/')
-
     # pytest will alter the connection, so we only want to load it within this
     # test
     from django.db import connection
