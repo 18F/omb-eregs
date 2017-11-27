@@ -46,6 +46,8 @@ OMBFootnote = namedtuple('OMBFootnote', ['number', 'text'])
 
 OMBPageNumber = namedtuple('OMBPageNumber', ['number'])
 
+OMBParagraph = namedtuple('OMBParagraph', ['id'])
+
 
 class AnnotatableMixin:
     def set_annotation(self, annotation):
