@@ -38,7 +38,6 @@ html {
     color: lightgray;
 }
 </style>
-<title>HTML output</title>
 """
 
 
@@ -53,7 +52,7 @@ def to_html(doc):
     pagenumbers.annotate_page_numbers(doc)
 
     footnotes_defined = []
-    chunks = []
+    chunks = [f'<title>HTML output for {doc.filename}</title>\n']
     for page in doc.pages:
         for line in page:
             line_classes = []

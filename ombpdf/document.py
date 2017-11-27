@@ -7,10 +7,11 @@ from . import util
 
 
 class OMBDocument:
-    def __init__(self, ltpages):
+    def __init__(self, ltpages, filename=None):
         stats = fontsize.get_font_size_stats(ltpages)
         self.paragraph_fontsize = stats.most_common(1)[0][0]
         self.pages = [OMBPage(page) for page in ltpages]
+        self.filename = filename
 
     @property
     def lines(self):
@@ -20,7 +21,7 @@ class OMBDocument:
 
     @classmethod
     def from_file(cls, fp):
-        return cls(util.get_ltpages(fp))
+        return cls(util.get_ltpages(fp), filename=fp.name)
 
 
 class OMBPage(list):
