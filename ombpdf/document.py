@@ -128,3 +128,6 @@ class OMBTextLine(list, AnnotatableMixin):
 
     def __repr__(self):
         return f'<{self.__class__.__name__} with text "{str(self)}">'
+
+    def is_blank(self):
+        return len(str(self).strip()) == 0

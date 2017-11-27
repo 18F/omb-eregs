@@ -8,7 +8,7 @@ PAGE_NUMBER_RE = re.compile(r'^([0-9]+)$')
 
 def get_last_nonempty_line(page):
     for line in reversed(page):
-        if str(line).strip():
+        if not line.is_blank():
             return line
 
 
