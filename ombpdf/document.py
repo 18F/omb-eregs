@@ -10,7 +10,10 @@ class OMBDocument:
     def __init__(self, ltpages, filename=None):
         stats = fontsize.get_font_size_stats(ltpages)
         self.paragraph_fontsize = stats.most_common(1)[0][0]
-        self.pages = [OMBPage(page) for page in ltpages]
+        self.pages = [
+            OMBPage(page, number)
+            for page, number in zip(ltpages, range(1, len(ltpages) + 1))
+        ]
         self.filename = filename
 
     @property
@@ -25,7 +28,7 @@ class OMBDocument:
 
 
 class OMBPage(list):
-    def __init__(self, ltpage):
+    def __init__(self, ltpage, number):
         super().__init__([
             OMBTextLine(line)
             for line in util.iter_flattened_layout(
@@ -33,6 +36,7 @@ class OMBPage(list):
                 layout.LTTextLineHorizontal)
         ])
         self.ltpage = ltpage
+        self.number = number
 
 
 OMBFootnoteCitation = namedtuple('OMBFootnoteCitation', ['number',
