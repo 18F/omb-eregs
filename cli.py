@@ -10,7 +10,6 @@ import ombpdf.footnotes
 import ombpdf.underlines
 import ombpdf.html
 import ombpdf.pagenumbers
-import ombpdf.lists
 
 
 def get_doc(filename):
@@ -65,14 +64,6 @@ def pagenumbers(filename):
     "Show page numbers in a PDF."
 
     ombpdf.pagenumbers.main(get_doc(filename))
-
-
-@cli.command()
-@click.argument('filename')
-def lists(filename):
-    "Show lists in a PDF."
-
-    ombpdf.lists.main(get_doc(filename))
 
 
 @cli.command()

@@ -37,7 +37,7 @@ class ListInfo:
 def annotate_lists(doc):
     list_id = 0
     stack = []
-    lines = []
+    lists = {}
     for page in doc.pages:
         for line in page:
             left_edge = stack[-1].left_edge if stack else doc.left_edge
@@ -47,6 +47,7 @@ def annotate_lists(doc):
             if line.left_edge > left_edge and li_type is not None:
                 list_id += 1
                 stack.append(ListInfo(list_id, line.left_edge, is_ordered))
+                lists[list_id] = {}
                 li_found = True
             elif line.left_edge < left_edge:
                 stack.pop()
@@ -65,11 +66,7 @@ def annotate_lists(doc):
                     is_ordered=li.is_ordered,
                     indentation=len(stack),
                 ))
-                lines.append(line)
-    return lines
-
-
-def main(doc):
-    lines = annotate_lists(doc)
-    for line in lines:
-        print(f'{line.annotation} {str(line)}')
+                if li.item_number not in lists[li.id]:
+                    lists[li.id][li.item_number] = []
+                lists[li.id][li.item_number].append(line)
+    return lists
