@@ -1,7 +1,7 @@
 from html import escape
 
 from .document import (OMBFootnoteCitation, OMBFootnote, OMBPageNumber,
-                       OMBParagraph)
+                       OMBParagraph, OMBListItemMarker)
 
 
 HTML_INTRO = """\
@@ -36,6 +36,10 @@ html {
 
 .page-number {
     color: lightgray;
+}
+
+.list-item-marker {
+    color: darkgray;
 }
 
 .paragraph:before {
@@ -106,8 +110,12 @@ def to_html(doc):
                     fnum = first_char.annotation.number
                     attrs.append(f'href="#{id_for_footnote(fnum)}"')
                     tag = 'a'
+                elif isinstance(first_char.annotation, OMBListItemMarker):
+                    classes.append('list-item-marker')
+                    attrs.append(f'title="{first_char.annotation}"')
                 elif first_char.annotation is not None:
-                    raise Exception(f'Unknown annotation for {first_char}')
+                    raise Exception(
+                        f'Unknown annotation: {first_char.annotation}')
 
                 if classes:
                     attrs.append(f'class="{" ".join(classes)}"')

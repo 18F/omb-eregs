@@ -1,6 +1,6 @@
 import re
 
-from .document import OMBListItem
+from .document import OMBListItem, OMBListItemMarker
 
 
 UL_RE = re.compile(r'^• ')
@@ -14,11 +14,16 @@ TYPE_OL = 'ordered list'
 
 def get_list_item_type(line):
     text = str(line)
-    if UL_RE.match(text):
-        return TYPE_UL
-    if OL_RE.match(text):
-        return TYPE_OL
-    return None
+
+    ul_match = UL_RE.match(text)
+    if ul_match:
+        return TYPE_UL, ul_match
+
+    ol_match = OL_RE.match(text)
+    if ol_match:
+        return TYPE_OL, ol_match
+
+    return None, None
 
 
 class ListInfo:
@@ -36,16 +41,22 @@ def annotate_lists(doc):
     for page in doc.pages:
         for line in page:
             left_edge = stack[-1].left_edge if stack else doc.left_edge
-            li_type = get_list_item_type(line)
+            li_type, marker_match = get_list_item_type(line)
+            is_ordered = li_type == TYPE_OL
+            li_found = False
             if line.left_edge > left_edge and li_type is not None:
                 list_id += 1
-                stack.append(ListInfo(list_id, line.left_edge, 
-                                      is_ordered=(li_type == TYPE_OL)))
+                stack.append(ListInfo(list_id, line.left_edge, is_ordered))
+                li_found = True
             elif line.left_edge < left_edge:
                 stack.pop()
             elif (line.left_edge == left_edge and
                   li_type is not None and stack):
                 stack[-1].item_number += 1
+                li_found = True
+            if li_found:
+                for char in line.iter_match(marker_match):
+                    char.set_annotation(OMBListItemMarker(is_ordered))
             if stack and not line.is_blank():
                 li = stack[-1]
                 line.set_annotation(OMBListItem(
