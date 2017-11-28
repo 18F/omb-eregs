@@ -46,7 +46,7 @@ def annotate_lists(doc):
             elif (line.left_edge == left_edge and
                   li_type is not None and stack):
                 stack[-1].item_number += 1
-            if stack:
+            if stack and not line.is_blank():
                 li = stack[-1]
                 line.set_annotation(OMBListItem(
                     list_id=li.id,

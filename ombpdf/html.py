@@ -42,6 +42,11 @@ html {
     content: "paragraph #" attr(data-id);
     float: right;
 }
+
+[data-annotation-repr]:before {
+    content: attr(data-annotation-repr);
+    float: right;
+}
 </style>
 """
 
@@ -73,7 +78,7 @@ def to_html(doc):
                 line_classes.append('paragraph')
                 line_attrs.append(f'data-id="{line.annotation.id}"')
             elif line.annotation is not None:
-                raise Exception(f'Unknown annotation: {line.annotation}')
+                line_attrs.append(f'data-annotation-repr="{line.annotation}"')
 
             if line_classes:
                 line_attrs.append(f'class="{" ".join(line_classes)}"')
