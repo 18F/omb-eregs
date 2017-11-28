@@ -1,4 +1,5 @@
 from collections import namedtuple
+import math
 
 from pdfminer import layout
 
@@ -7,6 +8,8 @@ from . import util
 
 
 class OMBDocument:
+    LEFT_EDGE_TOLERANCE = 0.2
+
     def __init__(self, ltpages, filename=None):
         stats = fontsize.get_font_size_stats(ltpages)
         self.paragraph_fontsize = stats.most_common(1)[0][0]
@@ -15,6 +18,18 @@ class OMBDocument:
             for page, number in zip(ltpages, range(1, len(ltpages) + 1))
         ]
         self.filename = filename
+        self.left_edge = self._calc_left_edge()
+
+    def _calc_left_edge(self):
+        min_x0 = math.inf
+        for line in self.lines:
+            x0 = line.lttextline.x0
+            if x0 < min_x0:
+                min_x0 = x0
+        return min_x0
+
+    def is_at_left_edge(self, line):
+        return line.lttextline.x0 - self.left_edge < self.LEFT_EDGE_TOLERANCE
 
     @property
     def lines(self):
@@ -45,6 +60,8 @@ OMBFootnoteCitation = namedtuple('OMBFootnoteCitation', ['number',
 OMBFootnote = namedtuple('OMBFootnote', ['number', 'text'])
 
 OMBPageNumber = namedtuple('OMBPageNumber', ['number'])
+
+OMBParagraph = namedtuple('OMBParagraph', ['id'])
 
 
 class AnnotatableMixin:
