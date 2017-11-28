@@ -53,6 +53,11 @@ OMBPageNumber = namedtuple('OMBPageNumber', ['number'])
 
 OMBParagraph = namedtuple('OMBParagraph', ['id'])
 
+OMBListItem = namedtuple('OMBListItem', ['list_id', 'number', 'is_ordered',
+                                         'indentation'])
+
+OMBListItemMarker = namedtuple('OMBListItemMarker', ['is_ordered'])
+
 
 class AnnotatableMixin:
     def set_annotation(self, annotation):
@@ -137,6 +142,10 @@ class OMBTextLine(list, AnnotatableMixin):
             i += 1
         if chars:
             yield make_item()
+
+    def iter_match(self, match, group=0):
+        for char in self[match.start(group):match.end(group)]:
+            yield char
 
     def __str__(self):
         return ''.join([str(char) for char in self])

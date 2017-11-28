@@ -1,7 +1,7 @@
 from html import escape
 
 from .document import (OMBFootnoteCitation, OMBFootnote, OMBPageNumber,
-                       OMBParagraph)
+                       OMBParagraph, OMBListItemMarker)
 
 
 HTML_INTRO = """\
@@ -38,8 +38,17 @@ html {
     color: lightgray;
 }
 
+.list-item-marker {
+    color: darkgray;
+}
+
 .paragraph:before {
     content: "paragraph #" attr(data-id);
+    float: right;
+}
+
+[data-annotation-repr]:before {
+    content: attr(data-annotation-repr);
     float: right;
 }
 </style>
@@ -73,7 +82,7 @@ def to_html(doc):
                 line_classes.append('paragraph')
                 line_attrs.append(f'data-id="{line.annotation.id}"')
             elif line.annotation is not None:
-                raise Exception(f'Unknown annotation: {line.annotation}')
+                line_attrs.append(f'data-annotation-repr="{line.annotation}"')
 
             if line_classes:
                 line_attrs.append(f'class="{" ".join(line_classes)}"')
@@ -101,8 +110,12 @@ def to_html(doc):
                     fnum = first_char.annotation.number
                     attrs.append(f'href="#{id_for_footnote(fnum)}"')
                     tag = 'a'
+                elif isinstance(first_char.annotation, OMBListItemMarker):
+                    classes.append('list-item-marker')
+                    attrs.append(f'title="{first_char.annotation}"')
                 elif first_char.annotation is not None:
-                    raise Exception(f'Unknown annotation for {first_char}')
+                    raise Exception(
+                        f'Unknown annotation: {first_char.annotation}')
 
                 if classes:
                     attrs.append(f'class="{" ".join(classes)}"')

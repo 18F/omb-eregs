@@ -31,8 +31,17 @@ html {
     color: lightgray;
 }
 
+.list-item-marker {
+    color: darkgray;
+}
+
 .paragraph:before {
     content: "paragraph #" attr(data-id);
+    float: right;
+}
+
+[data-annotation-repr]:before {
+    content: attr(data-annotation-repr);
     float: right;
 }
 </style>
@@ -159,12 +168,12 @@ html {
 </span></div><div data-id="10" class="paragraph"><span style="font-size: 16.2pt">allocation on-demand.  Thereafter, agencies shall evaluate options for the consolidation and 
 </span></div><div data-id="10" class="paragraph"><span style="font-size: 16.2pt">closure of existing data centers,</span><a style="font-size: 10.8pt" href="#footnote-11" class="footnote-citation">11</a><span style="font-size: 16.2pt"> by (in order of priority): 
 </span></div><div ><span style="font-size: 16.2pt"> 
-</span></div><div ><span style="font-size: 16.2pt">1.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Transitioning to provisioned services, including configurable and flexible technology 
-</span></div><div ><span style="font-size: 16.2pt">such as Software as a Service (SaaS), Platform as a Service (PaaS), and Infrastructure as 
-</span></div><div ><span style="font-size: 16.2pt">a Service (IaaS) to the furthest extent practicable, consistent with the Cloud First 
-</span></div><div ><span style="font-size: 16.2pt">policy.</span><a style="font-size: 10.8pt" href="#footnote-12" class="footnote-citation">12</a><span style="font-size: 16.2pt"> 
-</span></div><div ><span style="font-size: 16.2pt">2.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Migrating to inter-agency shared services or co-location data centers. 
-</span></div><div ><span style="font-size: 16.2pt">3.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Migrating to more optimized data centers within the agency’s data center inventory. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=1, number=1, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">1.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Transitioning to provisioned services, including configurable and flexible technology 
+</span></div><div data-annotation-repr="OMBListItem(list_id=1, number=1, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">such as Software as a Service (SaaS), Platform as a Service (PaaS), and Infrastructure as 
+</span></div><div data-annotation-repr="OMBListItem(list_id=1, number=1, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">a Service (IaaS) to the furthest extent practicable, consistent with the Cloud First 
+</span></div><div data-annotation-repr="OMBListItem(list_id=1, number=1, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">policy.</span><a style="font-size: 10.8pt" href="#footnote-12" class="footnote-citation">12</a><span style="font-size: 16.2pt"> 
+</span></div><div data-annotation-repr="OMBListItem(list_id=1, number=2, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">2.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Migrating to inter-agency shared services or co-location data centers. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=1, number=3, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">3.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Migrating to more optimized data centers within the agency’s data center inventory. 
 </span></div><div ><span style="font-size: 16.2pt"> 
 </span></div><div ><span style="font-size: 16.6pt" class="bold">Cloud Investment 
 </span></div><div ><span style="font-size: 16.2pt"> 
@@ -200,23 +209,23 @@ html {
 </span></div><div data-id="12" class="paragraph"><span style="font-size: 16.2pt">establish and maintain a data center shared services marketplace and coordinate shared services 
 </span></div><div data-id="12" class="paragraph"><span style="font-size: 16.2pt">for inter-agency consumption by: 
 </span></div><div ><span style="font-size: 16.2pt"> 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Coordinating with OMB to define qualifying operating standards for inter-agency shared 
-</span></div><div ><span style="font-size: 16.2pt">services providers, creating guidance materials for becoming such a provider, and 
-</span></div><div ><span style="font-size: 16.2pt">identifying and approving candidate providers. 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Maintaining and monitoring inter-agency shared services provider operating standards. 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Maintaining an online inventory of qualified inter-agency shared services providers. 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Establishing an online decision support tool to facilitate agency review, selection, and 
-</span></div><div ><span style="font-size: 16.2pt">analysis of inter-agency shared services providers. 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Coordinating with the GSA Federal Acquisition Service (FAS) to create and maintain an 
-</span></div><div ><span style="font-size: 16.2pt">inventory of acquisition tools and products specific to the technology and services 
-</span></div><div ><span style="font-size: 16.2pt">surrounding data center optimization, including procurement vehicles for the acquisition 
-</span></div><div ><span style="font-size: 16.2pt">of automated infrastructure management and monitoring tools. 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Developing, implementing, and maintaining financial and service models, as well as 
-</span></div><div ><span style="font-size: 16.2pt">contracts, pertaining to data center procurement with customer/partner agencies and 
-</span></div><div ><span style="font-size: 16.2pt">shared service providers.  
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Providing a forum for participating and interested agencies to discuss the inter-agency 
-</span></div><div ><span style="font-size: 16.2pt">shared services marketplace. 
-</span></div><div ><span style="font-size: 67.0pt">4 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=1, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Coordinating with OMB to define qualifying operating standards for inter-agency shared 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=1, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">services providers, creating guidance materials for becoming such a provider, and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=1, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">identifying and approving candidate providers. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=2, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Maintaining and monitoring inter-agency shared services provider operating standards. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=3, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Maintaining an online inventory of qualified inter-agency shared services providers. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=4, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Establishing an online decision support tool to facilitate agency review, selection, and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=4, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">analysis of inter-agency shared services providers. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=5, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Coordinating with the GSA Federal Acquisition Service (FAS) to create and maintain an 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=5, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">inventory of acquisition tools and products specific to the technology and services 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=5, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">surrounding data center optimization, including procurement vehicles for the acquisition 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=5, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">of automated infrastructure management and monitoring tools. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=6, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Developing, implementing, and maintaining financial and service models, as well as 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=6, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">contracts, pertaining to data center procurement with customer/partner agencies and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=6, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">shared service providers.  
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=7, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Providing a forum for participating and interested agencies to discuss the inter-agency 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=7, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">shared services marketplace. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=2, number=7, is_ordered=False, indentation=1)"><span style="font-size: 67.0pt">4 
 </span></div><div ><span style="font-size: 16.2pt"> 
 </span></div><div data-id="13" class="paragraph"><span style="font-size: 16.2pt">In this role, OGP will serve as a trusted agent and subject matter expert to assist data center 
 </span></div><div data-id="13" class="paragraph"><span style="font-size: 16.2pt">providers and consumers of data center services by providing guidance on technology 
@@ -559,14 +568,14 @@ html {
 </span></div><div ><span style="font-size: 16.2pt"> 
 </span></div><div data-id="39" class="paragraph"><span style="font-size: 16.2pt">Data will be collected quarterly on an agency-by-agency basis through the IDC, as follows: 
 </span></div><div ><span style="font-size: 16.2pt"> 
-</span></div><div ><span style="font-size: 14.7pt">1.</span><span style="font-size: 15.1pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Agencies must continue to maintain complete inventories of all data center facilities, 
-</span></div><div ><span style="font-size: 16.2pt">closure/consolidation plans, and properties of each facility owned, operated, or 
-</span></div><div ><span style="font-size: 16.2pt">maintained by or on behalf of the agency. 
-</span></div><div ><span style="font-size: 14.7pt">2.</span><span style="font-size: 15.1pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Agencies must include progress toward meeting all optimization metric target values.</span><a style="font-size: 10.8pt" href="#footnote-34" class="footnote-citation">34</a><span style="font-size: 16.2pt"> 
-</span></div><div ><span style="font-size: 14.7pt">3.</span><span style="font-size: 15.1pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Agencies must evaluate the costs of operating and maintaining current facilities and 
-</span></div><div ><span style="font-size: 16.2pt">develop year-by-year targets for cost savings and cost avoidance due to consolidation and 
-</span></div><div ><span style="font-size: 16.2pt">optimization for fiscal years 2016 through 2018. Agencies shall report all realized cost 
-</span></div><div ><span style="font-size: 16.2pt">savings and cost avoidance under the DCOI. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=1, is_ordered=True, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">1.</span><span style="font-size: 15.1pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Agencies must continue to maintain complete inventories of all data center facilities, 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=1, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">closure/consolidation plans, and properties of each facility owned, operated, or 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=1, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">maintained by or on behalf of the agency. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=2, is_ordered=True, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">2.</span><span style="font-size: 15.1pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Agencies must include progress toward meeting all optimization metric target values.</span><a style="font-size: 10.8pt" href="#footnote-34" class="footnote-citation">34</a><span style="font-size: 16.2pt"> 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=3, is_ordered=True, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">3.</span><span style="font-size: 15.1pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Agencies must evaluate the costs of operating and maintaining current facilities and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=3, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">develop year-by-year targets for cost savings and cost avoidance due to consolidation and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=3, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">optimization for fiscal years 2016 through 2018. Agencies shall report all realized cost 
+</span></div><div data-annotation-repr="OMBListItem(list_id=3, number=3, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">savings and cost avoidance under the DCOI. 
 </span></div><div ><span style="font-size: 16.2pt"> 
 </span></div><div ><span style="font-size: 16.6pt" class="bold">Strategic Plan  
 </span></div><div ><span style="font-size: 16.2pt"> 
@@ -577,22 +586,22 @@ html {
 </span></div><div ><span style="font-size: 16.2pt"> 
 </span></div><div data-id="41" class="paragraph"><span style="font-size: 16.2pt">Agencies DCOI Strategic Plans must include, at a minimum, the following: 
 </span></div><div ><span style="font-size: 16.2pt"> 
-</span></div><div ><span style="font-size: 16.2pt">1.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Planned and achieved performance levels for each optimization metric, by year; 
-</span></div><div ><span style="font-size: 16.2pt">2.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Planned and achieved closures, by year;  
-</span></div><div ><span style="font-size: 16.2pt">3.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">An explanation for any optimization metrics and closures for which the agency did not 
-</span></div><div ><span style="font-size: 16.2pt">meet the planned level in a previous Strategic Plan; 
-</span></div><div ><span style="font-size: 16.2pt">4.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Year-by-year calculations of target and actual agency-wide spending and cost savings on 
-</span></div><div ><span style="font-size: 16.2pt">data centers from fiscal years 2016 through 2018, including: 
-</span></div><div ><span style="font-size: 16.2pt">a.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">A description of any initial costs for data center consolidation and optimization; 
-</span></div><div ><span style="font-size: 16.2pt">5.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Historical costs, cost savings, and cost avoidances due to data center consolidation and 
-</span></div><div ><span style="font-size: 16.2pt">optimization through fiscal year 2015; and 
-</span></div><div ><span style="font-size: 16.2pt">6.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">A statement from the agency CIO stating whether the agency has complied with all 
-</span></div><div ><span style="font-size: 16.2pt">reporting requirements in this memorandum and the data center requirements of 
-</span></div><div ><span style="font-size: 16.2pt">FITARA. If the agency has not complied with all reporting requirements, the agency 
-</span></div><div ><span style="font-size: 16.2pt">must provide a statement describing the reasons for not complying. 
-</span></div><div ><span style="font-size: 16.2pt">b.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Life cycle cost savings and other improvements (including those beyond fiscal 
-</span></div><div ><span style="font-size: 16.2pt">and 
-</span></div><div ><span style="font-size: 16.2pt">year 2018, if applicable); 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=1, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">1.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Planned and achieved performance levels for each optimization metric, by year; 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=2, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">2.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Planned and achieved closures, by year;  
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=3, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">3.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">An explanation for any optimization metrics and closures for which the agency did not 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=3, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">meet the planned level in a previous Strategic Plan; 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=4, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">4.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Year-by-year calculations of target and actual agency-wide spending and cost savings on 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=4, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">data centers from fiscal years 2016 through 2018, including: 
+</span></div><div data-annotation-repr="OMBListItem(list_id=5, number=1, is_ordered=True, indentation=2)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">a.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">A description of any initial costs for data center consolidation and optimization; 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=4, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">5.</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Historical costs, cost savings, and cost avoidances due to data center consolidation and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=4, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">optimization through fiscal year 2015; and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=5, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">6.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">A statement from the agency CIO stating whether the agency has complied with all 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=5, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">reporting requirements in this memorandum and the data center requirements of 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=5, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">FITARA. If the agency has not complied with all reporting requirements, the agency 
+</span></div><div data-annotation-repr="OMBListItem(list_id=4, number=5, is_ordered=True, indentation=1)"><span style="font-size: 16.2pt">must provide a statement describing the reasons for not complying. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=6, number=1, is_ordered=True, indentation=2)"><span style="font-size: 16.2pt" title="OMBListItemMarker(is_ordered=True)" class="list-item-marker">b.</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=True)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Life cycle cost savings and other improvements (including those beyond fiscal 
+</span></div><div data-annotation-repr="OMBListItem(list_id=6, number=1, is_ordered=True, indentation=2)"><span style="font-size: 16.2pt">and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=6, number=1, is_ordered=True, indentation=2)"><span style="font-size: 16.2pt">year 2018, if applicable); 
 </span></div><div ><span style="font-size: 16.2pt"> 
 </span></div><div ><span style="font-size: 67.0pt">                                                        
 </span></div><div ><span style="font-size: 67.0pt"> 
@@ -625,13 +634,13 @@ html {
 </span></div><div data-id="44" class="paragraph"><span style="font-size: 16.2pt">To this end, beginning in 2016, OMB will report on government-wide and agency-specific data 
 </span></div><div data-id="44" class="paragraph"><span style="font-size: 16.2pt">center progress as part of the IT Dashboard, which will display: 
 </span></div><div ><span style="font-size: 16.2pt"> 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Planned and achieved data center closures by agency; 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Government-wide and agency progress toward meeting applicable optimization targets; 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Cumulative cost savings and cost avoidance realized through the implementation of the 
-</span></div><div ><span style="font-size: 16.2pt">DCOI and prior initiatives; and 
-</span></div><div ><span style="font-size: 14.7pt">•</span><span style="font-size: 16.4pt" class="sans-serif">  </span><span style="font-size: 16.2pt">Annual data center investment spending per agency, including investment transition 
-</span></div><div ><span style="font-size: 16.2pt">costs, cost savings projections, progress made against projections and improvements 
-</span></div><div ><span style="font-size: 16.2pt">realized through the implementation of the strategy. 
+</span></div><div data-annotation-repr="OMBListItem(list_id=7, number=1, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Planned and achieved data center closures by agency; 
+</span></div><div data-annotation-repr="OMBListItem(list_id=7, number=2, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Government-wide and agency progress toward meeting applicable optimization targets; 
+</span></div><div data-annotation-repr="OMBListItem(list_id=7, number=3, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Cumulative cost savings and cost avoidance realized through the implementation of the 
+</span></div><div data-annotation-repr="OMBListItem(list_id=7, number=3, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">DCOI and prior initiatives; and 
+</span></div><div data-annotation-repr="OMBListItem(list_id=7, number=4, is_ordered=False, indentation=1)"><span style="font-size: 14.7pt" title="OMBListItemMarker(is_ordered=False)" class="list-item-marker">•</span><span style="font-size: 16.4pt" title="OMBListItemMarker(is_ordered=False)" class="sans-serif list-item-marker">  </span><span style="font-size: 16.2pt">Annual data center investment spending per agency, including investment transition 
+</span></div><div data-annotation-repr="OMBListItem(list_id=7, number=4, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">costs, cost savings projections, progress made against projections and improvements 
+</span></div><div data-annotation-repr="OMBListItem(list_id=7, number=4, is_ordered=False, indentation=1)"><span style="font-size: 16.2pt">realized through the implementation of the strategy. 
 </span></div><div ><span style="font-size: 67.0pt"> </span><span style="font-size: 16.6pt" class="underline bold">Community Support</span><span style="font-size: 16.6pt" class="bold"> 
 </span></div><div ><span style="font-size: 16.2pt"> 
 </span></div><div data-id="45" class="paragraph"><span style="font-size: 16.2pt">Executive agencies are encouraged to join the Data Centers listserv by emailing 
