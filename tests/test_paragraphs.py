@@ -1,9 +1,7 @@
-from ombpdf import paragraphs, pagenumbers, footnotes
+from ombpdf import paragraphs
 
 
 def test_annotate_paragraphs_works(m_16_19_doc):
-    pagenumbers.annotate_page_numbers(m_16_19_doc)
-    footnotes.annotate_footnotes(m_16_19_doc)
     p = paragraphs.annotate_paragraphs(m_16_19_doc)
 
     assert str(p[1][0]).startswith('In 2010, the Office')

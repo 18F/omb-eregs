@@ -5,6 +5,7 @@ from pdfminer import layout
 
 from . import fontsize
 from . import util
+from .annotators import AnnotatorTracker
 
 
 class OMBDocument:
@@ -19,6 +20,7 @@ class OMBDocument:
         ]
         self.filename = filename
         self.left_edge = self._calc_left_edge()
+        self.annotators = AnnotatorTracker(self)
 
     def _calc_left_edge(self):
         min_x0 = math.inf

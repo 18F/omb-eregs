@@ -2,7 +2,6 @@ from html import escape
 
 from .document import (OMBFootnoteCitation, OMBFootnote, OMBPageNumber,
                        OMBParagraph)
-from . import footnotes, underlines, pagenumbers, paragraphs
 
 
 HTML_INTRO = """\
@@ -52,11 +51,7 @@ def id_for_footnote(fnum):
 
 
 def to_html(doc):
-    footnotes.annotate_citations(doc)
-    footnotes.annotate_footnotes(doc)
-    underlines.set_underlines(doc)
-    pagenumbers.annotate_page_numbers(doc)
-    paragraphs.annotate_paragraphs(doc)
+    doc.annotators.require_all()
 
     footnotes_defined = []
     chunks = [f'<title>HTML output for {doc.filename}</title>\n']

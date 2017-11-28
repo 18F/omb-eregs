@@ -20,6 +20,7 @@ def cull_footer(page):
 
 
 def annotate_paragraphs(doc):
+    doc.annotators.require('footnotes', 'page_numbers')
     in_paragraph = False
     paragraph_id = 0
     paragraphs = {}
