@@ -1,4 +1,5 @@
 from collections import namedtuple
+from decimal import Decimal
 import math
 
 from pdfminer import layout
@@ -9,8 +10,6 @@ from .annotators import AnnotatorTracker
 
 
 class OMBDocument:
-    LEFT_EDGE_TOLERANCE = 0.2
-
     def __init__(self, ltpages, filename=None):
         stats = fontsize.get_font_size_stats(ltpages)
         self.paragraph_fontsize = stats.most_common(1)[0][0]
@@ -19,19 +18,8 @@ class OMBDocument:
             for page, number in zip(ltpages, range(1, len(ltpages) + 1))
         ]
         self.filename = filename
-        self.left_edge = self._calc_left_edge()
+        self.left_edge = min(self.lines, key=lambda l: l.left_edge).left_edge
         self.annotators = AnnotatorTracker(self)
-
-    def _calc_left_edge(self):
-        min_x0 = math.inf
-        for line in self.lines:
-            x0 = line.lttextline.x0
-            if x0 < min_x0:
-                min_x0 = x0
-        return min_x0
-
-    def is_at_left_edge(self, line):
-        return line.lttextline.x0 - self.left_edge < self.LEFT_EDGE_TOLERANCE
 
     @property
     def lines(self):
@@ -110,6 +98,10 @@ class OMBTextLine(list, AnnotatableMixin):
         ])
         self.lttextline = lttextline
         self.annotation = None
+
+        # There can be *really* close bounding boxes, so we're
+        # just going to round to the nearest tenth.
+        self.left_edge = Decimal(lttextline.x0).quantize(Decimal('.1'))
 
     def iter_char_chunks(self):
         """

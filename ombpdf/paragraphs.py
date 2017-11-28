@@ -28,7 +28,7 @@ def annotate_paragraphs(doc):
         for line in cull_footer(page):
             if line.is_blank():
                 in_paragraph = False
-            elif line.annotation is None and doc.is_at_left_edge(line):
+            elif line.annotation is None and line.left_edge == doc.left_edge:
                 first_char = line[0]
                 if first_char.fontsize == doc.paragraph_fontsize:
                     if not in_paragraph:
