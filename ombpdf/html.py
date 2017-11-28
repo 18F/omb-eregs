@@ -46,10 +46,11 @@ def id_for_footnote(fnum):
 
 
 def to_html(doc):
+    # Page numbers and footnotes can clash; handle page numbers first.
+    pagenumbers.annotate_page_numbers(doc)
     footnotes.annotate_citations(doc)
     footnotes.annotate_footnotes(doc)
     underlines.set_underlines(doc)
-    pagenumbers.annotate_page_numbers(doc)
 
     footnotes_defined = []
     chunks = [f'<title>HTML output for {doc.filename}</title>\n']
