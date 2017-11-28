@@ -22,7 +22,7 @@ def cull_footer(page):
 def annotate_paragraphs(doc):
     in_paragraph = False
     paragraph_id = 0
-    lines = []
+    paragraphs = {}
     for page in doc.pages:
         for line in cull_footer(page):
             if line.is_blank():
@@ -33,9 +33,10 @@ def annotate_paragraphs(doc):
                     if not in_paragraph:
                         in_paragraph = True
                         paragraph_id += 1
+                        paragraphs[paragraph_id] = []
                     line.set_annotation(OMBParagraph(paragraph_id))
-                    lines.append(line)
+                    paragraphs[paragraph_id].append(line)
         if in_paragraph:
             if PARAGRAPH_END_RE.match(str(line)):
                 in_paragraph = False
-    return lines
+    return paragraphs
