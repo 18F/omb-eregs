@@ -40,9 +40,9 @@ export default function PolicyView({ policy, topicsIds }) {
             {policy.total_reqs} requirements
              match your search
           </div>
-          <div className="external-link icon-links sm-col sm-col-12 md-col-4">
+          <div className="sm-col sm-col-12 md-col-4 right-align">
             <Link href={policy.original_url}>
-              View original
+              View original&nbsp;<i className="fa fa-external-link" aria-hidden="true" />
             </Link>
           </div>
         </div>

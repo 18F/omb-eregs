@@ -46,7 +46,9 @@ export default function Policy({ docNode }) {
           { findNodeText(docNode, 'subject', policyMeta.title) }
         </h2>
         <div className="original-link-container">
-          <Link className="original-link" href={policyMeta.original_url}>See original</Link>
+          <Link className="original-link" href={policyMeta.original_url}>
+            See original&nbsp;<i className="fa fa-external-link" aria-hidden="true" />
+          </Link>
         </div>
         { fromNode ? <From docNode={fromNode} /> : null }
         <LabeledText id="issuance" label="Issued on:">
