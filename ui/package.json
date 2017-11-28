@@ -73,6 +73,7 @@
     "react-select": "^1.0.0-rc.5",
     "redux": "^3.7.2",
     "serialize-javascript": "^1.4.0",
+    "url-parse": "^1.2.0",
     "uswds": "^0.14.0",
     "validator": "^8.1.0"
   },
