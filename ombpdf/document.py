@@ -53,6 +53,8 @@ OMBPageNumber = namedtuple('OMBPageNumber', ['number'])
 
 OMBParagraph = namedtuple('OMBParagraph', ['id'])
 
+OMBListItem = namedtuple('OMBListItem', ['list_id', 'number', 'is_ordered',
+                                         'indentation'])
 
 class AnnotatableMixin:
     def set_annotation(self, annotation):
