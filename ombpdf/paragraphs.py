@@ -1,4 +1,9 @@
+import re
+
 from .document import OMBParagraph
+
+
+PARAGRAPH_END_RE = re.compile(r'.+\.\s*$')
 
 
 def cull_footer(page):
@@ -31,6 +36,6 @@ def annotate_paragraphs(doc):
                     line.set_annotation(OMBParagraph(paragraph_id))
                     lines.append(line)
         if in_paragraph:
-            if str(line).strip()[-1] == '.':
+            if PARAGRAPH_END_RE.match(str(line)):
                 in_paragraph = False
     return lines
