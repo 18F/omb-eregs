@@ -10,7 +10,6 @@ import ombpdf.footnotes
 import ombpdf.underlines
 import ombpdf.html
 import ombpdf.pagenumbers
-import ombpdf.paragraphs
 
 
 def get_doc(filename):
@@ -65,24 +64,6 @@ def pagenumbers(filename):
     "Show page numbers in a PDF."
 
     ombpdf.pagenumbers.main(get_doc(filename))
-
-
-@cli.command()
-@click.argument('filename')
-def paragraphs(filename):
-    "Show paragraphs in a PDF."
-
-    doc = get_doc(filename)
-    ombpdf.footnotes.annotate_footnotes(doc)
-    ombpdf.pagenumbers.annotate_page_numbers(doc)
-    lines = ombpdf.paragraphs.annotate_paragraphs(doc)
-    pnum = None
-    for line in lines:
-        if pnum is not None:
-            if line.annotation.id != pnum:
-                print()
-        pnum = line.annotation.id
-        print(str(line).strip())
 
 
 @cli.command()
