@@ -8,7 +8,7 @@ from model_mommy import mommy
 from document.serializers.doc_cursor import DocCursorSerializer
 from document.tests.utils import random_doc
 from document.tree import DocCursor
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Policy
 
 
 @pytest.mark.django_db
@@ -69,20 +69,6 @@ def test_by_pretty_url(client):
 def test_query_count(client):
     policy = mommy.make(Policy, omb_policy_id='M-O-A-R')
     root = random_doc(20, save=True, policy=policy, text='placeholder')
-    subtree_nodes = {
-        root.tree.nodes[idx]['model']
-        for idx in root.tree.nodes()
-        if idx != root.identifier
-    }
-    # select 5 nodes in the subtree as requirements
-    req_nodes = random.sample(subtree_nodes, 5)
-    reqs = mommy.make(Requirement, policy=policy, _quantity=5)
-
-    for req_node, req in zip(req_nodes, reqs):
-        for _ in range(random.randint(0, 4)):
-            req.topics.add(mommy.make(Topic))
-        req.docnode = req_node
-        req.save()
 
     # select 3 nodes to have external links
     for node in random.sample(list(root.walk()), 3):
@@ -104,11 +90,10 @@ def test_query_count(client):
     with CaptureQueriesContext(connection) as capture:
         client.get("/M-O-A-R")
         # Query 1: Lookup the policy
-        # 2: Lookup the root docnode, joining w/ req
+        # 2: Lookup the root docnode
         # 3: fetch footnote citations _and_ referenced node for the root
         # 4: fetch external links for the root
-        # 5: fetch child nodes, joining w/ requirements
-        # 6: fetch topics related to those requirements
-        # 7: fetch footnote citations _and_ referenced node for child nodes
-        # 8: fetch external links for child nodes
-        assert len(capture) == 8
+        # 5: fetch child nodes
+        # 6: fetch footnote citations _and_ referenced node for child nodes
+        # 7: fetch external links for child nodes
+        assert len(capture) == 7

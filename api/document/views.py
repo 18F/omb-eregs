@@ -17,9 +17,7 @@ def optimize(queryset):
         queryset=FootnoteCitation.objects.select_related('footnote_node'),
     )
     return queryset.\
-        select_related('requirement').\
-        prefetch_related('requirement__topics', footnote_prefetch,
-                         'externallinks')
+        prefetch_related(footnote_prefetch, 'externallinks')
 
 
 class TreeView(RetrieveAPIView):
