@@ -58,6 +58,8 @@ OMBListItem = namedtuple('OMBListItem', ['list_id', 'number', 'is_ordered',
 
 OMBListItemMarker = namedtuple('OMBListItemMarker', ['is_ordered'])
 
+OMBHeading = namedtuple('OMBHeading', ['level'])
+
 
 class AnnotatableMixin:
     def set_annotation(self, annotation):
