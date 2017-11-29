@@ -3,7 +3,7 @@ from typing import Iterator
 
 from django.db import models
 
-from reqs.models import Policy
+from reqs.models import Policy, Requirement
 
 
 class DocNode(models.Model):
@@ -61,3 +61,8 @@ class FootnoteCitation(Annotation):
 
 class ExternalLink(Annotation):
     href = models.URLField()
+
+
+class InlineRequirement(Annotation):
+    requirement = models.ForeignKey(
+        Requirement, on_delete=models.CASCADE, related_name='+')
