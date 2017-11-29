@@ -5,6 +5,7 @@ import React from 'react';
 import URL from 'url-parse';
 
 import Link from '../link';
+import renderContents from '../../util/render-contents';
 
 export default function ExternalLink({ content }) {
   const classNames = ['external-link-content'];
@@ -19,7 +20,7 @@ export default function ExternalLink({ content }) {
   }
   return (
     <Link className={classNames.join(' ')} href={content.href}>
-      { content.text }
+      { renderContents(content.inlines) }
       &nbsp;
       <i className={`fa ${iconName}`} aria-hidden="true" />
     </Link>
@@ -27,8 +28,8 @@ export default function ExternalLink({ content }) {
 }
 ExternalLink.propTypes = {
   content: PropTypes.shape({
+    inlines: PropTypes.arrayOf(PropTypes.shape({})), // recursive
     href: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
   }).isRequired,
 };
 
