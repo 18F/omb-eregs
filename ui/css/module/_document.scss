@@ -15,7 +15,7 @@
 }
 
 .original-link::after {
-  @extend .external-link;
+  background: url('/static/img/external-link.svg') no-repeat right;
   content: '';
   display: inline-block;
   width: 16px;

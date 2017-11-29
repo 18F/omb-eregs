@@ -13,8 +13,9 @@ tfoot {
 }
 
 .basic-table {
+  margin-top: 2rem;
   font-size: .9rem;
-  margin-bottom: 40px;
+  margin-bottom: 3rem;
 
   th,
   td {
@@ -58,7 +59,7 @@ table {
 
   .footnote-marker {
     @include font-san-serif-bold();
-    @include paragraph-marker();
+    @include paragraph-marker(auto);
     font-size: 0.75em;
   }
 

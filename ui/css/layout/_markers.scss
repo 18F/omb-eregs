@@ -3,15 +3,23 @@ $marker-whitespace-xs: 4px;
 $marker-width-md: $marker-width-xs + 8;
 $marker-whitespace-md: $marker-whitespace-xs + 4;
 
-@mixin paragraph-marker() {
+@mixin paragraph-marker($width: normal) {
   @extend .col;
   @extend .right-align;
-  width: $marker-width-xs;
+  @if $width == 'auto' {
+    width: $width;
+  } @else {
+    width: $marker-width-xs;
+  }
   margin-right: $marker-whitespace-xs;
   display: inline-block;
 
   @media #{$breakpoint-md} {
-    width: $marker-width-md;
+    @if $width == 'auto' {
+      width: $width;
+    } @else {
+      width: $marker-width-md;
+    }
     margin-right: $marker-whitespace-md;
   }
 }

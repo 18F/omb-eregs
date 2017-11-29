@@ -10,4 +10,23 @@
   .list-item-text {
     @include paragraph-with-marker();
   }
+
+  .node-paragraph{
+    margin-bottom: 8px;
+  }
+
+  .node-paragraph::last-child {
+    margin-bottom: 0;
+  }
+}
+
+.node-paragraph {
+  .list-item-marker,
+  .list-item-text {
+    line-height: 1.69rem;
+  }
+
+  .list-item-marker {
+    font-size: .9rem;
+  }
 }
