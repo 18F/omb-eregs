@@ -8,7 +8,7 @@ from model_mommy import mommy
 from document.serializers.doc_cursor import DocCursorSerializer
 from document.tests.utils import random_doc
 from document.tree import DocCursor
-from reqs.models import Policy
+from reqs.models import Policy, Requirement
 
 
 @pytest.mark.django_db
@@ -72,8 +72,13 @@ def test_query_count(client):
 
     # select 3 nodes to have external links
     for node in random.sample(list(root.walk()), 3):
-        node.model.externallinks.create(start=1, end=2,
+        node.model.externallinks.create(start=0, end=1,
                                         href='http://example.com/')
+
+    # select 3 nodes to have inline requirements
+    for node in random.sample(list(root.walk()), 3):
+        node.model.inlinerequirements.create(
+            start=1, end=2, requirement=mommy.make(Requirement))
 
     # select 3 nodes to add footnote citations
     citing_nodes = random.sample(list(root.walk()), 3)
@@ -82,7 +87,7 @@ def test_query_count(client):
     for node in root.walk():
         node.model.save()
     for citing, footnote in zip(citing_nodes, footnotes):
-        citing.model.footnotecitations.create(start=0, end=1,
+        citing.model.footnotecitations.create(start=2, end=3,
                                               footnote_node=footnote.model)
     # pytest will alter the connection, so we only want to load it within this
     # test
@@ -93,7 +98,9 @@ def test_query_count(client):
         # 2: Lookup the root docnode
         # 3: fetch footnote citations _and_ referenced node for the root
         # 4: fetch external links for the root
-        # 5: fetch child nodes
-        # 6: fetch footnote citations _and_ referenced node for child nodes
-        # 7: fetch external links for child nodes
-        assert len(capture) == 7
+        # 5: fetch inline requirements _and_ referenced req for root
+        # 6: fetch child nodes
+        # 7: fetch footnote citations _and_ referenced node for child nodes
+        # 8: fetch external links for child nodes
+        # 9: fetch inline requirements _and_ referenced req for child nodes
+        assert len(capture) == 9

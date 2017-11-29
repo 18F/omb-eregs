@@ -4,8 +4,9 @@ from typing import Iterator, List, Optional
 from rest_framework import serializers
 
 from document.models import (Annotation, ExternalLink, FootnoteCitation,
-                             PlainText)
+                             InlineRequirement, PlainText)
 from document.tree import DocCursor
+from reqs.models import Requirement
 
 
 class NestableAnnotation:
@@ -142,8 +143,22 @@ class ExternalLinkSerializer(BaseAnnotationSerializer):
     href = serializers.URLField()
 
 
+class RequirementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Requirement
+        fields = (
+            'req_id',
+        )
+
+
+class InlineRequirementSerializer(BaseAnnotationSerializer):
+    CONTENT_TYPE = 'requirement'
+    requirement = RequirementSerializer()
+
+
 NestedAnnotationSerializer.serializer_mapping.update({
     PlainText: PlainTextSerializer,
     FootnoteCitation: FootnoteCitationSerializer,
     ExternalLink: ExternalLinkSerializer,
+    InlineRequirement: InlineRequirementSerializer,
 })

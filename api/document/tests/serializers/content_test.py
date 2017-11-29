@@ -1,7 +1,10 @@
+import pytest
 from model_mommy import mommy
 
-from document.models import ExternalLink, PlainText
+from document.models import DocNode, ExternalLink, PlainText
 from document.serializers import content
+from document.tree import DocCursor
+from reqs.models import Requirement
 
 
 def test_nest_annotations_no_overlapping():
@@ -116,3 +119,44 @@ def test_wrap_unwrapped_nesting():
 
     assert [(c.start, c.end) for c in aunt.children] == [(18, 20)]
     assert [c.annotation_class for c in aunt.children] == [PlainText]
+
+
+@pytest.mark.django_db
+def test_inline_requirement_with_link_integration():
+    docnode = mommy.make(DocNode, text='Hm... go here.')
+    req = mommy.make(Requirement, req_id='111.222')
+    docnode.inlinerequirements.create(
+        start=len('Hm... '), end=len('Hm... go here'),
+        requirement=req)
+    docnode.externallinks.create(
+        start=len('Hm... go '), end=len('Hm... go here'),
+        href='http://example.com')
+
+    nested = content.nest_annotations(docnode.annotations(), len(docnode.text))
+    result = content.NestedAnnotationSerializer(
+        nested,
+        context={'cursor': DocCursor.load_from_model(docnode, subtree=False)},
+        many=True,
+    ).data
+    assert result == [
+        {'content_type': '__text__', 'inlines': [], 'text': 'Hm... '},
+        {
+            'content_type': 'requirement',
+            'text': 'go here',
+            'requirement': {'req_id': '111.222'},
+            'inlines': [
+                {'content_type': '__text__', 'inlines': [], 'text': 'go '},
+                {
+                    'content_type': 'external_link',
+                    'href': 'http://example.com',
+                    'text': 'here',
+                    'inlines': [{
+                        'content_type': '__text__',
+                        'inlines': [],
+                        'text': 'here',
+                    }],
+                },
+            ],
+        },
+        {'content_type': '__text__', 'inlines': [], 'text': '.'},
+    ]
