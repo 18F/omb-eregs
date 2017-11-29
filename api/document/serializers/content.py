@@ -1,7 +1,6 @@
 from collections import defaultdict
-from typing import Iterator, List
+from typing import Iterator, List, Optional
 
-from collections_extended import RangeMap
 from rest_framework import serializers
 
 from document.models import (Annotation, ExternalLink, FootnoteCitation,
@@ -9,54 +8,91 @@ from document.models import (Annotation, ExternalLink, FootnoteCitation,
 from document.tree import DocCursor
 
 
-def wrap_all_text(annotations: Iterator[Annotation], text_length: int):
-    """Ensure that all text is in an annotation by wrapping it in
-    PlainText."""
-    flattened = RangeMap()
-    for anote in annotations:
-        flattened[anote.start:anote.end] = anote    # flattens overlaps
-    ranges = list(flattened.ranges())     # make a copy
-    previous_end = 0
-    for next_start, next_end, _ in ranges:
-        if next_start != previous_end:
-            flattened[previous_end:next_start] = PlainText(
-                start=previous_end, end=next_start)
-        previous_end = next_end
+class NestableAnnotation:
+    """Wraps an Annotation with references to annotations it contains and its
+    parent."""
+    def __init__(self, annotation: Annotation,
+                 parent: Optional['NestedAnnotation']):
+        self.annotation = annotation
+        # NestableAnnotations point up to the parent and down to children
+        self.parent = parent
+        self.children: List[NestedAnnotation] = []
+        if parent:
+            parent.children.append(self)
 
-    # Account for trailing text
-    if previous_end != text_length:
-        flattened[previous_end:text_length] = PlainText(
-            start=previous_end, end=text_length)
+    @property
+    def annotation_class(self):
+        return type(self.annotation)
 
-    return flattened.values()
+    def __getattr__(self, attr):
+        """Delegate fields/methods to annotation."""
+        return getattr(self.annotation, attr)
+
+    def __contains__(self, child: Annotation):
+        """We are not allowing non-nested overlapping annotation, so we won't
+        compare ends when determining nesting."""
+        return self.start <= child.start and self.end >= child.start
+
+    def __repr__(self):
+        return (f'NestableAnnotation({repr(self.annotation)}) '
+                f'{repr(self.children)}')
+
+    def wrap_unwrapped(self):
+        """Ensure that all text is in an annotation by wrapping it in
+        PlainText."""
+        updated_children = []
+
+        previous_end = self.start
+        for anote in list(self.children):   # copy to ensure we iterate once
+            if anote.start != previous_end:
+                updated_children.append(NestableAnnotation(
+                    PlainText(start=previous_end, end=anote.start), self))
+            anote.wrap_unwrapped()
+            updated_children.append(anote)
+            previous_end = anote.end
+
+        # Account for trailing text
+        if previous_end != self.end:
+            updated_children.append(NestableAnnotation(
+                PlainText(start=previous_end, end=self.end), self))
+
+        self.children = updated_children
 
 
-class ContentListSerializer(serializers.BaseSerializer):
+def nest_annotations(annotations: Iterator[Annotation],
+                     text_length: int) -> List[NestableAnnotation]:
+    """Converts overlapping annotations into a nested version."""
+    in_order = sorted(annotations, key=lambda a: (a.start, -a.end))
+    # Easier to operate on a single root, even if we'll remove it later.
+    root = last = NestableAnnotation(PlainText(start=0, end=text_length), None)
+    for anote in in_order:
+        # We're not allowing non-nested overlapping annotations, so we won't
+        # compare ends when determining nesting
+        while anote not in last:
+            last = last.parent
+        # Enforce all annotations to be nested rather than overlapping
+        anote.end = min(anote.end, last.end)
+        last = NestableAnnotation(anote, last)
+    root.wrap_unwrapped()
+    return root.children
+
+
+class NestedAnnotationSerializer(serializers.Serializer):
     """Figures out which AnnotationSerializer to use when serializing
     content."""
     serializer_mapping = defaultdict(
         lambda: BaseAnnotationSerializer,   # will raise an exception when used
     )
 
-    @property
-    def total_text_length(self):
-        return len(self.context['cursor'].model.text)
-
-    def to_representation(self, data: List[Annotation]):
-        """In addition to the materialized annotations, we need to wrap the
-        remaining text in the virtual PlainText annotation."""
-        serialized_content = []
-        data = wrap_all_text(data, self.total_text_length)
-        for anote in data:
-            serializer = self.serializer_mapping[type(anote)]
-            serialized = serializer(anote, context=self.context).data
-            serialized_content.append(serialized)
-        return serialized_content
+    def to_representation(self, data: NestableAnnotation):
+        serializer = self.serializer_mapping[data.annotation_class]
+        return serializer(data, context=self.context).data
 
 
 class BaseAnnotationSerializer(serializers.Serializer):
-    text = serializers.SerializerMethodField()
     content_type = serializers.SerializerMethodField()
+    inlines = serializers.SerializerMethodField()
+    text = serializers.SerializerMethodField()
 
     @property
     def CONTENT_TYPE(self):     # noqa; this is a constant
@@ -70,8 +106,12 @@ class BaseAnnotationSerializer(serializers.Serializer):
     def cursor_tree(self):
         return self.context['cursor'].tree
 
-    def get_content_type(self, instance: Annotation):
+    def get_content_type(self, instance: NestableAnnotation):
         return self.CONTENT_TYPE
+
+    def get_inlines(self, instance: NestableAnnotation):
+        return NestedAnnotationSerializer(
+            instance.children, context=self.context, many=True).data
 
     def get_text(self, instance: Annotation):
         return self.doc_node_text[instance.start:instance.end]
@@ -79,6 +119,10 @@ class BaseAnnotationSerializer(serializers.Serializer):
 
 class PlainTextSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = '__text__'
+
+    def get_inlines(self, instance: PlainText):
+        """PlainText nodes are the leaves of our content tree."""
+        return []
 
 
 class FootnoteCitationSerializer(BaseAnnotationSerializer):
@@ -98,7 +142,7 @@ class ExternalLinkSerializer(BaseAnnotationSerializer):
     href = serializers.URLField()
 
 
-ContentListSerializer.serializer_mapping.update({
+NestedAnnotationSerializer.serializer_mapping.update({
     PlainText: PlainTextSerializer,
     FootnoteCitation: FootnoteCitationSerializer,
     ExternalLink: ExternalLinkSerializer,

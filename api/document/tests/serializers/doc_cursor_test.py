@@ -52,6 +52,7 @@ def test_end_to_end():
                 'meta': {},
                 'content': [{
                     'content_type': '__text__',
+                    'inlines': [],
                     'text': 'Section 1',
                 }],
                 'children': [],
@@ -86,6 +87,7 @@ def test_end_to_end():
                                 'meta': {},
                                 'content': [{
                                     'content_type': '__text__',
+                                    'inlines': [],
                                     'text': 'Paragraph (a)(1)',
                                 }],
                                 'children': [],
@@ -173,9 +175,15 @@ def test_footnote_citations():
     assert result['content'] == [
         {
             'content_type': '__text__',
+            'inlines': [],
             'text': 'Some',
         }, {
             'content_type': 'footnote_citation',
+            'inlines': [{
+                'content_type': '__text__',
+                'inlines': [],
+                'text': '1',
+            }],
             'text': '1',
             'footnote_node': doc_cursor.DocCursorSerializer(
                 para['footnote_1'],
@@ -183,9 +191,15 @@ def test_footnote_citations():
             ).data,
         }, {
             'content_type': '__text__',
+            'inlines': [],
             'text': ' message',
         }, {
             'content_type': 'footnote_citation',
+            'inlines': [{
+                'content_type': '__text__',
+                'inlines': [],
+                'text': '2',
+            }],
             'text': '2',
             'footnote_node': doc_cursor.DocCursorSerializer(
                 para['footnote_2'],
@@ -193,6 +207,7 @@ def test_footnote_citations():
             ).data,
         }, {
             'content_type': '__text__',
+            'inlines': [],
             'text': ' here',
         }
     ]
@@ -214,13 +229,20 @@ def test_external_links():
     assert result['content'] == [
         {
             'content_type': '__text__',
+            'inlines': [],
             'text': 'Go over '
         }, {
             'content_type': 'external_link',
+            'inlines': [{
+                'content_type': '__text__',
+                'inlines': [],
+                'text': 'there',
+            }],
             'href': 'http://example.com/aaa',
             'text': 'there',
         }, {
             'content_type': '__text__',
+            'inlines': [],
             'text': '!',
         }
     ]
