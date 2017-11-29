@@ -48,6 +48,10 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 }
 
 .inline-footnote {
+  > cite {
+    line-height: 1em;   // Maintain paragraph line height
+  }
+
   .node-footnote-content {
     display: block;
     width: 100%;
