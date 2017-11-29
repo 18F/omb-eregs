@@ -9,12 +9,21 @@ HTML_INTRO = """\
 """
 
 
+def id_for_footnote(fnum):
+    return f"footnote-{fnum}"
+
+
+def id_for_footnote_citation(fnum):
+    return f"footnote-citation-{fnum}"
+
+
 def to_html(doc):
     doc.annotators.require_all()
     chunks = [
         f'<title>Semantic HTML output for {doc.filename}</title>\n'
     ]
 
+    footnote_citations = {}
     footnotes = []
     block_stack = []
 
@@ -78,9 +87,13 @@ def to_html(doc):
                 # Don't display this content at all.
                 pass
             elif isinstance(anno, document.OMBFootnoteCitation):
-                # TODO: Add link to footnote.
+                fnum = anno.number
+                cit_id = id_for_footnote_citation(fnum)
+                footnote_citations[fnum] = cit_id
                 chunks.append(
-                    f'<sup>{anno.number}</sup>'
+                    f'<sup id="{cit_id}">'
+                    f'<a href="#{id_for_footnote(fnum)}">'
+                    f'{fnum}</a></sup>'
                 )
             else:
                 chunks.append(escape(text))
@@ -110,6 +123,24 @@ def to_html(doc):
 
     close_all_blocks()
 
-    # TODO: Add footnotes.
+    if footnotes:
+        chunks.append('<h2>Footnotes</h2>\n')
+        chunks.append('<dl>\n')
+        curr_footnote = None
+        for line in footnotes:
+            anno = line.annotation
+            if anno != curr_footnote:
+                curr_footnote = anno
+                chunks.append(f'<dt id="{id_for_footnote(anno.number)}">'
+                              f'{anno.number}</dt>\n')
+                chunks.append(f'<dd>{anno.text}')
+                cit_id = footnote_citations.get(anno.number)
+                if cit_id:
+                    chunks.append(
+                        f' <a href="#{cit_id}">Back to citation</a>'
+                    )
+                chunks.append('</dd>\n')
+
+        chunks.append('</dl>\n')
 
     return ''.join(chunks)
