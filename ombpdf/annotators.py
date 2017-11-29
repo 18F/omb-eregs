@@ -8,6 +8,7 @@ ANNOTATORS = {
     'paragraphs': 'ombpdf.paragraphs.annotate_paragraphs',
     'underlines': 'ombpdf.underlines.set_underlines',
     'lists': 'ombpdf.lists.annotate_lists',
+    'headings': 'ombpdf.headings.annotate_headings',
 }
 
 _annotator_funcs = {}
