@@ -8,6 +8,7 @@
 node_modules
 reqs/static/js/bundle.js
 ui-dist
+ui/static/font/fontawesome-webfont*
 ui/static/styles.css*
 jest*
 ui/lcov-report/

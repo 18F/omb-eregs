@@ -1,11 +1,29 @@
+import path from 'path';
+
 import PropTypes from 'prop-types';
 import React from 'react';
+import URL from 'url-parse';
 
 import Link from '../link';
 
 export default function ExternalLink({ content }) {
-  const className = content.href === content.text ? '' : 'print-url';
-  return <Link className={className} href={content.href}>{ content.text }</Link>;
+  const classNames = ['external-link-content'];
+  if (content.href !== content.text) {
+    classNames.push('print-url');
+  }
+  let iconName = 'fa-external-link';
+  const pathname = new URL(content.href).pathname;
+  const extension = path.extname(pathname);
+  if (extension && !['.html', '.htm'].includes(extension)) {
+    iconName = 'fa-file-o';
+  }
+  return (
+    <Link className={classNames.join(' ')} href={content.href}>
+      { content.text }
+      &nbsp;
+      <i className={`fa ${iconName}`} aria-hidden="true" />
+    </Link>
+  );
 }
 ExternalLink.propTypes = {
   content: PropTypes.shape({

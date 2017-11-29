@@ -4,6 +4,8 @@
 // and includes any non-semantic helper classes
 
 // Third Party
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome';
 @import '~basscss-sass/scss/basscss';
 @import '~nprogress/nprogress.css';
 
@@ -16,6 +18,7 @@
 @import 'layout/typography';
 @import 'layout/layout';
 @import 'layout/markers';
+@import 'layout/icons';
 
 @import 'module/header';
 @import 'module/document';
@@ -32,6 +35,7 @@
 @import 'module/loading-indicator';
 @import 'module/listitem';
 @import 'module/tables';
+@import 'module/external-link';
 
 @import 'state/print';
 @import 'state/ie';
