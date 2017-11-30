@@ -1,5 +1,14 @@
 import importlib
 
+ORDERED_ANNOTATORS = (
+    'page_numbers',
+    'footnotes',
+    'footnote_citations',
+    'paragraphs',
+    'underlines',
+    'lists',
+    'headings'
+)
 
 ANNOTATORS = {
     'footnotes': 'ombpdf.footnotes.annotate_footnotes',
@@ -37,7 +46,7 @@ class AnnotatorTracker:
             self._has_run[name] = False
 
     def require_all(self):
-        self.require(*ANNOTATORS.keys())
+        self.require(*ORDERED_ANNOTATORS)
 
     def require(self, *names):
         for name in names:

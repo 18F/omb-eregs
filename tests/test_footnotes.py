@@ -1,4 +1,4 @@
-from ombpdf import footnotes, pagenumbers
+from ombpdf import footnotes, lists, pagenumbers
 
 
 def test_annotate_citations_works(m_16_19_doc):
@@ -34,6 +34,8 @@ def test_annotate_footnotes_m_15_17(m_15_17_doc):
     # Page numbers and footnotes can clash; handle page numbers first.
     pagenumbers.annotate_page_numbers(m_15_17_doc)
     notes = footnotes.annotate_footnotes(m_15_17_doc)
+    # Run this to check that there isn't a clash over lists:
+    lists.annotate_lists(m_15_17_doc)
 
     assert notes[:2] == [
         (
