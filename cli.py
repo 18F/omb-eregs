@@ -1,4 +1,6 @@
+import os
 import sys
+import subprocess
 
 import click
 
@@ -11,6 +13,8 @@ import ombpdf.underlines
 import ombpdf.html
 import ombpdf.pagenumbers
 import ombpdf.headings
+import ombpdf.semhtml
+import ombpdf.webapp
 
 
 def get_doc(filename):
@@ -82,6 +86,30 @@ def html(filename):
 
     content = ombpdf.html.to_html(get_doc(filename)).encode('utf-8')
     sys.stdout.buffer.write(content)
+
+
+@cli.command()
+@click.argument('filename')
+def semhtml(filename):
+    "Convert the given PDF to semantic HTML."
+
+    content = ombpdf.semhtml.to_html(get_doc(filename)).encode('utf-8')
+    sys.stdout.buffer.write(content)
+
+
+@cli.command()
+def runserver():
+    "Run a web server that lets you browse PDFs and their conversions."
+
+    env = {}
+    env.update(os.environ)
+    env.update({
+        'FLASK_APP': os.path.join('ombpdf', 'webapp', '__init__.py'),
+        'FLASK_DEBUG': '1',
+    })
+
+    popen = subprocess.Popen(['flask', 'run'], env=env)
+    popen.wait()
 
 
 if __name__ == '__main__':

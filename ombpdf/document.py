@@ -1,5 +1,6 @@
 from collections import namedtuple
 from decimal import Decimal
+import logging
 import math
 
 from pdfminer import layout
@@ -7,6 +8,9 @@ from pdfminer import layout
 from . import fontsize
 from . import util
 from .annotators import AnnotatorTracker
+
+
+logger = logging.getLogger(__name__)
 
 
 class OMBDocument:
@@ -64,8 +68,9 @@ OMBHeading = namedtuple('OMBHeading', ['level'])
 class AnnotatableMixin:
     def set_annotation(self, annotation):
         if self.annotation is not None and self.annotation != annotation:
-            raise AssertionError(f"Document item already has a different "
-                                 f"annotation")
+            logger.warn(
+                f"Replacing {self.annotation} with {annotation}."
+            )
         self.annotation = annotation
 
 
