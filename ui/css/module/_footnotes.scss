@@ -5,6 +5,7 @@
   padding: 2px 4px;
   font-size: 0.6em;
   margin-left: .3em;
+  background-color: $color-white; // override any highlighting
 
   &.active {
     border-color: $color-primary-darker;

@@ -31,7 +31,7 @@ class NestableAnnotation:
     def __contains__(self, child: Annotation):
         """We are not allowing non-nested overlapping annotation, so we won't
         compare ends when determining nesting."""
-        return self.start <= child.start and self.end >= child.start
+        return self.start <= child.start and self.end > child.start
 
     def __repr__(self):
         return (f'NestableAnnotation({repr(self.annotation)}) '

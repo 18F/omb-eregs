@@ -40,6 +40,19 @@ def test_nest_annotations_entirely_nested():
         (4, 6), (6, 7), (7, 8)]
 
 
+def test_nest_annotations_adjacent():
+    """Annotations next to each other are not nested."""
+    annotations = [
+        mommy.prepare(ExternalLink, start=0, end=10),
+        mommy.prepare(ExternalLink, start=10, end=20),
+    ]
+
+    result = content.nest_annotations(annotations, 20)
+    assert len(result) == 2
+    assert [(r.start, r.end) for r in result] == [(0, 10), (10, 20)]
+    assert [r.annotation_class for r in result] == [ExternalLink, ExternalLink]
+
+
 def test_nest_annotations_initial_nesting():
     """These annotations share a start index."""
     annotations = [
