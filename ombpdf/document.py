@@ -1,9 +1,12 @@
 from collections import namedtuple
+from decimal import Decimal
+import math
 
 from pdfminer import layout
 
 from . import fontsize
 from . import util
+from .annotators import AnnotatorTracker
 
 
 class OMBDocument:
@@ -15,6 +18,8 @@ class OMBDocument:
             for page, number in zip(ltpages, range(1, len(ltpages) + 1))
         ]
         self.filename = filename
+        self.left_edge = min(self.lines, key=lambda l: l.left_edge).left_edge
+        self.annotators = AnnotatorTracker(self)
 
     @property
     def lines(self):
@@ -45,6 +50,15 @@ OMBFootnoteCitation = namedtuple('OMBFootnoteCitation', ['number',
 OMBFootnote = namedtuple('OMBFootnote', ['number', 'text'])
 
 OMBPageNumber = namedtuple('OMBPageNumber', ['number'])
+
+OMBParagraph = namedtuple('OMBParagraph', ['id'])
+
+OMBListItem = namedtuple('OMBListItem', ['list_id', 'number', 'is_ordered',
+                                         'indentation'])
+
+OMBListItemMarker = namedtuple('OMBListItemMarker', ['is_ordered'])
+
+OMBHeading = namedtuple('OMBHeading', ['level'])
 
 
 class AnnotatableMixin:
@@ -92,6 +106,10 @@ class OMBTextLine(list, AnnotatableMixin):
         self.lttextline = lttextline
         self.annotation = None
 
+        # There can be *really* close bounding boxes, so we're
+        # just going to round to the nearest tenth.
+        self.left_edge = Decimal(lttextline.x0).quantize(Decimal('.1'))
+
     def iter_char_chunks(self):
         """
         Iterate over all "chunks" of characters that share the same
@@ -126,6 +144,10 @@ class OMBTextLine(list, AnnotatableMixin):
             i += 1
         if chars:
             yield make_item()
+
+    def iter_match(self, match, group=0):
+        for char in self[match.start(group):match.end(group)]:
+            yield char
 
     def __str__(self):
         return ''.join([str(char) for char in self])
