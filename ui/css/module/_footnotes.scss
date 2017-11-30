@@ -1,3 +1,17 @@
+@mixin footnote-border-triangle-up() {
+  content: '';
+  position: absolute;
+  background: $color-white;
+  height: 18px;
+  width: 18px;
+  margin-left: -9px;
+  left: 50%;
+  border-top-right-radius: 3px;
+  transform: rotate(-45deg);
+  border-top: 1px solid $color-primary-darker;
+  border-right: 1px solid $color-primary-darker;
+}
+
 .footnote-link {
   @include font-san-serif();
   border: 1px solid $color-cool-blue-lighter;
@@ -6,11 +20,18 @@
   font-size: 0.6em;
   margin-left: .3em;
   background-color: $color-white; // override any highlighting
+  position: relative;
 
   &.active {
     border-color: $color-primary-darker;
     background: $color-primary-darker;
     color: $color-white;
+
+    &::before {
+      @include footnote-border-triangle-up();
+      top: 38px;
+      z-index: 10;
+    }
   }
 }
 
