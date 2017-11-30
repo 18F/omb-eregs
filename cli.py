@@ -11,6 +11,7 @@ import ombpdf.underlines
 import ombpdf.html
 import ombpdf.pagenumbers
 import ombpdf.headings
+import ombpdf.semhtml
 
 
 def get_doc(filename):
@@ -81,6 +82,15 @@ def html(filename):
     "Convert the given PDF to HTML."
 
     content = ombpdf.html.to_html(get_doc(filename)).encode('utf-8')
+    sys.stdout.buffer.write(content)
+
+
+@cli.command()
+@click.argument('filename')
+def semhtml(filename):
+    "Convert the given PDF to semantic HTML."
+
+    content = ombpdf.semhtml.to_html(get_doc(filename)).encode('utf-8')
     sys.stdout.buffer.write(content)
 
 
