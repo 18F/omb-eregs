@@ -48,6 +48,7 @@ jobs:
           command: |
             docker-compose run --rm webpack
             docker cp holder:/usr/src/app/ui/static/styles.css ./ui/static/styles.css
+            docker cp holder:/usr/src/app/ui/static/font/. ./ui/static/font
       - run:
           name: API Unit tests
           environment:
