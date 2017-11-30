@@ -3,12 +3,17 @@ import {
   documentData,
   formatIssuance,
   homepageData,
+  policiesData,
   policyData,
   redirectQuery,
+  requirementsData,
 } from '../../../util/api/queries';
 import endpoints from '../../../util/api/endpoints';
 
 jest.mock('../../../util/api/endpoints');
+
+const error404 = new Error('Not Found');
+error404.response = { status: 404 };
 
 describe('formatIssuance', () => {
   it('handles reasonable input', () => {
@@ -144,11 +149,9 @@ describe('policyData()', () => {
     expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '5' });
   });
   it('passes up 404s', async () => {
-    const err = new Error('Not found');
-    err.response = { status: 404 };
     endpoints.policies.fetchOne.mockReset();
     endpoints.policies.fetchOne.mockImplementationOnce(() => {
-      throw err;
+      throw error404;
     });
 
     const result = await policyData({ query: {} });
@@ -177,14 +180,34 @@ describe('documentData()', () => {
     });
   });
   it('passes up 404s', async () => {
-    const err = new Error('Not found');
-    err.response = { status: 404 };
     endpoints.document.fetchOne.mockReset();
     endpoints.document.fetchOne.mockImplementationOnce(() => {
-      throw err;
+      throw error404;
     });
 
     const result = await documentData({ query: {} });
+    expect(result).toEqual({ statusCode: 404 });
+  });
+});
+
+describe('policiesData()', () => {
+  it('passes up 404s', async () => {
+    endpoints.policies.fetch.mockImplementationOnce(() => {
+      throw error404;
+    });
+
+    const result = await policiesData({ query: { page: 99999 } });
+    expect(result).toEqual({ statusCode: 404 });
+  });
+});
+
+describe('requirementsData()', () => {
+  it('passes up 404s', async () => {
+    endpoints.requirements.fetch.mockImplementationOnce(() => {
+      throw error404;
+    });
+
+    const result = await requirementsData({ query: { page: 99999 } });
     expect(result).toEqual({ statusCode: 404 });
   });
 });

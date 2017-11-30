@@ -17,6 +17,17 @@ export function formatIssuance(policy) {
   };
 }
 
+async function propagate404(fn) {
+  try {
+    return await fn();
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      return { statusCode: 404 };
+    }
+    throw err;
+  }
+}
+
 export async function homepageData() {
   const results = await endpoints.policies.fetchResults({ ordering: '-issuance' });
   return {
@@ -24,39 +35,48 @@ export async function homepageData() {
   };
 }
 
-export async function policiesData({ query }) {
-  const [
-    existingAgencies,
-    existingPolicies,
-    existingTopics,
-    pagedPolicies,
-  ] = await Promise.all([
-    endpoints.topics.withIds(query.requirements__all_agencies__id__in),
-    endpoints.policies.withIds(query.id__in),
-    endpoints.topics.withIds(query.requirements__topics__id__in),
-    endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
-  ]);
-  return {
-    existingAgencies,
-    existingPolicies,
-    existingTopics,
-    pagedPolicies,
-  };
+export function policiesData({ query }) {
+  return propagate404(async () => {
+    const [
+      existingAgencies,
+      existingPolicies,
+      existingTopics,
+      pagedPolicies,
+    ] = await Promise.all([
+      endpoints.topics.withIds(query.requirements__all_agencies__id__in),
+      endpoints.policies.withIds(query.id__in),
+      endpoints.topics.withIds(query.requirements__topics__id__in),
+      endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
+    ]);
+    return {
+      existingAgencies,
+      existingPolicies,
+      existingTopics,
+      pagedPolicies,
+    };
+  });
 }
 
-export async function requirementsData({ query }) {
-  const results = await Promise.all([
-    endpoints.topics.withIds(query.all_agencies__id_in),
-    endpoints.policies.withIds(query.policy__id__in),
-    endpoints.topics.withIds(query.topics__id__in),
-    endpoints.requirements.fetch(query),
-  ]);
-  return {
-    existingAgencies: results[0],
-    existingPolicies: results[1],
-    existingTopics: results[2],
-    pagedReqs: results[3],
-  };
+export function requirementsData({ query }) {
+  return propagate404(async () => {
+    const [
+      existingAgencies,
+      existingPolicies,
+      existingTopics,
+      pagedReqs,
+    ] = await Promise.all([
+      endpoints.topics.withIds(query.all_agencies__id_in),
+      endpoints.policies.withIds(query.policy__id__in),
+      endpoints.topics.withIds(query.topics__id__in),
+      endpoints.requirements.fetch(query),
+    ]);
+    return {
+      existingAgencies,
+      existingPolicies,
+      existingTopics,
+      pagedReqs,
+    };
+  });
 }
 
 /*
@@ -134,17 +154,6 @@ export function redirectQuery(query, insertParam, idToInsert) {
   result[insertParam] = ids.join(',');
 
   return result;
-}
-
-async function propagate404(fn) {
-  try {
-    return await fn();
-  } catch (err) {
-    if (err.response && err.response.status === 404) {
-      return { statusCode: 404 };
-    }
-    throw err;
-  }
 }
 
 export async function policyData({ query }) {
