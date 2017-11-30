@@ -6,7 +6,7 @@ from model_mommy import mommy
 from document.models import DocNode
 from document.serializers import doc_cursor
 from document.tree import DocCursor
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Policy
 
 
 def test_end_to_end():
@@ -108,50 +108,6 @@ def test_end_to_end():
                 ],
             },
         ],
-    }
-
-
-@pytest.mark.django_db
-def test_requirement():
-    """The 'requirement' field should serialize an associated Requirement"""
-    policy = mommy.make(Policy)
-    topics = [mommy.make(Topic, name='AaA'), mommy.make(Topic, name='BbB')]
-    root = DocCursor.new_tree('policy', policy=policy)
-    req_node = root.add_child('req')
-    root.nested_set_renumber()
-
-    req = mommy.make(
-        Requirement,
-        citation='citcitcit',
-        docnode=req_node.model,
-        impacted_entity='imp',
-        policy=policy,
-        policy_section='sectsect',
-        policy_sub_section='subsub',
-        req_deadline='ded',
-        req_id='12.34',
-        topics=topics,
-        verb='vvvv',
-    )
-    req_node.model.refresh_from_db()
-
-    result = doc_cursor.DocCursorSerializer(
-        root, context={'policy': policy}).data
-    assert 'requirement' not in result['meta']
-    child_node = result['children'][0]
-    assert child_node['meta']['requirement'] == {
-        'citation': 'citcitcit',
-        'impacted_entity': 'imp',
-        'id': req.id,
-        'policy_section': 'sectsect',
-        'policy_sub_section': 'subsub',
-        'req_deadline': 'ded',
-        'req_id': '12.34',
-        'topics': [
-            {'id': topics[0].id, 'name': 'AaA'},
-            {'id': topics[1].id, 'name': 'BbB'},
-        ],
-        'verb': 'vvvv',
     }
 
 

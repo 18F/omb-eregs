@@ -2,7 +2,7 @@ from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import RetrieveAPIView
 
-from document.models import DocNode, FootnoteCitation
+from document.models import DocNode, FootnoteCitation, InlineRequirement
 from document.serializers.doc_cursor import DocCursorSerializer
 from document.tree import DocCursor
 from reqs.views.policies import policy_or_404
@@ -16,10 +16,13 @@ def optimize(queryset):
         'footnotecitations',
         queryset=FootnoteCitation.objects.select_related('footnote_node'),
     )
+    requirement_prefetch = Prefetch(
+        'inlinerequirements',
+        queryset=InlineRequirement.objects.select_related('requirement'),
+    )
     return queryset.\
-        select_related('requirement').\
-        prefetch_related('requirement__topics', footnote_prefetch,
-                         'externallinks')
+        prefetch_related(footnote_prefetch, 'externallinks',
+                         requirement_prefetch)
 
 
 class TreeView(RetrieveAPIView):

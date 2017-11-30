@@ -3,26 +3,7 @@ from typing import NamedTuple
 from rest_framework import serializers
 
 from document.tree import DocCursor
-from reqs.models import Policy, Requirement
-from reqs.serializers import TopicSerializer
-
-
-class RequirementSerializer(serializers.ModelSerializer):
-    topics = TopicSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = Requirement
-        fields = (
-            'citation',
-            'id',
-            'impacted_entity',
-            'policy_section',
-            'policy_sub_section',
-            'req_deadline',
-            'req_id',
-            'topics',
-            'verb',
-        )
+from reqs.models import Policy
 
 
 class PolicySerializer(serializers.ModelSerializer):
@@ -54,7 +35,6 @@ class Meta(NamedTuple):
 class MetaSerializer(serializers.Serializer):
     descendant_footnotes = serializers.SerializerMethodField()
     policy = serializers.SerializerMethodField()
-    requirement = serializers.SerializerMethodField()
 
     def serialize_doc_cursor(self, doc_cursor: DocCursor):
         serializer = type(self.context['parent_serializer'])
@@ -84,7 +64,3 @@ class MetaSerializer(serializers.Serializer):
     def get_policy(self, instance):
         if instance.is_root:
             return PolicySerializer(instance.policy).data
-
-    def get_requirement(self, instance):
-        if hasattr(instance.model, 'requirement'):
-            return RequirementSerializer(instance.model.requirement).data
