@@ -1,15 +1,16 @@
 import importlib
+from collections import OrderedDict
 
 
-ANNOTATORS = {
-    'footnotes': 'ombpdf.footnotes.annotate_footnotes',
-    'footnote_citations': 'ombpdf.footnotes.annotate_citations',
-    'page_numbers': 'ombpdf.pagenumbers.annotate_page_numbers',
-    'paragraphs': 'ombpdf.paragraphs.annotate_paragraphs',
-    'underlines': 'ombpdf.underlines.set_underlines',
-    'lists': 'ombpdf.lists.annotate_lists',
-    'headings': 'ombpdf.headings.annotate_headings',
-}
+ANNOTATORS = OrderedDict([
+    ('footnotes', 'ombpdf.footnotes.annotate_footnotes'),
+    ('footnote_citations', 'ombpdf.footnotes.annotate_citations'),
+    ('page_numbers', 'ombpdf.pagenumbers.annotate_page_numbers'),
+    ('paragraphs', 'ombpdf.paragraphs.annotate_paragraphs'),
+    ('underlines', 'ombpdf.underlines.set_underlines'),
+    ('lists', 'ombpdf.lists.annotate_lists'),
+    ('headings', 'ombpdf.headings.annotate_headings'),
+])
 
 _annotator_funcs = {}
 
