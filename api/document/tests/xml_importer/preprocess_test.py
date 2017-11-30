@@ -32,6 +32,20 @@ def test_standardize_content():
     assert aroot.findtext('./childC/content').strip() == 'Something else'
 
 
+def test_standardize_content_inlines():
+    """Ensure that we don't mess up inline elements."""
+    aroot = etree.fromstring("""
+    <aroot>
+        <childA>
+            <content>Some <em>things</em> here</content>
+        </childA>
+    </aroot>
+    """)
+    preprocess.standardize_content(aroot)
+    assert aroot.findtext('./childA/content/em') == 'things'
+    assert aroot.find('./childA/content/em/content') is None
+
+
 def test_clean_content():
     aroot = etree.fromstring("""
     <aroot>
