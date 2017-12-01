@@ -3,6 +3,8 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import katex from 'katex';
 
+import DocumentNode from '../../util/document-node';
+
 export function texFromContents(contents, inTable = false) {
   const texts = contents.map((content) => {
     switch (content.content_type) {
@@ -54,15 +56,5 @@ export default function TeXMath({ docNode }) {
 }
 
 TeXMath.propTypes = {
-  docNode: PropTypes.shape({
-    contents: PropTypes.arrayOf(PropTypes.shape({
-      content_type: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    })),
-    identifier: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-TeXMath.defaultProps = {
-  children: null,
+  docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };

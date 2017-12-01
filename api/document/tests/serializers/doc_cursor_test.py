@@ -3,9 +3,10 @@ from datetime import date
 import pytest
 from model_mommy import mommy
 
-from document import serializers
+from document.models import DocNode
+from document.serializers import doc_cursor
 from document.tree import DocCursor
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Policy
 
 
 def test_end_to_end():
@@ -21,8 +22,8 @@ def test_end_to_end():
     pa.add_child('par', '1', text='Paragraph (a)(1)', marker='(1)')
     sect2.add_child('par', 'b', marker='b.')
 
-    result = serializers.DocCursorSerializer(root,
-                                             context={'policy': policy}).data
+    result = doc_cursor.DocCursorSerializer(
+        root, context={'policy': policy}).data
     assert result == {
         'identifier': 'root_0',
         'node_type': 'root',
@@ -51,6 +52,7 @@ def test_end_to_end():
                 'meta': {},
                 'content': [{
                     'content_type': '__text__',
+                    'inlines': [],
                     'text': 'Section 1',
                 }],
                 'children': [],
@@ -85,6 +87,7 @@ def test_end_to_end():
                                 'meta': {},
                                 'content': [{
                                     'content_type': '__text__',
+                                    'inlines': [],
                                     'text': 'Paragraph (a)(1)',
                                 }],
                                 'children': [],
@@ -109,50 +112,6 @@ def test_end_to_end():
 
 
 @pytest.mark.django_db
-def test_requirement():
-    """The 'requirement' field should serialize an associated Requirement"""
-    policy = mommy.make(Policy)
-    topics = [mommy.make(Topic, name='AaA'), mommy.make(Topic, name='BbB')]
-    root = DocCursor.new_tree('policy', policy=policy)
-    req_node = root.add_child('req')
-    root.nested_set_renumber()
-
-    req = mommy.make(
-        Requirement,
-        citation='citcitcit',
-        docnode=req_node.model,
-        impacted_entity='imp',
-        policy=policy,
-        policy_section='sectsect',
-        policy_sub_section='subsub',
-        req_deadline='ded',
-        req_id='12.34',
-        topics=topics,
-        verb='vvvv',
-    )
-    req_node.model.refresh_from_db()
-
-    result = serializers.DocCursorSerializer(root,
-                                             context={'policy': policy}).data
-    assert 'requirement' not in result['meta']
-    child_node = result['children'][0]
-    assert child_node['meta']['requirement'] == {
-        'citation': 'citcitcit',
-        'impacted_entity': 'imp',
-        'id': req.id,
-        'policy_section': 'sectsect',
-        'policy_sub_section': 'subsub',
-        'req_deadline': 'ded',
-        'req_id': '12.34',
-        'topics': [
-            {'id': topics[0].id, 'name': 'AaA'},
-            {'id': topics[1].id, 'name': 'BbB'},
-        ],
-        'verb': 'vvvv',
-    }
-
-
-@pytest.mark.django_db
 def test_footnote_citations():
     """The "content" field should contain serialized FootnoteCitations."""
     policy = mommy.make(Policy)
@@ -167,85 +126,128 @@ def test_footnote_citations():
         start=len('Some1 message'), end=len('Some1 message2'),
         footnote_node=footnote2)
 
-    result = serializers.DocCursorSerializer(para,
-                                             context={'policy': policy}).data
+    result = doc_cursor.DocCursorSerializer(
+        para, context={'policy': policy}).data
     assert result['content'] == [
         {
             'content_type': '__text__',
+            'inlines': [],
             'text': 'Some',
         }, {
             'content_type': 'footnote_citation',
+            'inlines': [{
+                'content_type': '__text__',
+                'inlines': [],
+                'text': '1',
+            }],
             'text': '1',
-            'footnote_node': serializers.DocCursorSerializer(
+            'footnote_node': doc_cursor.DocCursorSerializer(
                 para['footnote_1'],
                 context={'policy': policy, 'is_root': False},
             ).data,
         }, {
             'content_type': '__text__',
+            'inlines': [],
             'text': ' message',
         }, {
             'content_type': 'footnote_citation',
+            'inlines': [{
+                'content_type': '__text__',
+                'inlines': [],
+                'text': '2',
+            }],
             'text': '2',
-            'footnote_node': serializers.DocCursorSerializer(
+            'footnote_node': doc_cursor.DocCursorSerializer(
                 para['footnote_2'],
                 context={'policy': policy, 'is_root': False},
             ).data,
         }, {
             'content_type': '__text__',
+            'inlines': [],
             'text': ' here',
         }
     ]
 
 
-@pytest.mark.parametrize('node_type', ('para', 'table', 'something-else'))
-@pytest.mark.parametrize('is_root', (True, False))
 @pytest.mark.django_db
-def test_descendant_footnotes_meta(node_type, is_root):
-    """Only the root and "table" nodes should get descendant_footnotes."""
+def test_external_links():
+    """The "content" field should contain serialized ExternalLinks."""
     policy = mommy.make(Policy)
-    cursor = DocCursor.new_tree(node_type, policy=policy)
-    meta = serializers.Meta(cursor, is_root, policy)
-    result = serializers.MetaSerializer(meta).data
-    if node_type == 'table' or is_root:
-        assert 'descendant_footnotes' in result
-    else:
-        assert 'descendant_footnotes' not in result
+    para = DocCursor.new_tree('para', text='Go over there!',
+                              policy=policy)
+    para.nested_set_renumber()
+    para.model.externallinks.create(
+        start=len('Go over '), end=len('Go over there'),
+        href='http://example.com/aaa')
+
+    result = doc_cursor.DocCursorSerializer(para,
+                                            context={'policy': policy}).data
+    assert result['content'] == [
+        {
+            'content_type': '__text__',
+            'inlines': [],
+            'text': 'Go over '
+        }, {
+            'content_type': 'external_link',
+            'inlines': [{
+                'content_type': '__text__',
+                'inlines': [],
+                'text': 'there',
+            }],
+            'href': 'http://example.com/aaa',
+            'text': 'there',
+        }, {
+            'content_type': '__text__',
+            'inlines': [],
+            'text': '!',
+        }
+    ]
 
 
 @pytest.mark.django_db
-def test_descendant_footnotes():
-    """We pull out footnotes of all descendants, and only descendants."""
-    policy = mommy.make(Policy)
-    root = DocCursor.new_tree('root', policy=policy)
-    ftnt_a = root.add_child('footnote', 'a')
-    root.add_child('para')
-    ftnt_b = root['para_1'].add_child('footnote', 'b')
-    root.add_child('list')
-    root['list_1'].add_child('para')
-    root['list_1'].add_child('para')
-    root['list_1'].add_child('para')
-    ftnt_c = root['list_1']['para_3'].add_child('footnote', 'c')
-    root.nested_set_renumber()
+def test_content_no_annotations():
+    node = mommy.make(DocNode, text='Some text here')
+    cursor = DocCursor.load_from_model(node)
+    content = doc_cursor.DocCursorSerializer(cursor).data['content']
+    assert len(content) == 1
+    assert content[0]['text'] == 'Some text here'
+    assert content[0]['content_type'] == '__text__'
 
-    root['para_1'].model.footnotecitations.create(
-        start=0, end=1, footnote_node=ftnt_a.model)
-    root['para_1'].model.footnotecitations.create(
-        start=1, end=2, footnote_node=ftnt_b.model)
-    root['list_1']['para_2'].model.footnotecitations.create(
-        start=0, end=1, footnote_node=ftnt_c.model)
 
-    def fts(cursor):
-        meta = serializers.Meta(cursor, is_root=True, policy=policy)
-        data = serializers.MetaSerializer(meta).data
-        return [node['identifier'] for node in data['descendant_footnotes']]
+@pytest.mark.django_db
+def test_content_middle_annotation():
+    cursor = DocCursor.new_tree(
+        'policy', policy=mommy.make(Policy), text='Some text here')
+    footnote_cursor = cursor.add_child('child')
+    cursor.nested_set_renumber()
+    cursor.model.footnotecitations.create(
+        start=len('Some '), end=len('Some text'),
+        footnote_node=footnote_cursor.model)
+    content = doc_cursor.DocCursorSerializer(cursor).data['content']
 
-    assert fts(root) == ['root_1__footnote_a', 'root_1__para_1__footnote_b',
-                         'root_1__list_1__para_3__footnote_c']
-    assert fts(root['footnote_a']) == []
-    assert fts(root['para_1']) == ['root_1__footnote_a',
-                                   'root_1__para_1__footnote_b']
-    assert fts(root['list_1']) == ['root_1__list_1__para_3__footnote_c']
-    assert fts(root['list_1']['para_2']) == [
-        'root_1__list_1__para_3__footnote_c']
-    # no citations in para 3
-    assert fts(root['list_1']['para_3']) == []
+    assert len(content) == 3
+    assert [c['text'] for c in content] == ['Some ', 'text', ' here']
+    assert [c['content_type'] for c in content] == [
+        '__text__', 'footnote_citation', '__text__',
+    ]
+    assert content[1]['footnote_node'] == doc_cursor.DocCursorSerializer(
+        footnote_cursor, context={'is_root': False}).data
+
+
+@pytest.mark.django_db
+def test_content_outside():
+    node = mommy.make(DocNode, text='Some text here')
+    node.externallinks.create(start=0, end=len('Some '),
+                              href='http://example.com/aaa')
+    node.externallinks.create(
+        start=len('Some text'), end=len('Some text here'),
+        href='http://example.com/bbb'
+    )
+    cursor = DocCursor.load_from_model(node)
+    content = doc_cursor.DocCursorSerializer(cursor).data['content']
+
+    assert len(content) == 3
+    assert [c['text'] for c in content] == ['Some ', 'text', ' here']
+    assert [c['content_type'] for c in content] == [
+        'external_link', '__text__', 'external_link',
+    ]

@@ -5,10 +5,10 @@ import pytest
 from django.test.utils import CaptureQueriesContext
 from model_mommy import mommy
 
-from document.serializers import DocCursorSerializer
+from document.serializers.doc_cursor import DocCursorSerializer
 from document.tests.utils import random_doc
 from document.tree import DocCursor
-from reqs.models import Policy, Requirement, Topic
+from reqs.models import Policy, Requirement
 
 
 @pytest.mark.django_db
@@ -69,20 +69,16 @@ def test_by_pretty_url(client):
 def test_query_count(client):
     policy = mommy.make(Policy, omb_policy_id='M-O-A-R')
     root = random_doc(20, save=True, policy=policy, text='placeholder')
-    subtree_nodes = {
-        root.tree.nodes[idx]['model']
-        for idx in root.tree.nodes()
-        if idx != root.identifier
-    }
-    # select 5 nodes in the subtree as requirements
-    req_nodes = random.sample(subtree_nodes, 5)
-    reqs = mommy.make(Requirement, policy=policy, _quantity=5)
 
-    for req_node, req in zip(req_nodes, reqs):
-        for _ in range(random.randint(0, 4)):
-            req.topics.add(mommy.make(Topic))
-        req.docnode = req_node
-        req.save()
+    # select 3 nodes to have external links
+    for node in random.sample(list(root.walk()), 3):
+        node.model.externallinks.create(start=0, end=1,
+                                        href='http://example.com/')
+
+    # select 3 nodes to have inline requirements
+    for node in random.sample(list(root.walk()), 3):
+        node.model.inlinerequirements.create(
+            start=1, end=2, requirement=mommy.make(Requirement))
 
     # select 3 nodes to add footnote citations
     citing_nodes = random.sample(list(root.walk()), 3)
@@ -91,18 +87,20 @@ def test_query_count(client):
     for node in root.walk():
         node.model.save()
     for citing, footnote in zip(citing_nodes, footnotes):
-        citing.model.footnotecitations.create(start=0, end=1,
+        citing.model.footnotecitations.create(start=2, end=3,
                                               footnote_node=footnote.model)
-
     # pytest will alter the connection, so we only want to load it within this
     # test
     from django.db import connection
     with CaptureQueriesContext(connection) as capture:
         client.get("/M-O-A-R")
         # Query 1: Lookup the policy
-        # 2: Lookup the root docnode, joining w/ req
+        # 2: Lookup the root docnode
         # 3: fetch footnote citations _and_ referenced node for the root
-        # 4: fetch child nodes, joining w/ requirements
-        # 5: fetch topics related to those requirements
-        # 6: fetch footnote citations _and_ referenced node for child nodes
-        assert len(capture) == 6
+        # 4: fetch external links for the root
+        # 5: fetch inline requirements _and_ referenced req for root
+        # 6: fetch child nodes
+        # 7: fetch footnote citations _and_ referenced node for child nodes
+        # 8: fetch external links for child nodes
+        # 9: fetch inline requirements _and_ referenced req for child nodes
+        assert len(capture) == 9

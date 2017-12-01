@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import React from 'react';
 import TeXMath, { texFromContents } from '../../../components/node-renderers/math';
-import nodeFactory from '../../test-utils/node-factory';
+import DocumentNode from '../../../util/document-node';
 import {
   itIncludesTheIdentifier,
 } from '../../test-utils/node-renderers';
@@ -11,7 +11,7 @@ jest.mock('../../../util/render-node');
 describe('<TeXMath />', () => {
   itIncludesTheIdentifier(TeXMath);
   it('generates something math-like', () => {
-    const docNode = nodeFactory({
+    const docNode = new DocumentNode({
       content: [
         { content_type: '__text__', text: '\\frac{12345654321}{10987678901}' },
       ],
@@ -22,7 +22,7 @@ describe('<TeXMath />', () => {
     expect(result.text()).toContain('10987678901');
   });
   it('generates inline links', () => {
-    const docNode = nodeFactory({
+    const docNode = new DocumentNode({
       content: [
         { content_type: '__text__', text: '\\frac{top' },
         { content_type: 'footnote_citation',

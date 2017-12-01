@@ -1,7 +1,34 @@
 export default class DocumentNode {
-  constructor(docNode) {
-    Object.assign(this, docNode);
-    this.children = docNode.children.map(c => new DocumentNode(c));
+  constructor(args) {
+    const fieldValues = args || {};
+    // a unique (with a single document) string that's composed of
+    // __-divided components
+    this.identifier = fieldValues.identifier || '';
+
+    // a string that gives some semantic meaning to each node.
+    // @see https://github.com/18F/omb-eregs/wiki/Content-Types
+    this.nodeType = fieldValues.node_type || fieldValues.nodeType || '';
+
+    // a way to distinguish children within a single parent
+    // Parent identifier + node_type + type_emblem == identifier
+    this.typeEmblem = fieldValues.type_emblem || fieldValues.typeEmblem || '';
+
+    // the plain text for a node (sans any markers). We generally don't want
+    // to access this as it doesn't deal with inline elements
+    this.text = fieldValues.text || '';
+
+    // text like "a)" or "Section 22"; not essential to understanding a list
+    // item, footnote, etc. but essential to correct display
+    this.marker = fieldValues.marker || '';
+
+    // an array of "content" objects, inline links, citations, etc.
+    this.content = fieldValues.content || [];
+
+    // an array of nested DocumentNodes
+    this.children = (fieldValues.children || []).map(c => new DocumentNode(c));
+
+    // node-level meta data, such as footnotes within a table
+    this.meta = fieldValues.meta || {};
   }
 
   linearize() {
@@ -24,7 +51,7 @@ export default class DocumentNode {
   }
 
   firstWithNodeType(nodeType) {
-    return this.firstMatch(n => n.node_type === nodeType);
+    return this.firstMatch(n => n.nodeType === nodeType);
   }
 
   /* Cleanup: does this node have nodeType in its lineage/ as a parent.

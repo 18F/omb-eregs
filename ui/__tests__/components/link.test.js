@@ -16,7 +16,7 @@ describe('<Link />', () => {
   describe('when given a `route` prop', () => {
     it('renders registered routes as links', () => {
       const result = shallow(<Link route={'route-one'}>hi</Link>);
-      expect(result.find('a').length).toEqual(1);
+      expect(result.find('a')).toHaveLength(1);
     });
     it('logs an error if the route is not registered', () => {
       const spy = jest.spyOn(console, 'error').mockImplementation(() => null);

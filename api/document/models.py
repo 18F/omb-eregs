@@ -1,7 +1,9 @@
-from collections_extended import RangeMap
+import itertools
+from typing import Iterator
+
 from django.db import models
 
-from reqs.models import Policy
+from reqs.models import Policy, Requirement
 
 
 class DocNode(models.Model):
@@ -31,43 +33,11 @@ class DocNode(models.Model):
             left__gt=self.left, right__lt=self.right, policy_id=self.policy_id
         ).order_by('left')
 
-    def flattened_annotations(self) -> RangeMap:
-        """Fetch all of our annotations and flatten overlaps arbitrarily (for
-        now)."""
-        annotations = RangeMap()
-        for fcite in self.footnotecitations.all():
-            annotations[fcite.start:fcite.end] = fcite    # flattens overlaps
-        return annotations
-
-    def content(self):
-        """Query all of our annotation types to markup the content of this
-        DocNode. Ensure all text is wrapped in an annotation by wrapping it in
-        the PlainText annotation. We'll flatten our overlaps arbitrarily for
-        now."""
-        if not self.text:
-            return []
-
-        annotations = self.flattened_annotations()
-        wrap_all_text(annotations, len(self.text))
-
-        return list(annotations.values())
-
-
-def wrap_all_text(annotations: RangeMap, text_length: int):
-    """Ensure that all text is in an annotation by wrapping it in
-    PlainText."""
-    ranges = list(annotations.ranges())     # make a copy
-    previous_end = 0
-    for next_start, next_end, _ in ranges:
-        if next_start != previous_end:
-            annotations[previous_end:next_start] = PlainText(
-                start=previous_end, end=next_start)
-        previous_end = next_end
-
-    # Account for trailing text
-    if previous_end != text_length:
-        annotations[previous_end:text_length] = PlainText(
-            start=previous_end, end=text_length)
+    def annotations(self) -> Iterator['Annotation']:
+        """Query all of our annotation types."""
+        return itertools.chain(self.footnotecitations.all(),
+                               self.externallinks.all(),
+                               self.inlinerequirements.all())
 
 
 class Annotation(models.Model):
@@ -88,3 +58,12 @@ class PlainText(Annotation):
 class FootnoteCitation(Annotation):
     footnote_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='+')
+
+
+class ExternalLink(Annotation):
+    href = models.URLField()
+
+
+class InlineRequirement(Annotation):
+    requirement = models.ForeignKey(
+        Requirement, on_delete=models.CASCADE, related_name='+')

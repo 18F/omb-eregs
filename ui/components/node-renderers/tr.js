@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import DocumentNode from '../../util/document-node';
 import renderNode from '../../util/render-node';
 
 export default function Tr({ docNode }) {
@@ -11,8 +12,5 @@ export default function Tr({ docNode }) {
   );
 }
 Tr.propTypes = {
-  docNode: PropTypes.shape({
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired, // recursive
-    identifier: PropTypes.string.isRequired,
-  }).isRequired,
+  docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };

@@ -2,15 +2,11 @@ import { mount } from 'enzyme';
 import React from 'react';
 
 import { FootnoteCitation, mapStateToProps } from '../../../components/content-renderers/footnote-citation';
-
-function footnoteNode(attrs = null) {
-  const defaultAttrs = { children: [], content: [], identifier: '' };
-  return Object.assign({}, defaultAttrs, attrs || {});
-}
+import DocumentNode from '../../../util/document-node';
 
 describe('<FootnoteCitation />', () => {
   let exampleProps = {
-    content: { footnote_node: footnoteNode(), text: '' },
+    content: { footnote_node: new DocumentNode(), text: '' },
     expanded: false,
   };
   beforeEach(() => {
@@ -25,7 +21,7 @@ describe('<FootnoteCitation />', () => {
     const props = {
       ...exampleProps,
       content: {
-        footnote_node: footnoteNode(),
+        footnote_node: new DocumentNode(),
         text: 'Some text here ',
       },
     };
@@ -38,7 +34,7 @@ describe('<FootnoteCitation />', () => {
     const props = {
       ...exampleProps,
       content: {
-        footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
+        footnote_node: new DocumentNode({ identifier: 'aaa_1__bbb_2' }),
         text: '',
       },
     };
@@ -81,7 +77,7 @@ describe('<FootnoteCitation />', () => {
 
   it('triggers a state transition if clicked when closed', () => {
     const content = {
-      footnote_node: footnoteNode({ identifier: 'aaa_1__bbb_2' }),
+      footnote_node: new DocumentNode({ identifier: 'aaa_1__bbb_2' }),
       text: '',
     };
     const props = {
@@ -109,7 +105,11 @@ describe('<FootnoteCitation />', () => {
 });
 
 describe('mapStateToProps()', () => {
-  const props = { content: { footnote_node: { identifier: 'aaa_1' } } };
+  const props = {
+    content: {
+      footnote_node: new DocumentNode({ identifier: 'aaa_1' }),
+    },
+  };
   it('converts to an expanded state', () => {
     const result = mapStateToProps({ openedFootnote: 'aaa_1' }, props);
     expect(result).toEqual({ expanded: true });

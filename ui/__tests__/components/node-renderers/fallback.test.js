@@ -2,8 +2,8 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Fallback from '../../../components/node-renderers/fallback';
+import DocumentNode from '../../../util/document-node';
 import renderNode from '../../../util/render-node';
-import nodeFactory from '../../test-utils/node-factory';
 
 jest.mock(
   '../../../util/render-node',
@@ -20,9 +20,9 @@ afterEach(() => {
 });
 
 describe('<Fallback />', () => {
-  const docNode = nodeFactory({
+  const docNode = new DocumentNode({
     content: [{ content_type: '__text__', text: 'Example content' }],
-    children: [nodeFactory({ first: 'child' })],
+    children: [new DocumentNode()],
     identifier: 'aaa_1__bbb_2',
   });
   it('includes text, children, id when not in dev mode', () => {
