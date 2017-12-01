@@ -1,8 +1,8 @@
 .homepage {
   .filter-form {
     background-color: $color-primary;
-    border-top: 1px solid $color-white;
-    color: $color-white;
+    border-top: 1px solid $pallet-white;
+    color: $pallet-white;
     padding-left: .75rem;
     padding-right: .75rem;
   }
@@ -10,8 +10,8 @@
 
   .filter-form-submit {
     background-color: $color-primary;
-    color: $color-white;
-    border: 1px solid $color-white;
+    color: $pallet-white;
+    border: 1px solid $pallet-white;
 
     &:hover {
       cursor: pointer;

@@ -31,13 +31,13 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   padding: 2px 4px;
   font-size: 0.7rem;
   margin-left: .3em;
-  background-color: $color-white; // override any highlighting
+  background-color: $pallet-white; // override any highlighting
   position: relative;
 
   &.active {
     border-color: $color-primary-darker;
     background: $color-primary-darker;
-    color: $color-white;
+    color: $pallet-white;
 
     &::before {
       @include footnote-border-triangle-up();

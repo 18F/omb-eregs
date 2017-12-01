@@ -55,7 +55,7 @@ h6,
   -webkit-margin-start: 0;
   -webkit-margin-end: 0;
   @include font-san-serif-bold();
-  color: $color-black;
+  color: $pallet-black;
 
 }
 
@@ -72,7 +72,7 @@ h6,
   .h4,
   .h5,
   .h6 {
-    color: $color-white;
+    color: $pallet-white;
   }
 }
 
@@ -97,7 +97,7 @@ h3,
 .document-container {
   h4,
   .h4 {
-    color: $color-gold-dark;
+    color: $pallet-ochre;
   }
 }
 

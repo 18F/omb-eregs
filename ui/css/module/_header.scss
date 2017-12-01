@@ -21,12 +21,12 @@
 }
 
 .navbar {
-  background-color: $color-primary-darkest;
+  background-color: $pallet-navy;
 }
 
 .navbar-title {
   display: inline-block;
-  color: $color-white;
+  color: $pallet-white;
   font-size: 1.75rem;
   font-weight: bold;
   line-height: 2.25rem;
@@ -88,7 +88,7 @@
 
   .search-submit {
     @extend .gray-border;
-    background-color: $color-white;
+    background-color: $pallet-white;
     border: 1px solid;
     border-left: 0;
     border-bottom-right-radius: 5px;
