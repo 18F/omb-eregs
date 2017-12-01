@@ -1,5 +1,5 @@
 $triangle-dimensions: 18px;
-$footnote-border: 1px;
+$footnote-border: 1px solid $color-blue;
 $footnote-vertical-margin: 24px;
 
 @mixin footnote-border-triangle-up() {
@@ -12,8 +12,8 @@ $footnote-vertical-margin: 24px;
   left: 50%;
   border-top-right-radius: 3px;
   transform: rotate(-45deg);
-  border-top: 1px solid $color-blue;
-  border-right: 1px solid $color-blue;
+  border-top: $footnote-border;
+  border-right: $footnote-border
 }
 
 .footnote-link {
@@ -53,8 +53,8 @@ $footnote-vertical-margin: 24px;
 
   .footnote-wrapper {
     display: block;
-    border-top: $footnote-border solid $color-blue;
-    border-bottom: $footnote-border solid $color-blue;
+    border-top: $footnote-border;
+    border-bottom: $footnote-border;
     margin-top: $footnote-vertical-margin;
     margin-bottom: 2rem;
     padding-top: 1rem;
