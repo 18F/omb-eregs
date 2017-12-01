@@ -7,7 +7,7 @@
   .navbar-title,
   .req .metadata,
   .req .req-text {
-    color: $pallet-black !important;
+    color: $color-black !important;
   }
 
   .main {
@@ -27,7 +27,7 @@
 
   .topics-list a,
   a:link {
-    color: $pallet-black;
+    color: $color-black;
   }
 
   .print-url::after {

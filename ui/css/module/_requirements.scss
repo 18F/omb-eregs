@@ -1,12 +1,12 @@
 .req {
 
   .req-text {
-    color: $pallet-black;
+    color: $color-black;
   }
 
   .metadata {
     @include font-san-serif();
-    color: $pallet-black;
+    color: $color-black;
     font-size: 0.8125rem;
   }
 
@@ -26,7 +26,7 @@
 }
 
 .requirement-content {
-  background-color: $pallet-canary;
-  border-right: 3px solid $pallet-black;
+  background-color: $color-canary;
+  border-right: 3px solid $color-black;
   padding-right: 4px;
 }

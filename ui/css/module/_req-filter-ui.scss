@@ -1,8 +1,8 @@
 @import '~react-select/scss/default';
 
 .active-filter {
-  background-color: $pallet-lt-gray;
-  border: 1px solid $pallet-gray;
+  background-color: $color-lt-gray;
+  border: 1px solid $color-gray;
   font-weight: 500;
   font-size: 0.875rem;
   padding: 0.25rem;
@@ -10,7 +10,7 @@
 
   .remove-filter-link {
     background: url('/static/img/remove-btn.svg') no-repeat center;
-    color: $pallet-black;
+    color: $color-black;
     padding: 0 0.25rem;
     text-indent: -9999px;
     width: 0.9375rem;
@@ -20,14 +20,14 @@
 .filter-ui {
 
   .select {
-    border-color: $pallet-gray;
-    color: $pallet-gray;
+    border-color: $color-gray;
+    color: $color-gray;
   }
 }
 
 .alert {
-  background-color: $pallet-canary;
-  border-color: $pallet-gold;
+  background-color: $color-canary;
+  border-color: $color-gold;
 }
 
 @media (max-width: 52em) {
@@ -36,7 +36,7 @@
   }
 
   .sidebar {
-    background-color: $pallet-lt-gray;
+    background-color: $color-lt-gray;
   }
 
   .filter-header {

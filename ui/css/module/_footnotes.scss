@@ -20,24 +20,24 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   left: 50%;
   border-top-right-radius: 3px;
   transform: rotate(-45deg);
-  border-top: 1px solid $pallet-blue;
-  border-right: 1px solid $pallet-blue;
+  border-top: 1px solid $color-blue;
+  border-right: 1px solid $color-blue;
 }
 
 .footnote-link {
   @include font-san-serif();
-  border: 1px solid $pallet-lt-blue;
+  border: 1px solid $color-lt-blue;
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 0.7rem;
   margin-left: .3em;
-  background-color: $pallet-white; // override any highlighting
+  background-color: $color-white; // override any highlighting
   position: relative;
 
   &.active {
-    border-color: $pallet-blue;
-    background: $pallet-blue;
-    color: $pallet-white;
+    border-color: $color-blue;
+    background: $color-blue;
+    color: $color-white;
 
     &::before {
       @include footnote-border-triangle-up();
@@ -61,8 +61,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 
   .footnote-wrapper {
     display: block;
-    border-top: $one-pixel solid $pallet-blue;
-    border-bottom: $one-pixel solid $pallet-blue;
+    border-top: $one-pixel solid $color-blue;
+    border-bottom: $one-pixel solid $color-blue;
     margin-top: $footnote-vertical-margin;
     margin-bottom: 2rem;
     padding-top: 1rem;
@@ -96,14 +96,14 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
     @extend .m0;
     @extend .col-11;
     width: calc(100% - 3em);
-    color: $pallet-gray;
+    color: $color-gray;
   }
 
   .close-button {
     @extend .bland-box;
     @extend .mx-auto;
     @include font-san-serif-bold();
-    color: $pallet-blue;
+    color: $color-blue;
     font-style: normal;
     font-size: .8em;
     display: block;
@@ -119,7 +119,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 }
 
 .bottom-footnotes {
-  border-top: 1px solid $pallet-blue;
+  border-top: 1px solid $color-blue;
   margin-top: 2.5em;
   padding-top: .75em;
 
@@ -140,7 +140,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   p {
     @include paragraph-with-marker();
     @extend .m0;
-    color: $pallet-gray;
+    color: $color-gray;
     font-size: .875em;
     line-height: 1.125rem;
   }
@@ -149,5 +149,5 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 .footnote-text {
   @include font-san-serif();
   font-style: normal;
-  color: $pallet-gray;
+  color: $color-gray;
 }
