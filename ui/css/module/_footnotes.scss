@@ -29,7 +29,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   border: 1px solid $color-cool-blue-lighter;
   border-radius: 4px;
   padding: 2px 4px;
-  font-size: 0.7em;
+  font-size: 0.7rem;
   margin-left: .3em;
   background-color: $color-white; // override any highlighting
   position: relative;
@@ -48,6 +48,10 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 }
 
 .inline-footnote {
+  > cite {
+    line-height: 1em;   // Maintain paragraph line height
+  }
+
   .node-footnote-content {
     display: block;
     width: 100%;
@@ -72,7 +76,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   }
 
   .node-footnote {
-    font-size: 0.9em;
+    font-size: 0.9rem;
     display: block;
   }
 
@@ -81,8 +85,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
     @extend .col;
     @extend .col-1;
     width: 2.5em;
-    font-size: .9em;
-    line-height: 1.5em;
+    font-size: .9rem;
+    line-height: 1.5rem;
     text-align: right;
     padding-right: .5em;
   }
@@ -128,8 +132,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   .citation-marker {
     @include font-san-serif-bold();
     @include paragraph-marker();
-    font-size: .875em;
-    line-height: 1em; // like font-text, except adjusting for bold
+    font-size: .875rem;
+    line-height: 1rem; // like font-text, except adjusting for bold
   }
 
   .footnote-text,
@@ -138,7 +142,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
     @extend .m0;
     color: $color-gray-medium;
     font-size: .875em;
-    line-height: 1.125em;
+    line-height: 1.125rem;
   }
 }
 
