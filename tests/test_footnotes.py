@@ -70,11 +70,7 @@ def test_annotate_footnotes_m_17_11_0(m_17_11_0_doc):
     # footnote citation.
     assert notes[5] == (
         6,
-        'Id. at§ 5(a). Example: The Program Fraud Civil Remedies Act '
-        'penalty was increased to $10,781in2016, in  accordance with '
-        'the catch-up adjustment requirement ofthe 2015 Act.  '
-        '$10,781x1.01636 = $10,957.38  When rounded to the nearest '
-        'dollar, the new penalty is $10,957.  '
+        'Id. at§ 5(a). '
     )
 
     assert citations[5] == (

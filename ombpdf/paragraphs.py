@@ -26,11 +26,11 @@ def annotate_paragraphs(doc):
     paragraphs = {}
     for page in doc.pages:
         for line in cull_footer(page):
-            if line.is_blank():
+            if line.is_blank() or line.annotation is not None:
                 in_paragraph = False
-            elif line.annotation is None and line.left_edge == doc.left_edge:
+            elif line.annotation is None and line.is_left_edge_near(doc):
                 first_char = line[0]
-                if first_char.fontsize == doc.paragraph_fontsize:
+                if first_char.fontsize.is_near(doc.paragraph_fontsize):
                     if not in_paragraph:
                         in_paragraph = True
                         paragraph_id += 1

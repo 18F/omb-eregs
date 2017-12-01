@@ -129,6 +129,10 @@ class OMBTextCharacter(AnnotatableMixin):
         )
 
 class OMBTextLine(list, AnnotatableMixin):
+    # Distance one edge can be from another to be considered more or less
+    # the same.
+    EDGE_THRESHOLD = Decimal('4')
+
     def __init__(self, lttextline):
         super().__init__([
             OMBTextCharacter(ltchar) for ltchar
@@ -142,6 +146,9 @@ class OMBTextLine(list, AnnotatableMixin):
         # so we're going to use rounding to ensure that lines with
         # very similar left edges are grouped together.
         self.left_edge = Decimal(int((lttextline.x0 - 0.5) / 2) * 2)
+
+    def is_left_edge_near(self, other):
+        return abs(self.left_edge - other.left_edge) <= self.EDGE_THRESHOLD
 
     def iter_char_chunks(self):
         """
