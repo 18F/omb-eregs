@@ -1,17 +1,12 @@
 .req {
 
-  .req-id {
-    @include font-san-serif();
-    color: $color-gray;
-  }
-
   .req-text {
     color: $pallet-black;
   }
 
   .metadata {
     @include font-san-serif();
-    color: $color-gray;
+    color: $pallet-black;
     font-size: 0.8125rem;
   }
 
