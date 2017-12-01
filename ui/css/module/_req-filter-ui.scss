@@ -2,7 +2,7 @@
 
 .active-filter {
   background-color: $color-gray-warm-light;
-  border: 1px solid $color-gray-light;
+  border: 1px solid $pallet-gray;
   font-weight: 500;
   font-size: 0.875rem;
   padding: 0.25rem;
@@ -20,7 +20,7 @@
 .filter-ui {
 
   .select {
-    border-color: $color-gray-light;
+    border-color: $pallet-gray;
     color: $pallet-gray;
   }
 }

@@ -75,7 +75,6 @@
   }
 
   .search-input {
-    @extend .gray-border;
     @include font-san-serif();
     border: 1px solid;
     border-right: 0;
@@ -87,7 +86,6 @@
   }
 
   .search-submit {
-    @extend .gray-border;
     background-color: $pallet-white;
     border: 1px solid;
     border-left: 0;
