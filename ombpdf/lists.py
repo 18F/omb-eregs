@@ -11,6 +11,10 @@ TYPE_UL = 'unordered list'
 
 TYPE_OL = 'ordered list'
 
+# List detection often greedily tries to apply itself to segments we've
+# already identified as page numbers or footnotes.
+greed_markers = ("OMBPageNumber", "OMBFootnote")
+
 
 def get_list_item_type(line):
     text = str(line)
@@ -40,6 +44,12 @@ def annotate_lists(doc):
     lists = {}
     for page in doc.pages:
         for line in page:
+            if line.annotation is not None:
+                # If the annotation is one of those in greed_markers, we
+                # assume that annotation is correct and that the
+                # list detection is being too greedy.
+                if line.annotation.__class__.__name__ in greed_markers:
+                    continue
             left_edge = stack[-1].left_edge if stack else doc.left_edge
             li_type, marker_match = get_list_item_type(line)
             is_ordered = li_type == TYPE_OL

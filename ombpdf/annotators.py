@@ -1,11 +1,10 @@
 import importlib
 from collections import OrderedDict
 
-
 ANNOTATORS = OrderedDict([
+    ('page_numbers', 'ombpdf.pagenumbers.annotate_page_numbers'),
     ('footnotes', 'ombpdf.footnotes.annotate_footnotes'),
     ('footnote_citations', 'ombpdf.footnotes.annotate_citations'),
-    ('page_numbers', 'ombpdf.pagenumbers.annotate_page_numbers'),
     ('paragraphs', 'ombpdf.paragraphs.annotate_paragraphs'),
     ('underlines', 'ombpdf.underlines.set_underlines'),
     ('lists', 'ombpdf.lists.annotate_lists'),
@@ -38,7 +37,7 @@ class AnnotatorTracker:
             self._has_run[name] = False
 
     def require_all(self):
-        self.require(*ANNOTATORS.keys())
+        self.require(*ANNOTATORS)
 
     def require(self, *names):
         for name in names:

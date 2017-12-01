@@ -4,7 +4,12 @@ from textwrap import TextWrapper
 
 from pdfminer import layout
 
-from .document import OMBDocument, OMBFootnoteCitation, OMBFootnote
+from .document import (
+    OMBDocument,
+    OMBFootnoteCitation,
+    OMBFootnote,
+    OMBPageNumber
+)
 from . import util
 from .fontsize import FontSize
 
@@ -61,6 +66,12 @@ def annotate_footnotes(doc):
         curr_footnote = None
 
     for line in doc.lines:
+        if line.annotation is not None:
+            # If the annotation is page number, we assume that the
+            # page number annotation is correct and that the
+            # footnote detection is being too greedy.
+            if line.annotation.__class__.__name__ == "OMBPageNumber":
+                continue
         big_chars = [
             char for char in line
             if char.fontsize.size >= doc.paragraph_fontsize.size
