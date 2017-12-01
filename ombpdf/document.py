@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import namedtuple, Counter
 from decimal import Decimal
 import logging
 import math
@@ -14,6 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 class OMBDocument:
+    # Minimum percentage of lines, out of all lines in the document, that
+    # we should expect to be on the left edge of the page. This helps us
+    # filter out outliers that might be left of the edge, but which might
+    # represent e.g. decorative banner text.
+    MIN_LEFT_EDGE_PERCENTAGE = 0.10
+
     def __init__(self, ltpages, filename=None):
         stats = fontsize.get_font_size_stats(ltpages)
         self.paragraph_fontsize = stats.most_common(1)[0][0]
@@ -22,8 +28,28 @@ class OMBDocument:
             for page, number in zip(ltpages, range(1, len(ltpages) + 1))
         ]
         self.filename = filename
-        self.left_edge = min(self.lines, key=lambda l: l.left_edge).left_edge
+        self.left_edge = self._calc_left_edge()
         self.annotators = AnnotatorTracker(self)
+
+        self._cull_lines_left_of_left_edge()
+
+    def _cull_lines_left_of_left_edge(self):
+        for page in self.pages:
+            lines = [line for line in page if line.left_edge < self.left_edge]
+            for line in lines:
+                page.remove(line)
+
+    def _calc_left_edge(self):
+        counter = Counter()
+        total_lines = 0
+        for line in self.lines:
+            counter[line.left_edge] += 1
+            total_lines += 1
+        significant_edges = [
+            left_edge for (left_edge, count) in counter.items()
+            if count > total_lines * self.MIN_LEFT_EDGE_PERCENTAGE
+        ]
+        return min(significant_edges)
 
     @property
     def lines(self):
@@ -111,9 +137,11 @@ class OMBTextLine(list, AnnotatableMixin):
         self.lttextline = lttextline
         self.annotation = None
 
-        # There can be *really* close bounding boxes, so we're
-        # just going to round to the nearest tenth.
-        self.left_edge = Decimal(lttextline.x0).quantize(Decimal('.1'))
+        # We're interested in the left edge of the line for inferring
+        # the *semantics* of the layout, rather than the *rendering*,
+        # so we're going to use rounding to ensure that lines with
+        # very similar left edges are grouped together.
+        self.left_edge = Decimal(int((lttextline.x0 - 0.5) / 2) * 2)
 
     def iter_char_chunks(self):
         """
