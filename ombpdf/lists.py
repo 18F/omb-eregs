@@ -39,6 +39,8 @@ class ListInfo:
 
 
 def annotate_lists(doc):
+    doc.annotators.require('page_numbers', 'footnotes')
+
     list_id = 0
     stack = []
     lists = {}
