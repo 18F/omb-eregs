@@ -33,7 +33,7 @@ $footnote-vertical-margin: 24px;
 
     &::before {
       @include footnote-border-triangle-up();
-      top: $triangle-dimensions + $footnote-vertical-margin + 2 * $footnote-border;
+      top: $triangle-dimensions + $footnote-vertical-margin;
       z-index: 10;
     }
   }
