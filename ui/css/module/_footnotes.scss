@@ -1,14 +1,6 @@
-$one-pixel-value: 0.063;
-$two-pixel-value: $one-pixel-value * 2;
-$one-pixel: $one-pixel-value + rem;
-
-$footnote-vertical-margin-value: 1.5;
-$footnote-vertical-margin: $footnote-vertical-margin-value + rem;
-
-$triangle-dimensions-value: 1.125;
-$triangle-dimensions: $triangle-dimensions-value + rem;
-
-$triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertical-margin-value - $two-pixel-value) + rem;
+$triangle-dimensions: 18px;
+$footnote-border: 1px;
+$footnote-vertical-margin: 24px;
 
 @mixin footnote-border-triangle-up() {
   content: '';
@@ -41,7 +33,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 
     &::before {
       @include footnote-border-triangle-up();
-      top: $triangle-border-vertical-offset;
+      top: $triangle-dimensions + $footnote-vertical-margin + 2 * $footnote-border;
       z-index: 10;
     }
   }
@@ -61,8 +53,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 
   .footnote-wrapper {
     display: block;
-    border-top: $one-pixel solid $color-blue;
-    border-bottom: $one-pixel solid $color-blue;
+    border-top: $footnote-border solid $color-blue;
+    border-bottom: $footnote-border solid $color-blue;
     margin-top: $footnote-vertical-margin;
     margin-bottom: 2rem;
     padding-top: 1rem;
