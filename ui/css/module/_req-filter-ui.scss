@@ -1,7 +1,7 @@
 @import '~react-select/scss/default';
 
 .active-filter {
-  background-color: $color-gray-warm-light;
+  background-color: $pallet-lt-gray;
   border: 1px solid $pallet-gray;
   font-weight: 500;
   font-size: 0.875rem;
@@ -36,7 +36,7 @@
   }
 
   .sidebar {
-    background-color: $color-gray-warm-light;
+    background-color: $pallet-lt-gray;
   }
 
   .filter-header {
