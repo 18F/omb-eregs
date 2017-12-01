@@ -42,3 +42,24 @@ def test_annotate_lists_works(m_16_19_doc):
         is_ordered=True,
         indentation=2,
     )
+
+
+def test_lists_are_annotated_on_m_15_17(m_15_17_doc):
+    lists = annotate_lists(m_15_17_doc)
+    titles = [
+        'Improve Educational Outcomes and Life Outcomes for Native Youth',
+        'Increase Access to Quality Teacher Housing',
+        'Improve Access to the Internet',
+        'Support the Implementation ofthe Indian Child Welfare Act',
+        'Reduce Teen Suicide',
+    ]
+
+    for i in range(1, 6):
+        assert lists[1][i][0].annotation == OMBListItem(
+            list_id=1,
+            number=i,
+            is_ordered=False,
+            indentation=1
+        )
+
+        assert titles[i-1] in ' '.join(str(line) for line in lists[1][i])
