@@ -1,14 +1,13 @@
-$triangle-dimensions: 18px;
 $footnote-border: 1px solid $color-blue;
 $footnote-vertical-margin: 24px;
 
-@mixin footnote-border-triangle-up() {
+@mixin footnote-border-triangle-up($side-length) {
   content: '';
   position: absolute;
   background: $color-white;
-  height: $triangle-dimensions;
-  width: $triangle-dimensions;
-  margin-left: -9px;
+  height: $side-length;
+  width: $side-length;
+  margin-left: - $side-length / 2;
   left: 50%;
   border-top-right-radius: 3px;
   transform: rotate(-45deg);
@@ -32,7 +31,8 @@ $footnote-vertical-margin: 24px;
     color: $color-white;
 
     &::before {
-      @include footnote-border-triangle-up();
+      $triangle-dimensions: 18px;
+      @include footnote-border-triangle-up($triangle-dimensions);
       top: $triangle-dimensions + $footnote-vertical-margin;
       z-index: 10;
     }
