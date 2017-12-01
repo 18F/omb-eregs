@@ -1,9 +1,21 @@
+$one-pixel-value: 0.063;
+$two-pixel-value: $one-pixel-value * 2;
+$one-pixel: $one-pixel-value + rem;
+
+$footnote-vertical-margin-value: 1.5;
+$footnote-vertical-margin: $footnote-vertical-margin-value + rem;
+
+$triangle-dimensions-value: 1.125;
+$triangle-dimensions: $triangle-dimensions-value + rem;
+
+$triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertical-margin-value - $two-pixel-value) + rem;
+
 @mixin footnote-border-triangle-up() {
   content: '';
   position: absolute;
   background: $color-white;
-  height: 18px;
-  width: 18px;
+  height: $triangle-dimensions;
+  width: $triangle-dimensions;
   margin-left: -9px;
   left: 50%;
   border-top-right-radius: 3px;
@@ -17,7 +29,7 @@
   border: 1px solid $color-cool-blue-lighter;
   border-radius: 4px;
   padding: 2px 4px;
-  font-size: 0.6em;
+  font-size: 0.7em;
   margin-left: .3em;
   background-color: $color-white; // override any highlighting
   position: relative;
@@ -29,7 +41,7 @@
 
     &::before {
       @include footnote-border-triangle-up();
-      top: 38px;
+      top: $triangle-border-vertical-offset;
       z-index: 10;
     }
   }
@@ -45,9 +57,9 @@
 
   .footnote-wrapper {
     display: block;
-    border-top: 1px solid $color-primary-darker;
-    border-bottom: 1px solid $color-primary-darker;
-    margin-top: 1.5rem;
+    border-top: $one-pixel solid $color-primary-darker;
+    border-bottom: $one-pixel solid $color-primary-darker;
+    margin-top: $footnote-vertical-margin;
     margin-bottom: 2rem;
     padding-top: 1rem;
     padding-bottom: 0.2em;
