@@ -20,8 +20,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   left: 50%;
   border-top-right-radius: 3px;
   transform: rotate(-45deg);
-  border-top: 1px solid $color-primary-darker;
-  border-right: 1px solid $color-primary-darker;
+  border-top: 1px solid $pallet-blue;
+  border-right: 1px solid $pallet-blue;
 }
 
 .footnote-link {
@@ -35,8 +35,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   position: relative;
 
   &.active {
-    border-color: $color-primary-darker;
-    background: $color-primary-darker;
+    border-color: $pallet-blue;
+    background: $pallet-blue;
     color: $pallet-white;
 
     &::before {
@@ -61,8 +61,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 
   .footnote-wrapper {
     display: block;
-    border-top: $one-pixel solid $color-primary-darker;
-    border-bottom: $one-pixel solid $color-primary-darker;
+    border-top: $one-pixel solid $pallet-blue;
+    border-bottom: $one-pixel solid $pallet-blue;
     margin-top: $footnote-vertical-margin;
     margin-bottom: 2rem;
     padding-top: 1rem;
@@ -103,7 +103,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
     @extend .bland-box;
     @extend .mx-auto;
     @include font-san-serif-bold();
-    color: $color-primary-darker;
+    color: $pallet-blue;
     font-style: normal;
     font-size: .8em;
     display: block;
