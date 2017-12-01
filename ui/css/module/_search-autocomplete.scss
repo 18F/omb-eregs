@@ -1,6 +1,6 @@
 .filter-lookup-field {
   @include font-san-serif();
-  border-color: $color-gray-dark;
+  border-color: $pallet-gray;
   border-right: 0;
   font-size: 0.875rem;
 }
@@ -12,7 +12,7 @@
   cursor: pointer;
 
   &.homepage-filter-button {
-    border-color: $color-gray-dark;
+    border-color: $pallet-gray;
   }
 }
 

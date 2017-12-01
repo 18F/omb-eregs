@@ -10,7 +10,7 @@
 
   .remove-filter-link {
     background: url('/static/img/remove-btn.svg') no-repeat center;
-    color: $color-gray-dark;
+    color: $pallet-black;
     padding: 0 0.25rem;
     text-indent: -9999px;
     width: 0.9375rem;
@@ -21,7 +21,7 @@
 
   .select {
     border-color: $color-gray-light;
-    color: $color-gray-dark;
+    color: $pallet-gray;
   }
 }
 
