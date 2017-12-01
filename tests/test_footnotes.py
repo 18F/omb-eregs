@@ -54,3 +54,30 @@ def test_annotate_footnotes_m_15_17(m_15_17_doc):
             'http://nces.ed.gov/pubs2014/201439l.pdf. \n'
         )
     ]
+
+
+def test_annotate_footnotes_m_17_11_0(m_17_11_0_doc):
+    # Page numbers and footnotes can clash; handle page numbers first.
+    pagenumbers.annotate_page_numbers(m_17_11_0_doc)
+    notes = footnotes.annotate_footnotes(m_17_11_0_doc)
+    citations = footnotes.annotate_citations(m_17_11_0_doc)
+    # Run this to check that there isn't a clash over lists:
+    lists.annotate_lists(m_17_11_0_doc)
+
+    # We're testing this footnote specifically because the source line for this
+    # footnote citation contains text that's slightly smaller than most of the
+    # text in the document, which was previously throwing off detection of this
+    # footnote citation.
+    assert notes[5] == (
+        6,
+        'Id. at§ 5(a). Example: The Program Fraud Civil Remedies Act '
+        'penalty was increased to $10,781in2016, in  accordance with '
+        'the catch-up adjustment requirement ofthe 2015 Act.  '
+        '$10,781x1.01636 = $10,957.38  When rounded to the nearest '
+        'dollar, the new penalty is $10,957.  '
+    )
+
+    assert citations[5] == (
+        6,
+        'living adjustment. "'
+    )

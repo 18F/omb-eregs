@@ -32,3 +32,13 @@ def m_15_17_pages():
 @pytest.fixture
 def m_15_17_doc(m_15_17_pages):
     return document.OMBDocument(m_15_17_pages, filename='m-15-17.pdf')
+
+
+@pytest.fixture
+def m_17_11_0_pages():
+    return read_pages('2017/m-17-11_0.pdf')
+
+
+@pytest.fixture
+def m_17_11_0_doc(m_17_11_0_pages):
+    return document.OMBDocument(m_17_11_0_pages, filename='m-17-11_0.pdf')
