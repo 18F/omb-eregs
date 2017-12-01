@@ -96,7 +96,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
     @extend .m0;
     @extend .col-11;
     width: calc(100% - 3em);
-    color: $color-gray-medium;
+    color: $pallet-gray;
   }
 
   .close-button {
@@ -140,7 +140,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   p {
     @include paragraph-with-marker();
     @extend .m0;
-    color: $color-gray-medium;
+    color: $pallet-gray;
     font-size: .875em;
     line-height: 1.125rem;
   }
@@ -149,5 +149,5 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 .footnote-text {
   @include font-san-serif();
   font-style: normal;
-  color: $color-gray-medium;
+  color: $pallet-gray;
 }
