@@ -1,18 +1,18 @@
 .filter-lookup-field {
   @include font-san-serif();
-  border-color: $color-gray-dark;
+  border-color: $color-gray;
   border-right: 0;
   font-size: 0.875rem;
 }
 
 .add-filter-button {
-  background-color: $color-primary;
-  border-color: $color-primary;
+  background-color: $color-blue;
+  border-color: $color-blue;
   color: $color-white;
   cursor: pointer;
 
   &.homepage-filter-button {
-    border-color: $color-gray-dark;
+    border-color: $color-gray;
   }
 }
 

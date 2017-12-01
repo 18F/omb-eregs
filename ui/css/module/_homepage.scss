@@ -1,21 +1,10 @@
 .homepage {
   .filter-form {
-    background-color: $color-primary;
+    background-color: $color-blue;
     border-top: 1px solid $color-white;
     color: $color-white;
     padding-left: .75rem;
     padding-right: .75rem;
-  }
-
-
-  .filter-form-submit {
-    background-color: $color-primary;
-    color: $color-white;
-    border: 1px solid $color-white;
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 
   h2,
@@ -38,9 +27,9 @@
   }
 
   .new-policies {
-    background-color: $color-gray-lightest;
-    border-top: 1px solid $color-gray-light;
-    border-bottom: 1px solid $color-gray-light;
+    background-color: $color-white;
+    border-top: 1px solid $color-gray;
+    border-bottom: 1px solid $color-gray;
   }
 
   .search-input {

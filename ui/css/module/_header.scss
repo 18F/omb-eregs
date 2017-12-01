@@ -1,6 +1,6 @@
 .usa-disclaimer {
-  background-color: $color-gray-lightest;
-  color: $color-gray-dark;
+  background-color: $color-white;
+  color: $color-gray;
   font-size: 0.75rem;
   padding: 0.25rem 1rem;
   line-height: 0.9375rem;
@@ -21,7 +21,7 @@
 }
 
 .navbar {
-  background-color: $color-primary-darkest;
+  background-color: $color-black;
 }
 
 .navbar-title {
@@ -75,7 +75,6 @@
   }
 
   .search-input {
-    @extend .gray-border;
     @include font-san-serif();
     border: 1px solid;
     border-right: 0;
@@ -87,7 +86,6 @@
   }
 
   .search-submit {
-    @extend .gray-border;
     background-color: $color-white;
     border: 1px solid;
     border-left: 0;
