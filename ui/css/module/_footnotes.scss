@@ -26,7 +26,7 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 
 .footnote-link {
   @include font-san-serif();
-  border: 1px solid $color-cool-blue-lighter;
+  border: 1px solid $pallet-lt-blue;
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 0.7rem;
