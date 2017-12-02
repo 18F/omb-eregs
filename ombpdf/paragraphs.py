@@ -38,7 +38,7 @@ def is_line_indented(line, next_line, doc):
 
 
 def annotate_paragraphs(doc):
-    doc.annotators.require('footnotes', 'page_numbers')
+    doc.annotators.require('footnotes', 'page_numbers', 'headings')
     in_paragraph = False
     paragraph_id = 0
     paragraphs = {}
