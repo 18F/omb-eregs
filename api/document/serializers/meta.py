@@ -24,12 +24,8 @@ class Meta(NamedTuple):
     policy: Policy
 
     @property
-    def model(self):
-        return self.cursor.model
-
-    @property
     def node_type(self):
-        return self.model.node_type
+        return self.cursor.node_type
 
 
 class MetaSerializer(serializers.Serializer):
@@ -55,7 +51,7 @@ class MetaSerializer(serializers.Serializer):
             return None
         footnotes = []
         for node in instance.cursor.walk():
-            for citation in node.model.footnotecitations.all():
+            for citation in node.footnotecitations.all():
                 subtree = DocCursor(instance.cursor.tree,
                                     citation.footnote_node.identifier)
                 footnotes.append(self.serialize_doc_cursor(subtree))

@@ -17,6 +17,10 @@ class DocCursor():
         self.tree = tree
         self.identifier = identifier
 
+    def __getattr__(self, attr):
+        """Delegate fields/methods to wrapped model."""
+        return getattr(self.model, attr)
+
     @classmethod
     def new_tree(cls, node_type: str, type_emblem: str='1', policy=None,
                  **attrs):
@@ -60,7 +64,7 @@ class DocCursor():
         example, due to having a paragraph marker such as "(ix)"), much of the
         time we'll just number them sequentially. This method gives us the
         next emblem for a given node_type as a child of self."""
-        child_type_counts = Counter(c.model.node_type for c in self.children())
+        child_type_counts = Counter(c.node_type for c in self.children())
         return str(child_type_counts[node_type] + 1)
 
     def add_child(self, node_type: str, type_emblem: Optional[str] = None,
@@ -73,7 +77,7 @@ class DocCursor():
         identifier = f"{self.identifier}__{node_type}_{type_emblem}"
         self.tree.add_node(identifier, model=DocNode(
             identifier=identifier, node_type=node_type,
-            type_emblem=type_emblem, depth=self.model.depth + 1,
+            type_emblem=type_emblem, depth=self.depth + 1,
             **attrs
         ))
         self.tree.add_edge(self.identifier, identifier,
@@ -101,7 +105,7 @@ class DocCursor():
 
         for child in self.children():
             child.nested_set_renumber(left + 1, bulk_create=False)
-            left = child.model.right
+            left = child.right
 
         if bulk_create:
             self._bulk_create()
@@ -123,7 +127,7 @@ class DocCursor():
         parent = self
         for child in models:
             # not a child of this parent; move cursor up
-            while child.left > parent.model.right:
+            while child.left > parent.right:
                 parent = parent.parent()
             self.tree.add_node(child.identifier, model=child)
             self.tree.add_edge(parent.identifier, child.identifier,

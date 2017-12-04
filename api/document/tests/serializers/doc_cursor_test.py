@@ -120,9 +120,9 @@ def test_footnote_citations():
     footnote1 = para.add_child('footnote').model
     footnote2 = para.add_child('footnote').model
     para.nested_set_renumber()
-    para.model.footnotecitations.create(
+    para.footnotecitations.create(
         start=len('Some'), end=len('Some1'), footnote_node=footnote1)
-    para.model.footnotecitations.create(
+    para.footnotecitations.create(
         start=len('Some1 message'), end=len('Some1 message2'),
         footnote_node=footnote2)
 
@@ -176,7 +176,7 @@ def test_external_links():
     para = DocCursor.new_tree('para', text='Go over there!',
                               policy=policy)
     para.nested_set_renumber()
-    para.model.externallinks.create(
+    para.externallinks.create(
         start=len('Go over '), end=len('Go over there'),
         href='http://example.com/aaa')
 
@@ -220,7 +220,7 @@ def test_content_middle_annotation():
         'policy', policy=mommy.make(Policy), text='Some text here')
     footnote_cursor = cursor.add_child('child')
     cursor.nested_set_renumber()
-    cursor.model.footnotecitations.create(
+    cursor.footnotecitations.create(
         start=len('Some '), end=len('Some text'),
         footnote_node=footnote_cursor.model)
     content = doc_cursor.DocCursorSerializer(cursor).data['content']

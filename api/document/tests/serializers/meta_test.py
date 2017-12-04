@@ -40,11 +40,11 @@ def test_descendant_footnotes():
     ftnt_c = root['list_1']['para_3'].add_child('footnote', 'c')
     root.nested_set_renumber()
 
-    root['para_1'].model.footnotecitations.create(
+    root['para_1'].footnotecitations.create(
         start=0, end=1, footnote_node=ftnt_a.model)
-    root['para_1'].model.footnotecitations.create(
+    root['para_1'].footnotecitations.create(
         start=1, end=2, footnote_node=ftnt_b.model)
-    root['list_1']['para_2'].model.footnotecitations.create(
+    root['list_1']['para_2'].footnotecitations.create(
         start=0, end=1, footnote_node=ftnt_c.model)
 
     def fts(cursor):

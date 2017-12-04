@@ -101,7 +101,7 @@ class BaseAnnotationSerializer(serializers.Serializer):
 
     @property
     def doc_node_text(self):
-        return self.context['cursor'].model.text
+        return self.context['cursor'].text
 
     @property
     def cursor_tree(self):

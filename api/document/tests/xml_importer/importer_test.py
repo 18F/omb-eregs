@@ -27,8 +27,8 @@ def test_import_xml_doc():
     assert DocNode.objects.count() == 4
     root_model = DocNode.objects.get(identifier='aroot_1')
     root = DocCursor.load_from_model(root_model)
-    assert root['subchild_b'].model.text == 'Contents'
-    assert root['subchild_2']['subsubchild_1'].model.node_type == 'subsubchild'
+    assert root['subchild_b'].text == 'Contents'
+    assert root['subchild_2']['subsubchild_1'].node_type == 'subsubchild'
 
 
 @pytest.mark.parametrize('xml_str, expected_emblem', [
@@ -38,13 +38,13 @@ def test_import_xml_doc():
 def test_convert_to_tree_root_emblems(xml_str, expected_emblem):
     xml = etree.fromstring(xml_str)
     result = importer.convert_to_tree(xml)
-    assert result.model.type_emblem == expected_emblem
+    assert result.type_emblem == expected_emblem
 
 
 def test_convert_to_tree_marker():
     xml = etree.fromstring('<some_el marker="(1)" />')
     result = importer.convert_to_tree(xml)
-    assert result.model.marker == '(1)'
+    assert result.marker == '(1)'
 
 
 def test_convert_to_tree_xml():
