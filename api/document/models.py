@@ -17,6 +17,8 @@ class DocNode(models.Model):
     text = models.TextField(blank=True)
     # e.g. "(a)", "From:", "1.", "•"
     marker = models.CharField(max_length=64, blank=True)
+    # Plain text title for this node (for use in tables of contents, etc.)
+    title = models.CharField(max_length=128, blank=True, db_index=True)
 
     left = models.PositiveIntegerField()
     right = models.PositiveIntegerField()
