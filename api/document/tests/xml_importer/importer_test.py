@@ -12,11 +12,11 @@ from reqs.models import Policy
 def test_import_xml_doc():
     policy = mommy.make(Policy)
     xml = etree.fromstring("""
-    <aroot>
+    <aroot title="Root of Doc">
         <subchild emblem="b">
             <content>Contents</content>
         </subchild>
-        <subchild>
+        <subchild title="Second child">
             <content>Subchild 2 here</content>
             <subsubchild />
         </subchild>
@@ -27,7 +27,10 @@ def test_import_xml_doc():
     assert DocNode.objects.count() == 4
     root_model = DocNode.objects.get(identifier='aroot_1')
     root = DocCursor.load_from_model(root_model)
+    assert root.title == 'Root of Doc'
     assert root['subchild_b'].text == 'Contents'
+    assert root['subchild_b'].title == ''
+    assert root['subchild_2'].title == 'Second child'
     assert root['subchild_2']['subsubchild_1'].node_type == 'subsubchild'
 
 
