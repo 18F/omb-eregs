@@ -8,6 +8,6 @@ describe('<PolicyLink />', () => {
     const policy = { id: 10, title_with_number: 'fake-text' };
     const rendered = shallow(<PolicyLink policy={policy} />);
     const link = rendered.find('Link');
-    expect(link.render().find('a').text()).toEqual('fake-text');
+    expect(link.children().text()).toEqual('fake-text');
   });
 });
