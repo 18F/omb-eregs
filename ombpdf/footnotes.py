@@ -1,5 +1,6 @@
 import re
 from textwrap import TextWrapper
+from decimal import Decimal
 
 from pdfminer import layout
 
@@ -21,6 +22,11 @@ FOOTNOTE_RE = re.compile(r'([0-9]+) (.+)')
 def is_significantly_smaller(size, normal_size, gap=0.2):
     return float(normal_size - size) > float(gap)
 
+def line_contains_big_chars(line, doc):
+    for char in line:
+        if char.fontsize.size + Decimal('0.5') >= doc.paragraph_fontsize.size:
+            return True
+    return False
 
 def annotate_citations(doc):
     citations = []
@@ -76,11 +82,7 @@ def annotate_footnotes(doc):
             # footnote detection is being too greedy.
             if line.annotation.__class__.__name__ == "OMBPageNumber":
                 continue
-        big_chars = [
-            char for char in line
-            if char.fontsize.size >= doc.paragraph_fontsize.size
-        ]
-        if not big_chars:
+        if not line_contains_big_chars(line, doc):
             chars = str(line)
             match = FOOTNOTE_RE.match(chars)
             if match:

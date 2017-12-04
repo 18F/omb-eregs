@@ -15,3 +15,17 @@ def test_annotate_paragraphs_works(m_16_19_doc):
 
     # The first sentence on page 3 (continuation of paragraph from page 2)
     assert str(p[9][2]).strip().startswith('without approval from OMB')
+
+
+def test_annotate_paragraphs_works_with_indents(m_15_17_doc):
+    p = paragraphs.annotate_paragraphs(m_15_17_doc)
+
+    assert str(p[2][0]).startswith('Last summer, the President')
+
+    assert str(p[3][0]).startswith('Federal government funding for')
+
+    assert str(p[4][0]).startswith('This memorandum outlines')
+
+    assert str(p[5][0]).startswith('While the Administration')
+
+    assert str(p[6][0]).startswith('Native children are far')

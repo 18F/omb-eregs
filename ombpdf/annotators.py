@@ -5,10 +5,10 @@ ANNOTATORS = OrderedDict([
     ('page_numbers', 'ombpdf.pagenumbers.annotate_page_numbers'),
     ('footnotes', 'ombpdf.footnotes.annotate_footnotes'),
     ('footnote_citations', 'ombpdf.footnotes.annotate_citations'),
-    ('paragraphs', 'ombpdf.paragraphs.annotate_paragraphs'),
     ('underlines', 'ombpdf.underlines.set_underlines'),
     ('lists', 'ombpdf.lists.annotate_lists'),
     ('headings', 'ombpdf.headings.annotate_headings'),
+    ('paragraphs', 'ombpdf.paragraphs.annotate_paragraphs'),
 ])
 
 _annotator_funcs = {}
