@@ -15,6 +15,7 @@ import ombpdf.pagenumbers
 import ombpdf.headings
 import ombpdf.semhtml
 import ombpdf.webapp
+import ombpdf.rawlayout
 
 
 def get_doc(filename):
@@ -94,6 +95,15 @@ def semhtml(filename):
     "Convert the given PDF to semantic HTML."
 
     content = ombpdf.semhtml.to_html(get_doc(filename)).encode('utf-8')
+    sys.stdout.buffer.write(content)
+
+
+@cli.command()
+@click.argument('filename')
+def rawlayout(filename):
+    "Show HTML for the raw layout (bounding boxes, etc) of the given PDF."
+
+    content = ombpdf.rawlayout.to_html(get_doc(filename)).encode('utf-8')
     sys.stdout.buffer.write(content)
 
 
