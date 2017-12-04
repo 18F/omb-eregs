@@ -50,10 +50,10 @@ describe('<Requirement />', () => {
     });
 
     let result = mount(<Requirement requirement={hasEntity} />);
-    expect(result.find('.applies-to').first().text()).toEqual(
+    expect(result.find('div.applies-to').first().text()).toEqual(
       'Applies to: A Value that has NA in it');
 
     result = mount(<Requirement requirement={hasNA} />);
-    expect(result.find('.applies-to')).toHaveLength(0);
+    expect(result.find('div.applies-to')).toHaveLength(0);
   });
 });
