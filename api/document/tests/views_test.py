@@ -103,4 +103,4 @@ def test_query_count(client):
         # 7: fetch footnote citations _and_ referenced node for child nodes
         # 8: fetch external links for child nodes
         # 9: fetch inline requirements _and_ referenced req for child nodes
-        assert len(capture) == 9
+        assert len(capture) == 11
