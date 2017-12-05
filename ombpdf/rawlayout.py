@@ -39,17 +39,19 @@ PREAMBLE = """\
 </p>
 """
 
-class PxStyleAttr:
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
+def to_px_style_attr(**kwargs):
+    '''
+    >>> to_px_style_attr(width=50.12345, height=40.65321)
+    'style="height: 40.65px; width: 50.12px"'
+    '''
 
-    def __str__(self):
-        props = []
-        for name, val in self.kwargs.items():
-            val = Decimal(val).quantize(Decimal('.01'))
-            props.append(f'{name}: {val}px')
-        css = '; '.join(props)
-        return f'style="{css}"'
+    props = []
+    for name, val in kwargs.items():
+        val = Decimal(val).quantize(Decimal('.01'))
+        props.append(f'{name}: {val}px')
+    props.sort()
+    css = '; '.join(props)
+    return f'style="{css}"'
 
 
 def to_html(doc):
@@ -60,15 +62,15 @@ def to_html(doc):
         PREAMBLE,
     ]
     for page in doc.pages:
-        pagestyle = PxStyleAttr(width=page.ltpage.width,
-                                height=page.ltpage.height)
+        pagestyle = to_px_style_attr(width=page.ltpage.width,
+                                     height=page.ltpage.height)
         chunks.append(f'<h2>Page {page.number}</h2>')
         chunks.append(f'<div class="page" {pagestyle}>\n')
         for line in page:
             chunks.append(f'<div class="line" '
                           f'data-str="{escape(str(line))}">\n')
             for char in line:
-                charstyle = PxStyleAttr(
+                charstyle = to_px_style_attr(
                     top=page.ltpage.height - char.ltchar.y0,
                     left=char.ltchar.x0,
                     width=char.ltchar.width,
