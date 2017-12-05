@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, Markup
 from werkzeug.routing import BaseConverter, ValidationError
 
 from ombpdf.download_pdfs import ROOT_DIR as DATA_DIR
@@ -75,4 +75,9 @@ def semhtml_pdf(pdf):
 
 @app.route('/rawlayout/<pdfpath:pdf>')
 def rawlayout_pdf(pdf):
-    return rawlayout.to_html(to_doc(pdf))
+    doc = to_doc(pdf)
+    return render_template(
+        'rawlayout.html',
+        doc=doc,
+        html=Markup(rawlayout.to_html(doc)),
+    )

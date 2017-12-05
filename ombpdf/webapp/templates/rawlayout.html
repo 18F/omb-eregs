@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+html, body {
+    font-family: sans-serif;
+}
+
+.page {
+    border: 1px solid black;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.char {
+    background: rgba(0, 255, 0, 0.2);
+    color: lightgray;
+    position: absolute;
+    overflow: hidden;
+    font-size: 0;
+}
+</style>
+<title>Raw layout for {{ doc.filename }}</title>
+<h1>Raw layout for <code>{{ doc.filename }}</code></h1>
+<p>
+  This page is primarily intended to show the bounding boxes of various page elements.
+</p>
+<p>
+  Inspect this page with developer tools to obtain more details.
+</p>
+{{ html }}
+<script src="{{ url_for('static', filename='js/main.bundle.js') }}"></script>
