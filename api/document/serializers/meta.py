@@ -2,6 +2,7 @@ from typing import NamedTuple
 
 from rest_framework import serializers
 
+from document.models import DocNode
 from document.tree import DocCursor
 from reqs.models import Policy
 
@@ -15,6 +16,17 @@ class PolicySerializer(serializers.ModelSerializer):
             'original_url',
             'title',
         )
+
+
+class TableOfContentsSerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DocNode
+        fields = ('children', 'identifier', 'title')
+
+    def get_children(self, instance):
+        return type(self)(instance.children(), many=True).data
 
 
 class Meta(NamedTuple):
@@ -31,6 +43,7 @@ class Meta(NamedTuple):
 class MetaSerializer(serializers.Serializer):
     descendant_footnotes = serializers.SerializerMethodField()
     policy = serializers.SerializerMethodField()
+    table_of_contents = serializers.SerializerMethodField()
 
     def serialize_doc_cursor(self, doc_cursor: DocCursor):
         serializer = type(self.context['parent_serializer'])
@@ -60,3 +73,10 @@ class MetaSerializer(serializers.Serializer):
     def get_policy(self, instance):
         if instance.is_root:
             return PolicySerializer(instance.policy).data
+
+    def get_table_of_contents(self, instance):
+        if instance.is_root:
+            only_titled = DocNode.objects.exclude(title='')
+            titled_cursor = DocCursor.load_from_model(
+                instance.cursor.model, queryset=only_titled)
+            return TableOfContentsSerializer(titled_cursor).data

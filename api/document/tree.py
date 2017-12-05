@@ -35,12 +35,13 @@ class DocCursor():
         return cls(tree, identifier)
 
     @classmethod
-    def load_from_model(cls, root_node: DocNode, subtree: bool=True):
+    def load_from_model(cls, root_node: DocNode, subtree: bool=True,
+                        queryset=None):
         tree = DiGraph()
         tree.add_node(root_node.identifier, model=root_node)
         root = cls(tree, root_node.identifier)
         if subtree:
-            root.add_models(root_node.descendants())
+            root.add_models(root_node.descendants(queryset))
         return root
 
     @property
@@ -117,9 +118,9 @@ class DocCursor():
         return self.tree.out_degree(self.identifier)
 
     def parent(self):
-        if '__' in self.identifier:
-            parent_idx = self.identifier.rsplit('__', 1)[0]
-            return self.__class__(self.tree, parent_idx)
+        predecessors = list(self.tree.predecessors(self.identifier))
+        if predecessors:
+            return type(self)(self.tree, predecessors[0])
 
     def add_models(self, models):
         """Convert a (linear) list of DocNodes into a tree-aware version.

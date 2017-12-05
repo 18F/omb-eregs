@@ -26,7 +26,7 @@ class DocCursorSerializer(serializers.ModelSerializer):
         )
 
     def get_children(self, instance):
-        return self.__class__(
+        return type(self)(
             instance.children(), many=True,
             context={**self.context, 'is_root': False},
         ).data

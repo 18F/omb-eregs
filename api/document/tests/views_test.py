@@ -93,13 +93,14 @@ def test_query_count(client):
     from django.db import connection
     with CaptureQueriesContext(connection) as capture:
         client.get("/M-O-A-R")
-        # Query 1: Lookup the policy
-        # 2: Lookup the root docnode
-        # 3: fetch footnote citations _and_ referenced node for the root
-        # 4: fetch external links for the root
-        # 5: fetch inline requirements _and_ referenced req for root
-        # 6: fetch child nodes
-        # 7: fetch footnote citations _and_ referenced node for child nodes
-        # 8: fetch external links for child nodes
-        # 9: fetch inline requirements _and_ referenced req for child nodes
-        assert len(capture) == 9
+        #  Query 1: Lookup the policy
+        #  2: Lookup the root docnode
+        #  3: fetch footnote citations _and_ referenced node for the root
+        #  4: fetch external links for the root
+        #  5: fetch inline requirements _and_ referenced req for root
+        #  6: fetch nodes for table of contents
+        #  7: fetch child nodes
+        #  8: fetch footnote citations _and_ referenced node for child nodes
+        #  9: fetch external links for child nodes
+        # 10: fetch inline requirements _and_ referenced req for child nodes
+        assert len(capture) == 10

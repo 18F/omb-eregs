@@ -30,8 +30,10 @@ class DocNode(models.Model):
             unique_together,
         )
 
-    def descendants(self):
-        return self.__class__.objects.filter(
+    def descendants(self, queryset=None):
+        if queryset is None:
+            queryset = type(self).objects
+        return queryset.filter(
             left__gt=self.left, right__lt=self.right, policy_id=self.policy_id
         ).order_by('left')
 
