@@ -18,8 +18,8 @@ describe('<Footnote />', () => {
     };
     const result = shallow(<Footnote {...params} />);
 
-    const marker = result.children().first();
-    expect(marker.text()).toBe('8');
+    const marker = result.find('Link').first();
+    expect(marker.render().text()).toBe('8');
   });
 });
 
