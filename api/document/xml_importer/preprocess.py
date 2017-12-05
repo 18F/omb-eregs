@@ -12,7 +12,10 @@ def standardize_content(xml: etree.ElementBase):
     """For ease of use, we don't require all text be wrapped in a "content"
     tag. However, that idiom _is_ helpful when parsing, so let's add them
     here."""
-    for element in xml.xpath('.//*[not(self::content) and not(./content)]'):
+    xpath_selector = ('not(self::content) '         # not a content element
+                      'and not(ancestor::content)'  # not a child of a content
+                      'and not(./content) ')        # doesn't contain a content
+    for element in xml.xpath(f'.//*[{xpath_selector}]'):
         if element.text:
             content_xml = etree.SubElement(element, 'content')
             content_xml.text = element.text

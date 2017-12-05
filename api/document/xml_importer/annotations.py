@@ -4,8 +4,10 @@ from typing import Dict, List, Optional, Type
 
 from lxml import etree
 
-from document.models import Annotation, ExternalLink, FootnoteCitation
+from document.models import (Annotation, ExternalLink, FootnoteCitation,
+                             InlineRequirement)
 from document.tree import XMLAwareCursor
+from reqs.models import Requirement
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +36,20 @@ def anchor(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
                         end=start + len(text), href=href)
 
 
+def requirement(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
+                start: int) -> Optional[InlineRequirement]:
+    text = ''.join(xml_span.itertext())
+    req_id = xml_span.attrib.get('id', '')
+    req = Requirement.objects.filter(req_id=req_id).first()
+    if req:
+        return InlineRequirement(
+            doc_node=cursor.model, start=start, end=start + len(text),
+            requirement=req
+        )
+    else:
+        logger.warning("Can't find requirement: %s", repr(req_id))
+
+
 def noop_handler(cursor, xml_span, start):
     pass
 
@@ -42,6 +58,7 @@ annotation_mapping = defaultdict(
     lambda: noop_handler,
     footnote_citation=footnote_citation,
     a=anchor,
+    req=requirement,
 )
 
 
@@ -49,18 +66,23 @@ def len_of_child_text(xml_node: etree.ElementBase):
     return sum(len(txt) for txt in xml_node.itertext())
 
 
-def content_xml_annotations(
-        content_xml: etree.ElementBase, cursor: XMLAwareCursor):
-    """Derive all annotations from a <content/> tag, tracking their start/end
-    position in the original string."""
-    len_so_far = len(content_xml.text or '')
-    for child_xml in content_xml:
-        handler = annotation_mapping[child_xml.tag]
-        annotation = handler(cursor, child_xml, len_so_far)
-        if annotation:
-            yield annotation
-        len_so_far += len_of_child_text(child_xml)
-        len_so_far += len(child_xml.tail or '')
+class AnnotationDeriver:
+    """Recursively derives annotations. This is a class to keep track of the
+    start position within the original string."""
+    def __init__(self, cursor: XMLAwareCursor):
+        self.len_so_far = 0
+        self.cursor = cursor
+
+    def derive(self, xml: etree.ElementBase):
+        intro_text = xml.text or ''
+        self.len_so_far += len(intro_text)
+        for child_xml in xml:
+            handler = annotation_mapping[child_xml.tag]
+            annotation = handler(self.cursor, child_xml, self.len_so_far)
+            if annotation:
+                yield annotation
+            yield from self.derive(child_xml)
+            self.len_so_far += len(child_xml.tail or '')
 
 
 def derive_annotations(
@@ -68,7 +90,7 @@ def derive_annotations(
     content_xml = cursor.xml_node.find('./content')
     annotations_by_cls = defaultdict(list)
     if content_xml is not None:
-        for annotation in content_xml_annotations(content_xml, cursor):
+        for annotation in AnnotationDeriver(cursor).derive(content_xml):
             annotations_by_cls[annotation.__class__].append(annotation)
 
     for child_cursor in cursor.children():
