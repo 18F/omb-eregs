@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Type
 
 from lxml import etree
 
-from document.models import (Annotation, ExternalLink, FootnoteCitation,
+from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement)
 from document.tree import XMLAwareCursor
 from reqs.models import Requirement
@@ -50,12 +50,20 @@ def requirement(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
         logger.warning("Can't find requirement: %s", repr(req_id))
 
 
+def cite(cursor: XMLAwareCursor, xml_span: etree.ElementBase,
+         start: int) -> Optional[ExternalLink]:
+    text = ''.join(xml_span.itertext())
+    return Cite(doc_node=cursor.model, start=start,
+                end=start + len(text))
+
+
 def noop_handler(cursor, xml_span, start):
     pass
 
 
 annotation_mapping = defaultdict(
     lambda: noop_handler,
+    cite=cite,
     footnote_citation=footnote_citation,
     a=anchor,
     req=requirement,

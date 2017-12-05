@@ -3,7 +3,7 @@ from typing import Iterator, List, Optional
 
 from rest_framework import serializers
 
-from document.models import (Annotation, ExternalLink, FootnoteCitation,
+from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
 from document.tree import DocCursor
 from reqs.models import Requirement
@@ -156,7 +156,12 @@ class InlineRequirementSerializer(BaseAnnotationSerializer):
     requirement = RequirementSerializer()
 
 
+class CiteSerializer(BaseAnnotationSerializer):
+    CONTENT_TYPE = 'cite'
+
+
 NestedAnnotationSerializer.serializer_mapping.update({
+    Cite: CiteSerializer,
     PlainText: PlainTextSerializer,
     FootnoteCitation: FootnoteCitationSerializer,
     ExternalLink: ExternalLinkSerializer,
