@@ -73,7 +73,7 @@ class AnnotationDeriver:
         self.len_so_far = 0
         self.cursor = cursor
 
-    def __call__(self, xml: etree.ElementBase):
+    def derive(self, xml: etree.ElementBase):
         intro_text = xml.text or ''
         self.len_so_far += len(intro_text)
         for child_xml in xml:
@@ -81,7 +81,7 @@ class AnnotationDeriver:
             annotation = handler(self.cursor, child_xml, self.len_so_far)
             if annotation:
                 yield annotation
-            yield from self(child_xml)
+            yield from self.derive(child_xml)
             self.len_so_far += len(child_xml.tail or '')
 
 
@@ -90,7 +90,7 @@ def derive_annotations(
     content_xml = cursor.xml_node.find('./content')
     annotations_by_cls = defaultdict(list)
     if content_xml is not None:
-        for annotation in AnnotationDeriver(cursor)(content_xml):
+        for annotation in AnnotationDeriver(cursor).derive(content_xml):
             annotations_by_cls[annotation.__class__].append(annotation)
 
     for child_cursor in cursor.children():

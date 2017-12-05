@@ -74,7 +74,7 @@ def test_annotation_deriver(monkeypatch):
         # being careful about whitespace
         "<content>Some <aaa>span</aaa> of <bbb>text</bbb> here "
         "<nonono>there</nonono>:<empty />!</content>")
-    result = list(annotations.AnnotationDeriver(Mock())(xml))
+    result = list(annotations.AnnotationDeriver(Mock()).derive(xml))
     assert result == [aaa.return_value, bbb.return_value]
 
     assert aaa.call_args[0][1].tag == 'aaa'
@@ -92,7 +92,7 @@ def test_annotation_deriver_nested(monkeypatch):
     xml = etree.fromstring(
         # being careful about whitespace
         "<content>Some <aaa>span of <bbb>text</bbb> here</aaa></content>")
-    result = list(annotations.AnnotationDeriver(Mock())(xml))
+    result = list(annotations.AnnotationDeriver(Mock()).derive(xml))
     assert result == [aaa.return_value, bbb.return_value]
 
     assert aaa.call_args[0][1].tag == 'aaa'
@@ -105,7 +105,7 @@ def test_annotation_deriver_nested(monkeypatch):
 def test_derive_annotations(monkeypatch):
     """Recursively derives annotation objects."""
     monkeypatch.setattr(annotations, 'AnnotationDeriver', Mock())
-    annotations.AnnotationDeriver.return_value.side_effect = [
+    annotations.AnnotationDeriver.return_value.derive.side_effect = [
         [FootnoteCitation(start=0), PlainText(start=1), PlainText(start=2)],
         [],
         [PlainText(start=3), FootnoteCitation(start=4)],
