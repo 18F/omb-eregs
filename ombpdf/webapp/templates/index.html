@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Raw PDF</th>
+      <th>Raw layout (HTML)</th>
       <th>Annotated layout (HTML)</th>
       <th>Semantic HTML</th>
   </thead>
@@ -14,6 +15,9 @@
     <tr>
       <td>
         <code><a href="{{ url_for('raw_pdf', pdf=path) }}">{{ name }}</a></code>
+      </td>
+      <td>
+        <a href="{{ url_for('rawlayout_pdf', pdf=path) }}">View raw layout</a>
       </td>
       <td>
         <a href="{{ url_for('html_pdf', pdf=path) }}">View annotated layout</a>

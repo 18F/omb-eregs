@@ -3,7 +3,7 @@ from werkzeug.routing import BaseConverter, ValidationError
 
 from ombpdf.download_pdfs import ROOT_DIR as DATA_DIR
 from ombpdf.document import OMBDocument
-from ombpdf import html, semhtml
+from ombpdf import html, semhtml, rawlayout
 
 
 class PdfPathConverter(BaseConverter):
@@ -62,3 +62,8 @@ def html_pdf(pdf):
 @app.route('/semhtml/<pdfpath:pdf>')
 def semhtml_pdf(pdf):
     return semhtml.to_html(to_doc(pdf))
+
+
+@app.route('/rawlayout/<pdfpath:pdf>')
+def rawlayout_pdf(pdf):
+    return rawlayout.to_html(to_doc(pdf))

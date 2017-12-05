@@ -30,3 +30,7 @@ def test_html_pdf_works(webapp):
 
 def test_semhtml_pdf_works(webapp):
     assert webapp.get(f'/semhtml/{PDFPATH}').status_code == 200
+
+
+def test_rawlayout_works(webapp):
+    assert webapp.get(f'/rawlayout/{PDFPATH}').status_code == 200
