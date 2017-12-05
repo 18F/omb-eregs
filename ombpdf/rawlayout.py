@@ -6,6 +6,16 @@ HTML_INTRO = """\
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+* {
+    box-sizing: border-box;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 html, body {
     font-family: sans-serif;
 }
@@ -18,13 +28,12 @@ html, body {
 }
 
 .char {
-    box-sizing: border-box;
-    background: rgba(0, 0, 0, 0.75);
-    border-left: 1px solid rgba(0, 0, 0, 0.9);
+    background: rgba(0, 255, 0, 0.2);
+/*    border-left: 1px solid blue; */
     color: lightgray;
     position: absolute;
     overflow: hidden;
-    font-size: 9px;
+    font-size: 0;
 }
 </style>
 """
@@ -32,7 +41,7 @@ html, body {
 PREAMBLE = """\
 <p>
   This page is primarily intended to show the bounding boxes of various
-  page elements. In particular, font sizes are not accurate.
+  page elements.
 </p>
 <p>
   Inspect this page with developer tools to obtain more details.
@@ -71,7 +80,7 @@ def to_html(doc):
                           f'data-str="{escape(str(line))}">\n')
             for char in line:
                 charstyle = to_px_style_attr(
-                    top=page.ltpage.height - char.ltchar.y0,
+                    top=page.ltpage.height - char.ltchar.y1,
                     left=char.ltchar.x0,
                     width=char.ltchar.width,
                     height=char.ltchar.height,
@@ -79,5 +88,7 @@ def to_html(doc):
                 chunks.append(f'<div class="char" {charstyle}>{char}</div>\n')
             chunks.append(f'</div>')
         chunks.append(f'</div>\n')
+
+    chunks.append(f'<script src="/static/js/main.bundle.js"></script>')
 
     return ''.join(chunks)
