@@ -118,8 +118,16 @@ def runserver():
         'FLASK_DEBUG': '1',
     })
 
-    popen = subprocess.Popen(['flask', 'run'], env=env)
-    popen.wait()
+    frontend = subprocess.Popen([
+        'node',
+        os.path.join('node_modules', 'webpack', 'bin', 'webpack.js'),
+    ])
+
+    try:
+        server = subprocess.Popen(['flask', 'run'], env=env)
+        server.wait()
+    finally:
+        frontend.kill()
 
 
 if __name__ == '__main__':
