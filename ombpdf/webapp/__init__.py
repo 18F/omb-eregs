@@ -3,6 +3,7 @@ from werkzeug.routing import BaseConverter, ValidationError
 
 from ombpdf.download_pdfs import ROOT_DIR as DATA_DIR
 from ombpdf.document import OMBDocument
+from ombpdf.util import get_ltpages
 from ombpdf import html, semhtml, rawlayout
 
 
@@ -36,8 +37,16 @@ def get_pdfmap():
     return pdfmap
 
 
+_ltpages_cache = {}
+
 def to_doc(path):
-    return OMBDocument.from_file(path.open('rb'))
+    if path not in _ltpages_cache:
+        with path.open('rb') as fp:
+            _ltpages_cache[path] = get_ltpages(fp)
+    return OMBDocument(
+        _ltpages_cache[path],
+        filename=path.relative_to(DATA_DIR),
+    )
 
 
 @app.route('/')
