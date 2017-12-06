@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import HeaderFooter from '../components/header-footer';
+import wrapPage from '../components/app-wrapper';
 import Link from '../components/link';
 import LabeledText from '../components/labeled-text';
 
@@ -98,10 +98,10 @@ export function Styleguide() {
       </p>
       <p>
         For now, most policy document styles can be seen on {' '}
-        <Link route="document" params={{policyId: 'M-16-19'}}>M-16-19</Link>.
+        <Link route="document" params={{ policyId: 'M-16-19' }}>M-16-19</Link>.
       </p>
     </div>
   );
 }
 
-export default () => <HeaderFooter><Styleguide /></HeaderFooter>;
+export default wrapPage(Styleguide, () => Promise.resolve());
