@@ -19,29 +19,29 @@
 }
 
 .document-nav {
-  $indent: 1rem;
+  $spacing: 1rem;
+  $active-width: 0.5rem;
 
   .section-heading {
     border-bottom: 1px solid $color-lt-blue;
     display: block;
     font-size: 1rem;
-    padding-left: $indent;
+    line-height: 1.3rem;
   }
 
   .heading-container {
-    padding-bottom: 1rem;
-    padding-top: 1rem;
+    padding: $spacing;
+    padding-left: $spacing + $active-width;
   }
 
   .section-heading:hover .heading-container {
     background-color: $color-sky;
-    border-left: ($indent / 2) solid $color-blue;
-    margin-left: -$indent;
-    padding-left: $indent / 2;
+    border-left: $active-width solid $color-blue;
+    padding-left: $spacing;
   }
 
   .sub-sections {
-    padding-left: $indent;
+    padding-left: $spacing;
 
     .section-heading {
       font-size: 0.875rem;
