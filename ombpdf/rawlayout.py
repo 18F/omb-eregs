@@ -29,7 +29,7 @@ def to_html(doc):
             f'<a href="#{page.number}">Page {page.number}</a></h2>'
         )
         chunks.append(f'<div class="page" {pagestyle}>\n')
-        for line in page:
+        for line, lineno in zip(page, range(1, len(page) + 1)):
             line_classes = ['line']
             if line.annotation is not None:
                 classname = line.annotation.__class__.__name__
@@ -38,7 +38,8 @@ def to_html(doc):
                 legend.add((classname, cssname))
             line_classes = ' '.join(line_classes)
             chunks.append(f'<div class="{line_classes}" '
-                          f'data-str="{escape(str(line))}">\n')
+                          f'data-anno="{escape(str(line.annotation))}"'
+                          f'data-lineno="{lineno}">\n')
             for char in line:
                 charstyle = to_px_style_attr(
                     top=page.ltpage.height - char.ltchar.y1,

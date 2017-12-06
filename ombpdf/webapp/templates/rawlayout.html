@@ -83,9 +83,21 @@ h2 a:hover {
 .line.line-OMBListItem .char {
     background: yellow;
 }
+
+#tooltip {
+    white-space: pre-wrap;
+    font-family: monospace;
+    position: absolute;
+    width: 30em;
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    z-index: 100;
+}
 </style>
 <title>Raw layout for {{ doc.filename }}</title>
 <h1>Raw layout for <code>{{ doc.filename }}</code></h1>
+<aside id="tooltip" style="display: none"></aside>
 <p>
   This page is primarily intended to show the bounding boxes of various page
   elements, along with other metadata.
