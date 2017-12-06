@@ -24,7 +24,10 @@ def to_html(doc):
     for page in doc.pages:
         pagestyle = to_px_style_attr(width=page.ltpage.width,
                                      height=page.ltpage.height)
-        chunks.append(f'<h2>Page {page.number}</h2>')
+        chunks.append(
+            f'<h2 id="{page.number}">'
+            f'<a href="#{page.number}">Page {page.number}</a></h2>'
+        )
         chunks.append(f'<div class="page" {pagestyle}>\n')
         for line in page:
             line_classes = ['line']
