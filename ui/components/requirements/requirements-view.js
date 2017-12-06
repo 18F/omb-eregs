@@ -8,19 +8,17 @@ import ThingCounterContainer from '../thing-counters';
 export default function RequirementsView({ requirements, count }) {
   const singular = 'requirement';
   const plural = 'requirements';
-  return (
-    <div>
-      <ThingCounterContainer count={count} singular={singular} plural={plural} />
-      <ul className="requirement-list list-reset">
-        { requirements.map(requirement => (
-          <li key={requirement.req_id} className="gray-border border rounded mb2">
-            <Requirement requirement={requirement} />
-          </li>
-        )) }
-      </ul>
-      <PagersContainer count={count} route="requirements" />
-    </div>
-  );
+  return [
+    <ThingCounterContainer count={count} key="counter" singular={singular} plural={plural} />,
+    <ul className="requirement-list list-reset" key="reqs">
+      { requirements.map(requirement => (
+        <li key={requirement.req_id} className="gray-border border rounded mb2">
+          <Requirement requirement={requirement} />
+        </li>
+      )) }
+    </ul>,
+    <PagersContainer count={count} key="pager" route="requirements" />,
+  ];
 }
 const requirementProps = PropTypes.shape({
   id: PropTypes.number,
