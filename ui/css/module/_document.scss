@@ -18,33 +18,31 @@
   margin-bottom: 8px;
 }
 
-.document-nav {
+.document-nav .sub-sections {
+  padding-left: 1rem;
+}
+
+.document-nav-heading {
   $spacing: 1rem;
   $active-width: 0.5rem;
 
-  .section-heading {
-    border-bottom: 1px solid $color-lt-blue;
-    display: block;
-    font-size: 1rem;
-    line-height: 1.3rem;
-  }
+  border-bottom: 1px solid $color-lt-blue;
+  display: block;
+  font-size: 1rem;
+  line-height: 1.3rem;
 
-  .heading-container {
+  .document-nav-container {
     padding: $spacing;
     padding-left: $spacing + $active-width;
   }
 
-  .section-heading:hover .heading-container {
+  &:hover .document-nav-container {
     background-color: $color-sky;
     border-left: $active-width solid $color-blue;
     padding-left: $spacing;
   }
 
-  .sub-sections {
-    padding-left: $spacing;
-
-    .section-heading {
-      font-size: 0.875rem;
-    }
+  .sub-sections & {
+    font-size: 0.875rem;
   }
 }

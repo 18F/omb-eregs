@@ -15,8 +15,8 @@ export default function DocumentNav({ className, docNode }) {
   return (
     <ol className={classes.join(' ')}>
       <li>
-        <Link className="section-heading" href={`#${tableOfContents.identifier}`}>
-          <div className="heading-container">Top</div>
+        <Link className="document-nav-heading" href={`#${tableOfContents.identifier}`}>
+          <div className="document-nav-container">Top</div>
         </Link>
       </li>
       { tableOfContents.children.map(tocNode =>
