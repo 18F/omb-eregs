@@ -27,3 +27,26 @@ loadingTask.promise.then(function (pdfDocument) {
 }).catch(function (reason) {
   console.error('Error: ' + reason);
 });
+
+var pages = document.querySelectorAll('.page');
+
+function isElPartlyInViewport (el) {
+  var rect = el.getBoundingClientRect();
+
+  return (
+    rect.bottom >= 0 &&
+    rect.right >= 0 &&
+    rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
+function setInViewport() {
+  pages.forEach(function(page, i) {
+    page.classList.toggle('in-viewport', isElPartlyInViewport(page));
+  });
+}
+
+['scroll', 'resize', 'load'].forEach(function(name) {
+  window.addEventListener(name, setInViewport);
+});
