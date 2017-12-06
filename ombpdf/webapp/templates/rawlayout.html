@@ -15,6 +15,27 @@ html, body {
     font-family: sans-serif;
 }
 
+.legend {
+    list-style-type: none;
+    padding: 0;
+}
+
+.legend .line {
+    display: inline-block;
+    position: relative;
+    width: 1em;
+    height: 1em;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.legend .char {
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+}
+
 .page {
     border: 1px solid black;
     position: relative;
@@ -23,21 +44,59 @@ html, body {
 }
 
 .char {
-    background: rgba(0, 255, 0, 0.2);
-    color: lightgray;
+    background: #ff0000;
+    opacity: 0.5;
     position: absolute;
     overflow: hidden;
     font-size: 0;
+}
+
+.line.line-OMBHeading .char {
+    background: #0000ff;
+}
+
+.line.line-OMBParagraph .char {
+    background: #00ff00;
+}
+
+.line.line-OMBPageNumber .char {
+    background: gray;
+}
+
+.line.line-OMBFootnote .char {
+    background: orange;
+}
+
+.line.line-OMBListItem .char {
+    background: yellow;
 }
 </style>
 <title>Raw layout for {{ doc.filename }}</title>
 <h1>Raw layout for <code>{{ doc.filename }}</code></h1>
 <p>
-  This page is primarily intended to show the bounding boxes of various page elements.
+  This page is primarily intended to show the bounding boxes of various page
+  elements, along with other metadata.
 </p>
 <p>
   Inspect this page with developer tools to obtain more details.
 </p>
+<h2>Legend</h2>
+<p>
+  Each bounding box is tinted with a color corresponding to the annotation
+  of the line it's on:
+</p>
+<ul class="legend">
+  {% for name, classname in legend %}
+    <li>
+      <span class="line {{ classname }}"><span class="char"></span></span>
+      <code>{{ name }}</code>
+    </li>
+  {% endfor %}
+  <li>
+    <span class="line"><span class="char"></span></span>
+    <code>None</code>
+  </li>
+</ul>
 {{ html }}
 <script>
 window.SCRIPT_PARAMS = {{ script_params|tojson|safe }};

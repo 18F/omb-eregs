@@ -82,9 +82,12 @@ def rawlayout_pdf(pdf):
         'workerSrc': url_for('static', filename='js/pdf.worker.bundle.js'),
     }
 
+    html, ctx = rawlayout.to_html(doc)
+
     return render_template(
         'rawlayout.html',
         doc=doc,
-        html=Markup(rawlayout.to_html(doc)),
+        html=Markup(html),
         script_params=script_params,
+        **ctx,
     )

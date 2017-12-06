@@ -18,14 +18,23 @@ def to_px_style_attr(**kwargs):
 
 
 def to_html(doc):
+    doc.annotators.require_all()
     chunks = []
+    legend = set()
     for page in doc.pages:
         pagestyle = to_px_style_attr(width=page.ltpage.width,
                                      height=page.ltpage.height)
         chunks.append(f'<h2>Page {page.number}</h2>')
         chunks.append(f'<div class="page" {pagestyle}>\n')
         for line in page:
-            chunks.append(f'<div class="line" '
+            line_classes = ['line']
+            if line.annotation is not None:
+                classname = line.annotation.__class__.__name__
+                cssname = f'line-{classname}'
+                line_classes.append(cssname)
+                legend.add((classname, cssname))
+            line_classes = ' '.join(line_classes)
+            chunks.append(f'<div class="{line_classes}" '
                           f'data-str="{escape(str(line))}">\n')
             for char in line:
                 charstyle = to_px_style_attr(
@@ -38,4 +47,4 @@ def to_html(doc):
             chunks.append(f'</div>')
         chunks.append(f'</div>\n')
 
-    return ''.join(chunks)
+    return (''.join(chunks), dict(legend=legend))
