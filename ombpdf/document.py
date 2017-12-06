@@ -31,13 +31,13 @@ class OMBDocument:
         self.left_edge = self._calc_left_edge()
         self.annotators = AnnotatorTracker(self)
 
-        self._cull_lines_left_of_left_edge()
+        self._realign_lines_left_of_left_edge()
 
-    def _cull_lines_left_of_left_edge(self):
+    def _realign_lines_left_of_left_edge(self):
         for page in self.pages:
             lines = [line for line in page if line.left_edge < self.left_edge]
             for line in lines:
-                page.remove(line)
+                line.left_edge = self.left_edge
 
     def _calc_left_edge(self):
         counter = Counter()
