@@ -1,6 +1,7 @@
 from functools import total_ordering
 
 from .document import OMBHeading
+from .util import is_x_smaller_than_y
 
 
 @total_ordering
@@ -13,6 +14,8 @@ class Style:
     which is a higher "heading level" than the other, e.g. <H1> vs. <H2>,
     hence the ordering.
     """
+
+    COMPARISON_GAP = 0.2
 
     def __init__(self, is_underlined, fontsize):
         self.is_underlined = is_underlined
@@ -34,12 +37,17 @@ class Style:
 
     def __eq__(self, other):
         return (self.is_underlined == other.is_underlined and
-                self.fontsize == other.fontsize)
+                self.fontsize.is_near(other.fontsize,
+                                      gap=self.COMPARISON_GAP))
 
     def __lt__(self, other):
-        if self.fontsize.size < other.fontsize.size:
+        if is_x_smaller_than_y(self.fontsize.size,
+                               other.fontsize.size,
+                               gap=self.COMPARISON_GAP):
             return True
-        if self.fontsize.size > other.fontsize.size:
+        if is_x_smaller_than_y(other.fontsize.size,
+                               self.fontsize.size,
+                               gap=self.COMPARISON_GAP):
             return False
         # The fonts are the same size, so compare them by complexity.
         return self.complexity_score() < other.complexity_score()
@@ -56,7 +64,8 @@ class Style:
 def get_heading_line_style(line):
     style = None
     for char, text in line.iter_char_chunks():
-        if not text.strip(): continue
+        if not text.strip():
+            continue
         if style is not None:
             # This line has multiple styles, so we'll assume
             # (possibly incorrectly) that it can't be a heading.
