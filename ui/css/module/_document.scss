@@ -17,3 +17,34 @@
 .original-link-container {
   margin-bottom: 8px;
 }
+
+.document-nav {
+  $indent: 1rem;
+
+  .section-heading {
+    border-bottom: 1px solid $color-lt-blue;
+    display: block;
+    font-size: 1rem;
+    padding-left: $indent;
+  }
+
+  .heading-container {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+  }
+
+  .section-heading:hover .heading-container {
+    background-color: $color-sky;
+    border-left: ($indent / 2) solid $color-blue;
+    margin-left: -$indent;
+    padding-left: $indent / 2;
+  }
+
+  .sub-sections {
+    padding-left: $indent;
+
+    .section-heading {
+      font-size: 0.875rem;
+    }
+  }
+}
