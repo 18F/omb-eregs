@@ -58,10 +58,10 @@ class FontSize(namedtuple('FontSize', ['font', 'size'])):
 
     __cache = weakref.WeakKeyDictionary()
 
-    def is_near(self, other):
+    def is_near(self, other, gap=1):
         if self.font != other.font:
             return False
-        return abs(self.size - other.size) <= 1
+        return abs(self.size - other.size) <= float(gap)
 
     @classmethod
     def from_ltchar(cls, ltchar):

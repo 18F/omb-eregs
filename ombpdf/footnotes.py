@@ -19,14 +19,12 @@ NUMBER_RE = re.compile(r'[0-9]')
 FOOTNOTE_RE = re.compile(r'([0-9]+) (.+)')
 
 
-def is_significantly_smaller(size, normal_size, gap=0.2):
-    return float(normal_size - size) > float(gap)
-
 def line_contains_big_chars(line, doc):
     for char in line:
         if char.fontsize.size + Decimal('0.5') >= doc.paragraph_fontsize.size:
             return True
     return False
+
 
 def annotate_citations(doc):
     citations = []
@@ -44,8 +42,9 @@ def annotate_citations(doc):
             citations.append(citation)
 
         for char in line:
-            if is_significantly_smaller(char.fontsize.size,
-                                        doc.paragraph_fontsize.size):
+            if util.is_significantly_smaller(char.fontsize.size,
+                                             doc.paragraph_fontsize.size,
+                                             gap=0.7):
                 if NUMBER_RE.match(str(char)):
                     if prev_paragraph_chars:
                         curr_citation.append(char)

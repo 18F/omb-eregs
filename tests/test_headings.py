@@ -41,3 +41,31 @@ def test_annotate_headings_works(m_16_19_doc):
 
 def test_main_works(m_16_19_doc):
     headings.main(m_16_19_doc)
+
+
+def test_annotate_headings_m_15_16(m_15_16_doc):
+    """
+    Minor difference in font size were causing many false positives for
+    headings in this document; this test checks that only the actual headings
+    are present.
+    We're looking only at what's after the SUBJECT: line because that line is
+    part of the metadata and should be treated differently.
+    """
+    split_heading = "SUBJECT: Multi-Agency Science and Technology Priorities "\
+        "for the FY 2017 Budget"
+    headers = [str(line).strip() for line in
+               headings.annotate_headings(m_15_16_doc)]
+    if split_heading in headers:
+        subj_index = headers.index(split_heading)
+        relevant = headers[subj_index + 1:]
+    else:
+        relevant = headers
+
+    expected = [
+        "Multi-Agency R&D priorities",
+        "R&D Infrastructure",
+        "Other R&D Program Guidance",
+        "STEM Education Guidance",
+    ]
+
+    assert relevant == expected

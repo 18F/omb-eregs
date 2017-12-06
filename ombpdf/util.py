@@ -27,3 +27,11 @@ def iter_flattened_layout(items, class_filter=object):
             stack.extend(children)
         if isinstance(item, class_filter):
             yield item
+
+
+def is_significantly_smaller(size, normal_size, gap=0.2):
+    return float(normal_size - size) > float(gap)
+
+
+def is_x_smaller_than_y(x, y, gap=0.2):
+    return float(y - x) > float(gap)

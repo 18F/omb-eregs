@@ -15,6 +15,16 @@ def read_pages(relpath):
 
 
 @pytest.fixture
+def m_11_29_pages():
+    return read_pages('2011/m11-29.pdf')
+
+
+@pytest.fixture
+def m_11_29_doc(m_11_29_pages):
+    return document.OMBDocument(m_11_29_pages, filename='m11-29.pdf')
+
+
+@pytest.fixture
 def m_16_19_pages():
     return read_pages('2016/m_16_19_1.pdf')
 
@@ -22,6 +32,16 @@ def m_16_19_pages():
 @pytest.fixture
 def m_16_19_doc(m_16_19_pages):
     return document.OMBDocument(m_16_19_pages, filename='m_16_19_1.pdf')
+
+
+@pytest.fixture
+def m_15_16_pages():
+    return read_pages('2015/m-15-16.pdf')
+
+
+@pytest.fixture
+def m_15_16_doc(m_15_16_pages):
+    return document.OMBDocument(m_15_16_pages, filename='m-15-16.pdf')
 
 
 @pytest.fixture
