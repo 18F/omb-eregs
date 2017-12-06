@@ -98,7 +98,7 @@ export function Styleguide() {
       </p>
       <p>
         For now, most policy document styles can be seen on {' '}
-        <Link href="/document/M-16-19">M-16-19</Link>.
+        <Link route="document" params={{policyId: 'M-16-19'}}>M-16-19</Link>.
       </p>
     </div>
   );
