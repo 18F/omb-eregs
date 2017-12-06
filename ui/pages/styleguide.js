@@ -9,18 +9,8 @@ const GITHUB_URL = 'https://github.com/18F/omb-eregs';
 
 function Example({ children }) {
   return (
-    <div style={{
-      border: '1px solid lightgray',
-      padding: '1rem 2.5rem',
-    }}
-    >
-      <h4 style={{
-        textTransform: 'uppercase',
-        color: 'gray',
-        letterSpacing: 1,
-        fontSize: '1em',
-      }}
-      >Example</h4>
+    <div className="styleguide-example">
+      <h4>Example</h4>
       {children}
     </div>
   );
@@ -47,10 +37,7 @@ CssLink.propTypes = {
 
 export function Styleguide() {
   return (
-    <div style={{
-      padding: '1rem',
-    }}
-    >
+    <div className="styleguide-container">
       <h2>Style guide</h2>
       <p>This is a style guide.</p>
       <p>Sorry there isn&rsquo;t much here yet.</p>
