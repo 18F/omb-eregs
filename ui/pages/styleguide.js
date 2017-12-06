@@ -86,7 +86,7 @@ export function Styleguide() {
       </Example>
       <h3>Labeled text</h3>
       <Example>
-        <LabeledText label="Label">I am some labeled text.</LabeledText>
+        <LabeledText label="Label" id="l1">I am some labeled text.</LabeledText>
       </Example>
       <h3>Policy document styles</h3>
       <p>
