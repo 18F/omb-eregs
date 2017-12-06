@@ -9,18 +9,20 @@ from document.tree import DocCursor
 from reqs.models import Policy
 
 
+@pytest.mark.django_db
 def test_end_to_end():
     """Create a tree, then serialize it."""
-    policy = mommy.prepare(
+    policy = mommy.make(
         Policy, issuance=date(2001, 2, 3), omb_policy_id='M-18-18',
         title='Some Title', uri='http://example.com/thing.pdf',
     )
-    root = DocCursor.new_tree('root', '0', policy=policy)
-    root.add_child('sect', text='Section 1')
-    sect2 = root.add_child('sect')
+    root = DocCursor.new_tree('root', '0', policy=policy, title='Policy A')
+    root.add_child('sect', text='Section 1', title='First Section')
+    sect2 = root.add_child('sect', title='Section 2')
     pa = sect2.add_child('par', 'a', marker='(a)')
     pa.add_child('par', '1', text='Paragraph (a)(1)', marker='(1)')
     sect2.add_child('par', 'b', marker='b.')
+    root.nested_set_renumber()
 
     result = doc_cursor.DocCursorSerializer(
         root, context={'policy': policy}).data
@@ -39,6 +41,21 @@ def test_end_to_end():
                 'omb_policy_id': 'M-18-18',
                 'original_url': 'http://example.com/thing.pdf',
                 'title': 'Some Title',
+            },
+            'table_of_contents': {
+                'identifier': 'root_0',
+                'title': 'Policy A',
+                'children': [
+                    {
+                        'children': [],
+                        'identifier': 'root_0__sect_1',
+                        'title': 'First Section',
+                    }, {
+                        'children': [],
+                        'identifier': 'root_0__sect_2',
+                        'title': 'Section 2',
+                    },
+                ],
             },
         },
         'children': [
@@ -120,9 +137,9 @@ def test_footnote_citations():
     footnote1 = para.add_child('footnote').model
     footnote2 = para.add_child('footnote').model
     para.nested_set_renumber()
-    para.model.footnotecitations.create(
+    para.footnotecitations.create(
         start=len('Some'), end=len('Some1'), footnote_node=footnote1)
-    para.model.footnotecitations.create(
+    para.footnotecitations.create(
         start=len('Some1 message'), end=len('Some1 message2'),
         footnote_node=footnote2)
 
@@ -176,7 +193,7 @@ def test_external_links():
     para = DocCursor.new_tree('para', text='Go over there!',
                               policy=policy)
     para.nested_set_renumber()
-    para.model.externallinks.create(
+    para.externallinks.create(
         start=len('Go over '), end=len('Go over there'),
         href='http://example.com/aaa')
 
@@ -220,7 +237,7 @@ def test_content_middle_annotation():
         'policy', policy=mommy.make(Policy), text='Some text here')
     footnote_cursor = cursor.add_child('child')
     cursor.nested_set_renumber()
-    cursor.model.footnotecitations.create(
+    cursor.footnotecitations.create(
         start=len('Some '), end=len('Some text'),
         footnote_node=footnote_cursor.model)
     content = doc_cursor.DocCursorSerializer(cursor).data['content']

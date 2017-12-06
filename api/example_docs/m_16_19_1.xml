@@ -1,4 +1,4 @@
-<policy emblem="1">
+<policy emblem="1" title="Data Center Optimization Initiative (DCOI)">
   <preamble>
     <published>August 1, 2016</published>
     <policyNum>M-16-19</policyNum>
@@ -8,7 +8,7 @@
     <from marker="FROM:">Tony Scott, Federal Chief Information Officer</from>
     <subject marker="SUBJECT:">Data Center Optimization Initiative (DCOI)</subject>
   </preamble>
-  <sec>
+  <sec title="Background">
     <heading>Background</heading>
     <para>
       <content>
@@ -69,7 +69,7 @@
       use to evaluate the success of those strategies.
     </para>
   </sec>
-  <sec>
+  <sec title="Policy">
     <heading>Policy</heading>
     <para>
       As of August 1, 2016, the FDCCI is superseded by the Data Center
@@ -112,7 +112,7 @@
         is included in the submitted plans and reports.
       </footnote>
     </para>
-    <sec>
+    <sec title="Leadership and Responsibilities">
       <heading>Leadership and Responsibilities</heading>
       <para>
         <content>
@@ -140,9 +140,9 @@
         </footnote>
       </para>
     </sec>
-    <sec>
+    <sec title="Transition to Cloud and Data Center Shared Services">
       <heading>Transition to Cloud and Data Center Shared Services</heading>
-      <sec>
+      <sec title="Development Freeze from New and Current Data Centers">
         <heading>Development Freeze for New and Current Data Centers</heading>
         <para>
           <content>
@@ -172,7 +172,7 @@
           </footnote>
         </para>
       </sec>
-      <sec>
+      <sec title="Consolidation and Closure of Existing Data Centers">
         <heading>Consolidation and Closure of Existing Data Centers</heading>
         <para>
           <content>
@@ -225,7 +225,7 @@
           </list>
         </para>
       </sec>
-      <sec>
+      <sec title="Cloud Investment">
         <heading>Cloud Investment</heading>
         <para>
           <content>
@@ -249,7 +249,7 @@
           </footnote>
         </para>
       </sec>
-      <sec>
+      <sec title="Shared Services Managing Partner">
         <heading>Shared Services Managing Partner</heading>
         <para>
           <content>
@@ -340,9 +340,9 @@
         </para>
       </sec>
     </sec>
-    <sec>
+    <sec title="Optimization of Physical Data Centers">
       <heading>Optimization of Physical Data Centers</heading>
-      <sec>
+      <sec title="Classification of Physical Data Centers">
         <heading>Classification of Physical Data Centers</heading>
         <para>
           <content>
@@ -403,7 +403,7 @@
           categorical benchmarks for OMB oversight.
         </para>
       </sec>
-      <sec>
+      <sec title="Energy Metering and Power Efficiency">
         <heading>Energy Metering and Power Efficiency</heading>
         <para>
           <content>
@@ -493,7 +493,7 @@
           </footnote>
         </para>
       </sec>
-      <sec>
+      <sec title="Automated Infrastructure Management">
         <heading>Automated Infrastructure Management</heading>
         <para>
           <content>
@@ -542,7 +542,7 @@
         </para>
       </sec>
     </sec>
-    <sec>
+    <sec title="Metric Target Values">
       <heading>Metric Target Values</heading>
       <para>
         OMB will measure agency progress for this initiative using the
@@ -551,7 +551,7 @@
         submissions. These optimization, cost-savings, and closure metrics and
         goals apply to all data centers at agency facilities.
       </para>
-      <sec>
+      <sec title="Goal 1: Optimization">
         <heading>Goal 1: Optimization</heading>
         <para>
           The following optimization metrics are listed in order of priority.
@@ -753,7 +753,7 @@
           Virtualization and Server Utilization &amp; Automated Monitoring.
         </para>
       </sec>
-      <sec>
+      <sec title="Goal 2: Cost Savings and Avoidance">
         <heading>Goal 2: Cost Savings and Avoidance</heading>
         <para>
           <content>
@@ -802,7 +802,7 @@
           agency.
         </para>
       </sec>
-      <sec>
+      <sec title="Goal 3: Closed Data Centers">
         <heading>Goal 3: Closed Data Centers</heading>
         <para>
           <content>
@@ -871,9 +871,9 @@
         </para>
       </sec>
     </sec>
-    <sec>
+    <sec title="Reporting">
       <heading>Reporting</heading>
-      <sec>
+      <sec title="Compliance Measurement">
         <heading>Compliance Measurement</heading>
         <para>
           Data will be collected quarterly on an agency-by-agency basis through the IDC, as follows:
@@ -914,7 +914,7 @@
           </list>
         </para>
       </sec>
-      <sec>
+      <sec title="Strategic Plan">
         <heading>Strategic Plan</heading>
         <para>
           <content>
@@ -1014,7 +1014,7 @@
         </para>
       </sec>
     </sec>
-    <sec>
+    <sec title="Transparency">
       <heading>Transparency</heading>
       <para>
         <content>
@@ -1057,7 +1057,7 @@
         </list>
       </para>
     </sec>
-    <sec>
+    <sec title="Community Support">
       <heading>Community Support</heading>
       <para>
         Executive agencies are encouraged to join the Data Centers listserv by
