@@ -41,8 +41,7 @@ def to_html(doc):
             return False
         curr_tagname, curr_anno = block_stack[-1]
         if anno is not None:
-            return (anno.__class__ == curr_anno.__class__ and
-                    anno == curr_anno)
+            return anno == curr_anno
         return curr_tagname in tagnames
 
     def close_all_blocks():

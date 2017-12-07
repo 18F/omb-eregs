@@ -1,4 +1,4 @@
-from collections import namedtuple, Counter
+from collections import Counter
 from decimal import Decimal
 import logging
 import math
@@ -8,6 +8,7 @@ from pdfminer import layout
 from . import fontsize
 from . import util
 from .annotators import AnnotatorTracker
+from .eqnamedtuple import eqnamedtuple
 
 
 logger = logging.getLogger(__name__)
@@ -74,21 +75,21 @@ class OMBPage(list):
         self.number = number
 
 
-OMBFootnoteCitation = namedtuple('OMBFootnoteCitation', ['number',
-                                                         'preceding_text'])
+OMBFootnoteCitation = eqnamedtuple('OMBFootnoteCitation', ['number',
+                                                           'preceding_text'])
 
-OMBFootnote = namedtuple('OMBFootnote', ['number', 'text'])
+OMBFootnote = eqnamedtuple('OMBFootnote', ['number', 'text'])
 
-OMBPageNumber = namedtuple('OMBPageNumber', ['number'])
+OMBPageNumber = eqnamedtuple('OMBPageNumber', ['number'])
 
-OMBParagraph = namedtuple('OMBParagraph', ['id'])
+OMBParagraph = eqnamedtuple('OMBParagraph', ['id'])
 
-OMBListItem = namedtuple('OMBListItem', ['list_id', 'number', 'is_ordered',
-                                         'indentation'])
+OMBListItem = eqnamedtuple('OMBListItem', ['list_id', 'number', 'is_ordered',
+                                           'indentation'])
 
-OMBListItemMarker = namedtuple('OMBListItemMarker', ['is_ordered'])
+OMBListItemMarker = eqnamedtuple('OMBListItemMarker', ['is_ordered'])
 
-OMBHeading = namedtuple('OMBHeading', ['level'])
+OMBHeading = eqnamedtuple('OMBHeading', ['level'])
 
 
 class AnnotatableMixin:
