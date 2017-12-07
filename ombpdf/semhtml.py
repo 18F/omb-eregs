@@ -3,38 +3,77 @@ from html import escape
 from . import document
 
 
-HTML_INTRO = """\
-<!DOCTYPE html>
-<meta charset="utf-8">
-"""
-
-
-def id_for_footnote(fnum):
-    return f"footnote-{fnum}"
-
-
-def id_for_footnote_citation(fnum):
-    return f"footnote-citation-{fnum}"
-
-
-class HTMLBuilder:
-    def __init__(self, doc):
-        self.doc = doc
-        self.chunks = [
-            f'<title>Semantic HTML output for {doc.filename}</title>\n'
-        ]
+class HTMLWriter:
+    def __init__(self):
+        self.chunks = []
         self.footnote_citations = {}
+
+    def start_document(self, doc):
+        self.chunks.append(
+            f'<title>Semantic HTML output for {doc.filename}</title>\n'
+        )
+
+    def begin_element(self, tagname):
+        self.chunks.append(f'<{tagname}>')
+
+    def end_element(self, tagname):
+        self.chunks.append(f'</{tagname}>\n')
+
+    def id_for_footnote(self, number):
+        return f"footnote-{number}"
+
+    def id_for_footnote_citation(self, number):
+        return f"footnote-citation-{number}"
+
+    def create_footnote_citation(self, number):
+        cit_id = self.id_for_footnote_citation(number)
+        self.footnote_citations[number] = cit_id
+        self.chunks.append(
+            f'<sup id="{cit_id}">'
+            f'<a href="#{self.id_for_footnote(number)}">'
+            f'{number}</a></sup>'
+        )
+
+    def create_text(self, text):
+        self.chunks.append(escape(text))
+
+    def begin_footnotes(self):
+        self.chunks.append('<h2>Footnotes</h2>\n')
+        self.chunks.append('<dl>\n')
+
+    def create_footnote(self, number, text):
+        self.chunks.append(f'<dt id="{self.id_for_footnote(number)}">'
+                           f'{number}</dt>\n')
+        self.chunks.append(f'<dd>{text}')
+        cit_id = self.footnote_citations.get(number)
+        if cit_id:
+            self.chunks.append(
+                f' <a href="#{cit_id}">Back to citation</a>'
+            )
+        self.chunks.append('</dd>\n')
+
+    def end_footnotes(self):
+        self.chunks.append('</dl>\n')
+
+    def getvalue(self):
+        return ''.join(self.chunks)
+
+
+class SemanticTreeBuilder:
+    def __init__(self, doc, writer):
+        self.doc = doc
+        self.writer = writer
         self.footnotes = []
         self.block_stack = []
 
     def open_new_block(self, tagname, anno):
         self.block_stack.append((tagname, anno))
-        self.chunks.append(f'<{tagname}>')
+        self.writer.begin_element(tagname)
 
     def close_current_block(self):
         if self.block_stack:
             tagname, _ = self.block_stack.pop()
-            self.chunks.append(f'</{tagname}>\n')
+            self.writer.end_element(tagname)
 
     def does_current_block_match(self, anno=None, tagnames=None):
         if not self.block_stack:
@@ -87,41 +126,27 @@ class HTMLBuilder:
                 pass
             elif isinstance(anno, document.OMBFootnoteCitation):
                 fnum = anno.number
-                cit_id = id_for_footnote_citation(fnum)
-                self.footnote_citations[fnum] = cit_id
-                self.chunks.append(
-                    f'<sup id="{cit_id}">'
-                    f'<a href="#{id_for_footnote(fnum)}">'
-                    f'{fnum}</a></sup>'
-                )
+                self.writer.create_footnote_citation(fnum)
             else:
-                self.chunks.append(escape(text))
+                self.writer.create_text(text)
 
     def process_footnotes(self):
         if not self.footnotes:
             return
 
-        self.chunks.append('<h2>Footnotes</h2>\n')
-        self.chunks.append('<dl>\n')
+        self.writer.begin_footnotes()
         curr_footnote = None
         for line in self.footnotes:
             anno = line.annotation
             if anno != curr_footnote:
                 curr_footnote = anno
-                self.chunks.append(f'<dt id="{id_for_footnote(anno.number)}">'
-                                   f'{anno.number}</dt>\n')
-                self.chunks.append(f'<dd>{anno.text}')
-                cit_id = self.footnote_citations.get(anno.number)
-                if cit_id:
-                    self.chunks.append(
-                        f' <a href="#{cit_id}">Back to citation</a>'
-                    )
-                self.chunks.append('</dd>\n')
+                self.writer.create_footnote(anno.number, anno.text)
 
-        self.chunks.append('</dl>\n')
+        self.writer.end_footnotes()
 
     def build(self):
         self.doc.annotators.require_all()
+        self.writer.start_document(self.doc)
 
         for line in self.doc.lines:
             anno = line.annotation
@@ -149,9 +174,11 @@ class HTMLBuilder:
         self.close_all_blocks()
         self.process_footnotes()
 
-        return ''.join(self.chunks)
 
 def to_html(doc):
-    builder = HTMLBuilder(doc)
+    writer = HTMLWriter()
+    builder = SemanticTreeBuilder(doc, writer)
 
-    return builder.build()
+    builder.build()
+
+    return writer.getvalue()
