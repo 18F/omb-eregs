@@ -125,8 +125,7 @@ class SemanticTreeBuilder:
                 # Don't display this content at all.
                 pass
             elif isinstance(anno, document.OMBFootnoteCitation):
-                fnum = anno.number
-                self.writer.create_footnote_citation(fnum)
+                self.writer.create_footnote_citation(anno.number)
             else:
                 self.writer.create_text(text)
 
