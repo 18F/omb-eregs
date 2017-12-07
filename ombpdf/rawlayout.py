@@ -2,43 +2,6 @@ from html import escape
 from decimal import Decimal
 
 
-HTML_INTRO = """\
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-html, body {
-    font-family: sans-serif;
-}
-
-.page {
-    border: 1px solid black;
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-}
-
-.char {
-    box-sizing: border-box;
-    background: rgba(0, 0, 0, 0.75);
-    border-left: 1px solid rgba(0, 0, 0, 0.9);
-    color: lightgray;
-    position: absolute;
-    overflow: hidden;
-    font-size: 9px;
-}
-</style>
-"""
-
-PREAMBLE = """\
-<p>
-  This page is primarily intended to show the bounding boxes of various
-  page elements. In particular, font sizes are not accurate.
-</p>
-<p>
-  Inspect this page with developer tools to obtain more details.
-</p>
-"""
-
 def to_px_style_attr(**kwargs):
     '''
     >>> to_px_style_attr(width=50.12345, height=40.65321)
@@ -55,23 +18,31 @@ def to_px_style_attr(**kwargs):
 
 
 def to_html(doc):
-    chunks = [
-        HTML_INTRO,
-        f'<title>Raw layout for {doc.filename}</title>\n',
-        f'<h1>Raw layout for <code>{doc.filename}</code></h1>\n',
-        PREAMBLE,
-    ]
+    doc.annotators.require_all()
+    chunks = []
+    legend = set()
     for page in doc.pages:
         pagestyle = to_px_style_attr(width=page.ltpage.width,
                                      height=page.ltpage.height)
-        chunks.append(f'<h2>Page {page.number}</h2>')
+        chunks.append(
+            f'<h2 id="{page.number}">'
+            f'<a href="#{page.number}">Page {page.number}</a></h2>'
+        )
         chunks.append(f'<div class="page" {pagestyle}>\n')
-        for line in page:
-            chunks.append(f'<div class="line" '
-                          f'data-str="{escape(str(line))}">\n')
+        for line, lineno in zip(page, range(1, len(page) + 1)):
+            line_classes = ['line']
+            if line.annotation is not None:
+                classname = line.annotation.__class__.__name__
+                cssname = f'line-{classname}'
+                line_classes.append(cssname)
+                legend.add((classname, cssname))
+            line_classes = ' '.join(line_classes)
+            chunks.append(f'<div class="{line_classes}" '
+                          f'data-anno="{escape(str(line.annotation))}"'
+                          f'data-lineno="{lineno}">\n')
             for char in line:
                 charstyle = to_px_style_attr(
-                    top=page.ltpage.height - char.ltchar.y0,
+                    top=page.ltpage.height - char.ltchar.y1,
                     left=char.ltchar.x0,
                     width=char.ltchar.width,
                     height=char.ltchar.height,
@@ -80,4 +51,4 @@ def to_html(doc):
             chunks.append(f'</div>')
         chunks.append(f'</div>\n')
 
-    return ''.join(chunks)
+    return (''.join(chunks), dict(legend=legend))

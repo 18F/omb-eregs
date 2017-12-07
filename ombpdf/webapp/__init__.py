@@ -1,8 +1,9 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, Markup, url_for
 from werkzeug.routing import BaseConverter, ValidationError
 
 from ombpdf.download_pdfs import ROOT_DIR as DATA_DIR
 from ombpdf.document import OMBDocument
+from ombpdf.util import get_ltpages
 from ombpdf import html, semhtml, rawlayout
 
 
@@ -36,8 +37,16 @@ def get_pdfmap():
     return pdfmap
 
 
+_ltpages_cache = {}
+
 def to_doc(path):
-    return OMBDocument.from_file(path.open('rb'))
+    if path not in _ltpages_cache:
+        with path.open('rb') as fp:
+            _ltpages_cache[path] = get_ltpages(fp)
+    return OMBDocument(
+        _ltpages_cache[path],
+        filename=path.relative_to(DATA_DIR),
+    )
 
 
 @app.route('/')
@@ -66,4 +75,19 @@ def semhtml_pdf(pdf):
 
 @app.route('/rawlayout/<pdfpath:pdf>')
 def rawlayout_pdf(pdf):
-    return rawlayout.to_html(to_doc(pdf))
+    doc = to_doc(pdf)
+
+    script_params = {
+        'pdfPath': url_for('raw_pdf', pdf=pdf),
+        'workerSrc': url_for('static', filename='js/pdf.worker.bundle.js'),
+    }
+
+    html, ctx = rawlayout.to_html(doc)
+
+    return render_template(
+        'rawlayout.html',
+        doc=doc,
+        html=Markup(html),
+        script_params=script_params,
+        **ctx,
+    )

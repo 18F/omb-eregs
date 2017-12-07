@@ -15,7 +15,6 @@ import ombpdf.pagenumbers
 import ombpdf.headings
 import ombpdf.semhtml
 import ombpdf.webapp
-import ombpdf.rawlayout
 
 
 def get_doc(filename):
@@ -99,15 +98,6 @@ def semhtml(filename):
 
 
 @cli.command()
-@click.argument('filename')
-def rawlayout(filename):
-    "Show HTML for the raw layout (bounding boxes, etc) of the given PDF."
-
-    content = ombpdf.rawlayout.to_html(get_doc(filename)).encode('utf-8')
-    sys.stdout.buffer.write(content)
-
-
-@cli.command()
 def runserver():
     "Run a web server that lets you browse PDFs and their conversions."
 
@@ -118,8 +108,16 @@ def runserver():
         'FLASK_DEBUG': '1',
     })
 
-    popen = subprocess.Popen(['flask', 'run'], env=env)
-    popen.wait()
+    frontend = subprocess.Popen([
+        'node',
+        os.path.join('node_modules', 'webpack', 'bin', 'webpack.js'),
+    ])
+
+    try:
+        server = subprocess.Popen(['flask', 'run'], env=env)
+        server.wait()
+    finally:
+        frontend.kill()
 
 
 if __name__ == '__main__':
