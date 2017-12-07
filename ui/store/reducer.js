@@ -1,4 +1,4 @@
-import { CLOSE_FOOTNOTE, OPEN_FOOTNOTE } from './actions';
+import { CLOSE_FOOTNOTE, OPEN_FOOTNOTE, RESET_DOCUMENT_STATE } from './actions';
 import initialState from './initial-state';
 
 
@@ -10,6 +10,11 @@ export default function reducer(state = initialState, action) {
         openedFootnote: action.footnoteIdentifier,
       };
     case CLOSE_FOOTNOTE:
+      return {
+        ...state,
+        openedFootnote: '',
+      };
+    case RESET_DOCUMENT_STATE:
       return {
         ...state,
         openedFootnote: '',

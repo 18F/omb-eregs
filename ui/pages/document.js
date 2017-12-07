@@ -3,6 +3,7 @@ import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
 import DocumentNav from '../components/document/navigation';
+import { resetDocumentState } from '../store/actions';
 import { documentData } from '../util/api/queries';
 import DocumentNode from '../util/document-node';
 import renderNode from '../util/render-node';
@@ -28,4 +29,9 @@ Document.propTypes = {
   docNode: PropTypes.shape({}).isRequired,
 };
 
-export default wrapPage(Document, documentData, headerFooterParams);
+function getInitialProps(props) {
+  props.store.dispatch(resetDocumentState());
+  return documentData(props);
+}
+
+export default wrapPage(Document, getInitialProps, headerFooterParams);
