@@ -1,3 +1,27 @@
+export class Meta {
+  constructor(args) {
+    const fieldValues = args || {};
+    // policy meta data (e.g. slugs, pdf url, etc.)  associated with this
+    // document
+    this.policy = fieldValues.policy || {};
+
+    // footnotes referenced in this DocumentNode or its children. E.g. used to
+    // consolidate footnotes in tables
+    // DocumentNode will be defined before this constructor is called
+    /* eslint-disable no-use-before-define */
+    this.descendantFootnotes = (
+      fieldValues.descendantFootnotes || fieldValues.descendant_footnotes || []
+    ).map(f => new DocumentNode(f));
+    /* eslint-enable no-use-before-define */
+
+    // title of this DocumentNode and any of its children. E.g. used in
+    // navigation
+    this.tableOfContents = (
+      fieldValues.table_of_contents || fieldValues.tableOfContents || {}
+    );
+  }
+}
+
 export default class DocumentNode {
   constructor(args) {
     const fieldValues = args || {};
@@ -28,7 +52,7 @@ export default class DocumentNode {
     this.children = (fieldValues.children || []).map(c => new DocumentNode(c));
 
     // node-level meta data, such as footnotes within a table
-    this.meta = fieldValues.meta || {};
+    this.meta = new Meta(fieldValues.meta);
   }
 
   linearize() {
