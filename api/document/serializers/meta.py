@@ -2,6 +2,7 @@ from typing import NamedTuple
 
 from rest_framework import serializers
 
+from document.models import DocNode
 from document.tree import DocCursor
 from reqs.models import Policy
 
@@ -17,6 +18,17 @@ class PolicySerializer(serializers.ModelSerializer):
         )
 
 
+class TableOfContentsSerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DocNode
+        fields = ('children', 'identifier', 'title')
+
+    def get_children(self, instance):
+        return type(self)(instance.children(), many=True).data
+
+
 class Meta(NamedTuple):
     """Package of all of the data needed to generate the "meta" field."""
     cursor: DocCursor
@@ -24,17 +36,14 @@ class Meta(NamedTuple):
     policy: Policy
 
     @property
-    def model(self):
-        return self.cursor.model
-
-    @property
     def node_type(self):
-        return self.model.node_type
+        return self.cursor.node_type
 
 
 class MetaSerializer(serializers.Serializer):
     descendant_footnotes = serializers.SerializerMethodField()
     policy = serializers.SerializerMethodField()
+    table_of_contents = serializers.SerializerMethodField()
 
     def serialize_doc_cursor(self, doc_cursor: DocCursor):
         serializer = type(self.context['parent_serializer'])
@@ -55,7 +64,7 @@ class MetaSerializer(serializers.Serializer):
             return None
         footnotes = []
         for node in instance.cursor.walk():
-            for citation in node.model.footnotecitations.all():
+            for citation in node.footnotecitations.all():
                 subtree = DocCursor(instance.cursor.tree,
                                     citation.footnote_node.identifier)
                 footnotes.append(self.serialize_doc_cursor(subtree))
@@ -64,3 +73,10 @@ class MetaSerializer(serializers.Serializer):
     def get_policy(self, instance):
         if instance.is_root:
             return PolicySerializer(instance.policy).data
+
+    def get_table_of_contents(self, instance):
+        if instance.is_root:
+            only_titled = DocNode.objects.exclude(title='')
+            titled_cursor = DocCursor.load_from_model(
+                instance.cursor.model, queryset=only_titled)
+            return TableOfContentsSerializer(titled_cursor).data

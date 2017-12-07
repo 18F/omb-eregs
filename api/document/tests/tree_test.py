@@ -12,7 +12,7 @@ def test_new_tree():
     assert result.identifier == 'root_0'
     assert set(result.tree.nodes()) == {'root_0'}
     assert len(result.tree.edges) == 0
-    assert result.model.text == 'Root Node'
+    assert result.text == 'Root Node'
 
 
 def test_item_access():
@@ -22,9 +22,9 @@ def test_item_access():
     sec1.add_child('par', 'a', text='paragraph a')
     sec1.add_child('par', 'b')
 
-    assert root['sect_1'].model.text == 'section 1'
-    assert root['sect_2'].model.text == 'section 2'
-    assert root['sect_1']['par_a'].model.text == 'paragraph a'
+    assert root['sect_1'].text == 'section 1'
+    assert root['sect_2'].text == 'section 2'
+    assert root['sect_1']['par_a'].text == 'paragraph a'
 
 
 def test_depths():
@@ -34,11 +34,11 @@ def test_depths():
     sec1.add_child('par', 'a')
     sec1.add_child('par', 'b')
 
-    assert root.model.depth == 0
-    assert root['sect_1'].model.depth == 1
-    assert root['sect_2'].model.depth == 1
-    assert root['sect_1']['par_a'].model.depth == 2
-    assert root['sect_1']['par_b'].model.depth == 2
+    assert root.depth == 0
+    assert root['sect_1'].depth == 1
+    assert root['sect_2'].depth == 1
+    assert root['sect_1']['par_a'].depth == 2
+    assert root['sect_1']['par_b'].depth == 2
 
 
 def test_children_are_sorted():
@@ -92,23 +92,23 @@ def test_nested_sets():
     sect2.add_child('par', '1')
 
     assert root.subtree_size() == 6
-    assert root.model.left is None
-    assert root.model.right is None
+    assert root.left is None
+    assert root.right is None
 
     root.nested_set_renumber(bulk_create=False)
 
-    assert root.model.left == 1
-    assert root['sect_1'].model.left == 2
-    assert root['sect_1']['par_a'].model.left == 3
-    assert root['sect_1']['par_a'].model.right == 4
-    assert root['sect_1']['par_b'].model.left == 5
-    assert root['sect_1']['par_b'].model.right == 6
-    assert root['sect_1'].model.right == 7
-    assert root['sect_2'].model.left == 8
-    assert root['sect_2']['par_1'].model.left == 9
-    assert root['sect_2']['par_1'].model.right == 10
-    assert root['sect_2'].model.right == 11
-    assert root.model.right == 12
+    assert root.left == 1
+    assert root['sect_1'].left == 2
+    assert root['sect_1']['par_a'].left == 3
+    assert root['sect_1']['par_a'].right == 4
+    assert root['sect_1']['par_b'].left == 5
+    assert root['sect_1']['par_b'].right == 6
+    assert root['sect_1'].right == 7
+    assert root['sect_2'].left == 8
+    assert root['sect_2']['par_1'].left == 9
+    assert root['sect_2']['par_1'].right == 10
+    assert root['sect_2'].right == 11
+    assert root.right == 12
 
 
 def test_parent():
@@ -148,10 +148,10 @@ def test_create_save_load():
     new_root = tree.DocCursor.load_from_model(model_root)
 
     assert new_root.subtree_size() == 7
-    assert new_root.model.text == 'Root'
-    assert new_root['sect_1'].model.text == 'First Section'
-    assert new_root['sect_1']['par_b'].model.text == 'Paragraph b'
-    assert new_root['appendix_1']['apppar_i'].model.text == 'Appendix par i'
+    assert new_root.text == 'Root'
+    assert new_root['sect_1'].text == 'First Section'
+    assert new_root['sect_1']['par_b'].text == 'Paragraph b'
+    assert new_root['appendix_1']['apppar_i'].text == 'Appendix par i'
 
 
 def test_add_models():
@@ -192,6 +192,6 @@ def test_default_policy():
     root.add_child('sec')
     root.add_child('sec', policy=policy2)
 
-    assert root.model.policy == policy1
-    assert root['sec_1'].model.policy == policy1
-    assert root['sec_2'].model.policy == policy2
+    assert root.policy == policy1
+    assert root['sec_1'].policy == policy1
+    assert root['sec_2'].policy == policy2

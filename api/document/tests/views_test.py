@@ -72,12 +72,11 @@ def test_query_count(client):
 
     # select 3 nodes to have external links
     for node in random.sample(list(root.walk()), 3):
-        node.model.externallinks.create(start=0, end=1,
-                                        href='http://example.com/')
+        node.externallinks.create(start=0, end=1, href='http://example.com/')
 
     # select 3 nodes to have inline requirements
     for node in random.sample(list(root.walk()), 3):
-        node.model.inlinerequirements.create(
+        node.inlinerequirements.create(
             start=1, end=2, requirement=mommy.make(Requirement))
 
     # select 3 nodes to add footnote citations
@@ -87,20 +86,21 @@ def test_query_count(client):
     for node in root.walk():
         node.model.save()
     for citing, footnote in zip(citing_nodes, footnotes):
-        citing.model.footnotecitations.create(start=2, end=3,
-                                              footnote_node=footnote.model)
+        citing.footnotecitations.create(
+            start=2, end=3, footnote_node=footnote.model)
     # pytest will alter the connection, so we only want to load it within this
     # test
     from django.db import connection
     with CaptureQueriesContext(connection) as capture:
         client.get("/M-O-A-R")
-        # Query 1: Lookup the policy
-        # 2: Lookup the root docnode
-        # 3: fetch footnote citations _and_ referenced node for the root
-        # 4: fetch external links for the root
-        # 5: fetch inline requirements _and_ referenced req for root
-        # 6: fetch child nodes
-        # 7: fetch footnote citations _and_ referenced node for child nodes
-        # 8: fetch external links for child nodes
-        # 9: fetch inline requirements _and_ referenced req for child nodes
-        assert len(capture) == 9
+        #  Query 1: Lookup the policy
+        #  2: Lookup the root docnode
+        #  3: fetch footnote citations _and_ referenced node for the root
+        #  4: fetch external links for the root
+        #  5: fetch inline requirements _and_ referenced req for root
+        #  6: fetch nodes for table of contents
+        #  7: fetch child nodes
+        #  8: fetch footnote citations _and_ referenced node for child nodes
+        #  9: fetch external links for child nodes
+        # 10: fetch inline requirements _and_ referenced req for child nodes
+        assert len(capture) == 10
