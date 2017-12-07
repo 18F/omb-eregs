@@ -21,7 +21,7 @@ def optimize(queryset):
         queryset=InlineRequirement.objects.select_related('requirement'),
     )
     return queryset.\
-        prefetch_related(footnote_prefetch, 'externallinks',
+        prefetch_related(footnote_prefetch, 'cites', 'externallinks',
                          requirement_prefetch)
 
 

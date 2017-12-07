@@ -40,6 +40,7 @@ class DocNode(models.Model):
     def annotations(self) -> Iterator['Annotation']:
         """Query all of our annotation types."""
         return itertools.chain(self.footnotecitations.all(),
+                               self.cites.all(),
                                self.externallinks.all(),
                                self.inlinerequirements.all())
 
@@ -57,6 +58,10 @@ class Annotation(models.Model):
 class PlainText(Annotation):
     class Meta:
         abstract = True
+
+
+class Cite(Annotation):
+    pass
 
 
 class FootnoteCitation(Annotation):
