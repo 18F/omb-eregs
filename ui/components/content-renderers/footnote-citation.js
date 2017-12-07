@@ -49,7 +49,7 @@ export class FootnoteCitation extends React.Component {
     const klass = `footnote-link nowrap${expanded ? ' active' : ''}`;
     const href = `#${this.props.content.footnote_node.identifier}`;
     const link = (
-      <cite>
+      <cite id={`citation-${this.props.content.footnote_node.identifier}`}>
         <sup>
           <Link
             className={klass}

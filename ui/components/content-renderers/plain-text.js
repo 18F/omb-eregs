@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 
 
 export default function PlainText({ content }) {
-  return <span>{ content.text }</span>;
+  return content.text;
 }
 PlainText.propTypes = {
   content: PropTypes.shape({

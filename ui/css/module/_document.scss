@@ -17,3 +17,32 @@
 .original-link-container {
   margin-bottom: 8px;
 }
+
+.document-nav .sub-sections {
+  padding-left: 1rem;
+}
+
+.document-nav-heading {
+  $spacing: 1rem;
+  $active-width: 0.5rem;
+
+  border-bottom: 1px solid $color-lt-blue;
+  display: block;
+  font-size: 1rem;
+  line-height: 1.3rem;
+
+  .document-nav-container {
+    padding: $spacing;
+    padding-left: $spacing + $active-width;
+  }
+
+  &:hover .document-nav-container {
+    background-color: $color-sky;
+    border-left: $active-width solid $color-blue;
+    padding-left: $spacing;
+  }
+
+  .sub-sections & {
+    font-size: 0.875rem;
+  }
+}

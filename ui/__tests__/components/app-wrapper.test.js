@@ -44,6 +44,11 @@ describe('wrapPage()', () => {
 
       expect(results.initialState).toEqual(initialState);
     });
+    it('allows an empty dataFn', async () => {
+      const Wrapped = wrapPage(ExamplePage);
+      const results = await Wrapped.getInitialProps({ some: 'input' });
+      expect(results.initialProps).toEqual({}); // no-op
+    });
   });
   describe('render()', () => {
     const Wrapped = wrapPage(ExamplePage, jest.fn());

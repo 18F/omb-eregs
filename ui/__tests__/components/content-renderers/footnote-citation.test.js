@@ -61,7 +61,7 @@ describe('<FootnoteCitation />', () => {
   it('focuses on footnote link once "close" btn is clicked', () => {
     const props = { ...exampleProps, expanded: true };
     const wrapper = mount(<FootnoteCitation {...props} />);
-    const link = wrapper.find('Link').getDOMNode();
+    const link = wrapper.find('Link').first().getDOMNode();
     const closeBtn = wrapper.find('.close-button');
     closeBtn.simulate('click');
     expect(global.window.document.activeElement).toEqual(link);
@@ -97,7 +97,7 @@ describe('<FootnoteCitation />', () => {
       ...exampleProps,
       expanded: true,
     };
-    const link = mount(<FootnoteCitation {...props} />).find('Link');
+    const link = mount(<FootnoteCitation {...props} />).find('Link').first();
     link.simulate('click');
     expect(props.openFootnote).not.toHaveBeenCalled();
     expect(props.closeFootnote).toHaveBeenCalledTimes(1);

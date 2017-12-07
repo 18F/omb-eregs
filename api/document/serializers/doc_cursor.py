@@ -25,19 +25,9 @@ class DocCursorSerializer(serializers.ModelSerializer):
             'type_emblem',
         )
 
-    @property
-    def cursor(self):
-        return self.context['cursor']
-
-    def to_representation(self, instance):
-        """We want to serialize the wrapped model, not the cursor. However, we
-        need to hang on to that cursor for rendering our children."""
-        self.context['cursor'] = instance
-        return super().to_representation(instance.model)
-
     def get_children(self, instance):
-        return self.__class__(
-            self.cursor.children(), many=True,
+        return type(self)(
+            instance.children(), many=True,
             context={**self.context, 'is_root': False},
         ).data
 
@@ -47,14 +37,14 @@ class DocCursorSerializer(serializers.ModelSerializer):
             instance.annotations(), len(instance.text))
         return NestedAnnotationSerializer(
             annotations,
-            context={'cursor': self.cursor, 'parent_serializer': self},
+            context={'cursor': instance, 'parent_serializer': self},
             many=True,
         ).data
 
     def get_meta(self, instance):
         """Include meta data which applies to the whole node."""
         meta = Meta(
-            self.cursor,
+            instance,
             self.context.get('is_root', True),
             self.context.get('policy'),
         )

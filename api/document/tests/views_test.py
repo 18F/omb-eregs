@@ -72,12 +72,11 @@ def test_query_count(client):
 
     # select 3 nodes to have external links
     for node in random.sample(list(root.walk()), 3):
-        node.model.externallinks.create(start=0, end=1,
-                                        href='http://example.com/')
+        node.externallinks.create(start=0, end=1, href='http://example.com/')
 
     # select 3 nodes to have inline requirements
     for node in random.sample(list(root.walk()), 3):
-        node.model.inlinerequirements.create(
+        node.inlinerequirements.create(
             start=1, end=2, requirement=mommy.make(Requirement))
 
     # select 3 nodes to add footnote citations
@@ -87,8 +86,8 @@ def test_query_count(client):
     for node in root.walk():
         node.model.save()
     for citing, footnote in zip(citing_nodes, footnotes):
-        citing.model.footnotecitations.create(start=2, end=3,
-                                              footnote_node=footnote.model)
+        citing.footnotecitations.create(
+            start=2, end=3, footnote_node=footnote.model)
     # pytest will alter the connection, so we only want to load it within this
     # test
     from django.db import connection
@@ -100,9 +99,10 @@ def test_query_count(client):
         # 04: fetch external links for the root
         # 05: fetch inline requirements _and_ referenced req for root
         # 06: fetch cite elements for the root
-        # 07: fetch child nodes
-        # 08: fetch footnote citations _and_ referenced node for child nodes
-        # 09: fetch external links for child nodes
-        # 10: fetch inline requirements _and_ referenced req for child nodes
-        # 11: fetch cite elements for child nodes
-        assert len(capture) == 11
+        # 06: fetch nodes for table of contents
+        # 08: fetch child nodes
+        # 09: fetch footnote citations _and_ referenced node for child nodes
+        # 10: fetch external links for child nodes
+        # 11: fetch inline requirements _and_ referenced req for child nodes
+        # 12: fetch cite elements for child nodes
+        assert len(capture) == 12
