@@ -69,6 +69,7 @@ docker-compose run --rm manage.py fetch_csv
 docker-compose run --rm manage.py import_reqs data.csv
 docker-compose run --rm manage.py sync_agencies
 docker-compose run --rm manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
+docker-compose run --rm manage.py import_xml_doc example_docs/m_15_16.xml M-15-16
 ```
 
 This may emit some warnings for improper input. The next time you visit the

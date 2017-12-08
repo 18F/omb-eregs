@@ -56,7 +56,7 @@ export default function Policy({ docNode }) {
         </LabeledText>
       </header>
       { docNode.children.map(renderNode) }
-      { footnotes(docNode.meta.descendant_footnotes.map(f => new DocumentNode(f))) }
+      { footnotes(docNode.meta.descendantFootnotes) }
     </div>
   );
 }
