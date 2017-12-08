@@ -2,4 +2,9 @@
  * withRouter()). That may change in the future. */
 export default {
   openedFootnote: '',
+  tableOfContents: {
+    children: [],
+    identifier: '',
+    title: '',
+  },
 };

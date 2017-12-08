@@ -133,15 +133,6 @@ describe('documentData()', () => {
       },
     });
   });
-  it('passes up 404s', async () => {
-    endpoints.document.fetchOne.mockReset();
-    endpoints.document.fetchOne.mockImplementationOnce(() => {
-      throw error404;
-    });
-
-    const result = await documentData({ query: {} });
-    expect(result).toEqual({ statusCode: 404 });
-  });
 });
 
 describe('policiesData()', () => {
