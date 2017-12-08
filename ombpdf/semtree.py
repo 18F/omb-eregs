@@ -53,6 +53,16 @@ class Footnote(Element):
 class Writer:
     '''
     A Writer implements the Visitor pattern for Elements.
+
+    Here's an example of the way the double dispatching works:
+
+        >>> class MyWriter(Writer):
+        ...     def create_FootnoteCitation(self, cit):
+        ...         print(f"Creating footnote citation {cit.number}!")
+
+        >>> writer = MyWriter()
+        >>> writer.create_element(FootnoteCitation(1))
+        Creating footnote citation 1!
     '''
 
     def _dispatch_method(self, prefix, el):
@@ -62,6 +72,9 @@ class Writer:
     def begin_element(self, el):
         '''
         Begins a non-void Element.
+
+        Subclasses should implement `begin_*` for every non-void Element
+        class.
         '''
 
         assert not el.is_void
@@ -70,6 +83,9 @@ class Writer:
     def end_element(self, el):
         '''
         Ends a non-void Element.
+
+        Subclasses should implement `end_*` for every non-void Element
+        class.
         '''
 
         assert not el.is_void
@@ -78,10 +94,20 @@ class Writer:
     def create_element(self, el):
         '''
         Creates a void Element.
+
+        Subclasses should implement `create_*` for every void Element class.
         '''
 
         assert el.is_void
         self._dispatch_method('create', el)
+
+    def create_text(self, text):
+        '''
+        Creates text, to be a child of the most recently begun
+        non-void Element.
+        '''
+
+        pass
 
 
 class SemanticTreeBuilder:
