@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from . import document
 
 
@@ -91,6 +93,17 @@ class Writer:
         assert not el.is_void
         self._dispatch_method('end', el)
 
+    @contextmanager
+    def wrap_in_element(self, el):
+        '''
+        Provides a `with`-statement context that wraps everything created
+        during the context's lifetime in the given element.
+        '''
+
+        self.begin_element(el)
+        yield
+        self.end_element(el)
+
     def create_element(self, el):
         '''
         Creates a void Element.
@@ -183,24 +196,16 @@ class SemanticTreeBuilder:
         if not self.footnotes:
             return
 
-        fl = FootnoteList()
+        with self.writer.wrap_in_element(FootnoteList()):
+            curr_footnote = None
+            for line in self.footnotes:
+                anno = line.annotation
+                if anno != curr_footnote:
+                    curr_footnote = anno
+                    self.writer.create_element(Footnote(anno.number,
+                                                        anno.text))
 
-        self.writer.begin_element(fl)
-
-        curr_footnote = None
-        for line in self.footnotes:
-            anno = line.annotation
-            if anno != curr_footnote:
-                curr_footnote = anno
-                self.writer.create_element(Footnote(anno.number, anno.text))
-
-        self.writer.end_element(fl)
-
-    def build(self):
-        self.doc.annotators.require_all()
-        doc_el = Document(title=self.doc.filename)
-        self.writer.begin_element(doc_el)
-
+    def process_document(self):
         for line in self.doc.lines:
             anno = line.annotation
             ignore_line = False
@@ -226,4 +231,9 @@ class SemanticTreeBuilder:
 
         self.close_all_blocks()
         self.process_footnotes()
-        self.writer.end_element(doc_el)
+
+    def build(self):
+        self.doc.annotators.require_all()
+
+        with self.writer.wrap_in_element(Document(title=self.doc.filename)):
+            self.process_document()
