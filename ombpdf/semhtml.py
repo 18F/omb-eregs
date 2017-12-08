@@ -1,145 +1,95 @@
 from html import escape
 
-from . import document
+from . import semtree
 
 
-HTML_INTRO = """\
-<!DOCTYPE html>
-<meta charset="utf-8">
-"""
+class HTMLWriter(semtree.Writer):
+    '''
+    Concrete Writer for HTML.
+    '''
 
+    def __init__(self):
+        self.chunks = []
+        self.footnote_citations = {}
 
-def id_for_footnote(fnum):
-    return f"footnote-{fnum}"
+    def id_for_footnote(self, number):
+        return f"footnote-{number}"
 
+    def id_for_footnote_citation(self, number):
+        return f"footnote-citation-{number}"
 
-def id_for_footnote_citation(fnum):
-    return f"footnote-citation-{fnum}"
+    def getvalue(self):
+        return ''.join(self.chunks)
+
+    # Below are Writer methods.
+
+    def begin_Document(self, doc):
+        self.chunks.append(
+            f'<title>Semantic HTML output for {doc.title}</title>\n'
+        )
+
+    def end_Document(self, doc):
+        pass
+
+    def begin_Heading(self, heading):
+        self.chunks.append(f'<h{heading.level}>')
+
+    def end_Heading(self, heading):
+        self.chunks.append(f'</h{heading.level}>\n')
+
+    def begin_Paragraph(self, p):
+        self.chunks.append(f'<p>')
+
+    def end_Paragraph(self, p):
+        self.chunks.append(f'</p>\n')
+
+    def begin_List(self, li):
+        self.chunks.append('<ol>' if li.is_ordered else '<ul>')
+
+    def end_List(self, li):
+        self.chunks.append('</ol>\n' if li.is_ordered else '</ul>\n')
+
+    def begin_ListItem(self, p):
+        self.chunks.append(f'<li>')
+
+    def end_ListItem(self, p):
+        self.chunks.append(f'</li>\n')
+
+    def create_FootnoteCitation(self, cit):
+        cit_id = self.id_for_footnote_citation(cit.number)
+        self.footnote_citations[cit.number] = cit_id
+        self.chunks.append(
+            f'<sup id="{cit_id}">'
+            f'<a href="#{self.id_for_footnote(cit.number)}">'
+            f'{cit.number}</a></sup>'
+        )
+
+    def begin_FootnoteList(self, fl):
+        self.chunks.append('<h2>Footnotes</h2>\n')
+        self.chunks.append('<dl>\n')
+
+    def end_FootnoteList(self, fl):
+        self.chunks.append('</dl>\n')
+
+    def create_Footnote(self, f):
+        self.chunks.append(f'<dt id="{self.id_for_footnote(f.number)}">'
+                           f'{f.number}</dt>\n')
+        self.chunks.append(f'<dd>{f.text}')
+        cit_id = self.footnote_citations.get(f.number)
+        if cit_id:
+            self.chunks.append(
+                f' <a href="#{cit_id}">Back to citation</a>'
+            )
+        self.chunks.append('</dd>\n')
+
+    def create_text(self, text):
+        self.chunks.append(escape(text))
 
 
 def to_html(doc):
-    doc.annotators.require_all()
-    chunks = [
-        f'<title>Semantic HTML output for {doc.filename}</title>\n'
-    ]
+    writer = HTMLWriter()
+    builder = semtree.SemanticTreeBuilder(doc, writer)
 
-    footnote_citations = {}
-    footnotes = []
-    block_stack = []
+    builder.build()
 
-    def open_new_block(tagname, anno):
-        block_stack.append((tagname, anno))
-        chunks.append(f'<{tagname}>')
-
-    def close_current_block():
-        if block_stack:
-            tagname, _ = block_stack.pop()
-            chunks.append(f'</{tagname}>\n')
-
-    def does_current_block_match(anno=None, tagnames=None):
-        if not block_stack:
-            return False
-        curr_tagname, curr_anno = block_stack[-1]
-        if anno is not None:
-            return anno == curr_anno
-        return curr_tagname in tagnames
-
-    def close_all_blocks():
-        while block_stack:
-            close_current_block()
-
-    def create_new_list(anno):
-        if anno.is_ordered:
-            open_new_block('ol', anno)
-        else:
-            open_new_block('ul', anno)
-
-    def process_new_list_item(anno):
-        if does_current_block_match(tagnames=['li']):
-            _, prev_anno = block_stack[-1]
-            if prev_anno.list_id == anno.list_id:
-                # It's another item in the same list.
-                close_current_block()
-                open_new_block('li', anno)
-            elif prev_anno.indentation < anno.indentation:
-                # It's a new nested list, inside a parent list.
-                create_new_list(anno)
-                open_new_block('li', anno)
-            else:
-                # A nested list has finished and we're back in
-                # the parent list.
-                close_current_block()  # Close final nested <li>
-                close_current_block()  # Close nested list
-                close_current_block()  # Close parent <li>
-                open_new_block('li', anno)
-        else:
-            # It's a new list following non-list content.
-            close_all_blocks()
-            create_new_list(anno)
-            open_new_block('li', anno)
-
-    def process_line(line):
-        for char, text in line.iter_char_chunks():
-            anno = char.annotation
-
-            if isinstance(anno, document.OMBListItemMarker):
-                # Don't display this content at all.
-                pass
-            elif isinstance(anno, document.OMBFootnoteCitation):
-                fnum = anno.number
-                cit_id = id_for_footnote_citation(fnum)
-                footnote_citations[fnum] = cit_id
-                chunks.append(
-                    f'<sup id="{cit_id}">'
-                    f'<a href="#{id_for_footnote(fnum)}">'
-                    f'{fnum}</a></sup>'
-                )
-            else:
-                chunks.append(escape(text))
-
-    for line in doc.lines:
-        anno = line.annotation
-        ignore_line = False
-        if anno and does_current_block_match(anno=anno):
-            pass
-        else:
-            if isinstance(anno, document.OMBFootnote):
-                footnotes.append(line)
-                ignore_line = True
-            elif isinstance(anno, document.OMBPageNumber):
-                ignore_line = True
-            elif isinstance(anno, document.OMBParagraph):
-                close_all_blocks()
-                open_new_block('p', anno)
-            elif isinstance(anno, document.OMBListItem):
-                process_new_list_item(anno)
-            elif isinstance(anno, document.OMBHeading):
-                close_all_blocks()
-                open_new_block(f'h{anno.level}', anno)
-
-        if not ignore_line:
-            process_line(line)
-
-    close_all_blocks()
-
-    if footnotes:
-        chunks.append('<h2>Footnotes</h2>\n')
-        chunks.append('<dl>\n')
-        curr_footnote = None
-        for line in footnotes:
-            anno = line.annotation
-            if anno != curr_footnote:
-                curr_footnote = anno
-                chunks.append(f'<dt id="{id_for_footnote(anno.number)}">'
-                              f'{anno.number}</dt>\n')
-                chunks.append(f'<dd>{anno.text}')
-                cit_id = footnote_citations.get(anno.number)
-                if cit_id:
-                    chunks.append(
-                        f' <a href="#{cit_id}">Back to citation</a>'
-                    )
-                chunks.append('</dd>\n')
-
-        chunks.append('</dl>\n')
-
-    return ''.join(chunks)
+    return writer.getvalue()
