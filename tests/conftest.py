@@ -14,6 +14,11 @@ def read_pages(relpath):
     return pages_cache[relpath]
 
 
+def load_document(path):
+    ltpages = read_pages(path)
+    return document.OMBDocument(ltpages, filename=path)
+
+
 @pytest.fixture
 def m_11_29_pages():
     return read_pages('2011/m11-29.pdf')
