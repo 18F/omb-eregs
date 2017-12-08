@@ -1,3 +1,10 @@
-/* Note that we're only tracking which foonote is opened right now. We may
- * expand this to include the url and other state vars in the future. */
-export default { openedFootnote: '' };
+/* Note that we _aren't_ tracking url here at this time (preferring Next's
+ * withRouter()). That may change in the future. */
+export default {
+  openedFootnote: '',
+  tableOfContents: {
+    children: [],
+    identifier: '',
+    title: '',
+  },
+};

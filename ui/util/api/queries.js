@@ -17,7 +17,7 @@ export function formatIssuance(policy) {
   };
 }
 
-async function propagate404(fn) {
+export async function propagate404(fn) {
   try {
     return await fn();
   } catch (err) {
@@ -157,10 +157,8 @@ export function redirectQuery(query, insertParam, idToInsert) {
 }
 
 export async function documentData({ query }) {
-  return propagate404(async () => {
-    const docNode = await endpoints.document.fetchOne(query.policyId);
-    const policy = formatIssuance(docNode.meta.policy);
-    docNode.meta = { ...docNode.meta, policy };
-    return { docNode };
-  });
+  const docNode = await endpoints.document.fetchOne(query.policyId);
+  const policy = formatIssuance(docNode.meta.policy);
+  docNode.meta = { ...docNode.meta, policy };
+  return { docNode };
 }
