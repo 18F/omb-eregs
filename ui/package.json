@@ -43,6 +43,7 @@
     "lodash.debounce": "^4.0.8",
     "node-sass": "^4.3.0",
     "raf": "^3.4.0",
+    "react-stickynode": "^1.4.0",
     "react-test-renderer": "^16.2.0",
     "sass-loader": "^6.0.5",
     "style-loader": "^0.18.2"
@@ -86,7 +87,9 @@
     "coverageReporters": [
       "lcov"
     ],
-    "setupFiles": ["raf/polyfill"],
+    "setupFiles": [
+      "raf/polyfill"
+    ],
     "setupTestFrameworkScriptFile": "<rootDir>/__tests__/test-utils/setup.js",
     "testRegex": "/__tests__/.*\\.test\\.jsx?$",
     "verbose": true
