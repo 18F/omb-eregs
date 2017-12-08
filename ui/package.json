@@ -73,6 +73,7 @@
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-select": "^1.0.0-rc.5",
+    "react-stickynode": "^1.4.0",
     "redux": "^3.7.2",
     "serialize-javascript": "^1.4.0",
     "url-parse": "^1.2.0",
@@ -86,7 +87,9 @@
     "coverageReporters": [
       "lcov"
     ],
-    "setupFiles": ["raf/polyfill"],
+    "setupFiles": [
+      "raf/polyfill"
+    ],
     "setupTestFrameworkScriptFile": "<rootDir>/__tests__/test-utils/setup.js",
     "testRegex": "/__tests__/.*\\.test\\.jsx?$",
     "verbose": true

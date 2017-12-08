@@ -81,8 +81,10 @@ export default function HeaderFooter({ children, showSearch, wrapperClassName })
       { faviconTags() }
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>,
-    <Disclaimer key="disclaimer" />,
-    <Navbar key="navbar" showSearch={showSearch} />,
+    <div key="page-header-wrapper" className="page-header-wrapper">
+      <Disclaimer key="disclaimer" />
+      <Navbar key="navbar" showSearch={showSearch} />
+    </div>,
     <div key="body" className={klasses}>
       {children}
     </div>,
