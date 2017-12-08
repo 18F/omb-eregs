@@ -43,7 +43,6 @@
     "lodash.debounce": "^4.0.8",
     "node-sass": "^4.3.0",
     "raf": "^3.4.0",
-    "react-stickynode": "^1.4.0",
     "react-test-renderer": "^16.2.0",
     "sass-loader": "^6.0.5",
     "style-loader": "^0.18.2"
@@ -74,6 +73,7 @@
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-select": "^1.0.0-rc.5",
+    "react-stickynode": "^1.4.0",
     "redux": "^3.7.2",
     "serialize-javascript": "^1.4.0",
     "url-parse": "^1.2.0",
