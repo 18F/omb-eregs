@@ -28,7 +28,8 @@ def to_html(doc):
             f'<h2 id="{page.number}">'
             f'<a href="#{page.number}">Page {page.number}</a></h2>'
         )
-        chunks.append(f'<div class="page" {pagestyle}>\n')
+        chunks.append(f'<div class="page" data-page="{page.number}" '
+                      f'{pagestyle}>\n')
         for line, lineno in zip(page, range(1, len(page) + 1)):
             line_classes = ['line']
             if line.annotation is not None:
