@@ -3,9 +3,10 @@ import React from 'react';
 
 import DocumentNode from '../../util/document-node';
 import renderNode from '../../util/render-node';
+import withScrollTracking from '../../util/with-scroll-tracking';
 
 /* Uses indentation and border to indicate separate sections */
-export default function Section({ docNode }) {
+export function Section({ docNode }) {
   return (
     <div className="node-section" id={docNode.identifier}>
       { docNode.children.map(renderNode) }
@@ -15,3 +16,5 @@ export default function Section({ docNode }) {
 Section.propTypes = {
   docNode: PropTypes.instanceOf(DocumentNode).isRequired,
 };
+
+export default withScrollTracking(Section);
