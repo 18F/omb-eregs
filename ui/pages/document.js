@@ -40,7 +40,9 @@ Document.propTypes = {
 export async function getInitialProps(props) {
   return propagate404(async () => {
     const { docNode } = await documentData(props);
-    props.store.dispatch(loadDocument(docNode.meta.table_of_contents));
+    const tableOfContents = docNode.meta.table_of_contents;
+    const hasFootnotes = docNode.meta.descendant_footnotes.length > 0;
+    props.store.dispatch(loadDocument(tableOfContents, hasFootnotes));
     return { docNode };
   });
 }

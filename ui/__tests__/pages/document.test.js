@@ -58,15 +58,31 @@ describe('getInitialProps()', () => {
     const result = await getInitialProps({ query: {} });
     expect(result).toEqual({ statusCode: 404 });
   });
-  it('triggers a document reset', async () => {
+  describe('document reset', () => {
     const tableOfContents = { children: [], identifier: 'idid', title: 'ttt' };
-    endpoints.document.fetchOne = jest.fn(() => ({ meta: {
-      policy: { issuance: '2001-02-03' },
-      table_of_contents: tableOfContents,
-    } }));
+    const policy = { issuance: '2001-02-03' };
     const store = { dispatch: jest.fn() };
 
-    await getInitialProps({ query: {}, store });
-    expect(store.dispatch).toHaveBeenCalledWith(loadDocument(tableOfContents));
+    it('bases hasFootnotes on the proper fields', async () => {
+      endpoints.document.fetchOne = jest.fn(() => ({ meta: {
+        descendant_footnotes: [],
+        policy,
+        table_of_contents: tableOfContents,
+      } }));
+
+      await getInitialProps({ query: {}, store });
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadDocument(tableOfContents, false));
+
+      endpoints.document.fetchOne = jest.fn(() => ({ meta: {
+        descendant_footnotes: [1, 2, 3],
+        policy,
+        table_of_contents: tableOfContents,
+      } }));
+
+      await getInitialProps({ query: {}, store });
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadDocument(tableOfContents, true));
+    });
   });
 });

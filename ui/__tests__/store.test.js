@@ -26,7 +26,7 @@ describe('footnote functionality', () => {
 describe('loading a new document', () => {
   it('clears existing footnotes', () => {
     const state = { ...initialState, openedFootnote: 'footnote' };
-    const result = reducer(state, loadDocument({ children: [] }));
+    const result = reducer(state, loadDocument({ children: [] }, false));
     expect(result.openedFootnote).toBe('');
   });
   it('sets the table of contents', () => {
@@ -35,7 +35,7 @@ describe('loading a new document', () => {
       identifier: 'idid',
       title: 'ttt',
     };
-    const result = reducer(initialState, loadDocument(tableOfContents));
+    const result = reducer(initialState, loadDocument(tableOfContents, false));
     expect(result.tableOfContents).toEqual(tableOfContents);
   });
   it('trims the table of contents', () => {
@@ -53,7 +53,7 @@ describe('loading a new document', () => {
       }],
     };
     const { tableOfContents: root } = reducer(
-      initialState, loadDocument(tableOfContents));
+      initialState, loadDocument(tableOfContents, false));
     expect(root.identifier).toBe('root');
     expect(root.children).toHaveLength(1);
     const [level1] = root.children;
@@ -62,6 +62,23 @@ describe('loading a new document', () => {
     const [level2] = level1.children;
     expect(level2.identifier).toBe('level-2');
     expect(level2.children).toHaveLength(0);
+  });
+  it('adds footnotes if applicable', () => {
+    const tableOfContents = {
+      children: [],
+      identifier: 'idid',
+      title: 'ttt',
+    };
+    const noFootnotes = reducer(initialState, loadDocument(tableOfContents, false));
+    expect(noFootnotes.tableOfContents.children).toHaveLength(0);
+
+    const withFootnotes = reducer(initialState, loadDocument(tableOfContents, true));
+    expect(withFootnotes.tableOfContents.children).toHaveLength(1);
+    expect(withFootnotes.tableOfContents.children[0]).toEqual({
+      children: [],
+      identifier: 'document-footnotes',
+      title: 'Footnotes',
+    });
   });
 });
 
