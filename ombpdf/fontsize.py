@@ -61,7 +61,7 @@ class FontSize(namedtuple('FontSize', ['font', 'size'])):
     def is_near(self, other, gap=1):
         if self.font != other.font:
             return False
-        return abs(self.size - other.size) <= float(gap)
+        return util.is_near(self.size, other.size, gap=gap)
 
     @classmethod
     def from_ltchar(cls, ltchar):

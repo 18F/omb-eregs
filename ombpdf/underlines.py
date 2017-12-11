@@ -1,14 +1,5 @@
-from collections import namedtuple
+from .horizlines import get_horizontal_lines
 
-from pdfminer import layout
-
-from . import util
-
-
-HorizontalLine = namedtuple('HorizontalLine', ['y', 'start', 'end'])
-
-# Maximum height of an underline (in points, I think).
-MAX_LINE_HEIGHT = 4.0
 
 # Percentage of bbox height underline can be from bottom of a line's bbox.
 MAX_LINE_BBOX_DIST = 0.25
@@ -27,13 +18,7 @@ def set_underlines(doc):
 
 def set_underlines_in_page(page):
     underlines = []
-    hlines = []
-    for rect in util.iter_flattened_layout(page.ltpage, layout.LTRect):
-        x0, y0 = rect.pts[0]
-        x1, y1 = rect.pts[2]
-        height = y1 - y0
-        if y1 - y0 < MAX_LINE_HEIGHT:
-            hlines.append(HorizontalLine((y0 + y1) / 2, x0, x1))
+    hlines = get_horizontal_lines(page)
     for line in page:
         for hline in hlines:
             tl = line.lttextline
