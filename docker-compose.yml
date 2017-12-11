@@ -161,6 +161,15 @@ services:
     ports: []
     depends_on: []
 
+  pybash:
+    <<: *DEV_API
+    entrypoint: .docker/wait_for_db_then .docker/activate_then bash
+    command: ''
+
+  nodebash:
+    <<: *DEV_UI
+    entrypoint: .docker/deps_ok_then .docker/modify_path_then bash
+    command: ''
 
 volumes:
   database_data:
