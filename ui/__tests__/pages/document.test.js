@@ -22,7 +22,9 @@ describe('<Document />', () => {
   it('includes the DocumentNav', () => {
     renderNode.mockImplementationOnce(() => null);
     const result = shallow(<Document docNode={{ identifier: 'abc' }} />);
-    expect(result.find('Connect(DocumentNav)')).toHaveLength(1);
+    const nav = result.find('Connect(DocumentNav)');
+    expect(nav).toHaveLength(1);
+    expect(nav.prop('isRoot')).toBe(true);
   });
 });
 

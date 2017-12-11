@@ -19,7 +19,7 @@ export function Document({ docNode }) {
     <div className="document-container clearfix max-width-4">
       <div className="col col-3 sm-hide xs-hide">
         <Sticky bottomBoundary=".document-container">
-          <DocumentNav />
+          <DocumentNav isRoot />
         </Sticky>
       </div>
       <div className="col col-1 sm-hide xs-hide">&nbsp;</div>
