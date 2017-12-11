@@ -6,7 +6,9 @@ def assert_snapshot_matches(snapshot_path, content, name=''):
     snapshot_path = snapshot_path.relative_to(Path('.').resolve())
 
     if not snapshot_path.exists():
-        snapshot_path.write_text(content, encoding='utf-8')
+        # Encoding the content ourselves and using write_bytes will
+        # ensure that the files have unix line endings.
+        snapshot_path.write_bytes(content.encode('utf-8'))
 
     expected_content = snapshot_path.read_text(encoding='utf-8')
 
