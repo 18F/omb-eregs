@@ -12,11 +12,20 @@ from .document import (
 )
 from . import util
 from .fontsize import FontSize
+from .horizlines import get_horizontal_lines
 
 
 NUMBER_RE = re.compile(r'[0-9]')
 
 FOOTNOTE_RE = re.compile(r'([0-9]+) (.+)')
+
+# Maximum distance the horizontal line separating a page's footnote section
+# can be from the top of the first footnote.
+MAX_HORIZ_LINE_DIST = 12
+
+# Maximum length the horizontal line separating a page's footnote section
+# can be, as a fraction of the page's width.
+MAX_HORIZ_LINE_LENGTH_FACTOR = 0.5
 
 
 def line_contains_big_chars(line, doc):
@@ -59,6 +68,20 @@ def annotate_citations(doc):
     return citations
 
 
+def is_horiz_line_above(doc, page, line):
+    for hline in get_horizontal_lines(page):
+        width = hline.end - hline.start
+        vertical_dist = hline.y - line.lttextline.y1
+
+        if (vertical_dist > 0 and
+                vertical_dist < MAX_HORIZ_LINE_DIST and
+                util.is_near(hline.start, line.lttextline.x0) and
+                width < page.ltpage.width * MAX_HORIZ_LINE_LENGTH_FACTOR):
+            return True
+
+    return False
+
+
 def annotate_footnotes(doc):
     footnotes = []
     curr_footnote = None
@@ -68,33 +91,53 @@ def annotate_footnotes(doc):
 
         if curr_footnote:
             number, text, lines = curr_footnote
+            # We want to track the OMBFootnote for the purpose of setting
+            # annotations, but track the OMBFootnote and the line in the
+            # rolling footnotes list, which is where we put footnote_plus.
             footnote = OMBFootnote(number, text)
+            footnote_plus = (OMBFootnote(number, text), lines)
             for line in lines:
                 line.set_annotation(footnote)
-            footnotes.append(footnote)
+            footnotes.append(footnote_plus)
         curr_footnote = None
 
-    for line in doc.lines:
-        if line.annotation is not None:
-            # If the annotation is page number, we assume that the
-            # page number annotation is correct and that the
-            # footnote detection is being too greedy.
-            if line.annotation.__class__.__name__ == "OMBPageNumber":
-                continue
-        if not line_contains_big_chars(line, doc):
-            chars = str(line)
-            match = FOOTNOTE_RE.match(chars)
-            if match:
+    for page in doc.pages:
+        found_horiz_line = False
+        for line in page:
+            if line.annotation is not None:
+                # If the annotation is page number, we assume that the
+                # page number annotation is correct and that the
+                # footnote detection is being too greedy.
+                if line.annotation.__class__.__name__ == "OMBPageNumber":
+                    continue
+            if not line_contains_big_chars(line, doc):
+                chars = str(line)
+                match = FOOTNOTE_RE.match(chars)
+                if match:
+                    finish_footnote()
+                    footnote, desc = match.groups()
+                    curr_footnote = [int(footnote), desc, [line]]
+                elif curr_footnote:
+                    curr_footnote[1] += chars
+                    curr_footnote[2].append(line)
+                elif len(footnotes) and not found_horiz_line:
+                    found_horiz_line = is_horiz_line_above(doc, page, line)
+                    if found_horiz_line:
+                        # Here we pull out the previous footnote and continue
+                        # adding to it.
+                        curr_ft = footnotes.pop()
+                        curr_obj = curr_ft[0]
+                        curr_num = curr_obj[0]
+                        curr_txt = curr_obj[1]
+                        curr_lines = curr_ft[1]
+                        curr_footnote = [curr_num, curr_txt + chars, curr_lines
+                                         + [line]]
+            else:
                 finish_footnote()
-                footnote, desc = match.groups()
-                curr_footnote = [int(footnote), desc, [line]]
-            elif curr_footnote:
-                curr_footnote[1] += chars
-                curr_footnote[2].append(line)
-        else:
-            finish_footnote()
     finish_footnote()
-    return footnotes
+    # Return the OMBFootnote list after applying strip() to the text:
+    footnote_objs = [OMBFootnote(f[0][0], f[0][1].strip()) for f in footnotes]
+    return footnote_objs
 
 
 def main(doc):
