@@ -1,0 +1,6 @@
+.cache/
+__pycache__/
+venv/
+data/
+node_modules/
+ombpdf/webapp/static/js/
