@@ -26,6 +26,25 @@ describe('<Document />', () => {
     expect(nav).toHaveLength(1);
     expect(nav.prop('isRoot')).toBe(true);
   });
+  it('does not include Footnotes if none are present', () => {
+    renderNode.mockImplementationOnce(() => null);
+    const result = shallow(<Document docNode={{}} />);
+    const footnotes = result.find('Connect(withScrollTracking(Footnotes))');
+    expect(footnotes).toHaveLength(0);
+  });
+  it('includes Footnotes', () => {
+    renderNode.mockImplementationOnce(() => null);
+    const docNode = { meta: { descendant_footnotes: [
+      { identifier: 'footnote_1' }, { identifier: 'footnote_2' },
+    ] } };
+    const result = shallow(<Document docNode={docNode} />);
+    const footnotes = result.find('Connect(withScrollTracking(Footnotes))');
+    expect(footnotes).toHaveLength(1);
+    expect(footnotes.prop('id')).toBe('document-footnotes');
+    expect(footnotes.prop('footnotes').map(f => f.identifier)).toEqual(
+      ['footnote_1', 'footnote_2'],
+    );
+  });
 });
 
 describe('getInitialProps()', () => {

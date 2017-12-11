@@ -67,23 +67,4 @@ describe('<Policy />', () => {
     const date = result.find('LabeledText').first();
     expect(date.children().text()).toEqual('some date here');
   });
-  it('renders footnotes at the bottom', () => {
-    const docNode = new DocumentNode({
-      meta: {
-        ...meta,
-        descendant_footnotes: [
-          new DocumentNode({ identifier: '1' }),
-          new DocumentNode({ identifier: '2' }),
-          new DocumentNode({ identifier: '3' }),
-        ],
-      },
-    });
-
-    const result = shallow(<Policy docNode={docNode} />);
-    const footnotes = result.find('.bottom-footnotes Footnote');
-    expect(footnotes).toHaveLength(3);
-    expect(footnotes.at(0).prop('docNode').identifier).toBe('1');
-    expect(footnotes.at(1).prop('docNode').identifier).toBe('2');
-    expect(footnotes.at(2).prop('docNode').identifier).toBe('3');
-  });
 });
