@@ -35,3 +35,7 @@ def is_significantly_smaller(size, normal_size, gap=0.2):
 
 def is_x_smaller_than_y(x, y, gap=0.2):
     return float(y - x) > float(gap)
+
+
+def is_near(a, b, gap=1):
+    return abs(a - b) <= float(gap)

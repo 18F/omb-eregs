@@ -12,11 +12,20 @@ from .document import (
 )
 from . import util
 from .fontsize import FontSize
+from .horizlines import get_horizontal_lines
 
 
 NUMBER_RE = re.compile(r'[0-9]')
 
 FOOTNOTE_RE = re.compile(r'([0-9]+) (.+)')
+
+# Maximum distance the horizontal line separating a page's footnote section
+# can be from the top of the first footnote.
+MAX_HORIZ_LINE_DIST = 12
+
+# Maximum length the horizontal line separating a page's footnote section
+# can be, as a fraction of the page's width.
+MAX_HORIZ_LINE_LENGTH_FACTOR = 0.5
 
 
 def line_contains_big_chars(line, doc):
@@ -59,6 +68,20 @@ def annotate_citations(doc):
     return citations
 
 
+def is_horiz_line_above(doc, page, line):
+    for hline in get_horizontal_lines(page):
+        width = hline.end - hline.start
+        vertical_dist = hline.y - line.lttextline.y1
+
+        if (vertical_dist > 0 and
+                vertical_dist < MAX_HORIZ_LINE_DIST and
+                util.is_near(hline.start, line.lttextline.x0) and
+                width < page.ltpage.width * MAX_HORIZ_LINE_LENGTH_FACTOR):
+            return True
+
+    return False
+
+
 def annotate_footnotes(doc):
     footnotes = []
     curr_footnote = None
@@ -79,6 +102,7 @@ def annotate_footnotes(doc):
         curr_footnote = None
 
     for page in doc.pages:
+        found_horiz_line = False
         for line in page:
             if line.annotation is not None:
                 # If the annotation is page number, we assume that the
@@ -96,11 +120,9 @@ def annotate_footnotes(doc):
                 elif curr_footnote:
                     curr_footnote[1] += chars
                     curr_footnote[2].append(line)
-                elif len(footnotes):
-                    # Also check to see if the footnotes are in the bottom
-                    # third of the page.
-                    bthird = page.ltpage.height / 3
-                    if line.lttextline.y1 < bthird:
+                elif len(footnotes) and not found_horiz_line:
+                    found_horiz_line = is_horiz_line_above(doc, page, line)
+                    if found_horiz_line:
                         # Here we pull out the previous footnote and continue
                         # adding to it.
                         curr_ft = footnotes.pop()
