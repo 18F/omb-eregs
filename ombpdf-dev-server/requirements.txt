@@ -7,6 +7,3 @@ tqdm==4.19.4
 # Needed for the CLI only.
 click==6.7
 flask==0.12.2
-
-# Needed for testing only.
-pytest==3.2.5
