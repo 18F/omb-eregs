@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+html, body {
+    font-family: sans-serif;
+}
+
+.legend {
+    list-style-type: none;
+    padding: 0;
+}
+
+.legend .line {
+    display: inline-block;
+    position: relative;
+    width: 1em;
+    height: 1em;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.legend .char {
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.page {
+    border: 1px solid black;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.page:not(.in-viewport) .line {
+    display: none;
+}
+
+h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h2 a:hover {
+  text-decoration: underline;
+}
+
+.char {
+    background: #ff0000;
+    opacity: 0.5;
+    position: absolute;
+    overflow: hidden;
+    font-size: 0;
+}
+
+.line.line-OMBHeading .char {
+    background: #0000ff;
+}
+
+.line.line-OMBParagraph .char {
+    background: #00ff00;
+}
+
+.line.line-OMBPageNumber .char {
+    background: gray;
+}
+
+.line.line-OMBFootnote .char {
+    background: orange;
+}
+
+.line.line-OMBListItem .char {
+    background: yellow;
+}
+
+#tooltip {
+    white-space: pre-wrap;
+    font-family: monospace;
+    position: absolute;
+    width: 30em;
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    z-index: 100;
+}
+
+.bbox {
+    position: absolute;
+    border: 1px solid blue;
+    pointer-events: none;
+}
+</style>
+<title>Raw layout for {{ doc.filename }}</title>
+<h1>Raw layout for <code>{{ doc.filename }}</code></h1>
+<nav><a href="{{ url_for('index') }}">&laquo; Back</a></nav>
+<aside id="tooltip" style="display: none"></aside>
+<p>
+  This page is primarily intended to show the bounding boxes of various page
+  elements, along with other metadata.
+</p>
+<p>
+  Inspect this page with developer tools to obtain more details.
+</p>
+<h2>Legend</h2>
+<p>
+  Each bounding box is tinted with a color corresponding to the annotation
+  of the line it's on:
+</p>
+<ul class="legend">
+  {% for name, classname in legend %}
+    <li>
+      <span class="line {{ classname }}"><span class="char"></span></span>
+      <code>{{ name }}</code>
+    </li>
+  {% endfor %}
+  <li>
+    <span class="line"><span class="char"></span></span>
+    <code>None</code>
+  </li>
+</ul>
+{{ html }}
+<script>
+window.SCRIPT_PARAMS = {{ script_params|tojson|safe }};
+</script>
+<script src="{{ url_for('static', filename='js/main.bundle.js') }}"></script>

@@ -1,0 +1,12 @@
+pdfminer.six==20170720
+
+# Needed for downloading PDFs only.
+requests==2.18.4
+tqdm==4.19.4
+
+# Needed for the CLI only.
+click==6.7
+flask==0.12.2
+
+# Needed for testing only.
+pytest==3.2.5

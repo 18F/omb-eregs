@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>{{ name }}</title>
+<h1>{{ name }}</h1>
+<table border="1" cellpadding="5px">
+  <thead>
+    <tr>
+      <th>Raw PDF</th>
+      <th>Raw layout (HTML)</th>
+      <th>Annotated layout (HTML)</th>
+      <th>Semantic HTML</th>
+  </thead>
+  <tbody>
+    {% for name, path in pdfmap.items() %}
+    <tr>
+      <td>
+        <code><a href="{{ url_for('raw_pdf', pdf=path) }}">{{ name }}</a></code>
+      </td>
+      <td>
+        <a href="{{ url_for('rawlayout_pdf', pdf=path) }}">View raw layout</a>
+      </td>
+      <td>
+        <a href="{{ url_for('html_pdf', pdf=path) }}">View annotated layout</a>
+      </td>
+      <td>
+        <a href="{{ url_for('semhtml_pdf', pdf=path) }}">View semantic HTML</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
