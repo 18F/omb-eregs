@@ -53,6 +53,17 @@ def find_line(url):
     return (doc, page, lines[0])
 
 
+def find_lines(url):
+    info = parse_rawlayout_url(url)
+    doc = load_document(info.pdf)
+    page = doc.pages[info.page - 1]
+    lines = lines_in_bbox(page, info.x0, info.y0, info.x1, info.y1)
+
+    assert len(lines) >= 1
+
+    return (doc, page, lines)
+
+
 def lines_in_bbox(page, x0, y0, x1, y1):
     '''
     Returns a list of all lines on the page that are fully contained in the

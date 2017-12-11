@@ -1,4 +1,7 @@
+import pytest
+
 from ombpdf import paragraphs
+from . import bbox
 
 
 def test_annotate_paragraphs_works(m_16_19_doc):
@@ -29,3 +32,11 @@ def test_annotate_paragraphs_works_with_indents(m_15_17_doc):
     assert str(p[5][0]).startswith('While the Administration')
 
     assert str(p[6][0]).startswith('Native children are far')
+
+
+@pytest.mark.xfail(raises=AssertionError)
+def test_indents_2():
+    doc, _, lines = bbox.find_lines('http://localhost:5000/rawlayout/2011/m11-29.pdf?bbox=1,61,240.5,546,313.5#1')
+    doc.annotators.require('paragraphs')
+    for line in lines:
+        assert isinstance(line.annotation, paragraphs.OMBParagraph)
