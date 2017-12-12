@@ -1,7 +1,7 @@
 import pytest
 
 from ombpdf.download_pdfs import download
-import ombpdf.webapp
+#import ombpdf.webapp
 
 
 PDFPATH = '2016/m_16_19_1.pdf'
@@ -16,21 +16,26 @@ def webapp():
     return ombpdf.webapp.app.test_client()
 
 
+@pytest.mark.skip(reason="Need to convert webapp to Django first!")
 def test_index_works(webapp):
     assert PDFPATH.encode('ascii') in webapp.get('/').data
 
 
+@pytest.mark.skip(reason="Need to convert webapp to Django first!")
 def test_raw_pdf_works(webapp):
     assert webapp.get(f'/raw/{PDFPATH}').status_code == 200
 
 
+@pytest.mark.skip(reason="Need to convert webapp to Django first!")
 def test_html_pdf_works(webapp):
     assert webapp.get(f'/html/{PDFPATH}').status_code == 200
 
 
+@pytest.mark.skip(reason="Need to convert webapp to Django first!")
 def test_semhtml_pdf_works(webapp):
     assert webapp.get(f'/semhtml/{PDFPATH}').status_code == 200
 
 
+@pytest.mark.skip(reason="Need to convert webapp to Django first!")
 def test_rawlayout_works(webapp):
     assert webapp.get(f'/rawlayout/{PDFPATH}').status_code == 200

@@ -17,6 +17,7 @@ ui/lcov.info
 
 # Data
 *.csv
+api/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

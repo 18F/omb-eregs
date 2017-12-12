@@ -1,8 +1,14 @@
 import os
 import sys
 import subprocess
+from pathlib import Path
 
 import click
+
+MY_DIR = Path(__file__).parent.parent.resolve()
+API_DIR = MY_DIR.parent / 'api'
+
+sys.path.append(str(API_DIR))
 
 import ombpdf.download_pdfs
 import ombpdf.fontsize
@@ -14,7 +20,7 @@ import ombpdf.html
 import ombpdf.pagenumbers
 import ombpdf.headings
 import ombpdf.semhtml
-import ombpdf.webapp
+import webapp
 
 
 def get_doc(filename):
@@ -104,7 +110,8 @@ def runserver():
     env = {}
     env.update(os.environ)
     env.update({
-        'FLASK_APP': os.path.join('ombpdf', 'webapp', '__init__.py'),
+        'PYTHONPATH': str(API_DIR),
+        'FLASK_APP': os.path.join('webapp', '__init__.py'),
         'FLASK_DEBUG': '1',
     })
 
