@@ -72,6 +72,7 @@ services:
       <<: *API_ENV
       PORT: 8001
       DEBUG: "true"
+      USE_POLLING: ${USE_POLLING:-false}
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
     depends_on:

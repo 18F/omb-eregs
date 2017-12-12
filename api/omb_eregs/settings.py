@@ -263,3 +263,8 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 ADMIN_TITLE = 'OMB Policy Library Editor'
+
+if DEBUG and os.environ.get('USE_POLLING') == 'true':
+    import django.utils.autoreload
+
+    django.utils.autoreload.USE_INOTIFY = False
