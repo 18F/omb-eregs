@@ -1,4 +1,10 @@
-import { closeFootnote, loadDocument, openFootnote } from '../store/actions';
+import {
+  closeFootnote,
+  enterSection,
+  exitSection,
+  loadDocument,
+  openFootnote,
+} from '../store/actions';
 import initialState from '../store/initial-state';
 import reducer from '../store/reducer';
 
@@ -56,5 +62,44 @@ describe('loading a new document', () => {
     const [level2] = level1.children;
     expect(level2.identifier).toBe('level-2');
     expect(level2.children).toHaveLength(0);
+  });
+});
+
+
+describe('current section tracking', () => {
+  const tableOfContents = {
+    identifier: 'root',
+    children: [
+      {
+        identifier: 'root-1',
+        children: [
+          { identifier: 'root-1-a', children: [] },
+          { identifier: 'root-1-b', children: [] },
+        ],
+      },
+      { identifier: 'root-2', children: [] },
+    ],
+  };
+
+  it('picks last relevant section', () => {
+    let state = { ...initialState, tableOfContents };
+    state = reducer(state, enterSection('root-1'));
+    expect(state.currentSection).toBe('root-1');
+    state = reducer(state, enterSection('root-1-a'));
+    expect(state.currentSection).toBe('root-1-a');
+    state = reducer(state, enterSection('root-1-b'));
+    expect(state.currentSection).toBe('root-1-b');
+    state = reducer(state, exitSection('root-1-a'));
+    expect(state.currentSection).toBe('root-1-b');
+    state = reducer(state, exitSection('root-1-b'));
+    expect(state.currentSection).toBe('root-1');
+    state = reducer(state, enterSection('root-2'));
+    expect(state.currentSection).toBe('root-2');
+  });
+  it('defaults to the root', () => {
+    let state = reducer(initialState, loadDocument(tableOfContents));
+    expect(state.currentSection).toBe('root');
+    state = reducer(state, enterSection('doesnt-exist'));
+    expect(state.currentSection).toBe('root');
   });
 });

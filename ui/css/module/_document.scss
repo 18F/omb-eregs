@@ -36,7 +36,8 @@
     padding-left: $spacing + $active-width;
   }
 
-  &:hover .document-nav-container {
+  &:hover .document-nav-container,
+  &.active .document-nav-container {
     background-color: $color-sky;
     border-left: $active-width solid $color-blue;
     padding-left: $spacing;
