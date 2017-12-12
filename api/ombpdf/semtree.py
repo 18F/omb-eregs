@@ -1,3 +1,4 @@
+import re
 from contextlib import contextmanager
 
 from . import document
@@ -62,7 +63,7 @@ class Writer:
     Here's an example of the way the double dispatching works:
 
         >>> class MyWriter(Writer):
-        ...     def create_FootnoteCitation(self, cit):
+        ...     def create_footnote_citation(self, cit):
         ...         print(f"Creating footnote citation {cit.number}!")
 
         >>> writer = MyWriter()
@@ -70,8 +71,14 @@ class Writer:
         Creating footnote citation 1!
     '''
 
+    # https://stackoverflow.com/a/1176023
+    def _camelcase_to_underscores(self, name):
+        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
     def _dispatch_method(self, prefix, el):
-        method = getattr(self, f'{prefix}_{el.__class__.__name__}')
+        uname = self._camelcase_to_underscores(el.__class__.__name__)
+        method = getattr(self, f'{prefix}_{uname}')
         method(el)
 
     def begin_element(self, el):
