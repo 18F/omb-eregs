@@ -75,6 +75,8 @@ services:
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
     depends_on:
+      - persistent_db
+      - minio
       - ombpdf-js-bundler
 
   ombpdf-js-bundler:
