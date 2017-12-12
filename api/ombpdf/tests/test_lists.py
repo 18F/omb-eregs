@@ -71,7 +71,7 @@ def test_lists_are_annotated_on_m_15_17(m_15_17_doc):
 
 @pytest.mark.xfail(raises=AssertionError)
 def test_unordered_2():
-    doc, _, lines = bbox.find_lines('http://localhost:5000/rawlayout/2011/m11-29.pdf?bbox=2,67,554.390625,560,737.390625#2')  # NOQA
+    doc, _, lines = bbox.find_lines('http://localhost:8001/pdf/rawlayout/2011/m11-29.pdf?bbox=2,67,554.390625,560,737.390625#2')  # NOQA
     doc.annotators.require('lists')
     for line in lines:
         assert isinstance(line.annotation, OMBListItem)
