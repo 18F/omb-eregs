@@ -58,7 +58,7 @@ INSTALLED_APPS = (
     'django.contrib.postgres',
 )
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar',)
+    INSTALLED_APPS += ('ombpdf', 'debug_toolbar',)
 
 MIDDLEWARE = (
     'django.middleware.cache.UpdateCacheMiddleware',
