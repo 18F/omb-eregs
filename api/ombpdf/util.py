@@ -1,4 +1,4 @@
-from pdfminer import converter, pdfinterp, layout
+from pdfminer import converter, layout, pdfinterp
 from pdfminer.pdfpage import PDFPage
 
 

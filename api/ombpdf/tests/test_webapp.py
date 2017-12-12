@@ -1,7 +1,8 @@
 import pytest
 
 from ombpdf.download_pdfs import download
-#import ombpdf.webapp
+
+# import ombpdf.webapp
 
 
 PDFPATH = '2016/m_16_19_1.pdf'
@@ -12,8 +13,8 @@ def webapp():
     # Ensure we have at least one PDF for the webapp to process.
     download(PDFPATH)
 
-    ombpdf.webapp.app.testing = True
-    return ombpdf.webapp.app.test_client()
+    # ombpdf.webapp.app.testing = True
+    # return ombpdf.webapp.app.test_client()
 
 
 @pytest.mark.skip(reason="Need to convert webapp to Django first!")

@@ -23,39 +23,39 @@ class HTMLWriter(semtree.Writer):
 
     # Below are Writer methods.
 
-    def begin_Document(self, doc):
+    def begin_document(self, doc):
         self.chunks.append(
             f'<title>Semantic HTML output for {doc.title}</title>\n'
         )
 
-    def end_Document(self, doc):
+    def end_document(self, doc):
         pass
 
-    def begin_Heading(self, heading):
+    def begin_heading(self, heading):
         self.chunks.append(f'<h{heading.level}>')
 
-    def end_Heading(self, heading):
+    def end_heading(self, heading):
         self.chunks.append(f'</h{heading.level}>\n')
 
-    def begin_Paragraph(self, p):
+    def begin_paragraph(self, p):
         self.chunks.append(f'<p>')
 
-    def end_Paragraph(self, p):
+    def end_paragraph(self, p):
         self.chunks.append(f'</p>\n')
 
-    def begin_List(self, li):
+    def begin_list(self, li):
         self.chunks.append('<ol>' if li.is_ordered else '<ul>')
 
-    def end_List(self, li):
+    def end_list(self, li):
         self.chunks.append('</ol>\n' if li.is_ordered else '</ul>\n')
 
-    def begin_ListItem(self, p):
+    def begin_list_item(self, p):
         self.chunks.append(f'<li>')
 
-    def end_ListItem(self, p):
+    def end_list_item(self, p):
         self.chunks.append(f'</li>\n')
 
-    def create_FootnoteCitation(self, cit):
+    def create_footnote_citation(self, cit):
         cit_id = self.id_for_footnote_citation(cit.number)
         self.footnote_citations[cit.number] = cit_id
         self.chunks.append(
@@ -64,14 +64,14 @@ class HTMLWriter(semtree.Writer):
             f'{cit.number}</a></sup>'
         )
 
-    def begin_FootnoteList(self, fl):
+    def begin_footnote_list(self, fl):
         self.chunks.append('<h2>Footnotes</h2>\n')
         self.chunks.append('<dl>\n')
 
-    def end_FootnoteList(self, fl):
+    def end_footnote_list(self, fl):
         self.chunks.append('</dl>\n')
 
-    def create_Footnote(self, f):
+    def create_footnote(self, f):
         self.chunks.append(f'<dt id="{self.id_for_footnote(f.number)}">'
                            f'{f.number}</dt>\n')
         self.chunks.append(f'<dd>{f.text}')

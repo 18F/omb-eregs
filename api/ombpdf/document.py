@@ -1,15 +1,12 @@
+import logging
 from collections import Counter
 from decimal import Decimal
-import logging
-import math
 
 from pdfminer import layout
 
-from . import fontsize
-from . import util
+from . import fontsize, util
 from .annotators import AnnotatorTracker
 from .eqnamedtuple import eqnamedtuple
-
 
 logger = logging.getLogger(__name__)
 
@@ -128,6 +125,7 @@ class OMBTextCharacter(AnnotatableMixin):
             self.annotation == char.annotation and
             self.fontsize == char.fontsize
         )
+
 
 class OMBTextLine(list, AnnotatableMixin):
     # Distance one edge can be from another to be considered more or less

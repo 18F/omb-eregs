@@ -17,4 +17,4 @@ psycopg2
 python-dateutil
 requests
 whitenoise
-pdfminer.six==20170720
+pdfminer.six

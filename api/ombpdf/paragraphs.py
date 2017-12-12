@@ -2,7 +2,6 @@ import re
 
 from .document import OMBParagraph
 
-
 PARAGRAPH_END_RE = re.compile(r'.+\.\s*$')
 
 MAX_INDENT = 48

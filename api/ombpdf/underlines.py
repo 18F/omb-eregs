@@ -1,6 +1,5 @@
 from .horizlines import get_horizontal_lines
 
-
 # Percentage of bbox height underline can be from bottom of a line's bbox.
 MAX_LINE_BBOX_DIST = 0.25
 

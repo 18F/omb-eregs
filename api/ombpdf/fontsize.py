@@ -1,7 +1,7 @@
 import re
 import weakref
-from decimal import Decimal
 from collections import Counter, namedtuple
+from decimal import Decimal
 
 from pdfminer import layout
 

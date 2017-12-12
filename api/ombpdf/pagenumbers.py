@@ -2,7 +2,6 @@ import re
 
 from .document import OMBPageNumber
 
-
 PAGE_NUMBER_RE = re.compile(r'^([0-9]+)$')
 
 

@@ -1,7 +1,7 @@
 from html import escape
 
-from .document import (OMBFootnoteCitation, OMBFootnote, OMBPageNumber,
-                       OMBParagraph, OMBListItemMarker)
+from .document import (OMBFootnote, OMBFootnoteCitation, OMBListItemMarker,
+                       OMBPageNumber, OMBParagraph)
 
 
 HTML_INTRO = """\

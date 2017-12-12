@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from ombpdf.semhtml import to_html
-from .snapshot import assert_snapshot_matches
 
+from .snapshot import assert_snapshot_matches
 
 MY_DIR = Path(__file__).parent
 

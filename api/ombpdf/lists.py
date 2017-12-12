@@ -2,7 +2,6 @@ import re
 
 from .document import OMBListItem, OMBListItemMarker
 
-
 UL_RE = re.compile(r'^• ')
 
 OL_RE = re.compile(r'^([0-9]+|[A-Za-z])\. ')
