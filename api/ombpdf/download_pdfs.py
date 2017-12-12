@@ -3,7 +3,6 @@ from pathlib import Path
 import requests
 from tqdm import tqdm
 
-
 ROOT_DIR = Path(__file__).parent.parent / 'data'
 
 DOMAIN = "obamawhitehouse.archives.gov"

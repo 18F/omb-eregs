@@ -1,5 +1,5 @@
-from html import escape
 from decimal import Decimal
+from html import escape
 
 
 def to_px_style_attr(**kwargs):
@@ -52,4 +52,4 @@ def to_html(doc):
             chunks.append(f'</div>')
         chunks.append(f'</div>\n')
 
-    return (''.join(chunks), dict(legend=legend))
+    return (''.join(chunks), {'legend': legend})

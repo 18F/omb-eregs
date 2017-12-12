@@ -18,7 +18,8 @@ class Document(Element):
         self.title = title
 
 
-class Paragraph(Element): pass
+class Paragraph(Element):
+    pass
 
 
 class List(Element):
@@ -26,7 +27,8 @@ class List(Element):
         self.is_ordered = is_ordered
 
 
-class ListItem(Element): pass
+class ListItem(Element):
+    pass
 
 
 class Heading(Element):
@@ -41,7 +43,8 @@ class FootnoteCitation(Element):
         self.number = number
 
 
-class FootnoteList(Element): pass
+class FootnoteList(Element):
+    pass
 
 
 class Footnote(Element):

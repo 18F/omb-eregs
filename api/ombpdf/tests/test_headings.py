@@ -1,7 +1,7 @@
 from decimal import Decimal
 
-from ombpdf.fontsize import FontSize, FontName
 from ombpdf import headings
+from ombpdf.fontsize import FontName, FontSize
 from ombpdf.headings import Style
 
 

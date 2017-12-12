@@ -3,7 +3,6 @@ from collections import namedtuple
 
 from .conftest import load_document
 
-
 BboxInfo = namedtuple('BboxInfo', [
     'pdf',
     'page',
@@ -15,10 +14,11 @@ BboxInfo = namedtuple('BboxInfo', [
 
 RAWLAYOUT_URL_RE = re.compile(r'^.+\/rawlayout\/(.*)\?bbox=([0-9.,]+).*$')
 
+
 def parse_rawlayout_url(url):
     '''
-    >>> parse_rawlayout_url('http://localhost:5000/rawlayout/2016/m_16_19_1.pdf?bbox=4,515,16.9375,559,93.9375#4')
-    BboxInfo(pdf='2016/m_16_19_1.pdf', page=4, x0=515.0, y0=16.9375, x1=559.0, y1=93.9375)
+    >>> parse_rawlayout_url('http://localhost:5000/rawlayout/2016/m_16_19_1.pdf?bbox=4,515,16.9375,559,93.9375#4')  # NOQA
+    BboxInfo(pdf='2016/m_16_19_1.pdf', page=4, x0=515.0, y0=16.9375, x1=559.0, y1=93.9375)  # NOQA
 
     >>> parse_rawlayout_url('blah')
     Traceback (most recent call last):

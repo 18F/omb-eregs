@@ -1,8 +1,7 @@
 import pytest
 
+from ombpdf import document, util
 from ombpdf.download_pdfs import download
-from ombpdf import util, document
-
 
 pages_cache = {}
 

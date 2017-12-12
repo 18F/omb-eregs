@@ -1,19 +1,10 @@
 import re
-from textwrap import TextWrapper
 from decimal import Decimal
+from textwrap import TextWrapper
 
-from pdfminer import layout
-
-from .document import (
-    OMBDocument,
-    OMBFootnoteCitation,
-    OMBFootnote,
-    OMBPageNumber
-)
 from . import util
-from .fontsize import FontSize
+from .document import OMBFootnote, OMBFootnoteCitation
 from .horizlines import get_horizontal_lines
-
 
 NUMBER_RE = re.compile(r'[0-9]')
 
