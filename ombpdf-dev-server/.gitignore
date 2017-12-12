@@ -1,6 +1,0 @@
-.cache/
-__pycache__/
-venv/
-data/
-node_modules/
-webapp/static/js/
