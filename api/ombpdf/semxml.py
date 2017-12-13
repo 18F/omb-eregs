@@ -5,17 +5,21 @@ import lxml.etree as ET
 from . import semtree
 
 
-Section = namedtuple('Section', ['el', 'heading_el', 'level'])
+StackItem = namedtuple('StackItem', ['el', 'level'])
 
 
 class XMLWriter(semtree.Writer):
     def __init__(self):
         self.root = ET.Element('policy')
-        self.sections = []
-        self.in_heading = False
+        self.stack = [StackItem(self.root, 0)]
 
     def getvalue(self):
         return ET.tostring(self.root, encoding="unicode", pretty_print=True)
+
+    def _push(self, el, level=None):
+        if level is None:
+            level = self.stack[-1].level
+        self.stack.append(StackItem(el, level))
 
     # Below are Writer methods.
 
@@ -28,25 +32,20 @@ class XMLWriter(semtree.Writer):
         pass
 
     def begin_heading(self, heading):
-        if self.sections:
-            while self.sections:
-                if self.sections[-1].level >= heading.level:
-                    self.sections.pop()
-                else:
-                    break
-        if self.sections:
-            parent = self.sections[-1].el
-        else:
-            parent = self.root
-        el = ET.SubElement(parent, 'sec')
+        while True:
+            if self.stack[-1].level >= heading.level:
+                self.stack.pop()
+            else:
+                break
+        el = ET.SubElement(self.stack[-1].el, 'sec')
         el.attrib['title'] = ''
         heading_el = ET.SubElement(el, 'heading')
         heading_el.text = ''
-        self.sections.append(Section(el, heading_el, heading.level))
-        self.in_heading = True
+        self._push(el, heading.level)
+        self._push(heading_el)
 
     def end_heading(self, heading):
-        self.in_heading = False
+        self.stack.pop()
 
     def begin_paragraph(self, p):
         pass
@@ -80,9 +79,9 @@ class XMLWriter(semtree.Writer):
 
     def create_text(self, text):
         text = text.replace('\n', '')
-        if self.in_heading:
-            self.sections[-1].el.attrib['title'] += text
-            self.sections[-1].heading_el.text += text
+        if self.stack[-1].el.tag == 'heading':
+            self.stack[-2].el.attrib['title'] += text
+            self.stack[-1].el.text += text
 
 
 def to_xml(doc):
