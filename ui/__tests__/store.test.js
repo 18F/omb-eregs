@@ -1,4 +1,10 @@
-import { closeFootnote, loadDocument, openFootnote } from '../store/actions';
+import {
+  closeFootnote,
+  enterSection,
+  exitSection,
+  loadDocument,
+  openFootnote,
+} from '../store/actions';
 import initialState from '../store/initial-state';
 import reducer from '../store/reducer';
 
@@ -20,7 +26,7 @@ describe('footnote functionality', () => {
 describe('loading a new document', () => {
   it('clears existing footnotes', () => {
     const state = { ...initialState, openedFootnote: 'footnote' };
-    const result = reducer(state, loadDocument({ children: [] }));
+    const result = reducer(state, loadDocument({ children: [] }, false));
     expect(result.openedFootnote).toBe('');
   });
   it('sets the table of contents', () => {
@@ -29,7 +35,7 @@ describe('loading a new document', () => {
       identifier: 'idid',
       title: 'ttt',
     };
-    const result = reducer(initialState, loadDocument(tableOfContents));
+    const result = reducer(initialState, loadDocument(tableOfContents, false));
     expect(result.tableOfContents).toEqual(tableOfContents);
   });
   it('trims the table of contents', () => {
@@ -47,7 +53,7 @@ describe('loading a new document', () => {
       }],
     };
     const { tableOfContents: root } = reducer(
-      initialState, loadDocument(tableOfContents));
+      initialState, loadDocument(tableOfContents, false));
     expect(root.identifier).toBe('root');
     expect(root.children).toHaveLength(1);
     const [level1] = root.children;
@@ -56,5 +62,61 @@ describe('loading a new document', () => {
     const [level2] = level1.children;
     expect(level2.identifier).toBe('level-2');
     expect(level2.children).toHaveLength(0);
+  });
+  it('adds footnotes if applicable', () => {
+    const tableOfContents = {
+      children: [],
+      identifier: 'idid',
+      title: 'ttt',
+    };
+    const noFootnotes = reducer(initialState, loadDocument(tableOfContents, false));
+    expect(noFootnotes.tableOfContents.children).toHaveLength(0);
+
+    const withFootnotes = reducer(initialState, loadDocument(tableOfContents, true));
+    expect(withFootnotes.tableOfContents.children).toHaveLength(1);
+    expect(withFootnotes.tableOfContents.children[0]).toEqual({
+      children: [],
+      identifier: 'document-footnotes',
+      title: 'Footnotes',
+    });
+  });
+});
+
+
+describe('current section tracking', () => {
+  const tableOfContents = {
+    identifier: 'root',
+    children: [
+      {
+        identifier: 'root-1',
+        children: [
+          { identifier: 'root-1-a', children: [] },
+          { identifier: 'root-1-b', children: [] },
+        ],
+      },
+      { identifier: 'root-2', children: [] },
+    ],
+  };
+
+  it('picks last relevant section', () => {
+    let state = { ...initialState, tableOfContents };
+    state = reducer(state, enterSection('root-1'));
+    expect(state.currentSection).toBe('root-1');
+    state = reducer(state, enterSection('root-1-a'));
+    expect(state.currentSection).toBe('root-1-a');
+    state = reducer(state, enterSection('root-1-b'));
+    expect(state.currentSection).toBe('root-1-b');
+    state = reducer(state, exitSection('root-1-a'));
+    expect(state.currentSection).toBe('root-1-b');
+    state = reducer(state, exitSection('root-1-b'));
+    expect(state.currentSection).toBe('root-1');
+    state = reducer(state, enterSection('root-2'));
+    expect(state.currentSection).toBe('root-2');
+  });
+  it('defaults to the root', () => {
+    let state = reducer(initialState, loadDocument(tableOfContents));
+    expect(state.currentSection).toBe('root');
+    state = reducer(state, enterSection('doesnt-exist'));
+    expect(state.currentSection).toBe('root');
   });
 });

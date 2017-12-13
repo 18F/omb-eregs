@@ -26,8 +26,8 @@ NavLink.defaultProps = {
   children: null,
 };
 
-function mapStateToProps({ activeSection }, { identifier }) {
-  return { active: activeSection === identifier };
+function mapStateToProps({ currentSection }, { identifier }) {
+  return { active: currentSection === identifier };
 }
 
 export default connect(mapStateToProps)(NavLink);

@@ -1,8 +1,20 @@
 export const CLOSE_FOOTNOTE = 'CLOSE_FOOTNOTE';
+export const ENTER_SECTION = 'ENTER_SECTION';
+export const EXIT_SECTION = 'EXIT_SECTION';
 export const LOAD_DOCUMENT = 'LOAD_DOCUMENT';
 export const OPEN_FOOTNOTE = 'OPEN_FOOTNOTE';
 
 export const closeFootnote = () => ({ type: CLOSE_FOOTNOTE });
+
+export const enterSection = sectionIdentifier => ({
+  sectionIdentifier,
+  type: ENTER_SECTION,
+});
+
+export const exitSection = sectionIdentifier => ({
+  sectionIdentifier,
+  type: EXIT_SECTION,
+});
 
 /* Limit the depth of Table of Contents entries */
 const trimTableOfContents = (depth, tableOfContents) => {
@@ -18,10 +30,22 @@ const trimTableOfContents = (depth, tableOfContents) => {
   };
 };
 
-export const loadDocument = tableOfContents => ({
-  tableOfContents: trimTableOfContents(2, tableOfContents),
-  type: LOAD_DOCUMENT,
-});
+const footnotesToC = {
+  children: [],
+  identifier: 'document-footnotes',
+  title: 'Footnotes',
+};
+
+export const loadDocument = (tableOfContents, hasFootnotes) => {
+  const trimmed = trimTableOfContents(2, tableOfContents);
+  if (hasFootnotes) {
+    trimmed.children.push(footnotesToC);
+  }
+  return {
+    tableOfContents: trimmed,
+    type: LOAD_DOCUMENT,
+  };
+};
 
 export const openFootnote = footnoteIdentifier => ({
   footnoteIdentifier,

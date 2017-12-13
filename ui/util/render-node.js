@@ -38,6 +38,6 @@ export default function renderNode(docNode) {
     th,
   };
   const NodeComponent = nodeMapping[docNode.nodeType] || Fallback;
-  const props = { docNode, key: docNode.identifier };
+  const props = { docNode, id: docNode.identifier, key: docNode.identifier };
   return <NodeComponent {...props} />;
 }
