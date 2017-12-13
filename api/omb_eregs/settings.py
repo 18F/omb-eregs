@@ -237,6 +237,10 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
         },
+        'pdfminer': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
     }
 }
 
