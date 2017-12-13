@@ -127,7 +127,7 @@ p {
   line-height: 1.69rem;
 }
 
-@media #{$breakpoint-md} {
+@media #{$on-desktop} {
   h1,
   .h1 {
     font-size: 2rem;

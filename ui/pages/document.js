@@ -43,12 +43,12 @@ export function Document({ docNode }) {
   const footnotes = doc.meta.descendantFootnotes;
   return (
     <div className="document-container clearfix max-width-4">
-      <div className="col col-3 sm-hide xs-hide">
+      <div className="col col-3 mobile-hide">
         <StartupSticky bottomBoundary=".document-container">
           <DocumentNav isRoot />
         </StartupSticky>
       </div>
-      <div className="col col-1 sm-hide xs-hide">&nbsp;</div>
+      <div className="col col-1 mobile-hide">&nbsp;</div>
       <div className="col-12 md-col-6 col">
         { renderNode(doc) }
         { footnotes.length ?
