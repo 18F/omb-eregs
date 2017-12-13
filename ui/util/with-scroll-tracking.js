@@ -8,16 +8,16 @@ import { allIds } from '../store/reducer';
 
 /* We only want to wrap components which are in the table of contents to limit
  * the amount of state changes */
-function mapStateToProps({ tableOfContents }, { docNode }) {
+function mapStateToProps({ tableOfContents }, { id }) {
   return {
-    trackScroll: allIds(tableOfContents).includes(docNode.identifier),
+    trackScroll: allIds(tableOfContents).includes(id),
   };
 }
 
-function mapDispatchToProps(dispatch, { docNode }) {
+function mapDispatchToProps(dispatch, { id }) {
   return {
-    onEnter: () => dispatch(enterSection(docNode.identifier)),
-    onLeave: () => dispatch(exitSection(docNode.identifier)),
+    onEnter: () => dispatch(enterSection(id)),
+    onLeave: () => dispatch(exitSection(id)),
   };
 }
 

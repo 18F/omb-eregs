@@ -30,10 +30,22 @@ const trimTableOfContents = (depth, tableOfContents) => {
   };
 };
 
-export const loadDocument = tableOfContents => ({
-  tableOfContents: trimTableOfContents(2, tableOfContents),
-  type: LOAD_DOCUMENT,
-});
+const footnotesToC = {
+  children: [],
+  identifier: 'document-footnotes',
+  title: 'Footnotes',
+};
+
+export const loadDocument = (tableOfContents, hasFootnotes) => {
+  const trimmed = trimTableOfContents(2, tableOfContents);
+  if (hasFootnotes) {
+    trimmed.children.push(footnotesToC);
+  }
+  return {
+    tableOfContents: trimmed,
+    type: LOAD_DOCUMENT,
+  };
+};
 
 export const openFootnote = footnoteIdentifier => ({
   footnoteIdentifier,

@@ -26,6 +26,25 @@ describe('<Document />', () => {
     expect(nav).toHaveLength(1);
     expect(nav.prop('isRoot')).toBe(true);
   });
+  it('does not include Footnotes if none are present', () => {
+    renderNode.mockImplementationOnce(() => null);
+    const result = shallow(<Document docNode={{}} />);
+    const footnotes = result.find('Connect(withScrollTracking(Footnotes))');
+    expect(footnotes).toHaveLength(0);
+  });
+  it('includes Footnotes', () => {
+    renderNode.mockImplementationOnce(() => null);
+    const docNode = { meta: { descendant_footnotes: [
+      { identifier: 'footnote_1' }, { identifier: 'footnote_2' },
+    ] } };
+    const result = shallow(<Document docNode={docNode} />);
+    const footnotes = result.find('Connect(withScrollTracking(Footnotes))');
+    expect(footnotes).toHaveLength(1);
+    expect(footnotes.prop('id')).toBe('document-footnotes');
+    expect(footnotes.prop('footnotes').map(f => f.identifier)).toEqual(
+      ['footnote_1', 'footnote_2'],
+    );
+  });
 });
 
 describe('getInitialProps()', () => {
@@ -39,15 +58,31 @@ describe('getInitialProps()', () => {
     const result = await getInitialProps({ query: {} });
     expect(result).toEqual({ statusCode: 404 });
   });
-  it('triggers a document reset', async () => {
+  describe('document reset', () => {
     const tableOfContents = { children: [], identifier: 'idid', title: 'ttt' };
-    endpoints.document.fetchOne = jest.fn(() => ({ meta: {
-      policy: { issuance: '2001-02-03' },
-      table_of_contents: tableOfContents,
-    } }));
+    const policy = { issuance: '2001-02-03' };
     const store = { dispatch: jest.fn() };
 
-    await getInitialProps({ query: {}, store });
-    expect(store.dispatch).toHaveBeenCalledWith(loadDocument(tableOfContents));
+    it('bases hasFootnotes on the proper fields', async () => {
+      endpoints.document.fetchOne = jest.fn(() => ({ meta: {
+        descendant_footnotes: [],
+        policy,
+        table_of_contents: tableOfContents,
+      } }));
+
+      await getInitialProps({ query: {}, store });
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadDocument(tableOfContents, false));
+
+      endpoints.document.fetchOne = jest.fn(() => ({ meta: {
+        descendant_footnotes: [1, 2, 3],
+        policy,
+        table_of_contents: tableOfContents,
+      } }));
+
+      await getInitialProps({ query: {}, store });
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadDocument(tableOfContents, true));
+    });
   });
 });

@@ -14,9 +14,10 @@ export function allIds(toc) {
 
 export function deriveCurrentSection(tableOfContents, visibleSections) {
   const ids = allIds(tableOfContents);
+  const firstSection = ids.length ? ids[0] : '';
   ids.reverse();
   const match = ids.find(id => visibleSections.includes(id));
-  return match || (ids.length ? ids[ids.length - 1] : '');
+  return match || firstSection;
 }
 
 export default function reducer(state = initialState, action) {

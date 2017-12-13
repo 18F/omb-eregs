@@ -3,6 +3,7 @@ import React from 'react';
 import Sticky from 'react-stickynode';
 
 import wrapPage from '../components/app-wrapper';
+import Footnotes from '../components/document/footnotes';
 import DocumentNav from '../components/document/navigation';
 import { loadDocument } from '../store/actions';
 import { documentData, propagate404 } from '../util/api/queries';
@@ -15,6 +16,7 @@ const headerFooterParams = {
 
 export function Document({ docNode }) {
   const doc = new DocumentNode(docNode);
+  const footnotes = doc.meta.descendantFootnotes;
   return (
     <div className="document-container clearfix max-width-4">
       <div className="col col-3 sm-hide xs-hide">
@@ -25,6 +27,8 @@ export function Document({ docNode }) {
       <div className="col col-1 sm-hide xs-hide">&nbsp;</div>
       <div className="col-12 md-col-6 col">
         { renderNode(doc) }
+        { footnotes.length ?
+          <Footnotes footnotes={footnotes} id="document-footnotes" /> : null }
       </div>
     </div>
   );
@@ -36,7 +40,9 @@ Document.propTypes = {
 export async function getInitialProps(props) {
   return propagate404(async () => {
     const { docNode } = await documentData(props);
-    props.store.dispatch(loadDocument(docNode.meta.table_of_contents));
+    const tableOfContents = docNode.meta.table_of_contents;
+    const hasFootnotes = docNode.meta.descendant_footnotes.length > 0;
+    props.store.dispatch(loadDocument(tableOfContents, hasFootnotes));
     return { docNode };
   });
 }
