@@ -10,12 +10,14 @@ import pytest
     'ombpdf.paragraphs',
     'ombpdf.rawlayout',
     'ombpdf.semtree',
+    'ombpdf.tests.bbox',
 ])
 def test_doctests(module_name):
     _, test_count = doctest.testmod(
         import_module(module_name),
         report=True,
         verbose=True,
-        raise_on_error=True
+        raise_on_error=True,
+        optionflags=doctest.NORMALIZE_WHITESPACE,
     )
     assert test_count > 0

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+{% load static %}
 <style>
 * {
     box-sizing: border-box;
@@ -103,7 +104,7 @@ h2 a:hover {
 </style>
 <title>Raw layout for {{ doc.filename }}</title>
 <h1>Raw layout for <code>{{ doc.filename }}</code></h1>
-<nav><a href="{{ url_for('index') }}">&laquo; Back</a></nav>
+<nav><a href="{% url 'ombpdf_index' %}">&laquo; Back</a></nav>
 <aside id="tooltip" style="display: none"></aside>
 <p>
   This page is primarily intended to show the bounding boxes of various page
@@ -131,6 +132,6 @@ h2 a:hover {
 </ul>
 {{ html }}
 <script>
-window.SCRIPT_PARAMS = {{ script_params|tojson|safe }};
+window.SCRIPT_PARAMS = {{ script_params }};
 </script>
-<script src="{{ url_for('static', filename='js/main.bundle.js') }}"></script>
+<script src="{% static 'ombpdf/js/main.bundle.js' %}"></script>

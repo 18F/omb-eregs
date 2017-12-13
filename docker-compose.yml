@@ -72,8 +72,22 @@ services:
       <<: *API_ENV
       PORT: 8001
       DEBUG: "true"
+      USE_POLLING: ${USE_POLLING:-false}
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
+    depends_on:
+      - persistent_db
+      - minio
+      - ombpdf-js-bundler
+
+  ombpdf-js-bundler:
+    image: node:6
+    volumes:
+      - .:/usr/src/app:delegated
+    environment:
+      USE_POLLING: ${USE_POLLING:-false}
+    working_dir: /usr/src/app/api/ombpdf
+    command: .docker/deps_ok_then node_modules/.bin/webpack --watch
 
   prod: &PROD_UI
     image: node:6

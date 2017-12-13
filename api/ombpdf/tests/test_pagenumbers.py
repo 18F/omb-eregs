@@ -16,7 +16,7 @@ def test_annotate_page_numbers_works(m_16_19_doc):
 @pytest.mark.xfail(raises=AssertionError,
                    reason="https://github.com/18F/omb-pdf/issues/1")
 def test_page_numbers_with_weird_line_ordering_are_recognized():
-    doc, _, line = bbox.find_line('http://localhost:5000/rawlayout/2016/m_16_19_1.pdf?bbox=4,515,16.9375,559,93.9375#4')  # NOQA
+    doc, _, line = bbox.find_line('http://localhost:8001/pdf/rawlayout/2016/m_16_19_1.pdf?bbox=4,515,16.9375,559,93.9375#4')  # NOQA
 
     doc.annotators.require('page_numbers')
     assert line.annotation == pagenumbers.OMBPageNumber(4)
