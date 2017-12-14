@@ -1,7 +1,10 @@
 import { shallow } from 'enzyme';
+import jump from 'jump.js';
 import React from 'react';
 
 import { NavLink } from '../../../../components/document/navigation/nav-link';
+
+jest.mock('jump.js');
 
 describe('<NavLink />', () => {
   it('displays children', () => {
@@ -25,5 +28,12 @@ describe('<NavLink />', () => {
     expect(nonActive.find('Link').hasClass('active')).toBe(false);
     const active = shallow(<NavLink active identifier="" title="" />);
     expect(active.find('Link').hasClass('active')).toBe(true);
+  });
+  it('triggers a scroll event', () => {
+    const result = shallow(<NavLink identifier="ididid" title="" />);
+    const preventDefault = jest.fn();
+    result.find('Link').simulate('click', { preventDefault });
+    expect(preventDefault).toHaveBeenCalled();
+    expect(jump).toHaveBeenCalledWith('#ididid');
   });
 });
