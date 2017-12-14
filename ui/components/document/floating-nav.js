@@ -24,9 +24,9 @@ export default class FloatingNav extends React.Component {
                   className={`col col-6 menu-button${this.state.open ? ' active' : ''}`}
                   onClick={buttonClick}
                 >
-                  <span className="button-text">
-                    { this.state.open ? '✕' : 'Jump to section' }
-                  </span>
+                  { this.state.open ?
+                    '✕' :
+                    <span className="include-divider">Jump to section</span>}
                 </button>
               </div>
               { this.state.open ?
