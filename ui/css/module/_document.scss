@@ -52,3 +52,61 @@
     padding-left: 1rem;
   }
 }
+
+.document-floating-nav {
+  .button-container {
+    background-color: $color-sky;
+  }
+
+  .menu-button {
+    @include reset-button();
+    background-color: $color-sky;
+    color: $color-blue;
+    font-size: 1rem;
+    line-height: 1.3rem;
+    padding-bottom: .75rem;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: .75rem;
+
+    &.active {
+      background-color: $color-blue;
+      color: $color-white;
+    }
+  }
+
+  .button-text {
+    border-right: 1px solid $color-lt-gray;
+    display: block;
+  }
+
+  // A slightly different set of styles from .document-sidebar-nav
+  .document-nav {
+    background-color: $color-blue;
+    margin: 0;
+    width: 100%;
+  }
+
+  .document-nav-container {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    border-bottom: 1px solid $color-navy;
+  }
+
+  .sub-sections .document-nav-container {
+    margin-left: 1rem;
+  }
+
+  .document-nav-heading {
+    color: $color-white;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .document-nav-heading:hover,
+  .document-nav-heading.active {
+    background-color: $color-navy;
+    border-left: 0.25rem solid $color-white;
+    padding-left: 0.75rem;
+  }
+}
