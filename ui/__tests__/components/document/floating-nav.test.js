@@ -32,4 +32,12 @@ describe('<FloatingNav />', () => {
     expect(button.hasClass('active')).toBe(true);
     expect(button.text()).toBe('✕');
   });
+  it('passes a "close" onClick handler to the DocumentNav', () => {
+    const result = shallow(<FloatingNav />);
+    result.setState({ open: true });
+    const onClick = result.children().find(DocumentNav).prop('onClick');
+    expect(result.state('open')).toBe(true);
+    onClick();
+    expect(result.state('open')).toBe(false);
+  });
 });
