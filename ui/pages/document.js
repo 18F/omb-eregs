@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import wrapPage from '../components/app-wrapper';
+import FloatingNav from '../components/document/floating-nav';
 import Footnotes from '../components/document/footnotes';
 import SidebarNav from '../components/document/sidebar-nav';
 import { loadDocument } from '../store/actions';
@@ -24,15 +25,18 @@ export function Document({ docNode }) {
   const doc = new DocumentNode(docNode);
   const footnotes = doc.meta.descendantFootnotes;
   return (
-    <div className="document-container clearfix max-width-4">
-      <SidebarNav bottomBoundary=".document-container" className="col col-3 mobile-hide" />
-      <div className="col col-1 mobile-hide">&nbsp;</div>
-      <div className="col-12 md-col-6 col">
-        { renderNode(doc) }
-        { footnotes.length ?
-          <Footnotes footnotes={footnotes} id="document-footnotes" /> : null }
+    <React.Fragment>
+      <FloatingNav />
+      <div className="document-container clearfix max-width-4">
+        <SidebarNav bottomBoundary=".document-container" className="col col-3 mobile-hide" />
+        <div className="col col-1 mobile-hide">&nbsp;</div>
+        <div className="col-12 md-col-6 col">
+          { renderNode(doc) }
+          { footnotes.length ?
+            <Footnotes footnotes={footnotes} id="document-footnotes" /> : null }
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 Document.propTypes = {
