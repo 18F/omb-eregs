@@ -110,3 +110,17 @@
     padding-left: 0.75rem;
   }
 }
+
+// Adjust for floating-nav covering text
+@media #{$on-mobile} {
+  $size-of-floating-nav: 3rem;
+
+  .node-section::before {
+    content: ' ';
+    display: block;
+    height: $size-of-floating-nav;
+    margin-top: -$size-of-floating-nav;
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
