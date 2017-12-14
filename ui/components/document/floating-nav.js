@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ConditionalRender from '../conditional-render';
 import Sticky from '../startup-sticky';
 import DocumentNav from './navigation';
 
@@ -15,17 +16,23 @@ export default class FloatingNav extends React.Component {
     return (
       <Sticky innerZ="100">
         <div className="document-floating-nav md-hide lg-hide">
-          <div className="clearfix button-container">
-            <button
-              className={`col col-6 menu-button${this.state.open ? ' active' : ''}`}
-              onClick={buttonClick}
-            >
-              <span className="button-text">
-                { this.state.open ? '✕' : 'Jump to section' }
-              </span>
-            </button>
-          </div>
-            <DocumentNav className="fixed" onClick={linkClick} isRoot /> : null }
+          <ConditionalRender>
+            <DocumentNav isRoot />
+            <React.Fragment>
+              <div className="clearfix button-container">
+                <button
+                  className={`col col-6 menu-button${this.state.open ? ' active' : ''}`}
+                  onClick={buttonClick}
+                >
+                  <span className="button-text">
+                    { this.state.open ? '✕' : 'Jump to section' }
+                  </span>
+                </button>
+              </div>
+              { this.state.open ?
+                <DocumentNav className="fixed" onClick={linkClick} isRoot /> : null }
+            </React.Fragment>
+          </ConditionalRender>
         </div>
       </Sticky>
     );
