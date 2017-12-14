@@ -36,4 +36,11 @@ describe('<NavLink />', () => {
     expect(preventDefault).toHaveBeenCalled();
     expect(jump).toHaveBeenCalledWith('#ididid');
   });
+  it('triggers passed in onClick', () => {
+    const onClick = jest.fn();
+    const result = shallow(<NavLink identifier="" onClick={onClick} title="" />);
+    expect(onClick).not.toHaveBeenCalled();
+    result.find('Link').simulate('click', { preventDefault: jest.fn() });
+    expect(onClick).toHaveBeenCalled();
+  });
 });

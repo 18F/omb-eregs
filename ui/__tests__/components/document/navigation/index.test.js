@@ -2,6 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import { DocumentNav } from '../../../../components/document/navigation';
+import NavLink from '../../../../components/document/navigation/nav-link';
 
 describe('<DocumentNav />', () => {
   const emptyToC = { children: [], identifier: 'ididid', title: 'ttt' };
@@ -11,7 +12,7 @@ describe('<DocumentNav />', () => {
       expect(result.hasClass('document-nav')).toBe(true);
     });
     it('generates a "Top" link', () => {
-      const links = result.find('Connect(NavLink)');
+      const links = result.find(NavLink);
       expect(links).toHaveLength(1);
       expect(links.prop('identifier')).toBe('ididid');
       expect(links.prop('title')).toBe('Top');
@@ -33,7 +34,7 @@ describe('<DocumentNav />', () => {
       ],
     };
     const result = shallow(<DocumentNav tableOfContents={toc} />);
-    const links = result.find('Connect(NavLink)');
+    const links = result.find(NavLink);
     expect(links).toHaveLength(3);
     expect(links.at(0).prop('identifier')).toBe('child1');
     expect(links.at(0).prop('title')).toBe('A Child');
@@ -51,5 +52,10 @@ describe('<DocumentNav />', () => {
     expect(result.hasClass('some')).toBe(true);
     expect(result.hasClass('klazzes')).toBe(true);
   });
+  it('passes onClick functions down', () => {
+    const onClick = jest.fn();
+    const result = shallow(
+      <DocumentNav onClick={onClick} isRoot tableOfContents={emptyToC} />);
+    expect(result.find(NavLink).prop('onClick')).toBe(onClick);
+  });
 });
-
