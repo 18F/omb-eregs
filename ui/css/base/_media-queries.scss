@@ -1,0 +1,33 @@
+$breakpoint-xs-sm-dim: 640px; // basscss' default (= 40em)
+$breakpoint-sm-md-dim: 832px; // basscss' default (= 52em)
+$breakpoint-md-lg-dim: 1024px; // basscss's default (= 64em)
+
+$breakpoint-mobile-desktop-dim: $breakpoint-sm-md-dim;
+
+// These vars are used in basscss
+$breakpoint-sm: '(min-width: #{$breakpoint-xs-sm-dim})';
+$breakpoint-md: '(min-width: #{$breakpoint-sm-md-dim})';
+$breakpoint-lg: '(min-width: #{$breakpoint-md-lg-dim})';
+
+$on-mobile: '(max-width: #{$breakpoint-mobile-desktop-dim - 1})';
+$on-desktop: $breakpoint-md;
+
+@mixin hide-on-mobile() {
+  @media #{$on-mobile} {
+    display: none;
+  }
+}
+
+@mixin hide-on-desktop() {
+  @media #{$on-desktop} {
+    display: none;
+  }
+}
+
+.mobile-hide {
+  @include hide-on-mobile();
+}
+
+.desktop-hide {
+  @include hide-on-desktop();
+}

@@ -1,28 +1,28 @@
-$marker-width-xs: 24px;
-$marker-whitespace-xs: 4px;
-$marker-width-md: $marker-width-xs + 8;
-$marker-whitespace-md: $marker-whitespace-xs + 4;
+$marker-width-mobile: 24px;
+$marker-whitespace-mobile: 4px;
+$marker-width-desktop: $marker-width-mobile + 8;
+$marker-whitespace-desktop: $marker-whitespace-mobile + 4;
 
 @mixin paragraph-marker() {
   @extend .col;
   @extend .right-align;
-  width: $marker-width-xs;
-  margin-right: $marker-whitespace-xs;
+  width: $marker-width-mobile;
+  margin-right: $marker-whitespace-mobile;
   display: inline-block;
 
-  @media #{$breakpoint-md} {
-    width: $marker-width-md;
-    margin-right: $marker-whitespace-md;
+  @media #{$on-desktop} {
+    width: $marker-width-desktop;
+    margin-right: $marker-whitespace-desktop;
   }
 }
 
 @mixin paragraph-with-marker() {
   @extend .col;
   @extend .col-11;
-  width: calc(100% - #{$marker-width-xs + $marker-whitespace-xs});
+  width: calc(100% - #{$marker-width-mobile + $marker-whitespace-mobile});
   word-wrap: break-word;
 
-  @media #{$breakpoint-md} {
-    width: calc(100% - #{$marker-width-md + $marker-whitespace-md});
+  @media #{$on-desktop} {
+    width: calc(100% - #{$marker-width-desktop + $marker-whitespace-desktop});
   }
 }
