@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Sticky from 'react-stickynode';
 
 import wrapPage from '../components/app-wrapper';
+import FloatingNav from '../components/document/floating-nav';
 import Footnotes from '../components/document/footnotes';
-import DocumentNav from '../components/document/navigation';
+import SidebarNav from '../components/document/sidebar-nav';
 import { loadDocument } from '../store/actions';
 import { documentData, propagate404 } from '../util/api/queries';
 import DocumentNode from '../util/document-node';
@@ -20,41 +20,23 @@ const headerFooterParams = {
  * sending a mock scroll event (resizing won't get us into the "fixed" state)
  * on mount to the DOM.
  */
-class StartupSticky extends Sticky {
-  componentDidMount() {
-    super.componentDidMount();
-    const scrollEvent = {
-      scroll: {
-        delta: 1, // down
-        top: window.scrollY,
-      },
-    };
-    // react-sticky's initialization isn't actually complete until the state
-    // change *after* componentDidMount. Therefore, we add a callback to fire
-    // after that state change...
-    /* eslint-disable react/no-did-mount-set-state */
-    this.setState({}, () => this.handleScroll(null, scrollEvent));
-    /* eslint-enable react/no-did-mount-set-state */
-  }
-}
 
 export function Document({ docNode }) {
   const doc = new DocumentNode(docNode);
   const footnotes = doc.meta.descendantFootnotes;
   return (
-    <div className="document-container clearfix max-width-4">
-      <div className="col col-3 mobile-hide">
-        <StartupSticky bottomBoundary=".document-container">
-          <DocumentNav isRoot />
-        </StartupSticky>
+    <React.Fragment>
+      <FloatingNav />
+      <div className="document-container clearfix max-width-4">
+        <SidebarNav bottomBoundary=".document-container" className="col col-3 mobile-hide" />
+        <div className="col col-1 mobile-hide">&nbsp;</div>
+        <div className="col-12 md-col-6 col">
+          { renderNode(doc) }
+          { footnotes.length ?
+            <Footnotes footnotes={footnotes} id="document-footnotes" /> : null }
+        </div>
       </div>
-      <div className="col col-1 mobile-hide">&nbsp;</div>
-      <div className="col-12 md-col-6 col">
-        { renderNode(doc) }
-        { footnotes.length ?
-          <Footnotes footnotes={footnotes} id="document-footnotes" /> : null }
-      </div>
-    </div>
+    </React.Fragment>
   );
 }
 Document.propTypes = {

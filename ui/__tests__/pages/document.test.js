@@ -19,12 +19,11 @@ describe('<Document />', () => {
     expect(renderNode).toHaveBeenCalledTimes(1);
     expect(renderNode).toHaveBeenCalledWith(new DocumentNode(docNode));
   });
-  it('includes the DocumentNav', () => {
+  it('includes the SidebarNav', () => {
     renderNode.mockImplementationOnce(() => null);
     const result = shallow(<Document docNode={{ identifier: 'abc' }} />);
-    const nav = result.find('Connect(DocumentNav)');
+    const nav = result.find('SidebarNav');
     expect(nav).toHaveLength(1);
-    expect(nav.prop('isRoot')).toBe(true);
   });
   it('does not include Footnotes if none are present', () => {
     renderNode.mockImplementationOnce(() => null);
