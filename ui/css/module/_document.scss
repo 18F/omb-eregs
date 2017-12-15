@@ -18,32 +18,112 @@
   margin-bottom: 8px;
 }
 
-.document-nav .sub-sections {
-  padding-left: 1rem;
-}
-
 .document-nav-heading {
-  $spacing: 1rem;
-  $active-width: 0.5rem;
-
-  border-bottom: 1px solid $color-lt-blue;
   display: block;
   font-size: 1rem;
   line-height: 1.3rem;
+
+  .sub-sections & {
+    font-size: 0.875rem;
+  }
+}
+
+.document-sidebar-nav {
+  $spacing: 1rem;
+  $active-width: 0.5rem;
 
   .document-nav-container {
     padding: $spacing;
     padding-left: $spacing + $active-width;
   }
 
-  &:hover .document-nav-container,
-  &.active .document-nav-container {
+  .document-nav-heading {
+    border-bottom: 1px solid $color-lt-blue;
+  }
+
+  .document-nav-heading:hover .document-nav-container,
+  .document-nav-heading.active .document-nav-container {
     background-color: $color-sky;
     border-left: $active-width solid $color-blue;
     padding-left: $spacing;
   }
 
-  .sub-sections & {
-    font-size: 0.875rem;
+  .sub-sections {
+    padding-left: 1rem;
+  }
+}
+
+.document-floating-nav {
+  .button-container {
+    background-color: $color-sky;
+  }
+
+  .menu-button {
+    @include reset-button();
+    background-color: $color-sky;
+    color: $color-blue;
+    font-size: 1rem;
+    line-height: 1.3rem;
+    padding-bottom: .75rem;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: .75rem;
+
+    &.active {
+      background-color: $color-blue;
+      color: $color-white;
+    }
+  }
+
+  .include-divider {
+    border-right: 1px solid $color-lt-gray;
+    display: block;
+  }
+
+  // A slightly different set of styles from .document-sidebar-nav
+  .document-nav {
+    background-color: $color-blue;
+    margin: 0;
+    width: 100%;
+  }
+
+  .document-nav-container {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    border-bottom: 1px solid $color-navy;
+  }
+
+  .sub-sections .document-nav-container {
+    margin-left: 1rem;
+  }
+
+  .document-nav-heading {
+    color: $color-white;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .document-nav-heading:hover,
+  .document-nav-heading.active {
+    background-color: $color-navy;
+    border-left: 0.25rem solid $color-white;
+    padding-left: 0.75rem;
+  }
+}
+
+// Adjust for floating-nav covering text
+@media #{$on-mobile} {
+  $size-of-floating-nav: 3rem;
+
+  .bottom-footnotes::before,
+  .node-policy::before,
+  .node-section::before,
+  .table-footer .footnote::before {
+    content: ' ';
+    display: block;
+    height: $size-of-floating-nav;
+    margin-top: -$size-of-floating-nav;
+    pointer-events: none;
+    visibility: hidden;
   }
 }

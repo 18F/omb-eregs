@@ -1,4 +1,5 @@
 .usa-disclaimer {
+  @include hide-on-mobile();
   background-color: $color-white;
   color: $color-gray;
   font-size: 0.75rem;
@@ -27,13 +28,19 @@
 .navbar-title {
   display: inline-block;
   color: $color-white;
-  font-size: 1.75rem;
-  font-weight: bold;
-  line-height: 2.25rem;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1rem;
   margin-bottom: .67em;
   margin-top: .67em;
   -webkit-margin-before: 0.67em;
   -webkit-margin-after: 0.67em;
+
+  @media #{$on-desktop} {
+    font-size: 1.75rem;
+    font-weight: bold;
+    line-height: 2.25rem;
+  }
 
   sup {
     font-size: 0.625rem;
