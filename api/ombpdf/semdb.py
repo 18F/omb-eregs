@@ -4,11 +4,10 @@ import lxml.etree as ET
 
 from . import semtree
 
-
 StackItem = namedtuple('StackItem', ['el', 'level'])
 
 
-class XMLWriter(semtree.Writer):
+class DBWriter(semtree.Writer):
     def __init__(self):
         self.root = ET.Element('policy')
         self.stack = [StackItem(self.root, 0)]
@@ -84,10 +83,8 @@ class XMLWriter(semtree.Writer):
             self.stack[-1].el.text += text
 
 
-def to_xml(doc):
-    writer = XMLWriter()
+def to_db(doc):
+    writer = DBWriter()
     builder = semtree.SemanticTreeBuilder(doc, writer)
 
     builder.build()
-
-    return writer.getvalue()
