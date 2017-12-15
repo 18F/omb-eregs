@@ -10,6 +10,19 @@ from document.tree import DocCursor
 from reqs.models import Policy
 
 
+def assert_has_paragraph(doctree, text):
+    items = [doctree]
+
+    while items:
+        item = items.pop()
+        if item['node_type'] == 'para':
+            if item['content'][0]['text'] == text:
+                return
+        items.extend([child for child in item['children']])
+
+    raise AssertionError(f'Document has no paragraph w/ text "{text}"')
+
+
 @pytest.mark.django_db
 def test_m_14_10_import(m_14_10_doc):
     policy = mommy.make(
@@ -23,11 +36,11 @@ def test_m_14_10_import(m_14_10_doc):
     groups = [list(g) for k, g in grouped]
     for i, group in enumerate(groups):
         text = "".join([str(l) for l in group])
-        root.add_child('par', str(i), text=text, marker=str(i))
+        root.add_child('para', str(i), text=text, marker=str(i))
     root.nested_set_renumber()
     result = doc_cursor.DocCursorSerializer(
         root, context={'policy': policy}).data
-    first_para = (
+    assert_has_paragraph(result, (
         'Office of Management and Budget (OMB) Memorandum M-12-16, '
         '"Providing Prompt Payment to Small Business Subcontractors," '
         'established the Executive Branch policy that agencies should, to '
@@ -43,5 +56,4 @@ def test_m_14_10_import(m_14_10_doc):
         'strategies that might be used over the longer term to help maintain '
         'effective cash flow and prompt payment to small business '
         'subcontractors. '
-    )
-    assert result["children"][5]["content"][0]["text"] == first_para
+    ))
