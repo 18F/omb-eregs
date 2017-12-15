@@ -117,7 +117,8 @@
 
   .bottom-footnotes::before,
   .node-policy::before,
-  .node-section::before {
+  .node-section::before,
+  .table-footer .footnote::before {
     content: ' ';
     display: block;
     height: $size-of-floating-nav;
