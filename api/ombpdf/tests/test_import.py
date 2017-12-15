@@ -16,7 +16,7 @@ def test_m_14_10_import(m_14_10_doc):
         Policy, issuance=date(2001, 2, 3), omb_policy_id='M-18-18',
         title='Some Title', uri='http://example.com/thing.pdf',
     )
-    root = DocCursor.new_tree('root', '0', policy=policy, title='Policy A')
+    root = DocCursor.new_tree('root', '0', policy=policy, title=policy.title)
     m_14_10_doc.annotators.require_all()
     lines = m_14_10_doc.pages[0]
     grouped = groupby(lines, key=attrgetter("annotation"))
