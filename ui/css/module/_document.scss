@@ -115,7 +115,10 @@
 @media #{$on-mobile} {
   $size-of-floating-nav: 3rem;
 
-  .node-section::before {
+  .bottom-footnotes::before,
+  .node-policy::before,
+  .node-section::before,
+  .table-footer .footnote::before {
     content: ' ';
     display: block;
     height: $size-of-floating-nav;

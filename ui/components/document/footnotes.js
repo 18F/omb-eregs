@@ -8,6 +8,7 @@ import Footnote from '../node-renderers/footnote';
 export function Footnotes({ id, footnotes }) {
   return (
     <div className="bottom-footnotes" id={id}>
+      <hr className="bottom-footnotes-border" />
       { footnotes.map(fn => <Footnote key={fn.identifier} docNode={fn} />) }
     </div>
   );
