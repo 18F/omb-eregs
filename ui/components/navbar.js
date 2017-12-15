@@ -20,7 +20,7 @@ export default function Navbar({ showSearch }) {
     <div className="overflow-auto">
       <div className="flex items-center navbar">
         <img
-          className="pl2 pr1"
+          className="mobile-hide pl2 pr1"
           alt="US flag"
           width="50"
           height="50"

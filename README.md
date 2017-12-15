@@ -69,10 +69,25 @@ docker-compose run --rm manage.py fetch_csv
 docker-compose run --rm manage.py import_reqs data.csv
 docker-compose run --rm manage.py sync_agencies
 docker-compose run --rm manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
+docker-compose run --rm manage.py import_xml_doc example_docs/m_15_16.xml M-15-16
 ```
 
 This may emit some warnings for improper input. The next time you visit the
 admin, you'll see it's populated.
+
+### PDF importing
+
+This project has functionality that processes PDFs and prepares them for
+import into the policy library.
+
+To download some PDFs for development, you can run:
+
+```bash
+docker-compose run --rm manage.py download_pdfs
+```
+
+You can then access a variety of development and debugging-related
+views for the PDFs at http://localhost:8001/pdf/.
 
 ### Docker-compose commands
 

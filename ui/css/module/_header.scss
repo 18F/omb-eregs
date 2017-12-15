@@ -1,6 +1,7 @@
 .usa-disclaimer {
-  background-color: $color-gray-lightest;
-  color: $color-gray-dark;
+  @include hide-on-mobile();
+  background-color: $color-white;
+  color: $color-gray;
   font-size: 0.75rem;
   padding: 0.25rem 1rem;
   line-height: 0.9375rem;
@@ -21,19 +22,25 @@
 }
 
 .navbar {
-  background-color: $color-primary-darkest;
+  background-color: $color-black;
 }
 
 .navbar-title {
   display: inline-block;
   color: $color-white;
-  font-size: 1.75rem;
-  font-weight: bold;
-  line-height: 2.25rem;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1rem;
   margin-bottom: .67em;
   margin-top: .67em;
   -webkit-margin-before: 0.67em;
   -webkit-margin-after: 0.67em;
+
+  @media #{$on-desktop} {
+    font-size: 1.75rem;
+    font-weight: bold;
+    line-height: 2.25rem;
+  }
 
   sup {
     font-size: 0.625rem;
@@ -75,7 +82,6 @@
   }
 
   .search-input {
-    @extend .gray-border;
     @include font-san-serif();
     border: 1px solid;
     border-right: 0;
@@ -87,7 +93,6 @@
   }
 
   .search-submit {
-    @extend .gray-border;
     background-color: $color-white;
     border: 1px solid;
     border-left: 0;

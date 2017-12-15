@@ -65,7 +65,7 @@ def test_anchor_without_href():
     assert result.href == 'http://example.com/thing'
 
 
-def test_content_xml_annotations(monkeypatch):
+def test_annotation_deriver(monkeypatch):
     """Passes the correct string indexes and annotations along."""
     aaa, bbb = Mock(), Mock()
     monkeypatch.setitem(annotations.annotation_mapping, 'aaa', aaa)
@@ -74,7 +74,25 @@ def test_content_xml_annotations(monkeypatch):
         # being careful about whitespace
         "<content>Some <aaa>span</aaa> of <bbb>text</bbb> here "
         "<nonono>there</nonono>:<empty />!</content>")
-    result = list(annotations.content_xml_annotations(xml, Mock()))
+    result = list(annotations.AnnotationDeriver(Mock()).derive(xml))
+    assert result == [aaa.return_value, bbb.return_value]
+
+    assert aaa.call_args[0][1].tag == 'aaa'
+    assert aaa.call_args[0][2] == len('Some ')
+
+    assert bbb.call_args[0][1].tag == 'bbb'
+    assert bbb.call_args[0][2] == len('Some span of ')
+
+
+def test_annotation_deriver_nested(monkeypatch):
+    """Annotations can be nested."""
+    aaa, bbb = Mock(), Mock()
+    monkeypatch.setitem(annotations.annotation_mapping, 'aaa', aaa)
+    monkeypatch.setitem(annotations.annotation_mapping, 'bbb', bbb)
+    xml = etree.fromstring(
+        # being careful about whitespace
+        "<content>Some <aaa>span of <bbb>text</bbb> here</aaa></content>")
+    result = list(annotations.AnnotationDeriver(Mock()).derive(xml))
     assert result == [aaa.return_value, bbb.return_value]
 
     assert aaa.call_args[0][1].tag == 'aaa'
@@ -86,8 +104,8 @@ def test_content_xml_annotations(monkeypatch):
 
 def test_derive_annotations(monkeypatch):
     """Recursively derives annotation objects."""
-    monkeypatch.setattr(annotations, 'content_xml_annotations', Mock())
-    annotations.content_xml_annotations.side_effect = [
+    monkeypatch.setattr(annotations, 'AnnotationDeriver', Mock())
+    annotations.AnnotationDeriver.return_value.derive.side_effect = [
         [FootnoteCitation(start=0), PlainText(start=1), PlainText(start=2)],
         [],
         [PlainText(start=3), FootnoteCitation(start=4)],

@@ -1,61 +1,15 @@
-// USWDS colors
-// https://github.com/18F/web-design-standards/blob/develop/src/stylesheets/core/_variables.scss
+$color-black:               #000000;
+$color-gray:                #727375;
+$color-lt-gray:             #cecfd1;
+$color-white:               #ffffff;
 
-$color-primary:              #0071bc !default;
-$color-primary-darker:       #3d73a8 !default;
-$color-primary-darkest:      #112e51 !default;
+$color-navy:                #112e51;
+$color-blue:                #1067a6;
+$color-lt-blue:             #88d8f6;
+$color-sky:                 #edfcff;
 
-$color-primary-alt:          #02bfe7 !default;
-$color-primary-alt-dark:     #00a6d2 !default;
-$color-primary-alt-darkest:  #046b99 !default;
-$color-primary-alt-light:    #9bdaf1 !default; // lighten($color-primary-alt, 60%)
-$color-primary-alt-lightest: #e1f3f8 !default; // lighten($color-primary-alt, 90%)
-
-$color-secondary:            #e31c3d !default;
-$color-secondary-dark:       #cd2026 !default;
-$color-secondary-darkest:    #981b1e !default;
-$color-secondary-light:      #e59393 !default; // lighten($color-secondary, 60%)
-$color-secondary-lightest:   #f9dede !default; // lighten($color-secondary, 90%)
-
-$color-white:                #ffffff !default;
-$color-base:                 #212121 !default;
-$color-black:                #000000 !default;
-
-$color-gray-darker:            #111 !default;
-$color-gray-dark:            #323a45 !default;
-$color-gray:                 #5b616b !default; // lighten($color-gray-dark, 20%)
-$color-gray-medium:          #757575 !default; // lightest gray that passes color contrast
-$color-gray-light:           #aeb0b5 !default; // lighten($color-gray-dark, 60%)
-$color-gray-lighter:         #d6d7d9 !default; // lighten($color-gray-dark, 80%)
-$color-gray-lightest:        #fafafa !default;
-
-$color-gray-warm-dark:       #494440 !default;
-$color-gray-warm-light:      #e4e2e0 !default; // lighten($color-gray-warm-dark, 90%)
-$color-gray-cool-light:      #dce4ef !default; // lighten($color-primary, 90%)
-
-$color-gold:                 #fdb81e !default;
-$color-gold-light:           #f9c642 !default; //  lighten($color-gold, 20%)
-$color-gold-lighter:         #fad980 !default; //  lighten($color-gold, 60%)
-$color-gold-lightest:        #fff1d2 !default; //  lighten($color-gold, 83%)
-$color-gold-dark:            #8c7c2a !default;
-
-$color-green:                #2e8540 !default;
-$color-green-light:          #4aa564 !default; // lighten($color-green, 20%)
-$color-green-lighter:        #94bfa2 !default; // lighten($color-green, 60%)
-$color-green-lightest:       #e7f4e4 !default; // lighten($color-green, 60%)
-
-$color-cool-blue:            #2f67a1 !default;
-$color-cool-blue-light:      #4773aa !default; // lighten($color-cool-blue, 20%)
-$color-cool-blue-lighter:    #8ba6ca !default; // lighten($color-cool-blue, 60%)
-$color-cool-blue-lightest:   #dce4ef !default; // lighten($color-cool-blue, 90%)
-
-$color-focus:                #3e94cf !default;
-$color-visited:              #4c2c92 !default;
-
-$color-shadow:               rgba(#000, 0.3) !default;
-
-// New pallet
-$pallet-blue:                #1067a6 !default;
-$pallet-canary:              #ffee99 !default;
-$pallet-sunshine:            #fffae3 !default;
-$pallet-yellow-dark:         #f3ecc9 !default;
+$color-ochre:               #8c7c2a;
+$color-gold:                #ffdc37;
+$color-lt-gold:             #f0e6b6;
+$color-canary:              #ffee99;
+$color-sunshine:            #fffae3;

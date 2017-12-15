@@ -1,3 +1,9 @@
 .nowrap {
   white-space: nowrap;
 }
+
+@mixin reset-button() {
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}

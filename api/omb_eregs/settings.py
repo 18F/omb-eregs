@@ -58,7 +58,7 @@ INSTALLED_APPS = (
     'django.contrib.postgres',
 )
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar',)
+    INSTALLED_APPS += ('ombpdf', 'debug_toolbar',)
 
 MIDDLEWARE = (
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -237,6 +237,10 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
         },
+        'pdfminer': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
     }
 }
 
@@ -263,3 +267,8 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 ADMIN_TITLE = 'OMB Policy Library Editor'
+
+if DEBUG and os.environ.get('USE_POLLING') == 'true':
+    import django.utils.autoreload
+
+    django.utils.autoreload.USE_INOTIFY = False

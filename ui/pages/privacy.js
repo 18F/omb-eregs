@@ -1,7 +1,7 @@
 import React from 'react';
 
+import wrapPage from '../components/app-wrapper';
 import { email, ContactEmail } from '../components/contact-email';
-import HeaderFooter from '../components/header-footer';
 import Link from '../components/link';
 
 export function PrivacyView() {
@@ -128,4 +128,4 @@ export function PrivacyView() {
   );
 }
 
-export default () => <HeaderFooter><PrivacyView /></HeaderFooter>;
+export default wrapPage(PrivacyView);

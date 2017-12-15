@@ -6,7 +6,7 @@ import Link from '../link';
 export default function FootnoteCitationInTable({ content }) {
   const href = `#${content.footnote_node.identifier}-table`;
   return (
-    <sup className="footnote-citation-in-table">
+    <sup className="footnote-citation-in-table" id={`citation-${content.footnote_node.identifier}`}>
       <Link href={href}>{ content.text }</Link>
     </sup>
   );

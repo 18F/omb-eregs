@@ -1,32 +1,23 @@
-$one-pixel-value: 0.063;
-$two-pixel-value: $one-pixel-value * 2;
-$one-pixel: $one-pixel-value + rem;
+$footnote-border: 1px solid $color-blue;
+$footnote-vertical-margin: 24px;
 
-$footnote-vertical-margin-value: 1.5;
-$footnote-vertical-margin: $footnote-vertical-margin-value + rem;
-
-$triangle-dimensions-value: 1.125;
-$triangle-dimensions: $triangle-dimensions-value + rem;
-
-$triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertical-margin-value - $two-pixel-value) + rem;
-
-@mixin footnote-border-triangle-up() {
+@mixin footnote-border-triangle-up($side-length) {
   content: '';
   position: absolute;
   background: $color-white;
-  height: $triangle-dimensions;
-  width: $triangle-dimensions;
-  margin-left: -9px;
+  height: $side-length;
+  width: $side-length;
+  margin-left: - $side-length / 2;
   left: 50%;
   border-top-right-radius: 3px;
   transform: rotate(-45deg);
-  border-top: 1px solid $color-primary-darker;
-  border-right: 1px solid $color-primary-darker;
+  border-top: $footnote-border;
+  border-right: $footnote-border;
 }
 
 .footnote-link {
   @include font-san-serif();
-  border: 1px solid $color-cool-blue-lighter;
+  border: 1px solid $color-lt-blue;
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 0.7rem;
@@ -35,13 +26,14 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
   position: relative;
 
   &.active {
-    border-color: $color-primary-darker;
-    background: $color-primary-darker;
+    border-color: $color-blue;
+    background: $color-blue;
     color: $color-white;
 
     &::before {
-      @include footnote-border-triangle-up();
-      top: $triangle-border-vertical-offset;
+      $triangle-dimensions: 18px;
+      @include footnote-border-triangle-up($triangle-dimensions);
+      top: $triangle-dimensions + $footnote-vertical-margin;
       z-index: 10;
     }
   }
@@ -61,8 +53,8 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 
   .footnote-wrapper {
     display: block;
-    border-top: $one-pixel solid $color-primary-darker;
-    border-bottom: $one-pixel solid $color-primary-darker;
+    border-top: $footnote-border;
+    border-bottom: $footnote-border;
     margin-top: $footnote-vertical-margin;
     margin-bottom: 2rem;
     padding-top: 1rem;
@@ -96,14 +88,14 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
     @extend .m0;
     @extend .col-11;
     width: calc(100% - 3em);
-    color: $color-gray-medium;
+    color: $color-gray;
   }
 
   .close-button {
     @extend .bland-box;
     @extend .mx-auto;
     @include font-san-serif-bold();
-    color: $color-primary-darker;
+    color: $color-blue;
     font-style: normal;
     font-size: .8em;
     display: block;
@@ -119,9 +111,13 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 }
 
 .bottom-footnotes {
-  border-top: 1px solid $pallet-blue;
-  margin-top: 2.5em;
-  padding-top: .75em;
+  margin-top: 2rem;
+
+  .bottom-footnotes-border {
+    border: none;
+    border-bottom: 1px solid $color-blue;
+    margin-bottom: .75rem;
+  }
 
   .node-footnote {
     @extend .clearfix;
@@ -136,11 +132,15 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
     line-height: 1rem; // like font-text, except adjusting for bold
   }
 
+  .citation-link {
+    color: $color-black;
+  }
+
   .footnote-text,
   p {
     @include paragraph-with-marker();
     @extend .m0;
-    color: $color-gray-medium;
+    color: $color-gray;
     font-size: .875em;
     line-height: 1.125rem;
   }
@@ -149,5 +149,5 @@ $triangle-border-vertical-offset: ($triangle-dimensions-value + $footnote-vertic
 .footnote-text {
   @include font-san-serif();
   font-style: normal;
-  color: $color-gray-medium;
+  color: $color-gray;
 }

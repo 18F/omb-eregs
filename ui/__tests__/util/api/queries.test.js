@@ -4,7 +4,6 @@ import {
   formatIssuance,
   homepageData,
   policiesData,
-  policyData,
   redirectQuery,
   requirementsData,
 } from '../../../util/api/queries';
@@ -114,51 +113,6 @@ describe('redirectQuery()', () => {
   });
 });
 
-describe('policyData()', () => {
-  beforeEach(() => {
-    endpoints.requirements.fetch.mockImplementationOnce(
-      () => Promise.resolve({ count: 1, results: 'data-goes-here' }));
-    endpoints.policies.fetchOne.mockImplementationOnce(
-      () => Promise.resolve({ issuance: '2000-01-02' }));
-  });
-
-  it('hits the correct url with OMB policy ID', async () => {
-    await policyData({ query: { policyId: 'M-123' } });
-    expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy__omb_policy_id: 'M-123', page: '1' });
-    expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('M-123');
-  });
-
-  it('hits the correct urls with policy ID', async () => {
-    await policyData({ query: { policyId: '3' } });
-    expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '1' });
-    expect(endpoints.policies.fetchOne).toHaveBeenCalledWith('3');
-  });
-
-  it('returns the correct results', async () => {
-    const results = await policyData({ query: {} });
-    expect(results).toEqual({
-      pagedReqs: { count: 1, results: 'data-goes-here' },
-      policy: {
-        issuance: '2000-01-02',
-        issuance_pretty: 'January 2, 2000',
-      },
-    });
-  });
-  it('will pass the page number', async () => {
-    await policyData({ query: { page: '5', policyId: '3' } });
-    expect(endpoints.requirements.fetch).toHaveBeenCalledWith({ policy_id: '3', page: '5' });
-  });
-  it('passes up 404s', async () => {
-    endpoints.policies.fetchOne.mockReset();
-    endpoints.policies.fetchOne.mockImplementationOnce(() => {
-      throw error404;
-    });
-
-    const result = await policyData({ query: {} });
-    expect(result).toEqual({ statusCode: 404 });
-  });
-});
-
 describe('documentData()', () => {
   beforeEach(() => {
     endpoints.document.fetchOne.mockImplementationOnce(
@@ -178,15 +132,6 @@ describe('documentData()', () => {
         },
       },
     });
-  });
-  it('passes up 404s', async () => {
-    endpoints.document.fetchOne.mockReset();
-    endpoints.document.fetchOne.mockImplementationOnce(() => {
-      throw error404;
-    });
-
-    const result = await documentData({ query: {} });
-    expect(result).toEqual({ statusCode: 404 });
   });
 });
 

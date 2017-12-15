@@ -23,6 +23,8 @@ Router.onRouteChangeStart = NProgress.start;
 
 export default function wrapPage(Page, dataFn, headerFooterParams) {
   const hfParams = headerFooterParams || { showSearch: true };
+  const noop = () => ({});
+  const fetchFn = dataFn || noop;
   function WrappedPage(props) {
     if (props.err || props.statusCode) {
       return <ErrorView err={props.err} statusCode={props.statusCode} />;
@@ -42,7 +44,7 @@ export default function wrapPage(Page, dataFn, headerFooterParams) {
 
   WrappedPage.getInitialProps = async (ctx) => {
     try {
-      return await dataFn(ctx);
+      return await fetchFn(ctx);
     } catch (err) {
       return { err };
     }

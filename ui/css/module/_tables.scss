@@ -1,6 +1,6 @@
 .basic-thead,
 tfoot {
-  background: $pallet-sunshine;
+  background: $color-sunshine;
 }
 
 .basic-th,
@@ -19,7 +19,7 @@ tfoot {
 
   th,
   td {
-    border: 1px solid $pallet-yellow-dark;
+    border: 1px solid $color-lt-gold;
   }
 
   td:first-child,
@@ -50,7 +50,7 @@ table {
 }
 
 .table-footer {
-  background-color: $pallet-sunshine;
+  background-color: $color-sunshine;
 
   .h4 {
     color: $color-black;

@@ -4,19 +4,14 @@
     display: none;
   }
 
-  .usa-disclaimer,
   .navbar-title,
   .req .metadata,
   .req .req-text {
-    color: $color-gray-darker !important;
+    color: $color-black !important;
   }
 
   .main {
     border-left: 0;
-  }
-
-  .list-reset {
-    border-bottom: 1px solid $color-gray-darker;
   }
 
   .active-filter {
@@ -32,7 +27,7 @@
 
   .topics-list a,
   a:link {
-    color: $color-gray-darker;
+    color: $color-black;
   }
 
   .print-url::after {

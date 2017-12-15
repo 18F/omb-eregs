@@ -67,30 +67,30 @@ function faviconTags() {
 export default function HeaderFooter({ children, showSearch, wrapperClassName }) {
   const klasses = ['container', wrapperClassName].join(' ');
 
-  return (
-    <div>
-      <Head>
-        <title>OMB Policy Library (Beta)</title>
-        <link rel="stylesheet" href="/static/styles.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha1/katex.min.css" integrity="sha384-8QOKbPtTFvh/lMY0qPVbXj9hDh+v8US0pD//FcoYFst2lCIf0BmT58+Heqj0IGyx" crossOrigin="anonymous" />
-        <script
-          async
-          type="text/javascript"
-          id="_fed_an_ua_tag"
-          src="https://dap.digitalgov.gov/Universal­Federated­Analytics­Min.js?agency=EOP&subagency=OMB"
-        />
-        { faviconTags() }
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <Disclaimer />
-      <Navbar showSearch={showSearch} />
-      <div className={klasses}>
-        {children}
-      </div>
-      <Footer />
-      <script src="/static/ie.js" />
-    </div>
-  );
+  return [
+    <Head key="head">
+      <title>OMB Policy Library (Beta)</title>
+      <link rel="stylesheet" href="/static/styles.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha1/katex.min.css" integrity="sha384-8QOKbPtTFvh/lMY0qPVbXj9hDh+v8US0pD//FcoYFst2lCIf0BmT58+Heqj0IGyx" crossOrigin="anonymous" />
+      <script
+        async
+        type="text/javascript"
+        id="_fed_an_ua_tag"
+        src="https://dap.digitalgov.gov/Universal­Federated­Analytics­Min.js?agency=EOP&subagency=OMB"
+      />
+      { faviconTags() }
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </Head>,
+    <div key="page-header-wrapper" className="page-header-wrapper">
+      <Disclaimer key="disclaimer" />
+      <Navbar key="navbar" showSearch={showSearch} />
+    </div>,
+    <div key="body" className={klasses}>
+      {children}
+    </div>,
+    <Footer key="footer" />,
+    <script key="footer-script" src="/static/ie.js" />,
+  ];
 }
 
 HeaderFooter.propTypes = {

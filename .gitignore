@@ -14,9 +14,11 @@ jest*
 ui/lcov-report/
 ui/lcov.info
 .next
+api/ombpdf/static/ombpdf/js/
 
 # Data
 *.csv
+api/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
