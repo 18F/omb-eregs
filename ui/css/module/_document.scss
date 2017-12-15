@@ -115,6 +115,7 @@
 @media #{$on-mobile} {
   $size-of-floating-nav: 3rem;
 
+  .node-policy::before,
   .node-section::before {
     content: ' ';
     display: block;
