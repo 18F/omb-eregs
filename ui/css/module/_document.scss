@@ -115,6 +115,7 @@
 @media #{$on-mobile} {
   $size-of-floating-nav: 3rem;
 
+  .bottom-footnotes::before,
   .node-policy::before,
   .node-section::before {
     content: ' ';
