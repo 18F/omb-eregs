@@ -1,90 +1,81 @@
-from collections import namedtuple
+from collections import Counter
 
-import lxml.etree as ET
+from document.serializers import doc_cursor
+from document.tree import DocCursor
 
 from . import semtree
 
-StackItem = namedtuple('StackItem', ['el', 'level'])
-
 
 class DBWriter(semtree.Writer):
-    def __init__(self):
-        self.root = ET.Element('policy')
-        self.stack = [StackItem(self.root, 0)]
+    def __init__(self, policy):
+        self.policy = policy
+        self.root = DocCursor.new_tree(
+            'root', '0', policy=policy, title=policy.title)
+        self.cursor = self.root
+        self.counter = Counter()
+        self.muted = False
 
-    def getvalue(self):
-        return ET.tostring(self.root, encoding="unicode", pretty_print=True)
-
-    def _push(self, el, level=None):
-        if level is None:
-            level = self.stack[-1].level
-        self.stack.append(StackItem(el, level))
+    def serialize(self):
+        return doc_cursor.DocCursorSerializer(
+            self.root, context={'policy': self.policy}).data
 
     # Below are Writer methods.
 
     def begin_document(self, doc):
-        self.preamble = ET.SubElement(self.root, 'preamble')
-        self.policyTitle = ET.SubElement(self.preamble, 'policyTitle')
-        self.policyTitle.text = doc.title
+        pass
 
     def end_document(self, doc):
-        pass
+        self.root.nested_set_renumber()
 
     def begin_heading(self, heading):
-        while True:
-            if self.stack[-1].level >= heading.level:
-                self.stack.pop()
-            else:
-                break
-        el = ET.SubElement(self.stack[-1].el, 'sec')
-        el.attrib['title'] = ''
-        heading_el = ET.SubElement(el, 'heading')
-        heading_el.text = ''
-        self._push(el, heading.level)
-        self._push(heading_el)
+        self.muted = True
 
     def end_heading(self, heading):
-        self.stack.pop()
+        self.muted = False
 
     def begin_paragraph(self, p):
-        pass
+        marker = str(self.counter['p'])
+        self.cursor = self.cursor.add_child('para', marker)
+        self.counter['p'] += 1
 
     def end_paragraph(self, p):
-        pass
+        self.cursor = self.cursor.parent()
 
     def begin_list(self, li):
-        pass
+        self.muted = True
 
     def end_list(self, li):
-        pass
+        self.muted = False
 
     def begin_list_item(self, p):
-        pass
+        self.muted = True
 
     def end_list_item(self, p):
-        pass
+        self.muted = False
 
     def create_footnote_citation(self, cit):
         pass
 
     def begin_footnote_list(self, fl):
-        pass
+        self.muted = True
 
     def end_footnote_list(self, fl):
-        pass
+        self.muted = False
 
     def create_footnote(self, f):
         pass
 
     def create_text(self, text):
+        if self.muted:
+            return
         text = text.replace('\n', '')
-        if self.stack[-1].el.tag == 'heading':
-            self.stack[-2].el.attrib['title'] += text
-            self.stack[-1].el.text += text
+        self.cursor.model.text += text
 
 
-def to_db(doc):
-    writer = DBWriter()
+def to_db(doc, policy):
+    writer = DBWriter(policy)
     builder = semtree.SemanticTreeBuilder(doc, writer)
 
     builder.build()
+
+    return writer

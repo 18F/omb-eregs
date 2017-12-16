@@ -1,22 +1,20 @@
 from datetime import date
-from itertools import groupby
-from operator import attrgetter
 
 import pytest
 from model_mommy import mommy
 
-from document.serializers import doc_cursor
-from document.tree import DocCursor
+from ombpdf import semdb
 from reqs.models import Policy
 
 
-def assert_has_paragraph(doctree, text):
+def assert_has_paragraph(doctree, start, end):
     items = [doctree]
 
     while items:
         item = items.pop()
         if item['node_type'] == 'para':
-            if item['content'][0]['text'] == text:
+            text = item['content'][0]['text']
+            if text.startswith(start) and text.endswith(end):
                 return
         items.extend([child for child in item['children']])
 
@@ -29,31 +27,10 @@ def test_m_14_10_import(m_14_10_doc):
         Policy, issuance=date(2001, 2, 3), omb_policy_id='M-18-18',
         title='Some Title', uri='http://example.com/thing.pdf',
     )
-    root = DocCursor.new_tree('root', '0', policy=policy, title=policy.title)
-    m_14_10_doc.annotators.require_all()
-    lines = m_14_10_doc.pages[0]
-    grouped = groupby(lines, key=attrgetter("annotation"))
-    groups = [list(g) for k, g in grouped]
-    for i, group in enumerate(groups):
-        text = "".join([str(l) for l in group])
-        root.add_child('para', str(i), text=text, marker=str(i))
-    root.nested_set_renumber()
-    result = doc_cursor.DocCursorSerializer(
-        root, context={'policy': policy}).data
-    assert_has_paragraph(result, (
-        'Office of Management and Budget (OMB) Memorandum M-12-16, '
-        '"Providing Prompt Payment to Small Business Subcontractors," '
-        'established the Executive Branch policy that agencies should, to '
-        'the full extent permitted by law, temporarily accelerate payments '
-        'to all prime contractors -with a goal of paying them within 15 days '
-        'ofreceipt of proper invoices -in order to allow them to provide '
-        'prompt payments to small business subcontractors. To support the '
-        'policy, the Federal Acquisition Regulatory Council (FAR Council) '
-        'created a new clause for agencies to incorporate into their '
-        'contracts requiring prime contractors to accelerate payments to '
-        'their small business subcontractors when they receive accelerated '
-        'payments from the government. The FAR Council is also considering '
-        'strategies that might be used over the longer term to help maintain '
-        'effective cash flow and prompt payment to small business '
-        'subcontractors. '
-    ))
+    result = semdb.to_db(m_14_10_doc, policy).serialize()
+
+    assert_has_paragraph(
+        result,
+        start='Office of Management and Budget (OMB) Memorandum M-12-16, ',
+        end='cash flow and prompt payment to small business subcontractors. '
+    )
