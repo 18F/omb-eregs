@@ -1,4 +1,5 @@
 import { shallow } from 'enzyme';
+import Head from 'next/head';
 import React from 'react';
 
 import { Document, getInitialProps } from '../../pages/document';
@@ -43,6 +44,13 @@ describe('<Document />', () => {
     expect(footnotes.prop('footnotes').map(f => f.identifier)).toEqual(
       ['footnote_1', 'footnote_2'],
     );
+  });
+  it('sets the page header', () => {
+    renderNode.mockImplementationOnce(() => null);
+    const docNode = { meta: { policy: { title_with_number: 'AAAA: Stuff' } } };
+    const head = shallow(<Document docNode={docNode} />).find(Head);
+    expect(head).toHaveLength(1);
+    expect(head.children().text()).toMatch(/AAAA: Stuff/);
   });
 });
 

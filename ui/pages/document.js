@@ -8,6 +8,7 @@ import SidebarNav from '../components/document/sidebar-nav';
 import { loadDocument } from '../store/actions';
 import { documentData, propagate404 } from '../util/api/queries';
 import DocumentNode from '../util/document-node';
+import pageTitle from '../util/page-title';
 import renderNode from '../util/render-node';
 
 const headerFooterParams = {
@@ -26,6 +27,7 @@ export function Document({ docNode }) {
   const footnotes = doc.meta.descendantFootnotes;
   return (
     <React.Fragment>
+      { pageTitle(doc.meta.policy.titleWithNumber) }
       <FloatingNav />
       <div className="document-container clearfix max-width-4">
         <SidebarNav bottomBoundary=".document-container" className="col col-3 mobile-hide" />
