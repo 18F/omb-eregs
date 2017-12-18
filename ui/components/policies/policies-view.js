@@ -14,14 +14,14 @@ export default function PoliciesView({ policies, count, topicsIds }) {
     <ThingCounterContainer count={count} key="counter" singular={singular} plural={plural} />,
     <ul className="policy-list list-reset" key="policy-list">
       { policies.map(policy =>
-        <PolicyView key={policy.id} policy={new Policy(policy)} topicsIds={topicsIds} />,
+        <PolicyView key={policy.id} policy={policy} topicsIds={topicsIds} />,
       )}
     </ul>,
     <PagersContainer count={count} key="pager" route="policies" />,
   ];
 }
 PoliciesView.propTypes = {
-  policies: PropTypes.arrayOf(Policy.shape),
+  policies: PropTypes.arrayOf(PropTypes.instanceOf(Policy)),
   count: PropTypes.number,
   topicsIds: PropTypes.string,
 };

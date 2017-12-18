@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 /**
  * The Policy class wraps the policy structure returned by the API
  * and adds a number of convenience methods to it.  It's intended to be
@@ -31,12 +29,3 @@ export default class Policy {
     };
   }
 }
-
-Policy.shape = PropTypes.shape({
-  id: PropTypes.number,
-  title_with_number: PropTypes.string,
-  relevant_reqs: PropTypes.number,
-  total_reqs: PropTypes.number,
-  has_docnode: PropTypes.bool,
-  omb_policy_id: PropTypes.string,
-});
