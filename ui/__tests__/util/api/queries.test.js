@@ -1,7 +1,6 @@
 import {
   cleanSearchParams,
   documentData,
-  formatIssuance,
   homepageData,
   policiesData,
   redirectQuery,
@@ -13,17 +12,6 @@ jest.mock('../../../util/api/endpoints');
 
 const error404 = new Error('Not Found');
 error404.response = { status: 404 };
-
-describe('formatIssuance', () => {
-  it('handles reasonable input', () => {
-    const result = formatIssuance({ issuance: '2001-12-20' });
-    expect(result.issuance_pretty).toEqual('December 20, 2001');
-  });
-  it('fails gracefully', () => {
-    const result = formatIssuance({ issuance: null });
-    expect(result.issuance_pretty).toEqual('Invalid date');
-  });
-});
 
 describe('homepageData', () => {
   it('makes the correct request', () => {

@@ -1,4 +1,3 @@
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
@@ -7,15 +6,6 @@ import { apiNameField, search } from '../../lookup-search';
 import { routes } from '../../routes';
 
 const NUM_POLICIES = 4;
-// See https://momentjs.com/docs/#/displaying/ for options
-const DATE_FORMAT = 'MMMM D, YYYY';
-
-export function formatIssuance(policy) {
-  return {
-    ...policy,
-    issuance_pretty: moment(policy.issuance).format(DATE_FORMAT),
-  };
-}
 
 export async function propagate404(fn) {
   try {
