@@ -2,10 +2,11 @@ import difflib
 from pathlib import Path
 
 
-def assert_snapshot_matches(snapshot_path, content, name=''):
+def assert_snapshot_matches(snapshot_path, content, name='',
+                            force_overwrite=False):
     snapshot_path = snapshot_path.relative_to(Path('.').resolve())
 
-    if not snapshot_path.exists():
+    if not snapshot_path.exists() or force_overwrite:
         # Encoding the content ourselves and using write_bytes will
         # ensure that the files have unix line endings.
         snapshot_path.write_bytes(content.encode('utf-8'))
