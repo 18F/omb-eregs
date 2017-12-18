@@ -31,8 +31,25 @@ class ListInfo:
 class DOMWriter(semtree.Writer):
     def __init__(self):
         self.muted = True
-        self.depth = 0
         self.elinfo = {}
+        self.footnote_citations = {}
+        self.cursors = []
+
+    @property
+    def depth(self):
+        node = self.cursor
+        depth = 0
+        while node != self.root:
+            depth += 1
+            node = node.parentNode
+        return depth
+
+    def _push_cursor(self, cursor):
+        self.cursors.append(self.cursor)
+        self.cursor = cursor
+
+    def _pop_cursor(self):
+        self.cursor = self.cursors.pop()
 
     def _push_child(self, name, attrs=None, elinfo=None):
         child = self.document.createElement(name)
@@ -43,14 +60,12 @@ class DOMWriter(semtree.Writer):
             self.elinfo[child] = elinfo
         self.cursor.appendChild(child)
         self.cursor = child
-        self.depth += 1
         return child
 
     def _pop_child(self, name=None):
         if name is not None:
             assert self.cursor.nodeName == name
         self.cursor = self.cursor.parentNode
-        self.depth -= 1
 
     def _get_parent(self, name):
         node = self.cursor.parentNode
@@ -59,8 +74,14 @@ class DOMWriter(semtree.Writer):
         return node
 
     def _ensure_section(self):
-        if self.depth == 0:
+        if self.cursor == self.root:
             self._push_child('sec')
+
+    def _add_text(self, text):
+        self.cursor.appendChild(self.document.createTextNode(text))
+
+    def _add_comment(self, text):
+        self.cursor.appendChild(self.document.createComment(text))
 
     # Below are Writer methods.
 
@@ -110,7 +131,10 @@ class DOMWriter(semtree.Writer):
         self.muted = True
 
     def create_footnote_citation(self, cit):
-        pass
+        self._push_child('footnote_citation')
+        self._add_text(str(cit.number))
+        self.footnote_citations[cit.number] = self.cursor
+        self._pop_child('footnote_citation')
 
     def begin_footnote_list(self, fl):
         self.muted = True
@@ -119,18 +143,31 @@ class DOMWriter(semtree.Writer):
         self.muted = False
 
     def create_footnote(self, f):
-        pass
+        citation = self.footnote_citations.get(f.number)
+        if citation is not None:
+            parent = citation.parentNode
+            if parent.nodeName == 'content':
+                parent = parent.parentNode
+            self._push_cursor(parent)
+            self._push_child('footnote', {
+                'emblem': str(f.number),
+                'marker': str(f.number),
+            })
+            self._add_text(f.text)
+            self._pop_child('footnote')
+            self._pop_cursor()
+        else:
+            self._add_comment(f'Uncited footnote #{f.number}: {f.text}')
 
     def create_text(self, text):
         text = text.replace('\n', '')
         if self.muted:
-            child = self.document.createComment(text)
+            self._add_comment(text)
         else:
-            child = self.document.createTextNode(text)
+            self._add_text(text)
             if self.cursor.nodeName == 'heading':
                 sec = self._get_parent('sec')
                 sec.setAttribute('title', sec.getAttribute('title') + text)
-        self.cursor.appendChild(child)
 
 
 def to_dom(doc):
