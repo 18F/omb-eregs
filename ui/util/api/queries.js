@@ -30,9 +30,7 @@ export async function propagate404(fn) {
 
 export async function homepageData() {
   const results = await endpoints.policies.fetchResults({ ordering: '-issuance' });
-  return {
-    recentPolicies: results.slice(0, NUM_POLICIES).map(formatIssuance),
-  };
+  return { recentPolicies: results.slice(0, NUM_POLICIES) };
 }
 
 export function policiesData({ query }) {

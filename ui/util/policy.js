@@ -1,13 +1,19 @@
+import moment from 'moment';
 /**
  * The Policy class wraps the policy structure returned by the API
  * and adds a number of convenience methods to it.  It's intended to be
  * immutable; no state is stored in it.
  */
 
+// See https://momentjs.com/docs/#/displaying/ for options
+const DATE_FORMAT = 'MMMM D, YYYY';
+
 export default class Policy {
   constructor(initial) {
     this.hasDocnode = initial.hasDocnode || initial.has_docnode || false;
     this.id = initial.id || '';
+    this.issuance = initial.issuance || '';
+    this.issuingBody = initial.issuingBody || initial.issuing_body || '';
     this.ombPolicyId = initial.ombPolicyId || initial.omb_policy_id || '';
     this.originalUrl = initial.originalUrl || initial.original_url || '';
     this.relevantReqs = initial.relevantReqs || initial.relevant_reqs || 0;
@@ -27,5 +33,9 @@ export default class Policy {
         policyId: this.ombPolicyId,
       },
     };
+  }
+
+  issuancePretty() {
+    return moment(this.issuance, 'YYYY-MM-DD').format(DATE_FORMAT);
   }
 }

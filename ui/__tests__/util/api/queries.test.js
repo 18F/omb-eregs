@@ -40,17 +40,6 @@ describe('homepageData', () => {
       expect(recentPolicies.map(r => r.id)).toEqual([1, 2, 3, 4]);
     });
   });
-  it('formats issuance date', () => {
-    endpoints.topics.fetchResults.mockImplementationOnce(() =>
-      Promise.resolve([{ issuance: '2002-03-04' }, { issuance: '2020-11-10' }]),
-    );
-    return homepageData().then(({ recentPolicies }) => {
-      expect(recentPolicies.map(r => r.issuance_pretty)).toEqual([
-        'March 4, 2002',
-        'November 10, 2020',
-      ]);
-    });
-  });
 });
 
 describe('cleanSearchParams()', () => {

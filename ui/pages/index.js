@@ -7,6 +7,7 @@ import { ContactEmail } from '../components/contact-email';
 import Link from '../components/link';
 import Search from '../components/search/search';
 import { homepageData } from '../util/api/queries';
+import Policy from '../util/policy';
 
 export function Homepage({ recentPolicies }) {
   return (
@@ -72,7 +73,8 @@ export function Homepage({ recentPolicies }) {
         <div className="landing-section">
           <h3>New policies</h3>
           <ol className="list-reset clearfix">
-            {recentPolicies.map(p => <NewPolicyView policy={p} key={p.id} />)}
+            {recentPolicies.map(p =>
+              <NewPolicyView policy={new Policy(p)} key={p.id} />)}
           </ol>
         </div>
       </section>
