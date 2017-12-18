@@ -140,11 +140,18 @@ class DOMWriter(semtree.Writer):
         self.muted = True
 
     def end_footnote_list(self, fl):
+        if self.footnote_citations:
+            unresolved = str(list(self.footnote_citations.keys()))
+            self._add_comment(
+                'Warning, unresolved footnote citations exist: '
+                f'{unresolved}'
+            )
         self.muted = False
 
     def create_footnote(self, f):
         citation = self.footnote_citations.get(f.number)
         if citation is not None:
+            del self.footnote_citations[f.number]
             parent = citation.parentNode
             if parent.nodeName == 'content':
                 parent = parent.parentNode
