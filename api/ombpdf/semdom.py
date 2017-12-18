@@ -6,12 +6,29 @@ from . import semtree
 class DOMWriter(semtree.Writer):
     def __init__(self):
         self.muted = True
+        self.depth = 0
 
-    def _push_child(self, name):
+    def _push_child(self, name, attrs=None):
         child = self.document.createElement(name)
+        if attrs is not None:
+            for key, value in attrs.items():
+                child.setAttribute(key, value)
         self.cursor.appendChild(child)
         self.cursor = child
+        self.depth += 1
         return child
+
+    def _pop_child(self, name=None):
+        if name is not None:
+            assert self.cursor.nodeName == name
+        self.cursor = self.cursor.parentNode
+        self.depth -= 1
+
+    def _get_parent(self, name):
+        node = self.cursor.parentNode
+        while node.nodeName != name:
+            node = node.parentNode
+        return node
 
     # Below are Writer methods.
 
@@ -24,20 +41,26 @@ class DOMWriter(semtree.Writer):
         pass
 
     def begin_heading(self, heading):
-        self.muted = True
+        while self.depth >= heading.level:
+            self._pop_child()
+        self._push_child('sec', {'title': ''})
+        self._push_child('heading')
+        self.muted = False
 
     def end_heading(self, heading):
-        self.muted = False
+        self._pop_child('heading')
+        self.muted = True
 
     def begin_paragraph(self, p):
         self.muted = False
-        if self.cursor.nodeName == 'policy':
+        if self.depth == 0:
             self._push_child('sec')
         self._push_child('para')
         self._push_child('content')
 
     def end_paragraph(self, p):
-        self.cursor = self.cursor.parentNode.parentNode
+        self._pop_child('content')
+        self._pop_child('para')
         self.muted = True
 
     def begin_list(self, li):
@@ -70,6 +93,9 @@ class DOMWriter(semtree.Writer):
             child = self.document.createComment(text)
         else:
             child = self.document.createTextNode(text)
+            if self.cursor.nodeName == 'heading':
+                sec = self._get_parent('sec')
+                sec.setAttribute('title', sec.getAttribute('title') + text)
         self.cursor.appendChild(child)
 
 
