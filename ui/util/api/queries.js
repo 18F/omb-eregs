@@ -156,7 +156,5 @@ export function redirectQuery(query, insertParam, idToInsert) {
 
 export async function documentData({ query }) {
   const docNode = await endpoints.document.fetchOne(query.policyId);
-  const policy = formatIssuance(docNode.meta.policy);
-  docNode.meta = { ...docNode.meta, policy };
   return { docNode };
 }

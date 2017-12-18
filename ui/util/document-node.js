@@ -1,9 +1,11 @@
+import Policy from './policy';
+
 export class Meta {
   constructor(args) {
     const fieldValues = args || {};
     // policy meta data (e.g. slugs, pdf url, etc.)  associated with this
     // document
-    this.policy = fieldValues.policy || {};
+    this.policy = new Policy(fieldValues.policy || {});
 
     // footnotes referenced in this DocumentNode or its children. E.g. used to
     // consolidate footnotes in tables

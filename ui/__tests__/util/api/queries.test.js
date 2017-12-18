@@ -114,10 +114,7 @@ describe('documentData()', () => {
     expect(result).toEqual({
       docNode: {
         meta: {
-          policy: {
-            issuance: '2012-12-12',
-            issuance_pretty: 'December 12, 2012',
-          },
+          policy: { issuance: '2012-12-12' },
         },
       },
     });
