@@ -134,10 +134,12 @@ export const cleanSearchParamTypes = PropTypes.shape({
   }).isRequired,
 });
 
-export async function searchRedirectData({ query }) {
-  const userParams = cleanSearchParams(query);
-  const pagedEntries = await search(userParams.lookup, userParams.q, userParams.page);
-  return { pagedEntries, userParams };
+export function searchRedirectData({ query }) {
+  return propagate404(async () => {
+    const userParams = cleanSearchParams(query);
+    const pagedEntries = await search(userParams.lookup, userParams.q, userParams.page);
+    return { pagedEntries, userParams };
+  });
 }
 
 /*
