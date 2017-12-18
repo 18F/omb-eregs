@@ -13,7 +13,7 @@ from reqs.models import Policy
 logger = logging.getLogger(__name__)
 
 
-def import_xml_doc(policy: Policy, xml: etree.ElementBase):
+def import_xml_doc(policy: Policy, xml: etree.ElementBase) -> XMLAwareCursor:
     DocNode.objects.filter(policy=policy).delete()
     warn_about_mismatches(policy, xml)
     standardize_content(xml)
@@ -28,6 +28,7 @@ def import_xml_doc(policy: Policy, xml: etree.ElementBase):
         cls.objects.bulk_create(annotations)
         logger.info('Created %s %s', len(annotations),
                     cls._meta.verbose_name_plural)
+    return root
 
 
 def convert_to_tree(xml_node: etree.ElementBase, parent=None,

@@ -18,7 +18,10 @@ def assert_has_paragraph(doctree, start, end):
                 return
         items.extend([child for child in item['children']])
 
-    raise AssertionError(f'Document has no paragraph w/ text "{text}"')
+    raise AssertionError(
+        f'Document has no paragraph starting w/ "{start}"'
+        f'and ending w/ "{end}"'
+    )
 
 
 @pytest.mark.django_db
@@ -32,5 +35,5 @@ def test_m_14_10_import(m_14_10_doc):
     assert_has_paragraph(
         result,
         start='Office of Management and Budget (OMB) Memorandum M-12-16, ',
-        end='cash flow and prompt payment to small business subcontractors. '
+        end='cash flow and prompt payment to small business subcontractors.'
     )
