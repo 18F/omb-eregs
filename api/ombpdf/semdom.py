@@ -3,16 +3,44 @@ from xml.dom import minidom
 from . import semtree
 
 
+class ListInfo:
+    def __init__(self, writer, info):
+        self.writer = writer
+        self.info = info
+        self.item = 1
+
+    def begin_list_item(self):
+        if self.info.is_ordered:
+            attrs = {
+                'emblem': str(self.item),
+                'marker': f'{self.item}.'
+            }
+        else:
+            attrs = {'marker': '\u2022'}
+        self.writer._push_child('listitem', attrs)
+        self.writer._push_child('para')
+        self.writer._push_child('content', elinfo=self)
+        self.item += 1
+
+    def end_list_item(self):
+        self.writer._pop_child('content')
+        self.writer._pop_child('para')
+        self.writer._pop_child('listitem')
+
+
 class DOMWriter(semtree.Writer):
     def __init__(self):
         self.muted = True
         self.depth = 0
+        self.elinfo = {}
 
-    def _push_child(self, name, attrs=None):
+    def _push_child(self, name, attrs=None, elinfo=None):
         child = self.document.createElement(name)
         if attrs is not None:
             for key, value in attrs.items():
                 child.setAttribute(key, value)
+        if elinfo is not None:
+            self.elinfo[child] = elinfo
         self.cursor.appendChild(child)
         self.cursor = child
         self.depth += 1
@@ -29,6 +57,10 @@ class DOMWriter(semtree.Writer):
         while node.nodeName != name:
             node = node.parentNode
         return node
+
+    def _ensure_section(self):
+        if self.depth == 0:
+            self._push_child('sec')
 
     # Below are Writer methods.
 
@@ -53,8 +85,7 @@ class DOMWriter(semtree.Writer):
 
     def begin_paragraph(self, p):
         self.muted = False
-        if self.depth == 0:
-            self._push_child('sec')
+        self._ensure_section()
         self._push_child('para')
         self._push_child('content')
 
@@ -64,16 +95,19 @@ class DOMWriter(semtree.Writer):
         self.muted = True
 
     def begin_list(self, li):
-        self.muted = True
+        self._ensure_section()
+        self._push_child('list', elinfo=ListInfo(self, li))
 
     def end_list(self, li):
-        self.muted = False
+        self._pop_child('list')
 
     def begin_list_item(self, p):
-        self.muted = True
+        self.elinfo[self.cursor].begin_list_item()
+        self.muted = False
 
     def end_list_item(self, p):
-        self.muted = False
+        self.elinfo[self.cursor].end_list_item()
+        self.muted = True
 
     def create_footnote_citation(self, cit):
         pass
