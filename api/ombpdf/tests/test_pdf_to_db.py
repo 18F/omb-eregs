@@ -23,9 +23,9 @@ def test_error_raised_if_policy_does_not_exist():
 @pytest.mark.django_db
 def test_it_works():
     policy = mommy.make(Policy, omb_policy_id='M-14-10')
-    assert len(policy.docnode_set.all()) == 0
+    assert not policy.docnode_set.all().exists()
 
     call_command('pdf_to_db', str(pdf_path))
 
     policy.refresh_from_db()
-    assert len(policy.docnode_set.all()) > 0
+    assert policy.docnode_set.all().exists()

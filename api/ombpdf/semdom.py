@@ -98,7 +98,7 @@ class DOMWriter(semtree.Writer):
     def begin_heading(self, heading):
         while self.depth >= heading.level:
             self._pop_child()
-        self._push_child('sec', {'title': ''})
+        self._push_child('sec')
         self._push_child('heading')
         self.muted = False
 
