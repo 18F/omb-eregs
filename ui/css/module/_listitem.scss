@@ -3,8 +3,9 @@
   margin-bottom: 8px;
 
   .list-item-marker {
-    @include font-san-serif-bold();
+    @include font-serif-bold();
     @include paragraph-marker();
+    @include size-regular();
   }
 
   .list-item-text {
