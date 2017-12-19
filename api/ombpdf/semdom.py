@@ -30,6 +30,8 @@ class ListInfo:
 
 class DOMWriter(semtree.Writer):
     def __init__(self):
+        # This tracks whether we are outputting any text we're given
+        # as actual text nodes (unmuted), or as comment nodes (muted).
         self.muted = True
         self.elinfo = {}
         self.footnote_citations = {}
