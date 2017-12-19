@@ -169,7 +169,7 @@ class DOMWriter(semtree.Writer):
             self._add_comment(f'Uncited footnote #{f.number}: {f.text}')
 
     def create_text(self, text):
-        text = text.replace('\n', '')
+        text = text.replace('\n', ' ')
         if self.muted:
             self._add_comment(text)
         else:
