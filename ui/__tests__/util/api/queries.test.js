@@ -5,6 +5,7 @@ import {
   policiesData,
   redirectQuery,
   requirementsData,
+  searchRedirectData,
 } from '../../../util/api/queries';
 import endpoints from '../../../util/api/endpoints';
 
@@ -127,6 +128,23 @@ describe('requirementsData()', () => {
     });
 
     const result = await requirementsData({ query: { page: 99999 } });
+    expect(result).toEqual({ statusCode: 404 });
+  });
+});
+
+describe('searchRedirect()', () => {
+  it('passes up 404s', async () => {
+    endpoints.topics.fetch.mockImplementationOnce(() => {
+      throw error404;
+    });
+    const query = {
+      insertParam: 'goesHere',
+      lookup: 'topics',
+      page: '9999',
+      redirectRoute: 'requirements',
+    };
+
+    const result = await searchRedirectData({ query });
     expect(result).toEqual({ statusCode: 404 });
   });
 });

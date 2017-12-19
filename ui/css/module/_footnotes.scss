@@ -111,9 +111,13 @@ $footnote-vertical-margin: 24px;
 }
 
 .bottom-footnotes {
-  border-top: 1px solid $color-blue;
-  margin-top: 2.5em;
-  padding-top: .75em;
+  margin-top: 2rem;
+
+  .bottom-footnotes-border {
+    border: none;
+    border-bottom: 1px solid $color-blue;
+    margin-bottom: .75rem;
+  }
 
   .node-footnote {
     @extend .clearfix;
