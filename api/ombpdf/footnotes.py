@@ -85,8 +85,8 @@ def annotate_footnotes(doc):
             # We want to track the OMBFootnote for the purpose of setting
             # annotations, but track the OMBFootnote and the line in the
             # rolling footnotes list, which is where we put footnote_plus.
-            footnote = OMBFootnote(number, text)
-            footnote_plus = (OMBFootnote(number, text), lines)
+            footnote = OMBFootnote(number)
+            footnote_plus = (footnote, text, lines)
             for line in lines:
                 line.set_annotation(footnote)
             footnotes.append(footnote_plus)
@@ -118,19 +118,14 @@ def annotate_footnotes(doc):
                     if found_horiz_line:
                         # Here we pull out the previous footnote and continue
                         # adding to it.
-                        curr_ft = footnotes.pop()
-                        curr_obj = curr_ft[0]
-                        curr_num = curr_obj[0]
-                        curr_txt = curr_obj[1]
-                        curr_lines = curr_ft[1]
+                        (curr_num,), curr_txt, curr_lines = footnotes.pop()
                         curr_footnote = [curr_num, curr_txt + chars, curr_lines
                                          + [line]]
             else:
                 finish_footnote()
     finish_footnote()
-    # Return the OMBFootnote list after applying strip() to the text:
-    footnote_objs = [OMBFootnote(f[0][0], f[0][1].strip()) for f in footnotes]
-    return footnote_objs
+
+    return [(footnote, text.strip()) for footnote, text, _ in footnotes]
 
 
 def main(doc):
@@ -143,7 +138,7 @@ def main(doc):
     wrapper = TextWrapper(initial_indent=indent, subsequent_indent=indent)
 
     print("\nFootnotes:")
-    for f in annotate_footnotes(doc):
+    for f, text in annotate_footnotes(doc):
         print(f"  #{f.number}:")
-        print('\n'.join(wrapper.wrap(f.text)))
+        print('\n'.join(wrapper.wrap(text)))
         print()

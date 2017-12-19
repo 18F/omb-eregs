@@ -75,7 +75,7 @@ class OMBPage(list):
 OMBFootnoteCitation = eqnamedtuple('OMBFootnoteCitation', ['number',
                                                            'preceding_text'])
 
-OMBFootnote = eqnamedtuple('OMBFootnote', ['number', 'text'])
+OMBFootnote = eqnamedtuple('OMBFootnote', ['number'])
 
 OMBFootnoteMarker = eqnamedtuple('OMBFootnoteMarker', ['number'])
 

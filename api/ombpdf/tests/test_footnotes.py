@@ -5,6 +5,11 @@ def tuplify(iterable):
     return [tuple(x) for x in iterable]
 
 
+def simplified_footnotes(doc):
+    return [(footnote.number, text) for (footnote, text)
+            in footnotes.annotate_footnotes(doc)]
+
+
 def test_annotate_citations_works(m_16_19_doc):
     citations = tuplify(footnotes.annotate_citations(m_16_19_doc))
     assert citations[:3] == [
@@ -18,7 +23,7 @@ def test_annotate_citations_works(m_16_19_doc):
 def test_annotate_footnotes_works(m_16_19_doc):
     # Page numbers and footnotes can clash; handle page numbers first.
     pagenumbers.annotate_page_numbers(m_16_19_doc)
-    notes = tuplify(footnotes.annotate_footnotes(m_16_19_doc))
+    notes = simplified_footnotes(m_16_19_doc)
     assert notes[:1] == [
         (1, 'The FDCCI was first established by OMB “Memo for CIOs: '
             'Federal Data Center Consolidation Initiative,” issued '
@@ -42,7 +47,7 @@ def test_main_15_17(m_15_17_doc):
 def test_annotate_footnotes_m_15_17(m_15_17_doc):
     # Page numbers and footnotes can clash; handle page numbers first.
     pagenumbers.annotate_page_numbers(m_15_17_doc)
-    notes = tuplify(footnotes.annotate_footnotes(m_15_17_doc))
+    notes = simplified_footnotes(m_15_17_doc)
     # Run this to check that there isn't a clash over lists:
     lists.annotate_lists(m_15_17_doc)
 
@@ -119,7 +124,7 @@ def test_annotate_footnotes_m_15_17(m_15_17_doc):
 def test_annotate_footnotes_m_17_11_0(m_17_11_0_doc):
     # Page numbers and footnotes can clash; handle page numbers first.
     pagenumbers.annotate_page_numbers(m_17_11_0_doc)
-    notes = tuplify(footnotes.annotate_footnotes(m_17_11_0_doc))
+    notes = simplified_footnotes(m_17_11_0_doc)
     citations = tuplify(footnotes.annotate_citations(m_17_11_0_doc))
     # Run this to check that there isn't a clash over lists:
     lists.annotate_lists(m_17_11_0_doc)
