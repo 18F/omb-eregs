@@ -11,6 +11,9 @@ class ListInfo:
 
     def begin_list_item(self):
         if self.info.is_ordered:
+            # TODO: Ideally we should take the emblem/marker from the
+            # original PDF, but semtree doesn't currently communicate
+            # that information.
             attrs = {
                 'emblem': str(self.item),
                 'marker': f'{self.item}.'
