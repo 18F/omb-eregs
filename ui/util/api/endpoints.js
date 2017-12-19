@@ -2,9 +2,10 @@ import axios from 'axios';
 import buildURL from 'axios/lib/helpers/buildURL';
 import LRU from 'lru-cache';
 
-const CACHE_MAX_AGE = process.env.NODE_ENV === 'production'
-  ? 1000 * 60 * 60 // 1 hour
-  : 1;
+const CACHE_MAX_AGE = (
+  process.env.NODE_ENV === 'production' ||
+  process.env.NODE_ENV === 'test'
+) ? 1000 * 60 * 60 /* 1 hour */ : 1;
 
 const CACHE_CONFIG = {
   max: 32,
