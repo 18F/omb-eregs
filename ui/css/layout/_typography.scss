@@ -114,8 +114,7 @@ h6,
 
 p {
   @include font-serif();
-  font-size: 1rem;
-  line-height: 1.69rem;
+  @include size-regular();
 }
 
 @media #{$on-desktop} {
