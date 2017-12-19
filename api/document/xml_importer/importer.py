@@ -13,9 +13,11 @@ from reqs.models import Policy
 logger = logging.getLogger(__name__)
 
 
-def import_xml_doc(policy: Policy, xml: etree.ElementBase) -> XMLAwareCursor:
+def import_xml_doc(policy: Policy, xml: etree.ElementBase,
+                   ignore_preamble=False) -> XMLAwareCursor:
     DocNode.objects.filter(policy=policy).delete()
-    warn_about_mismatches(policy, xml)
+    if not ignore_preamble:
+        warn_about_mismatches(policy, xml)
     standardize_content(xml)
     clean_content(xml)
 

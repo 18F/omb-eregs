@@ -19,5 +19,5 @@ class DBResult:
 def to_db(doc, policy):
     dom = semdom.to_dom(doc)
     xml = etree.fromstring(dom.toxml())
-    root = import_xml_doc(policy, xml)
+    root = import_xml_doc(policy, xml, ignore_preamble=True)
     return DBResult(root, policy)
