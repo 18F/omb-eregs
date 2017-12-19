@@ -77,6 +77,8 @@ OMBFootnoteCitation = eqnamedtuple('OMBFootnoteCitation', ['number',
 
 OMBFootnote = eqnamedtuple('OMBFootnote', ['number', 'text'])
 
+OMBFootnoteMarker = eqnamedtuple('OMBFootnoteMarker', ['number'])
+
 OMBPageNumber = eqnamedtuple('OMBPageNumber', ['number'])
 
 OMBParagraph = eqnamedtuple('OMBParagraph', ['id'])

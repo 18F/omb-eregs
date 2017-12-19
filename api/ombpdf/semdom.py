@@ -150,10 +150,9 @@ class DOMWriter(semtree.Writer):
             )
         self.muted = False
 
-    def create_footnote(self, f):
+    def begin_footnote(self, f):
         citation = self.footnote_citations.get(f.number)
         if citation is not None:
-            del self.footnote_citations[f.number]
             parent = citation.parentNode
             if parent.nodeName == 'content':
                 parent = parent.parentNode
@@ -162,11 +161,19 @@ class DOMWriter(semtree.Writer):
                 'emblem': str(f.number),
                 'marker': str(f.number),
             })
-            self._add_text(f.text)
+            self.muted = False
+        else:
+            self._add_comment(f'Begin uncited footnote #{f.number}')
+
+    def end_footnote(self, f):
+        citation = self.footnote_citations.get(f.number)
+        if citation is not None:
+            del self.footnote_citations[f.number]
             self._pop_child('footnote')
             self._pop_cursor()
         else:
-            self._add_comment(f'Uncited footnote #{f.number}: {f.text}')
+            self._add_comment(f'End uncited footnote #{f.number}')
+        self.muted = True
 
     def create_text(self, text):
         text = text.replace('\n', ' ')

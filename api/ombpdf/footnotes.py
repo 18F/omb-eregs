@@ -3,7 +3,7 @@ from decimal import Decimal
 from textwrap import TextWrapper
 
 from . import util
-from .document import OMBFootnote, OMBFootnoteCitation
+from .document import OMBFootnote, OMBFootnoteCitation, OMBFootnoteMarker
 from .horizlines import get_horizontal_lines
 
 NUMBER_RE = re.compile(r'[0-9]')
@@ -107,6 +107,8 @@ def annotate_footnotes(doc):
                 if match:
                     finish_footnote()
                     footnote, desc = match.groups()
+                    for char in line[:len(footnote) + 1]:
+                        char.set_annotation(OMBFootnoteMarker(int(footnote)))
                     curr_footnote = [int(footnote), desc, [line]]
                 elif curr_footnote:
                     curr_footnote[1] += chars

@@ -71,10 +71,12 @@ class HTMLWriter(semtree.Writer):
     def end_footnote_list(self, fl):
         self.chunks.append('</dl>\n')
 
-    def create_footnote(self, f):
+    def begin_footnote(self, f):
         self.chunks.append(f'<dt id="{self.id_for_footnote(f.number)}">'
                            f'{f.number}</dt>\n')
-        self.chunks.append(f'<dd>{f.text}')
+        self.chunks.append(f'<dd>')
+
+    def end_footnote(self, f):
         cit_id = self.footnote_citations.get(f.number)
         if cit_id:
             self.chunks.append(
