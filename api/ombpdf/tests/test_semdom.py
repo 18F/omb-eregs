@@ -22,5 +22,4 @@ def test_m_14_10_import(m_14_10_doc):
 
 
 def test_m_16_19_import(m_16_19_doc):
-    # TODO: Remove the force_overwrite arg once functionality stabilizes.
-    assert_dom_xml_snapshot_matches(m_16_19_doc, force_overwrite=True)
+    assert_dom_xml_snapshot_matches(m_16_19_doc)
