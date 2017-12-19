@@ -1,6 +1,6 @@
 .node-list-item {
   @extend .clearfix;
-  margin-bottom: 8px;
+  margin-bottom: $space-xs;
 
   .list-item-marker {
     @include font-serif-bold();

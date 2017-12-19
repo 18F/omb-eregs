@@ -1,5 +1,5 @@
 .node-paragraph {
-  margin-bottom: 16px;
+  margin-bottom: $space;
 }
 
 .document-header {
@@ -7,15 +7,15 @@
 }
 
 .document-heading {
-  margin-top: 8px;
+  margin-top: $space-xs;
 
   .original-link {
-    margin-bottom: 8px;
+    margin-bottom: $space-xs;
   }
 }
 
 .original-link-container {
-  margin-bottom: 8px;
+  margin-bottom: $space-xs;
 }
 
 .document-nav-heading {
@@ -29,8 +29,8 @@
 }
 
 .document-sidebar-nav {
-  $spacing: 1rem;
-  $active-width: 0.5rem;
+  $spacing: $space;
+  $active-width: $space-xs;
 
   .document-nav-container {
     padding: $spacing;
@@ -49,7 +49,7 @@
   }
 
   .sub-sections {
-    padding-left: 1rem;
+    padding-left: $space;
   }
 }
 
@@ -64,10 +64,10 @@
     color: $color-blue;
     font-size: 1rem;
     line-height: 1.3rem;
-    padding-bottom: .75rem;
+    padding-bottom: $space-sm;
     padding-left: 0;
     padding-right: 0;
-    padding-top: .75rem;
+    padding-top: $space-sm;
 
     &.active {
       background-color: $color-blue;
@@ -88,26 +88,26 @@
   }
 
   .document-nav-container {
-    padding-bottom: 1rem;
-    padding-top: 1rem;
+    padding-bottom: $space;
+    padding-top: $space;
     border-bottom: 1px solid $color-navy;
   }
 
   .sub-sections .document-nav-container {
-    margin-left: 1rem;
+    margin-left: $space;
   }
 
   .document-nav-heading {
     color: $color-white;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: $space;
+    padding-right: $space;
   }
 
   .document-nav-heading:hover,
   .document-nav-heading.active {
     background-color: $color-navy;
     border-left: 0.25rem solid $color-white;
-    padding-left: 0.75rem;
+    padding-left: $space-sm;
   }
 }
 
