@@ -9,9 +9,9 @@ export default function PolicyView({ policy, topicsIds }) {
     policy__id__in: policy.id,
     topics__id__in: topicsIds,
   };
-  const relevantReqCount = policy.relevant_reqs >= 100 ? '99+' : policy.relevant_reqs;
+  const relevantReqCount = policy.relevantReqs >= 100 ? '99+' : policy.relevantReqs;
   const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
-  let policyTitle = policy.title_with_number;
+  let policyTitle = policy.titleWithNumber;
 
   if (policy.hasDocument()) {
     policyTitle = (
@@ -37,11 +37,11 @@ export default function PolicyView({ policy, topicsIds }) {
                 {relevantReqCount}
               </Link>
             </div> of&nbsp;
-            {policy.total_reqs} requirements
+            {policy.totalReqs} requirements
              match your search
           </div>
           <div className="sm-col sm-col-12 md-col-4 right-align">
-            <Link href={policy.original_url}>
+            <Link href={policy.originalUrl}>
               View original&nbsp;<i className="fa fa-external-link" aria-hidden="true" />
             </Link>
           </div>

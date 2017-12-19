@@ -2,14 +2,15 @@ import { mount } from 'enzyme';
 import React from 'react';
 
 import NewPolicyView from '../../../components/homepage/new-policy-view';
+import Policy from '../../../util/policy';
 
 describe('<NewPolicyView />', () => {
-  const policy = {
+  const policy = new Policy({
     id: 42,
     title_with_number: 'Title with A Number',
+    issuance: '1900-01-04',
     issuing_body: 'Somebody',
-    issuance_pretty: 'January 4, 1900',
-  };
+  });
   const result = mount(<NewPolicyView policy={policy} />);
 
   it('includes expected fields', () => {

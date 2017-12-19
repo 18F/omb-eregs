@@ -8,6 +8,7 @@ import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
 import { policiesData } from '../util/api/queries';
+import Policy from '../util/policy';
 
 const fieldNames = {
   agencies: 'requirements__all_agencies__id__in',
@@ -42,7 +43,7 @@ export function PoliciesContainer({
       filterControls={filterControls}
       pageContent={
         <PoliciesView
-          policies={pagedPolicies.results}
+          policies={pagedPolicies.results.map(p => new Policy(p))}
           count={pagedPolicies.count}
           topicsIds={existingTopics.map(t => t.id).join(',')}
         />
@@ -64,7 +65,7 @@ PoliciesContainer.propTypes = {
   existingPolicies: ExistingFilters.propTypes.policies,
   existingTopics: ExistingFilters.propTypes.topics,
   pagedPolicies: PropTypes.shape({
-    results: PoliciesView.propTypes.policies,
+    results: PropTypes.arrayOf(PropTypes.shape({})), // see Policy constructor
     count: PoliciesView.propTypes.count,
   }),
 };
