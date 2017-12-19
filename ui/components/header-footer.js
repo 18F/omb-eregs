@@ -83,7 +83,11 @@ export default function HeaderFooter({ children, showSearch, wrapperClassName })
         { faviconTags() }
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      { pageTitle() }
+      {
+        /* Set a default page title. This can be overridden if pageTitle()
+          is also called in child components */
+        pageTitle()
+      }
       <div className="page-header-wrapper">
         <Disclaimer key="disclaimer" />
         <Navbar key="navbar" showSearch={showSearch} />
