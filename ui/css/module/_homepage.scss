@@ -3,8 +3,8 @@
     background-color: $color-blue;
     border-top: 1px solid $color-white;
     color: $color-white;
-    padding-left: .75rem;
-    padding-right: .75rem;
+    padding-left: $space-sm;
+    padding-right: $space-sm;
   }
 
   h2,
@@ -22,7 +22,7 @@
 
     .search-input {
       width: 100%;
-      margin-bottom: 1rem;
+      margin-bottom: $space;
     }
   }
 
@@ -36,9 +36,9 @@
     width: 55%;
     min-width: 260px;
     max-width: 350px;
-    padding: 0.5rem;
-    margin-right: 0.5rem;
-    margin-bottom: 1rem;
+    padding: $space-xs;
+    margin-right: $space-xs;
+    margin-bottom: $space;
   }
 
   .search-submit {
@@ -61,7 +61,7 @@
     }
 
     .new-policies {
-      padding: 2rem 1rem;
+      padding: $space-xl $space;
     }
   }
 }

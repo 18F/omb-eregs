@@ -15,6 +15,8 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'base/base';
 @import 'base/fonts';
 @import 'base/media-queries';
+@import 'base/spacing';
+@import 'base/type-size';
 @import 'base/util';
 
 @import 'layout/typography';
@@ -38,6 +40,7 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'module/listitem';
 @import 'module/tables';
 @import 'module/external-link';
+@import 'module/node-heading';
 
 @import 'state/print';
 @import 'state/ie';

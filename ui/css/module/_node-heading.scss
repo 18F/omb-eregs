@@ -1,0 +1,10 @@
+.node-heading {
+  margin-bottom: $space-xs;
+  margin-top: $space-xl;
+}
+
+// Spacing between headings is different than other elements
+.node-heading + .node-heading,
+.node-heading + .node-section > .node-heading:first-child {
+  margin-top: $space-xs;
+}
