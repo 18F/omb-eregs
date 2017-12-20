@@ -9,7 +9,8 @@ describe('<PoliciesContainer />', () => {
     results: [{ id: 9 }, { id: 12 }],
     count: 2,
   };
-  const result = shallow(<PoliciesContainer pagedPolicies={pagedPolicies} />);
+  const result = shallow(<PoliciesContainer pagedPolicies={pagedPolicies} />)
+    .find('SearchFilterView');
 
   it('has a topics filter controls', () => {
     const controls = result.prop('filterControls');

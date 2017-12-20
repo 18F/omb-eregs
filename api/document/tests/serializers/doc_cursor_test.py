@@ -41,6 +41,7 @@ def test_end_to_end():
                 'omb_policy_id': 'M-18-18',
                 'original_url': 'http://example.com/thing.pdf',
                 'title': 'Some Title',
+                'title_with_number': 'M-18-18: Some Title',
             },
             'table_of_contents': {
                 'identifier': 'root_0',
