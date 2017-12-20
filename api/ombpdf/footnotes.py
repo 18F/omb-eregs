@@ -8,7 +8,7 @@ from .horizlines import get_horizontal_lines
 
 NUMBER_RE = re.compile(r'[0-9]')
 
-FOOTNOTE_RE = re.compile(r'([0-9]+) (.+)')
+FOOTNOTE_RE = re.compile(r'([0-9]+ )(.+)')
 
 # Maximum distance the horizontal line separating a page's footnote section
 # can be from the top of the first footnote.
@@ -106,10 +106,11 @@ def annotate_footnotes(doc):
                 match = FOOTNOTE_RE.match(chars)
                 if match:
                     finish_footnote()
-                    footnote, desc = match.groups()
-                    for char in line[:len(footnote) + 1]:
-                        char.set_annotation(OMBFootnoteMarker(int(footnote)))
-                    curr_footnote = [int(footnote), desc, [line]]
+                    marker, rest = match.groups()
+                    number = int(marker.strip())
+                    for char in line[:len(marker)]:
+                        char.set_annotation(OMBFootnoteMarker(number))
+                    curr_footnote = [number, rest, [line]]
                 elif curr_footnote:
                     curr_footnote[1] += chars
                     curr_footnote[2].append(line)
