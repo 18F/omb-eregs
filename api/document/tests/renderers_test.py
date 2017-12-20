@@ -151,3 +151,10 @@ def test_renderer_pretty():
         b'  <content>Beginning <wrapper>stuff</wrapper></content>\n'
         b'</a_node>\n'
     )
+
+
+def test_browsable_akn_uses_akn_renderer():
+    assert isinstance(
+        renderers.BrowsableAkomaNtosoRenderer().get_default_renderer(None),
+        renderers.AkomaNtosoRenderer
+    )
