@@ -49,11 +49,8 @@ class FootnoteList(Element):
 
 
 class Footnote(Element):
-    is_void = True
-
-    def __init__(self, number, text):
+    def __init__(self, number):
         self.number = number
-        self.text = text
 
 
 class Writer:
@@ -194,7 +191,8 @@ class SemanticTreeBuilder:
         for char, text in line.iter_char_chunks():
             anno = char.annotation
 
-            if isinstance(anno, document.OMBListItemMarker):
+            if isinstance(anno, (document.OMBListItemMarker,
+                                 document.OMBFootnoteMarker)):
                 # Don't display this content at all.
                 pass
             elif isinstance(anno, document.OMBFootnoteCitation):
@@ -212,8 +210,10 @@ class SemanticTreeBuilder:
                 anno = line.annotation
                 if anno != curr_footnote:
                     curr_footnote = anno
-                    self.writer.create_element(Footnote(anno.number,
-                                                        anno.text))
+                    self.close_all_blocks()
+                    self.open_new_block(Footnote(anno.number), anno)
+                self.process_line(line)
+            self.close_all_blocks()
 
     def process_document(self):
         for line in self.doc.lines:
