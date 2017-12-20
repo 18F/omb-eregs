@@ -38,7 +38,10 @@
           
           
       </content>
-      <footnote emblem="1" marker="1">The FDCCI was first established by OMB “Memo for CIOs: Federal Data Center Consolidation Initiative,” issued on February 26, 2010, and modified by subsequent memoranda. </footnote>
+      <footnote emblem="1" marker="1">
+        The FDCCI was first established by OMB “Memo for CIOs: Federal Data Center Consolidation Initiative,” issued  
+        on February 26, 2010, and modified by subsequent memoranda.  
+      </footnote>
     </para>
     <para>
       <content>
@@ -52,7 +55,10 @@
         investment and cost savings.  
           
       </content>
-      <footnote emblem="2" marker="2">Title VIII, Subtitle D of the National Defense Authorization Act (NDAA) for Fiscal Year 2015, Pub. L. No. 113-291. </footnote>
+      <footnote emblem="2" marker="2">
+        Title VIII, Subtitle D of the National Defense Authorization Act (NDAA) for Fiscal Year 2015, Pub. L. No. 113- 
+        291.  
+      </footnote>
     </para>
     <para>
       <content>
@@ -67,7 +73,11 @@
           
                                                                  
       </content>
-      <footnote emblem="3" marker="3">This office was established in accordance with Section 101 of the E-government Act of 2002, codified at 44 U.S.C. § 3602, and is headed by the Federal government Chief Information Officer.  This office will also be referred to as OMB’s Office of the Federal Chief Information Officer (OFCIO).   </footnote>
+      <footnote emblem="3" marker="3">
+        This office was established in accordance with Section 101 of the E-government Act of 2002, codified at 44 U.S.C.  
+        § 3602, and is headed by the Federal government Chief Information Officer.  This office will also be referred to as  
+        OMB’s Office of the Federal Chief Information Officer (OFCIO).    
+      </footnote>
     </para>
     <para>
       <content>
@@ -101,7 +111,11 @@
           
           
       </content>
-      <footnote emblem="4" marker="4">Federal Information Technology Shared Services Strategy, May 2, 2012, https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/shared_services_strategy.pdf. </footnote>
+      <footnote emblem="4" marker="4">
+        Federal Information Technology Shared Services Strategy, May 2, 2012,  
+        https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/shared_services_strategy.pdf
+        .  
+      </footnote>
     </para>
     <para>
       <content>
@@ -113,8 +127,14 @@
           
           
       </content>
-      <footnote emblem="5" marker="5">See Chief Financial Officers Act of 1990, Pub. L. No. 101–576. </footnote>
-      <footnote emblem="6" marker="6">Per Sec. 834(b)(1)(C) of the FY2015 NDAA, the Department of Defense may submit to OMB, in lieu of the Strategic Plan described in this memorandum, the defense-wide plan and cost savings report required under sections 2867(b)(2) and 2867(d), respectively, of the FY2012 NDAA.  If submitting such plans and reports in lieu of the Strategic Plan, DOD shall ensure all information required by the Strategic Plan is included in the submitted plans and reports. </footnote>
+      <footnote emblem="5" marker="5">See Chief Financial Officers Act of 1990, Pub. L. No. 101–576.  </footnote>
+      <footnote emblem="6" marker="6">
+        Per Sec. 834(b)(1)(C) of the FY2015 NDAA, the Department of Defense may submit to OMB, in lieu of the  
+        Strategic Plan described in this memorandum, the defense-wide plan and cost savings report required under sections  
+        2867(b)(2) and 2867(d), respectively, of the FY2012 NDAA.  If submitting such plans and reports in lieu of the  
+        Strategic Plan, DOD shall ensure all information required by the Strategic Plan is included in the submitted plans  
+        and reports.  
+      </footnote>
     </para>
     <sec title="Leadership and Responsibilities    ">
       <heading>
@@ -135,8 +155,15 @@
           toward meeting the goals set forth in this memorandum.  
             
         </content>
-        <footnote emblem="7" marker="7">Title VIII, Subtitle D of the National Defense Authorization Act (NDAA) for Fiscal Year 2015, Pub. L. No. 113-291.  </footnote>
-        <footnote emblem="8" marker="8">OMB Memorandum M-15-14, “Management and Oversight of Federal Information Technology,” June 10, 2015, https://www.whitehouse.gov/sites/default/files/omb/memoranda/2015/m-15-14.pdf. </footnote>
+        <footnote emblem="7" marker="7">
+          Title VIII, Subtitle D of the National Defense Authorization Act (NDAA) for Fiscal Year 2015, Pub. L. No. 113- 
+          291.   
+        </footnote>
+        <footnote emblem="8" marker="8">
+          OMB Memorandum M-15-14, “Management and Oversight of Federal Information Technology,” June 10, 2015,  
+          https://www.whitehouse.gov/sites/default/files/omb/memoranda/2015/m-15-14.pdf
+          .  
+        </footnote>
       </para>
     </sec>
     <sec title="Transition to Cloud and Data Center Shared Services    ">
@@ -167,8 +194,14 @@
             (such as through consolidation of multiple existing data centers into a single new data center).  
               
           </content>
-          <footnote emblem="9" marker="9">The General Services Administration (GSA) Office of Government-wide Policy (OGP) will coordinate with OMB to define thresholds for what constitutes “significant” expansion within 60 days of publication of this memorandum. </footnote>
-          <footnote emblem="10" marker="10">Data centers certified by GSA OGP as Inter-agency Shared Service Provider data centers are excluded from this development freeze. </footnote>
+          <footnote emblem="9" marker="9">
+            The General Services Administration (GSA) Office of Government-wide Policy (OGP) will coordinate with OMB  
+            to define thresholds for what constitutes “significant” expansion within 60 days of publication of this memorandum.  
+          </footnote>
+          <footnote emblem="10" marker="10">
+            Data centers certified by GSA OGP as Inter-agency Shared Service Provider data centers are excluded from this  
+            development freeze.  
+          </footnote>
         </para>
       </sec>
       <sec title="Consolidation and Closure of Existing Data Centers    ">
@@ -187,7 +220,7 @@
              by (in order of priority):  
               
           </content>
-          <footnote emblem="11" marker="11">This requirement does not apply to GSA OGP designated inter-agency shared services data centers. </footnote>
+          <footnote emblem="11" marker="11">This requirement does not apply to GSA OGP designated inter-agency shared services data centers.  </footnote>
         </para>
         <list>
           <listitem emblem="1" marker="1.">
@@ -200,7 +233,11 @@
                 <footnote_citation>12</footnote_citation>
                   
               </content>
-              <footnote emblem="12" marker="12">Federal Cloud Computing Strategy, February 8, 2011, https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/federal-cloud-computing-strategy.pdf. </footnote>
+              <footnote emblem="12" marker="12">
+                Federal Cloud Computing Strategy, February 8, 2011,  
+                https://www.whitehouse.gov/sites/default/files/omb/assets/egov_docs/federal-cloud-computing-strategy.pdf
+                .  
+              </footnote>
             </para>
           </listitem>
           <listitem emblem="2" marker="2.">
@@ -239,8 +276,8 @@
               
               
           </content>
-          <footnote emblem="13" marker="13">Ibid. </footnote>
-          <footnote emblem="14" marker="14">See FY2015 NDAA Sec. 834(3)(c). </footnote>
+          <footnote emblem="13" marker="13">Ibid.  </footnote>
+          <footnote emblem="14" marker="14">See FY2015 NDAA Sec. 834(3)(c).  </footnote>
         </para>
       </sec>
       <sec title="Shared Services Managing Partner    ">
@@ -262,7 +299,12 @@
             for inter-agency consumption by:  
               
           </content>
-          <footnote emblem="15" marker="15">Formed in 2004, lines of business (LOB) are cross-agency initiatives to define, design, implement and monitor a set of common solutions for government-wide business functions, processes, or desires capabilities. Each LOB is governed by a Managing Partner which is designated as the lead organization responsible for managing the business requirements of their community. </footnote>
+          <footnote emblem="15" marker="15">
+            Formed in 2004, lines of business (LOB) are cross-agency initiatives to define, design, implement and monitor a  
+            set of common solutions for government-wide business functions, processes, or desires capabilities. Each LOB is  
+            governed by a Managing Partner which is designated as the lead organization responsible for managing the business  
+            requirements of their community.  
+          </footnote>
         </para>
         <list>
           <listitem marker="•">
@@ -367,7 +409,10 @@
               
               
           </content>
-          <footnote emblem="16" marker="16">Data centers containing only print servers that were previously reported as “closed” shall remain classified as closed data centers in agencies’ data center reporting. </footnote>
+          <footnote emblem="16" marker="16">
+            Data centers containing only print servers that were previously reported as “closed” shall remain classified as  
+            closed data centers in agencies’ data center reporting.  
+          </footnote>
         </para>
         <para>
           <content>
@@ -384,8 +429,15 @@
             included in agencies’ quarterly inventory data submissions to OMB.  
               
           </content>
-          <footnote emblem="17" marker="17">The term “tiered” and the definitions that follow are derived from the Uptime Institute’s Tier Classification System; however, this shall not be construed as requiring any certification in order for a data center to be considered tiered by OMB. </footnote>
-          <footnote emblem="18" marker="18">Data centers previously classified as tiered in past inventories will automatically be classified as tiered under the DCOI. </footnote>
+          <footnote emblem="17" marker="17">
+            The term “tiered” and the definitions that follow are derived from the Uptime Institute’s Tier Classification  
+            System; however, this shall not be construed as requiring any certification in order for a data center to be considered  
+            tiered by OMB.  
+          </footnote>
+          <footnote emblem="18" marker="18">
+            Data centers previously classified as tiered in past inventories will automatically be classified as tiered under the  
+            DCOI.  
+          </footnote>
         </para>
         <para>
           <content>
@@ -420,7 +472,12 @@
               
               
           </content>
-          <footnote emblem="19" marker="19">Executive Order, “Planning for Federal Sustainability in the Next Decade” https://www.whitehouse.gov/the-press-office/2015/03/19/executive-order-planning-federal-sustainability-next-decade.   </footnote>
+          <footnote emblem="19" marker="19">
+            Executive Order, “Planning for Federal Sustainability in the Next Decade” 
+            https://www.whitehouse.gov/the-press- 
+            office/2015/03/19/executive-order-planning-federal-sustainability-next-decade
+            .    
+          </footnote>
         </para>
         <para>
           <content>
@@ -432,7 +489,10 @@
                                                                      
               
           </content>
-          <footnote emblem="20" marker="20">While Executive Order 13693 requires advanced energy metering in all data centers, OMB will monitor PUE for tiered data centers only. </footnote>
+          <footnote emblem="20" marker="20">
+            While Executive Order 13693 requires advanced energy metering in all data centers, OMB will monitor PUE for  
+            tiered data centers only.  
+          </footnote>
         </para>
         <para>
           <content>
@@ -442,7 +502,12 @@
                
               
           </content>
-          <footnote emblem="21" marker="21">See “Implementing Instructions for Executive Order 13693, ‘Planning for Federal Sustainability in the Next Decade’” https://www.whitehouse.gov/sites/default/files/docs/eo_13693_implementing_instructions_june_10_2015.pdf.  </footnote>
+          <footnote emblem="21" marker="21">
+            See “Implementing Instructions for Executive Order 13693, ‘Planning for Federal Sustainability in the Next  
+            Decade’”  
+            https://www.whitehouse.gov/sites/default/files/docs/eo_13693_implementing_instructions_june_10_2015.pdf
+            .   
+          </footnote>
         </para>
         <para>
           <content>
@@ -478,7 +543,10 @@
             existing vehicles.  PUE reporting is not required for cloud services.  
               
           </content>
-          <footnote emblem="22" marker="22">This can be PUE for the facility as a whole in cases where the agency only contracts for a portion of a larger facility; however, if PUE metrics are available specific to the agency’s use, that is preferred. </footnote>
+          <footnote emblem="22" marker="22">
+            This can be PUE for the facility as a whole in cases where the agency only contracts for a portion of a larger  
+            facility; however, if PUE metrics are available specific to the agency’s use, that is preferred.  
+          </footnote>
         </para>
       </sec>
       <sec title="Automated Infrastructure Management    ">
@@ -497,7 +565,7 @@
               
               
           </content>
-          <footnote emblem="23" marker="23">For non-tiered data centers, only automated monitoring of server utilization is required. </footnote>
+          <footnote emblem="23" marker="23">For non-tiered data centers, only automated monitoring of server utilization is required.  </footnote>
         </para>
         <para>
           <content>
@@ -695,10 +763,17 @@
              
               
           </content>
-          <footnote emblem="24" marker="24">While agencies should strive to achieve each applicable optimization target for each data center, only PUE targets will be calculated on a per-data center basis. All other targets will be calculated at the agency inventory-level. </footnote>
-          <footnote emblem="25" marker="25">“Total gross floor area” is defined as total square footage available for IT equipment and includes all associated corridors, walkways, and air circulation requirements. This does not include office space, mechanical rooms, or storage areas. </footnote>
-          <footnote emblem="26" marker="26">PUE shall be calculated by OMB based on quarterly average IT and facility electricity usage data.  </footnote>
-          <footnote emblem="27" marker="27">Server utilization shall be collected continuously and reported as a quarterly average. </footnote>
+          <footnote emblem="24" marker="24">
+            While agencies should strive to achieve each applicable optimization target for each data center, only PUE targets  
+            will be calculated on a per-data center basis. All other targets will be calculated at the agency inventory-level.  
+          </footnote>
+          <footnote emblem="25" marker="25">
+            “Total gross floor area” is defined as total square footage available for IT equipment and includes all associated  
+            corridors, walkways, and air circulation requirements. This does not include office space, mechanical rooms, or  
+            storage areas.  
+          </footnote>
+          <footnote emblem="26" marker="26">PUE shall be calculated by OMB based on quarterly average IT and facility electricity usage data.   </footnote>
+          <footnote emblem="27" marker="27">Server utilization shall be collected continuously and reported as a quarterly average.  </footnote>
         </para>
         <para>
           <content>
@@ -741,8 +816,15 @@
             9  
               
           </content>
-          <footnote emblem="29" marker="29">Benchmarked against the sum of all non-cloud data center costs (including data center labor, software, hardware, electricity, and facility) found in physical data center fields of the IT Inventory Summary Table of the IT Dashboard. </footnote>
-          <footnote emblem="30" marker="30">Consistent with OMB Circular A-131, the term “cost savings” refers to “a reduction in actual expenditures below the projected level of costs to achieve a specific objective,” and the term “cost avoidance” refers to “an action taken in the immediate time frame that will decrease costs in the future.” </footnote>
+          <footnote emblem="29" marker="29">
+            Benchmarked against the sum of all non-cloud data center costs (including data center labor, software, hardware,  
+            electricity, and facility) found in physical data center fields of the IT Inventory Summary Table of the IT Dashboard.  
+          </footnote>
+          <footnote emblem="30" marker="30">
+            Consistent with OMB Circular A-131, the term “cost savings” refers to “a reduction in actual expenditures below  
+            the projected level of costs to achieve a specific objective,” and the term “cost avoidance” refers to “an action taken  
+            in the immediate time frame that will decrease costs in the future.”  
+          </footnote>
         </para>
         <para>
           <content>
@@ -766,7 +848,7 @@
               
               
           </content>
-          <footnote emblem="31" marker="31">Excludes print servers. </footnote>
+          <footnote emblem="31" marker="31">Excludes print servers.  </footnote>
         </para>
         <para>
           <content>
@@ -793,8 +875,14 @@
             age.   
               
           </content>
-          <footnote emblem="32" marker="32">The baseline number of data centers is based on the agencies’ August 31, 2015, data center inventory submissions, as collected by OMB OFCIO through the Integrated Data Collection. </footnote>
-          <footnote emblem="33" marker="33">Estimated reduction in gross floor area of data centers is approximate and has been based on the average size, in square feet, of the data centers of each type to be closed. </footnote>
+          <footnote emblem="32" marker="32">
+            The baseline number of data centers is based on the agencies’ August 31, 2015, data center inventory submissions,  
+            as collected by OMB OFCIO through the Integrated Data Collection.  
+          </footnote>
+          <footnote emblem="33" marker="33">
+            Estimated reduction in gross floor area of data centers is approximate and has been based on the average size, in  
+            square feet, of the data centers of each type to be closed.  
+          </footnote>
         </para>
         <para>
           <content>
@@ -855,7 +943,10 @@
                 <footnote_citation>34</footnote_citation>
                   
               </content>
-              <footnote emblem="34" marker="34">Note: Agencies participating as a tenant in an inter-agency shared services provider data center are not required to report metric values to OMB. The provider will report this data to OMB. </footnote>
+              <footnote emblem="34" marker="34">
+                Note: Agencies participating as a tenant in an inter-agency shared services provider data center are not required to  
+                report metric values to OMB. The provider will report this data to OMB.  
+              </footnote>
             </para>
           </listitem>
           <listitem emblem="3" marker="3.">
@@ -886,7 +977,7 @@
             replace existing FDCCI requirements for consolidation plans.   
               
           </content>
-          <footnote emblem="35" marker="35">See FITARA Section 834(b)(1)(A)-(E). </footnote>
+          <footnote emblem="35" marker="35">See FITARA Section 834(b)(1)(A)-(E).  </footnote>
         </para>
         <para>
           <content>
@@ -998,7 +1089,7 @@
           established herein and relative to agencies’ Strategic Plans.   
             
         </content>
-        <footnote emblem="36" marker="36">See 2015 NDAA Section 834(b)(2)(C). </footnote>
+        <footnote emblem="36" marker="36">See 2015 NDAA Section 834(b)(2)(C).  </footnote>
       </para>
       <para>
         <content>
@@ -1062,7 +1153,9 @@
             
         </content>
       </para>
-      <!--Uncited footnote #28: “Active” racks are those that have IT equipment consuming electricity. -->
+      <!--Begin uncited footnote #28-->
+      <!--“Active” racks are those that have IT equipment consuming electricity.  -->
+      <!--End uncited footnote #28-->
     </sec>
   </sec>
 </policy>

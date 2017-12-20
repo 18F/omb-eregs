@@ -1,7 +1,7 @@
 from html import escape
 
-from .document import (OMBFootnote, OMBFootnoteCitation, OMBListItemMarker,
-                       OMBPageNumber, OMBParagraph)
+from .document import (OMBFootnote, OMBFootnoteCitation, OMBFootnoteMarker,
+                       OMBListItemMarker, OMBPageNumber, OMBParagraph)
 
 
 HTML_INTRO = """\
@@ -38,7 +38,7 @@ html {
     color: lightgray;
 }
 
-.list-item-marker {
+.list-item-marker, .footnote-marker {
     color: darkgray;
 }
 
@@ -113,6 +113,8 @@ def to_html(doc):
                 elif isinstance(first_char.annotation, OMBListItemMarker):
                     classes.append('list-item-marker')
                     attrs.append(f'title="{first_char.annotation}"')
+                elif isinstance(first_char.annotation, OMBFootnoteMarker):
+                    classes.append('footnote-marker')
                 elif first_char.annotation is not None:
                     raise Exception(
                         f'Unknown annotation: {first_char.annotation}')

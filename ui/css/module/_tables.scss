@@ -13,7 +13,7 @@ tfoot {
 }
 
 .basic-table {
-  margin-top: 2rem;
+  margin-top: $space-xl;
   font-size: .9rem;
   margin-bottom: 3rem;
 
@@ -79,5 +79,5 @@ table {
 .basic-table td,
 tfoot td,
 .table-footer {
-  padding: 1em;
+  padding: $space;
 }

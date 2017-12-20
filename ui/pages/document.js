@@ -8,24 +8,19 @@ import SidebarNav from '../components/document/sidebar-nav';
 import { loadDocument } from '../store/actions';
 import { documentData, propagate404 } from '../util/api/queries';
 import DocumentNode from '../util/document-node';
+import pageTitle from '../util/page-title';
 import renderNode from '../util/render-node';
 
 const headerFooterParams = {
   showSearch: true,
 };
 
-/* react-stickynode has an annoying bug
- * https://github.com/yahoo/react-stickynode/issues/61 around not loading
- * correctly if linking to the middle of a page. This hacks around that by
- * sending a mock scroll event (resizing won't get us into the "fixed" state)
- * on mount to the DOM.
- */
-
 export function Document({ docNode }) {
   const doc = new DocumentNode(docNode);
   const footnotes = doc.meta.descendantFootnotes;
   return (
     <React.Fragment>
+      { pageTitle(doc.meta.policy.titleWithNumber) }
       <FloatingNav />
       <div className="document-container clearfix max-width-4">
         <SidebarNav bottomBoundary=".document-container" className="col col-3 mobile-hide" />

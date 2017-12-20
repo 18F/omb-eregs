@@ -6,6 +6,8 @@ import Disclaimer from './disclaimer';
 import Navbar from './navbar';
 import Footer from './footer';
 
+import pageTitle from '../util/page-title';
+
 
 /* Generates the myriad tags needed to support favicons across a variety of
  * OSes, browsers, and display sizes. */
@@ -67,30 +69,33 @@ function faviconTags() {
 export default function HeaderFooter({ children, showSearch, wrapperClassName }) {
   const klasses = ['container', wrapperClassName].join(' ');
 
-  return [
-    <Head key="head">
-      <title>OMB Policy Library (Beta)</title>
-      <link rel="stylesheet" href="/static/styles.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha1/katex.min.css" integrity="sha384-8QOKbPtTFvh/lMY0qPVbXj9hDh+v8US0pD//FcoYFst2lCIf0BmT58+Heqj0IGyx" crossOrigin="anonymous" />
-      <script
-        async
-        type="text/javascript"
-        id="_fed_an_ua_tag"
-        src="https://dap.digitalgov.gov/Universal­Federated­Analytics­Min.js?agency=EOP&subagency=OMB"
-      />
-      { faviconTags() }
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-    </Head>,
-    <div key="page-header-wrapper" className="page-header-wrapper">
-      <Disclaimer key="disclaimer" />
-      <Navbar key="navbar" showSearch={showSearch} />
-    </div>,
-    <div key="body" className={klasses}>
-      {children}
-    </div>,
-    <Footer key="footer" />,
-    <script key="footer-script" src="/static/ie.js" />,
-  ];
+  return (
+    <React.Fragment>
+      <Head>
+        <link rel="stylesheet" href="/static/styles.css" />
+        <script
+          async
+          type="text/javascript"
+          id="_fed_an_ua_tag"
+          src="https://dap.digitalgov.gov/Universal­Federated­Analytics­Min.js?agency=EOP&subagency=OMB"
+        />
+        { faviconTags() }
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      {
+        /* Set a default page title. This can be overridden if pageTitle()
+          is also called in child components */
+        pageTitle()
+      }
+      <div className="page-header-wrapper">
+        <Disclaimer key="disclaimer" />
+        <Navbar key="navbar" showSearch={showSearch} />
+      </div>
+      <div className={klasses}>{children}</div>
+      <Footer />
+      <script src="/static/ie.js" />
+    </React.Fragment>
+  );
 }
 
 HeaderFooter.propTypes = {
