@@ -1,5 +1,11 @@
 import Sticky from 'react-stickynode';
 
+/* react-stickynode has an annoying bug
+ * https://github.com/yahoo/react-stickynode/issues/61 around not loading
+ * correctly if linking to the middle of a page. This hacks around that by
+ * sending a mock scroll event (resizing won't get us into the "fixed" state)
+ * on mount to the DOM.
+ */
 export default class StartupSticky extends Sticky {
   componentDidMount() {
     super.componentDidMount();

@@ -3,10 +3,12 @@ import React from 'react';
 import wrapPage from '../components/app-wrapper';
 import { email, ContactEmail } from '../components/contact-email';
 import Link from '../components/link';
+import pageTitle from '../util/page-title';
 
 export function PrivacyView() {
   return (
     <div className="ml3">
+      { pageTitle('Privacy Policy') }
       <h2 className="h1">Privacy Policy</h2>
       <h3 className="caps">Protecting privacy and security</h3>
 
