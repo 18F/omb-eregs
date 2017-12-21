@@ -2,7 +2,7 @@
 
 import {EditorState} from "prosemirror-state";
 import {EditorView} from "prosemirror-view";
-import {Schema, DOMParser, Node, Fragment} from "prosemirror-model";
+import {Schema, Node} from "prosemirror-model";
 import {schema} from "prosemirror-schema-basic";
 import {addListNodes} from "prosemirror-schema-list";
 import {exampleSetup} from "prosemirror-example-setup";
@@ -40,50 +40,37 @@ function dbDocToProseMirrorDoc(root, schema) {
                     `${JSON.stringify(node)}`);
   };
 
-  const makeNode = info => {
-    if (!(info.type in schema.nodes)) {
-      throw new Error(`Node type is not in schema: ${info.type}`);
-    }
-
-    return new Node(
-      schema.nodes[info.type],
-      info.attrs || {},
-      new Fragment(info.content, null),
-      info.marks
-    );
-  };
-
   const node_type_converters = {
     policy(node) {
-      return makeNode({
+      return {
         type: 'doc',
         content: node.children.map(convert),
-      });
+      };
     },
     para(node) {
-      return makeNode({
+      return {
         type: 'paragraph',
         content: node.content.map(convert),
-      });
+      };
     },
     sec(node) {
-      return makeNode({
+      return {
         type: 'section',
         content: node.children.map(convert),
-      });
+      };
     },
   };
 
   const content_type_converters = {
     __text__(node) {
-      return Node.fromJSON(schema, {
+      return {
         type: 'text',
         text: node.text,
-      });
+      };
     }
   };
 
-  return Promise.resolve(convert(root));
+  return Promise.resolve(Node.fromJSON(schema, convert(root)));
 }
 
 function proseMirrorDocToDbDoc(doc) {
