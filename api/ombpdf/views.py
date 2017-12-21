@@ -81,3 +81,7 @@ def rawlayout_pdf(request, pdf):
 def semhtml_pdf(request, pdf):
     return HttpResponse(semhtml.to_html(to_doc(as_path(pdf))),
                         content_type='text/html')
+
+
+def prosemirror_fun(request):
+    return render(request, 'ombpdf/prosemirror-fun.html')

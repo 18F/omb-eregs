@@ -10,4 +10,5 @@ urlpatterns = [
     url(f'^html/{PDF}$', views.html_pdf, name='html_pdf'),
     url(f'^rawlayout/{PDF}$', views.rawlayout_pdf, name='rawlayout_pdf'),
     url(f'^semhtml/{PDF}$', views.semhtml_pdf, name='semhtml_pdf'),
+    url(f'^prosemirror-fun$', views.prosemirror_fun),
 ]
