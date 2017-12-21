@@ -26,8 +26,6 @@
     "prosemirror-history": "^1.0.0",
     "prosemirror-keymap": "^1.0.0",
     "prosemirror-menu": "^1.0.0",
-    "prosemirror-schema-basic": "^1.0.0",
-    "prosemirror-schema-list": "^1.0.0",
     "prosemirror-state": "^1.0.0",
     "prosemirror-view": "^1.0.5",
     "style-loader": "0.19.1",

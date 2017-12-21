@@ -1,23 +1,28 @@
 import {Schema} from "prosemirror-model";
-import {schema as basicSchema} from "prosemirror-schema-basic";
-import {addListNodes} from "prosemirror-schema-list";
 
+export const nodes = {
+  doc: {
+    content: "block+",
+  },
 
-function addSectionNodes(nodes) {
-  return nodes.append({
-    section: {
-      content: 'block+',
-      parseDOM: [{tag: 'div'}],
-      toDOM() { return ["div", 0]; },
-    }
-  });
-}
+  paragraph: {
+    content: 'inline*',
+    group: 'block',
+    toDOM() { return ['p', 0]; },
+  },
 
-const policySchema = new Schema({
-  nodes: addSectionNodes(
-    addListNodes(basicSchema.spec.nodes, "paragraph block", "block")
-  ),
-  marks: basicSchema.spec.marks,
-});
+  section: {
+    content: 'block+',
+    toDOM() { return ["div", 0]; },
+  },
 
-export default policySchema;
+  text: {
+    group: 'inline',
+  },
+};
+
+export const marks = {};
+
+export const schema = new Schema({nodes, marks});
+
+export default schema;
