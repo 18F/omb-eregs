@@ -1,6 +1,9 @@
 import {Node} from "prosemirror-model";
 
-export default function dbDocToProseMirrorDoc(root, schema) {
+import schema from './policy-schema';
+
+
+export default function dbDocToProseMirrorDoc(root) {
   const convert = node => {
     if (node.node_type) {
       if (node.node_type in node_type_converters) {
