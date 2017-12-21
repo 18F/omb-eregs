@@ -3,7 +3,7 @@
 import {EditorState} from "prosemirror-state";
 import {EditorView} from "prosemirror-view";
 import {Schema, Node} from "prosemirror-model";
-import {schema} from "prosemirror-schema-basic";
+import {schema as basicSchema} from "prosemirror-schema-basic";
 import {addListNodes} from "prosemirror-schema-list";
 import {exampleSetup} from "prosemirror-example-setup";
 
@@ -77,23 +77,23 @@ function proseMirrorDocToDbDoc(doc) {
   // TODO implement this!
 }
 
-const mySchema = new Schema({
+const policySchema = new Schema({
   nodes: addSectionNodes(
-    addListNodes(schema.spec.nodes, "paragraph block", "block")
+    addListNodes(basicSchema.spec.nodes, "paragraph block", "block")
   ),
-  marks: schema.spec.marks,
+  marks: basicSchema.spec.marks,
 });
 
 const contentEl = document.querySelector('#content');
 
 window.fetch('/document/M-14-10')
   .then(res => res.json())
-  .then(dbDoc => dbDocToProseMirrorDoc(dbDoc, mySchema))
+  .then(dbDoc => dbDocToProseMirrorDoc(dbDoc, policySchema))
   .then(doc => {
     window.view = new EditorView(document.querySelector('#editor'), {
       state: EditorState.create({
         doc,
-        plugins: exampleSetup({schema: mySchema}),
+        plugins: exampleSetup({schema: policySchema}),
       }),
     });
   });
