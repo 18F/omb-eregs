@@ -11,7 +11,7 @@ export const nodes = {
   },
 
   section: {
-    content: 'heading? paragraph+',
+    content: 'heading? (paragraph | section)+',
     toDOM() { return ["section", 0]; },
   },
 

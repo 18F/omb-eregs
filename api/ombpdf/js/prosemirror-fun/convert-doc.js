@@ -71,8 +71,14 @@ export default function dbDocToProseMirrorDoc(root) {
     }
   };
 
-  return Promise.resolve(Node.fromJSON(schema, {
+  const doc = Node.fromJSON(schema, {
     type: 'doc',
-    content: root.children.map(convertChild),
-  }));
+    content: root.children
+      .filter(child => child.node_type !== 'preamble')
+      .map(convertChild),
+  });
+
+  doc.check();
+
+  return Promise.resolve(doc);
 }
