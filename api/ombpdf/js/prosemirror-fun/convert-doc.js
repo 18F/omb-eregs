@@ -66,7 +66,7 @@ export default function dbDocToProseMirrorDoc(root) {
     __text__(node) {
       return {
         type: 'text',
-        text: node.text,
+        text: node.text.replace(/\s+/g, ' '),
       };
     }
   };
