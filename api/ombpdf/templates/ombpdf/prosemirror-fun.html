@@ -6,24 +6,28 @@
 }
 
 .ProseMirror section {
-  border-top: 1px dotted gray;
-  border-bottom: 1px dotted gray;
-  margin: 1em 0;
+  border-left: 4px solid gray;
+  margin: 1em 0 1em 0;
+  padding: 0 0 0 1em;
 }
 
-.unimplemented {
+.ProseMirror > section {
+  margin-left: 1em;
+}
+
+.ProseMirror .unimplemented {
   font-family: monospace;
   background: lightpink;
   padding: 2px 4px;
 }
 
-span.unimplemented {
+.ProseMirror span.unimplemented {
   display: inline-block;
   margin: 0 2px;
   font-size: 0.8rem;
 }
 
-div.unimplemented {
+.ProseMirror div.unimplemented {
   margin: 10px 2px;
   text-align: center;
   font-weight: bold;
