@@ -49,12 +49,7 @@ const TESTS = {
         children: [
           {
             node_type: 'para',
-            content: [
-              {
-                content_type: 'blarg',
-                foo: 'bar',
-              },
-            ],
+            content: [{content_type: 'blarg', foo: 'bar'}],
             children: [],
           }
         ],
@@ -65,12 +60,11 @@ const TESTS = {
 
     const marks = doc.firstChild.firstChild.firstChild.marks;
     assert.equal(marks.length, 1);
-    const mark = marks[0];
-    assert.deepEqual(JSON.parse(mark.attrs.data), {
+    assert.deepEqual(JSON.parse(marks[0].attrs.data), {
       content_type: 'blarg',
       foo: 'bar'
     });
-    assert.equal(mark.type, schema.marks.unimplemented_content);
+    assert.equal(marks[0].type, schema.marks.unimplemented_content);
   },
 };
 
