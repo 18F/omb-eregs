@@ -3,6 +3,7 @@
 // Babel.
 
 import assert from 'assert';
+import {Node} from "prosemirror-model";
 
 import convertDoc from './convert-doc';
 import schema from './policy-schema';
@@ -27,9 +28,17 @@ function captureWarnings(fn) {
 }
 
 const TESTS = {
+  testConvertDocChecksDoc() {
+    assert.throws(() => {
+      convertDoc({children: []});
+    }, /Invalid content for node doc/);
+  },
   testEmptySectionFails() {
     assert.throws(() => {
-      convertDoc(makeDbDoc([{node_type: 'sec', children: []}]));
+      Node.fromJSON(schema, {
+        type: 'doc',
+        content: [{type: 'section', content: []}],
+      }).check();
     }, /Invalid content for node section/);
   },
   testUnimplementedContentWorks() {
@@ -77,7 +86,7 @@ export default function runTests() {
       TESTS[name]();
     });
     console.groupEnd();
-    console.log('All tests passed.');
+    console.log(`All ${Object.keys(TESTS).length} tests passed.`);
   } catch (e) {
     console.groupEnd();
     console.error(currTest, 'failed with exception', e);
