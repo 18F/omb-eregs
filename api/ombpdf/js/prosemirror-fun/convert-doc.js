@@ -19,10 +19,9 @@ function convertChild(node) {
     }
     logWarningOnce(`Unknown node_type: ${node.node_type}`);
     return {
-      type: 'text',
-      text: node.node_type,
-      marks: [{type: 'unimplemented',
-               attrs: {data: JSON.stringify(node)}}],
+      type: 'unimplemented_child',
+      attrs: {data: JSON.stringify(node)},
+      content: [{type: 'text', text: node.node_type}],
     };
   }
 }
@@ -37,35 +36,40 @@ function convertContent(node) {
     return {
       type: 'text',
       text: node.content_type,
-      marks: [{type: 'unimplemented',
+      marks: [{type: 'unimplemented_content',
                attrs: {data: JSON.stringify(node)}}],
     };
   }
 }
 
-function convertContentsAndChildren(node) {
-  const contents = node.content.map(convertContent);
-  const children = node.children.map(convertChild);
-  return contents.concat(children);
-};
+function flatMap(array, fn) {
+  return array.reduce((all, curr) => {
+    const mapResult = fn(curr);
+    if (Array.isArray(mapResult)) {
+      return all.concat(mapResult);
+    } else {
+      return all.concat([mapResult]);
+    }
+  }, []);
+}
 
 const NODE_TYPE_CONVERTERS = {
   heading(node) {
     return {
       type: 'heading',
-      content: node.content.map(convertContent),
+      content: flatMap(node.content, convertContent),
     };
   },
   para(node) {
-    return {
+    return [{
       type: 'paragraph',
-      content: convertContentsAndChildren(node),
-    };
+      content: flatMap(node.content, convertContent),
+    }].concat(flatMap(node.children, convertChild));
   },
   sec(node) {
     return {
       type: 'section',
-      content: node.children.map(convertChild),
+      content: flatMap(node.children, convertChild),
     };
   },
 };
@@ -82,9 +86,10 @@ const CONTENT_TYPE_CONVERTERS = {
 export default function dbDocToProseMirrorDoc(root) {
   const doc = Node.fromJSON(schema, {
     type: 'doc',
-    content: root.children
-      .filter(child => child.node_type !== 'preamble')
-      .map(convertChild),
+    content: flatMap(
+      root.children.filter(child => child.node_type !== 'preamble'),
+      convertChild
+    ),
   });
 
   doc.check();

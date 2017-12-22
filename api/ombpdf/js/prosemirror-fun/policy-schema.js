@@ -11,7 +11,7 @@ export const nodes = {
   },
 
   section: {
-    content: 'heading? (paragraph | section)+',
+    content: 'heading? (paragraph | section | unimplemented_child)+',
     toDOM() { return ["section", 0]; },
   },
 
@@ -24,13 +24,22 @@ export const nodes = {
     toDOM() { return ['h1', 0]; },
   },
 
+  unimplemented_child: {
+    content: 'inline*',
+    atom: true,
+    attrs: {
+      data: {},
+    },
+    toDOM() { return ['div', {'class': 'unimplemented'}, 0]; },
+  },
+
   text: {
     group: 'inline',
   },
 };
 
 export const marks = {
-  unimplemented: {
+  unimplemented_content: {
     attrs: {
       data: {},
     },
