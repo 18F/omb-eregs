@@ -2,33 +2,37 @@ import assert from 'assert';
 
 import convertDoc from './convert-doc';
 
+function makeDbDoc(children) {
+  return {node_type: 'policy', children: children};
+}
+
 const TESTS = {
+  testEmptySectionFails() {
+    assert.throws(() => {
+      convertDoc(makeDbDoc([{node_type: 'sec', children: []}]));
+    }, /Invalid content for node section/);
+  },
   testUnimplementedContentWorks() {
     const oldWarn = console.warn;
     const warnings = [];
     console.warn = msg => warnings.push(msg);
 
     try {
-      const doc = convertDoc({
-        node_type: 'policy',
+      const doc = convertDoc(makeDbDoc([{
+        node_type: 'sec',
         children: [
           {
-            node_type: 'sec',
-            children: [
+            node_type: 'para',
+            content: [
               {
-                node_type: 'para',
-                content: [
-                  {
-                    content_type: 'blarg',
-                    foo: 'bar',
-                  },
-                ],
-                children: [],
-              }
+                content_type: 'blarg',
+                foo: 'bar',
+              },
             ],
+            children: [],
           }
         ],
-      });
+      }]));
     } finally {
       console.warn = oldWarn;
     }
