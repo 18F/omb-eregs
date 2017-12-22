@@ -13,7 +13,8 @@ export default function dbDocToProseMirrorDoc(root) {
       return {
         type: 'text',
         text: node.node_type,
-        marks: [{type: 'unimplemented'}],
+        marks: [{type: 'unimplemented',
+                 attrs: {data: JSON.stringify(node)}}],
       };
     }
   };
@@ -28,9 +29,16 @@ export default function dbDocToProseMirrorDoc(root) {
       return {
         type: 'text',
         text: node.content_type,
-        marks: [{type: 'unimplemented'}],
+        marks: [{type: 'unimplemented',
+                 attrs: {data: JSON.stringify(node)}}],
       };
     }
+  };
+
+  const convertContentsAndChildren = node => {
+    const contents = node.content.map(convertContent);
+    const children = node.children.map(convertChild);
+    return contents.concat(children);
   };
 
   const node_type_converters = {
@@ -43,7 +51,7 @@ export default function dbDocToProseMirrorDoc(root) {
     para(node) {
       return {
         type: 'paragraph',
-        content: node.content.map(convertContent),
+        content: convertContentsAndChildren(node),
       };
     },
     sec(node) {

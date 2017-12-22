@@ -31,6 +31,9 @@ export const nodes = {
 
 export const marks = {
   unimplemented: {
+    attrs: {
+      data: {},
+    },
     toDOM() { return ['span', {'class': 'unimplemented'}]; },
   },
 };
