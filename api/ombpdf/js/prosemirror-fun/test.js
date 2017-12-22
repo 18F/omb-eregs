@@ -5,6 +5,7 @@
 import assert from 'assert';
 
 import convertDoc from './convert-doc';
+import schema from './policy-schema';
 
 function makeDbDoc(children) {
   return {node_type: 'policy', children: children};
@@ -37,6 +38,14 @@ const TESTS = {
           }
         ],
       }]));
+      const marks = doc.firstChild.firstChild.firstChild.marks;
+      assert.equal(marks.length, 1);
+      const mark = marks[0];
+      assert.deepEqual(JSON.parse(mark.attrs.data), {
+        content_type: 'blarg',
+        foo: 'bar'
+      });
+      assert.equal(mark.type, schema.marks.unimplemented_content);
     } finally {
       console.warn = oldWarn;
     }
