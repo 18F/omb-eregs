@@ -2,12 +2,22 @@ import {Node} from "prosemirror-model";
 
 import schema from './policy-schema';
 
+const warnings_logged = {};
+
+function logWarningOnce(msg) {
+  if (msg in warnings_logged) {
+    return;
+  }
+  warnings_logged[msg] = true;
+  console.warn(msg);
+}
+
 function convertChild(node) {
   if (node.node_type) {
     if (node.node_type in NODE_TYPE_CONVERTERS) {
       return NODE_TYPE_CONVERTERS[node.node_type](node);
     }
-    console.warn(`Unknown node type: ${node.node_type}`);
+    logWarningOnce(`Unknown node_type: ${node.node_type}`);
     return {
       type: 'text',
       text: node.node_type,
@@ -23,7 +33,7 @@ function convertContent(node) {
       return CONTENT_TYPE_CONVERTERS[node.content_type](node);
     }
 
-    console.warn(`Unknown content type: ${node.content_type}`);
+    logWarningOnce(`Unknown content_type: ${node.content_type}`);
     return {
       type: 'text',
       text: node.content_type,
