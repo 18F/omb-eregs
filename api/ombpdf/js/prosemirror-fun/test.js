@@ -11,6 +11,21 @@ function makeDbDoc(children) {
   return {node_type: 'policy', children: children};
 }
 
+function captureWarnings(fn) {
+  const oldWarn = console.warn;
+  const warnings = [];
+
+  console.warn = msg => warnings.push(msg);
+
+  try {
+    fn();
+  } finally {
+    console.warn = oldWarn;
+  }
+
+  return warnings;
+}
+
 const TESTS = {
   testEmptySectionFails() {
     assert.throws(() => {
@@ -18,12 +33,9 @@ const TESTS = {
     }, /Invalid content for node section/);
   },
   testUnimplementedContentWorks() {
-    const oldWarn = console.warn;
-    const warnings = [];
-    console.warn = msg => warnings.push(msg);
-
-    try {
-      const doc = convertDoc(makeDbDoc([{
+    let doc;
+    const warnings = captureWarnings(() => {
+      doc = convertDoc(makeDbDoc([{
         node_type: 'sec',
         children: [
           {
@@ -38,19 +50,18 @@ const TESTS = {
           }
         ],
       }]));
-      const marks = doc.firstChild.firstChild.firstChild.marks;
-      assert.equal(marks.length, 1);
-      const mark = marks[0];
-      assert.deepEqual(JSON.parse(mark.attrs.data), {
-        content_type: 'blarg',
-        foo: 'bar'
-      });
-      assert.equal(mark.type, schema.marks.unimplemented_content);
-    } finally {
-      console.warn = oldWarn;
-    }
+    });
 
     assert.deepEqual(warnings, ["Unknown content_type: blarg"]);
+
+    const marks = doc.firstChild.firstChild.firstChild.marks;
+    assert.equal(marks.length, 1);
+    const mark = marks[0];
+    assert.deepEqual(JSON.parse(mark.attrs.data), {
+      content_type: 'blarg',
+      foo: 'bar'
+    });
+    assert.equal(mark.type, schema.marks.unimplemented_content);
   },
 };
 

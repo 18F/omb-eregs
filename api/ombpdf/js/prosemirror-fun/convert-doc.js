@@ -2,7 +2,7 @@ import {Node} from "prosemirror-model";
 
 import schema from './policy-schema';
 
-const warnings_logged = {};
+let warnings_logged = {};
 
 function logWarningOnce(msg) {
   if (msg in warnings_logged) {
@@ -81,6 +81,8 @@ const CONTENT_TYPE_CONVERTERS = {
 };
 
 export default function dbDocToProseMirrorDoc(root) {
+  warnings_logged = {};
+
   const doc = Node.fromJSON(schema, {
     type: 'doc',
     content: flatMap(
