@@ -1,3 +1,7 @@
+// This is a horriby janky ad-hoc test suite because I
+// don't have a spare day to figure out how to set up Jest with
+// Babel.
+
 import assert from 'assert';
 
 import convertDoc from './convert-doc';
