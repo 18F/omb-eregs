@@ -12,7 +12,7 @@ import styles from 'prosemirror-menu/style/menu.css';
 
 const contentEl = document.querySelector('#content');
 
-window.fetch('/document/M-14-10')
+window.fetch('/document/M-16-19')
   .then(res => res.json())
   .then(dbDoc => convertDoc(dbDoc))
   .then(doc => {

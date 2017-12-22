@@ -12,7 +12,7 @@ export const nodes = {
 
   section: {
     content: 'heading? paragraph+',
-    toDOM() { return ["section", {'class': 'doc-section'}, 0]; },
+    toDOM() { return ["section", 0]; },
   },
 
   heading: {
@@ -29,7 +29,11 @@ export const nodes = {
   },
 };
 
-export const marks = {};
+export const marks = {
+  unimplemented: {
+    toDOM() { return ['span', {'class': 'unimplemented'}]; },
+  },
+};
 
 export const schema = new Schema({nodes, marks});
 

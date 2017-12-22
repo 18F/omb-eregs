@@ -9,19 +9,36 @@ export default function dbDocToProseMirrorDoc(root) {
       if (node.node_type in node_type_converters) {
         return node_type_converters[node.node_type](node);
       }
-      throw new Error(`Unknown node type: ${node.node_type}`);
+      console.warn(`Unknown node type: ${node.node_type}`);
+      return {
+        type: 'text',
+        text: node.node_type,
+        marks: [{type: 'unimplemented'}],
+      };
     }
     if (node.content_type) {
       if (node.content_type in content_type_converters) {
         return content_type_converters[node.content_type](node);
       }
-      throw new Error(`Unknown content type: ${node.content_type}`);
+
+      console.warn(`Unknown content type: ${node.content_type}`);
+      return {
+        type: 'text',
+        text: node.content_type,
+        marks: [{type: 'unimplemented'}],
+      };
     }
     throw new Error(`Don't know what to do with node: ` +
                     `${JSON.stringify(node)}`);
   };
 
   const node_type_converters = {
+    heading(node) {
+      return {
+        type: 'heading',
+        content: node.content.map(convert),
+      };
+    },
     policy(node) {
       return {
         type: 'doc',
