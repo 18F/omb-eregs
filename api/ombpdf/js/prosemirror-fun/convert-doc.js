@@ -42,15 +42,12 @@ function convertContent(node) {
   }
 }
 
+function toArray(obj) {
+  return Array.isArray(obj) ? obj : [obj];
+}
+
 function flatMap(array, fn) {
-  return array.reduce((all, curr) => {
-    const mapResult = fn(curr);
-    if (Array.isArray(mapResult)) {
-      return all.concat(mapResult);
-    } else {
-      return all.concat([mapResult]);
-    }
-  }, []);
+  return array.reduce((all, curr) => all.concat(toArray(fn(curr))), []);
 }
 
 const NODE_TYPE_CONVERTERS = {
