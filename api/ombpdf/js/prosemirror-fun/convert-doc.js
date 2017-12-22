@@ -4,7 +4,7 @@ import schema from './policy-schema';
 
 
 export default function dbDocToProseMirrorDoc(root) {
-  const convert = node => {
+  const convertChild = node => {
     if (node.node_type) {
       if (node.node_type in node_type_converters) {
         return node_type_converters[node.node_type](node);
@@ -16,6 +16,9 @@ export default function dbDocToProseMirrorDoc(root) {
         marks: [{type: 'unimplemented'}],
       };
     }
+  };
+
+  const convertContent = node => {
     if (node.content_type) {
       if (node.content_type in content_type_converters) {
         return content_type_converters[node.content_type](node);
@@ -28,33 +31,25 @@ export default function dbDocToProseMirrorDoc(root) {
         marks: [{type: 'unimplemented'}],
       };
     }
-    throw new Error(`Don't know what to do with node: ` +
-                    `${JSON.stringify(node)}`);
   };
 
   const node_type_converters = {
     heading(node) {
       return {
         type: 'heading',
-        content: node.content.map(convert),
-      };
-    },
-    policy(node) {
-      return {
-        type: 'doc',
-        content: node.children.map(convert),
+        content: node.content.map(convertContent),
       };
     },
     para(node) {
       return {
         type: 'paragraph',
-        content: node.content.map(convert),
+        content: node.content.map(convertContent),
       };
     },
     sec(node) {
       return {
         type: 'section',
-        content: node.children.map(convert),
+        content: node.children.map(convertChild),
       };
     },
   };
@@ -68,5 +63,8 @@ export default function dbDocToProseMirrorDoc(root) {
     }
   };
 
-  return Promise.resolve(Node.fromJSON(schema, convert(root)));
+  return Promise.resolve(Node.fromJSON(schema, {
+    type: 'doc',
+    content: root.children.map(convertChild),
+  }));
 }
