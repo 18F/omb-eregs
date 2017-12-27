@@ -34,7 +34,6 @@ export const nodes = {
   },
 
   unimplemented_content: {
-    content: 'inline*',
     group: 'inline',
     inline: true,
     atom: true,
@@ -42,7 +41,12 @@ export const nodes = {
       data: {},
       contentType: {},
     },
-    toDOM() { return ['span', {'class': 'unimplemented'}, 0]; },
+    toDOM(node) {
+      return ['span', {
+        'class': 'unimplemented',
+        'data-content-type': node.attrs.contentType,
+      }];
+    },
   },
 
   text: {
