@@ -34,10 +34,11 @@ function convertContent(node) {
 
     logWarningOnce(`Unknown content_type: ${node.content_type}`);
     return {
-      type: 'text',
-      text: node.content_type,
-      marks: [{type: 'unimplemented_content',
-               attrs: {data: JSON.stringify(node)}}],
+      type: 'unimplemented_content',
+      attrs: {
+        data: JSON.stringify(node),
+        contentType: node.content_type,
+      }
     };
   }
 }

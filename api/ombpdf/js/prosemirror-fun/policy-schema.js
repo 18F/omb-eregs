@@ -33,18 +33,24 @@ export const nodes = {
     toDOM() { return ['div', {'class': 'unimplemented'}, 0]; },
   },
 
+  unimplemented_content: {
+    content: 'inline*',
+    group: 'inline',
+    inline: true,
+    atom: true,
+    attrs: {
+      data: {},
+      contentType: {},
+    },
+    toDOM() { return ['span', {'class': 'unimplemented'}, 0]; },
+  },
+
   text: {
     group: 'inline',
   },
 };
 
 export const marks = {
-  unimplemented_content: {
-    attrs: {
-      data: {},
-    },
-    toDOM() { return ['span', {'class': 'unimplemented'}]; },
-  },
 };
 
 export const schema = new Schema({nodes, marks});

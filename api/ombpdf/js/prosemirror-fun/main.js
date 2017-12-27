@@ -6,6 +6,7 @@ import {menuBar, undoItem, redoItem} from "prosemirror-menu";
 
 import convertDoc from './convert-doc';
 import runTests from './test';
+import {UnimplementedContentView} from './node-views';
 
 import styles from 'prosemirror-view/style/prosemirror.css';
 import styles from 'prosemirror-menu/style/menu.css';
@@ -33,6 +34,11 @@ window.fetch('/document/M-16-19')
           history(),
         ],
       }),
+      nodeViews: {
+        unimplemented_content(node) {
+          return new UnimplementedContentView(node);
+        },
+      },
     });
   });
 

@@ -58,13 +58,12 @@ const TESTS = {
 
     assert.deepEqual(warnings, ["Unknown content_type: blarg"]);
 
-    const marks = doc.firstChild.firstChild.firstChild.marks;
-    assert.equal(marks.length, 1);
-    assert.deepEqual(JSON.parse(marks[0].attrs.data), {
+    const child = doc.firstChild.firstChild.firstChild;
+    assert.deepEqual(JSON.parse(child.attrs.data), {
       content_type: 'blarg',
       foo: 'bar'
     });
-    assert.equal(marks[0].type, schema.marks.unimplemented_content);
+    assert.equal(child.type, schema.nodes.unimplemented_content);
   },
 };
 
