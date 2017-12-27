@@ -51,6 +51,10 @@ function flatMap(array, fn) {
   return array.reduce((all, curr) => all.concat(toArray(fn(curr))), []);
 }
 
+function collapseWhitespace(text) {
+  return text.replace(/\s+/g, ' ');
+}
+
 const NODE_TYPE_CONVERTERS = {
   heading(node) {
     return {
@@ -85,13 +89,13 @@ const CONTENT_TYPE_CONVERTERS = {
   __text__(node) {
     return {
       type: 'text',
-      text: node.text.replace(/\s+/g, ' '),
+      text: collapseWhitespace(node.text),
     };
   },
   external_link(node) {
     return {
       type: 'text',
-      text: node.text,
+      text: collapseWhitespace(node.text),
       marks: [{
         type: 'external_link',
         attrs: {
