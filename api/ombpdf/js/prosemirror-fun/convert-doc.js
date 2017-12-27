@@ -62,6 +62,27 @@ const NODE_TYPE_CONVERTERS = {
       content: flatMap(node.content, convertContent),
     };
   },
+  list(node) {
+    return {
+      type: 'list',
+      content: flatMap(node.children, convertChild),
+    };
+  },
+  listitem(node) {
+    return {
+      type: 'list_item',
+      content: [
+        {
+          type: 'list_item_marker',
+          content: [{type: 'text', text: node.marker}],
+        },
+        {
+          type: 'list_item_content',
+          content: flatMap(node.children, convertChild),
+        },
+      ],
+    };
+  },
   para(node) {
     return [{
       type: 'paragraph',

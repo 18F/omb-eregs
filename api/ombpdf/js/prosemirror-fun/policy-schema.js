@@ -11,7 +11,7 @@ export const nodes = {
   },
 
   section: {
-    content: 'heading? (paragraph | section | footnote | unimplemented_child)+',
+    content: 'heading? (list | paragraph | section | footnote | unimplemented_child)+',
     toDOM() { return ["section", 0]; },
   },
 
@@ -35,6 +35,26 @@ export const nodes = {
         'data-marker': node.attrs.marker,
       }, 0];
     },
+  },
+
+  list: {
+    content: 'list_item+',
+    toDOM() { return ["ol", 0]; },
+  },
+
+  list_item: {
+    content: 'list_item_marker list_item_content',
+    toDOM() { return ["li", 0]; },
+  },
+
+  list_item_marker: {
+    content: 'inline*',
+    toDOM() { return ['span', 0]; },
+  },
+
+  list_item_content: {
+    content: '(list | paragraph | footnote | unimplemented_child)*',
+    toDOM() { return ['div', {'class': 'list-item-content'}, 0]; },
   },
 
   unimplemented_child: {

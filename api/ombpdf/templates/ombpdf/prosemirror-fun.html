@@ -47,6 +47,19 @@
   font-weight: bold;
   padding-right: 0.5em;
 }
+
+.ProseMirror ol {
+  list-style-type: none;
+}
+
+.ProseMirror ol > li {
+  display: grid;
+  grid-template-columns: 32px auto;
+}
+
+.ProseMirror ol > li > .list-item-content > *:first-child {
+  margin-top: 0;
+}
 </style>
 <title>ProseMirror fun</title>
 <h1>ProseMirror fun</h1>
