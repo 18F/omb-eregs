@@ -55,6 +55,9 @@ export const nodes = {
 };
 
 export const marks = {
+  footnote_citation: {
+    toDOM() { return ['sup']; },
+  },
 };
 
 export const schema = new Schema({nodes, marks});

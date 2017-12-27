@@ -78,7 +78,16 @@ const CONTENT_TYPE_CONVERTERS = {
       type: 'text',
       text: node.text.replace(/\s+/g, ' '),
     };
-  }
+  },
+  footnote_citation(node) {
+    return {
+      type: 'text',
+      text: node.text,
+      marks: [{
+        type: 'footnote_citation',
+      }],
+    };
+  },
 };
 
 export default function dbDocToProseMirrorDoc(root) {
