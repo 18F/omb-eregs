@@ -88,6 +88,18 @@ const CONTENT_TYPE_CONVERTERS = {
       text: node.text.replace(/\s+/g, ' '),
     };
   },
+  external_link(node) {
+    return {
+      type: 'text',
+      text: node.text,
+      marks: [{
+        type: 'external_link',
+        attrs: {
+          href: node.href,
+        },
+      }],
+    };
+  },
   footnote_citation(node) {
     return {
       type: 'text',

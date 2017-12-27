@@ -71,6 +71,13 @@ export const marks = {
   footnote_citation: {
     toDOM() { return ['sup']; },
   },
+  external_link: {
+    attrs: {
+      href: {},
+    },
+    inclusive: false,
+    toDOM(node) { return ["a", node.attrs] },
+  },
 };
 
 export const schema = new Schema({nodes, marks});
