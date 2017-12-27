@@ -5,9 +5,11 @@ import {baseKeymap, selectParentNode} from "prosemirror-commands";
 import {history, undo, redo} from "prosemirror-history";
 import {menuBar, undoItem, redoItem,
         selectParentNodeItem} from "prosemirror-menu";
+import {splitListItem} from "prosemirror-schema-list";
 
 import convertDoc from './convert-doc';
 import runTests from './test';
+import schema from './policy-schema';
 
 import styles from 'prosemirror-view/style/prosemirror.css';
 import styles from 'prosemirror-menu/style/menu.css';
@@ -32,6 +34,7 @@ window.fetch('/document/M-16-19')
             'Mod-z': undo,
             'Shift-Mod-z': redo,
             'Escape': selectParentNode,
+            'Shift-Enter': splitListItem(schema.nodes.list_item),
           })),
           history(),
         ],
