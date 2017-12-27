@@ -48,17 +48,12 @@
   padding-right: 0.5em;
 }
 
-.ProseMirror ol {
-  list-style-type: none;
+.ProseMirror ol.list-type-numbered {
+  list-style-type: decimal;
 }
 
-.ProseMirror ol > li {
-  display: grid;
-  grid-template-columns: 32px auto;
-}
-
-.ProseMirror ol > li > .list-item-content > *:first-child {
-  margin-top: 0;
+.ProseMirror ol.list-type-lettered {
+  list-style-type: lower-alpha;
 }
 </style>
 <title>ProseMirror fun</title>

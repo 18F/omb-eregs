@@ -1,4 +1,12 @@
 import {Schema} from "prosemirror-model";
+import {orderedList, bulletList, listItem} from "prosemirror-schema-list";
+
+function add(obj, props) {
+  let copy = {}
+  for (let prop in obj) copy[prop] = obj[prop]
+  for (let prop in props) copy[prop] = props[prop]
+  return copy
+}
 
 export const nodes = {
   doc: {
@@ -11,7 +19,7 @@ export const nodes = {
   },
 
   section: {
-    content: 'heading? (list | paragraph | section | footnote | unimplemented_child)+',
+    content: 'heading? (ordered_list | bullet_list | paragraph | section | footnote | unimplemented_child)+',
     toDOM() { return ["section", 0]; },
   },
 
@@ -37,25 +45,27 @@ export const nodes = {
     },
   },
 
-  list: {
+  ordered_list: add(orderedList, {
     content: 'list_item+',
-    toDOM() { return ["ol", 0]; },
-  },
+    attrs: {
+      order: {default: 1},
+      className: {default: ''},
+    },
+    toDOM(node) {
+      return ["ol", {
+        'start': node.attrs.order == 1 ? null : node.attrs.order,
+        'class': node.attrs.className,
+      }, 0]
+    }
+  }),
 
-  list_item: {
-    content: 'list_item_marker list_item_content',
-    toDOM() { return ["li", 0]; },
-  },
+  bullet_list: add(bulletList, {
+    content: 'list_item+',
+  }),
 
-  list_item_marker: {
-    content: 'inline*',
-    toDOM() { return ['span', 0]; },
-  },
-
-  list_item_content: {
-    content: '(list | paragraph | footnote | unimplemented_child)*',
-    toDOM() { return ['div', {'class': 'list-item-content'}, 0]; },
-  },
+  list_item: add(listItem, {
+    content: '(ordered_list | bullet_list | paragraph | footnote | unimplemented_child)*',
+  }),
 
   unimplemented_child: {
     content: 'inline*',

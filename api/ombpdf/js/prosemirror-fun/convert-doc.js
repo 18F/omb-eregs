@@ -63,24 +63,40 @@ const NODE_TYPE_CONVERTERS = {
     };
   },
   list(node) {
-    return {
-      type: 'list',
+    const firstItem = node.children[0];
+    if (firstItem.node_type !== 'listitem') {
+      throw new Error(`expected first child of list to be `
+                      `listitem, not ${firstItem.node_type}`);
+    }
+    const result = {};
+    if (firstItem.marker === '●') {
+      result.type = 'bullet_list';
+    } else if (firstItem.marker === '1.') {
+      Object.assign(result, {
+        type: 'ordered_list',
+        attrs: {
+          className: 'list-type-numbered',
+        },
+      });
+    } else if (firstItem.marker === 'a.') {
+      Object.assign(result, {
+        type: 'ordered_list',
+        attrs: {
+          className: 'list-type-lettered',
+        },
+      });
+    } else {
+      throw new Error(`unrecognized marker for listitem: ` +
+                      `${firstItem.marker}`);
+    }
+    return Object.assign(result, {
       content: flatMap(node.children, convertChild),
-    };
+    });
   },
   listitem(node) {
     return {
       type: 'list_item',
-      content: [
-        {
-          type: 'list_item_marker',
-          content: [{type: 'text', text: node.marker}],
-        },
-        {
-          type: 'list_item_content',
-          content: flatMap(node.children, convertChild),
-        },
-      ],
+      content: flatMap(node.children, convertChild),
     };
   },
   para(node) {
