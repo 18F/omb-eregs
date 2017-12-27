@@ -41,6 +41,24 @@ const TESTS = {
       }).check();
     }, /Invalid content for node section/);
   },
+  testUnimplementedChildWorks() {
+    let doc;
+    const warnings = captureWarnings(() => {
+      doc = convertDoc(makeDbDoc([{
+        node_type: 'sec',
+        children: [{node_type: 'boof', foo: 'barf'}],
+      }]));
+    });
+
+    assert.deepEqual(warnings, ["Unknown node_type: boof"]);
+
+    const child = doc.firstChild.firstChild;
+    assert.deepEqual(JSON.parse(child.attrs.data), {
+      node_type: 'boof',
+      foo: 'barf'
+    });
+    assert.equal(child.type, schema.nodes.unimplemented_child);
+  },
   testUnimplementedContentWorks() {
     let doc;
     const warnings = captureWarnings(() => {
