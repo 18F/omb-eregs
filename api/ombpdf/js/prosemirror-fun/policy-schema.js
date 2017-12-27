@@ -11,7 +11,7 @@ export const nodes = {
   },
 
   section: {
-    content: 'heading? (paragraph | section | unimplemented_child)+',
+    content: 'heading? (paragraph | section | footnote | unimplemented_child)+',
     toDOM() { return ["section", 0]; },
   },
 
@@ -22,6 +22,19 @@ export const nodes = {
     //
     // https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_HTML_sections_and_outlines#The_HTML5_outline_algorithm
     toDOM() { return ['h1', 0]; },
+  },
+
+  footnote: {
+    content: 'inline*',
+    attrs: {
+      marker: {},
+    },
+    toDOM(node) {
+      return ['p', {
+        'class': 'footnote',
+        'data-marker': node.attrs.marker,
+      }, 0];
+    },
   },
 
   unimplemented_child: {

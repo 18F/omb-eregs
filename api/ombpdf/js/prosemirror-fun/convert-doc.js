@@ -70,6 +70,15 @@ const NODE_TYPE_CONVERTERS = {
       content: flatMap(node.children, convertChild),
     };
   },
+  footnote(node) {
+    return {
+      type: 'footnote',
+      attrs: {
+        marker: node.marker,
+      },
+      content: flatMap(node.content, convertContent),
+    };
+  },
 };
 
 const CONTENT_TYPE_CONVERTERS = {
