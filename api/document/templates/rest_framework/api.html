@@ -1,0 +1,19 @@
+{% extends "rest_framework/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}{% if name %}{{ name }} – {% endif %}OMB Policy Library API (Beta){% endblock %}
+
+{% block branding %}
+  <a class="navbar-brand" href="/">OMB Policy Library API (Beta)</a>
+{% endblock %}
+
+{% block bootstrap_theme %}
+  <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/bootstrap.min.css" %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/bootstrap-tweaks.css" %}"/>
+  <style>
+  pre.prettyprint {
+    white-space: pre-wrap;
+  }
+  </style>
+{% endblock %}

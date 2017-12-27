@@ -4,7 +4,7 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
 from document.models import DocNode, FootnoteCitation, InlineRequirement
-from document.renderers import AkomaNtosoRenderer
+from document.renderers import AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer
 from document.serializers.doc_cursor import DocCursorSerializer
 from document.tree import DocCursor
 from reqs.views.policies import policy_or_404
@@ -30,7 +30,7 @@ def optimize(queryset):
 class TreeView(RetrieveAPIView):
     serializer_class = DocCursorSerializer
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer,
-                        AkomaNtosoRenderer)
+                        AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer)
     queryset = DocNode.objects.none()   # Used to determine permissions
 
     def get_object(self):

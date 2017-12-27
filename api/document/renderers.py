@@ -60,3 +60,10 @@ class AkomaNtosoRenderer(renderers.BaseRenderer):
     def render(self, data, media_type=None, renderer_context=None):
         as_xml = node_to_xml(data)
         return etree.tostring(as_xml, encoding=self.charset, pretty_print=True)
+
+
+class BrowsableAkomaNtosoRenderer(renderers.BrowsableAPIRenderer):
+    format = 'akn-api'  # noqa
+
+    def get_default_renderer(self, view):
+        return AkomaNtosoRenderer()
