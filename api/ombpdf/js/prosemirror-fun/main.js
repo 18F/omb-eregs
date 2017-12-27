@@ -2,7 +2,8 @@ import {EditorState} from "prosemirror-state";
 import {EditorView} from "prosemirror-view";
 import {keymap} from "prosemirror-keymap"
 import {history, undo, redo} from "prosemirror-history";
-import {menuBar, undoItem, redoItem} from "prosemirror-menu";
+import {menuBar, undoItem, redoItem,
+        selectParentNodeItem} from "prosemirror-menu";
 
 import convertDoc from './convert-doc';
 import runTests from './test';
@@ -25,7 +26,7 @@ window.fetch('/document/M-16-19')
         plugins: [
           menuBar({
             floating: true,
-            content: [[undoItem, redoItem]],
+            content: [[undoItem, redoItem], [selectParentNodeItem]],
           }),
           keymap({
             'Mod-z': undo,
