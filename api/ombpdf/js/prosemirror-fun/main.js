@@ -1,7 +1,7 @@
 import {EditorState} from "prosemirror-state";
 import {EditorView} from "prosemirror-view";
 import {keymap} from "prosemirror-keymap"
-import {selectParentNode} from "prosemirror-commands";
+import {baseKeymap, selectParentNode} from "prosemirror-commands";
 import {history, undo, redo} from "prosemirror-history";
 import {menuBar, undoItem, redoItem,
         selectParentNodeItem} from "prosemirror-menu";
@@ -28,11 +28,11 @@ window.fetch('/document/M-16-19')
             floating: true,
             content: [[undoItem, redoItem], [selectParentNodeItem]],
           }),
-          keymap({
+          keymap(Object.assign({}, baseKeymap, {
             'Mod-z': undo,
             'Shift-Mod-z': redo,
             'Escape': selectParentNode,
-          }),
+          })),
           history(),
         ],
       }),
