@@ -33,6 +33,7 @@ window.fetch('/document/M-16-19')
           keymap(Object.assign({}, baseKeymap, {
             'Mod-z': undo,
             'Shift-Mod-z': redo,
+            'Mod-s': saveDocument,
             'Escape': selectParentNode,
             'Shift-Enter': splitListItem(schema.nodes.list_item),
           })),
@@ -43,3 +44,20 @@ window.fetch('/document/M-16-19')
   });
 
 window.addEventListener('load', runTests);
+
+function saveDocument(state, dispatch, view) {
+  if (!dispatch) {
+    return true;
+  }
+
+  const doc = state.doc.toJSON();
+  const data = new FormData();
+
+  data.append('doc', JSON.stringify(doc));
+
+  return window.fetch(window.location.pathname, {
+    method: 'POST',
+    body: data,
+  }).then(res => res.json())
+    .then(res => console.log(res));
+}

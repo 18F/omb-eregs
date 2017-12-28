@@ -1,10 +1,11 @@
 import json
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import SafeString
+from django.views.decorators.csrf import csrf_exempt
 
 from ombpdf import html, rawlayout, semhtml
 from ombpdf.document import OMBDocument
@@ -83,5 +84,11 @@ def semhtml_pdf(request, pdf):
                         content_type='text/html')
 
 
+@csrf_exempt
 def prosemirror_fun(request):
-    return render(request, 'ombpdf/prosemirror-fun.html')
+    if request.method == 'GET':
+        return render(request, 'ombpdf/prosemirror-fun.html')
+    else:
+        doc = json.loads(request.POST['doc'])
+        # TODO: Import the document.
+        return JsonResponse(doc)
