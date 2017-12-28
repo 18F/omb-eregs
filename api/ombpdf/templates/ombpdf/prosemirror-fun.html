@@ -37,6 +37,10 @@
   font-weight: bold;
 }
 
+.ProseMirror sup {
+  background-color: yellow;
+}
+
 .ProseMirror .footnote {
   border-top: 1px dotted gray;
   border-bottom: 1px dotted gray;
@@ -45,7 +49,8 @@
 .ProseMirror .footnote:before {
   content: attr(data-marker);
   font-weight: bold;
-  padding-right: 0.5em;
+  margin-right: 0.5em;
+  background-color: yellow;
 }
 
 .ProseMirror ol.list-type-numbered {
