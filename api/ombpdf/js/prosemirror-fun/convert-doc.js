@@ -55,6 +55,28 @@ function collapseWhitespace(text) {
   return text.replace(/\s+/g, ' ');
 }
 
+function createListNode(marker) {
+  if (marker === '●') {
+    return {type: 'bullet_list'};
+  } else if (marker === '1.') {
+    return {
+      type: 'ordered_list',
+      attrs: {
+        className: 'list-type-numbered',
+      },
+    };
+  } else if (marker === 'a.') {
+    return {
+      type: 'ordered_list',
+      attrs: {
+        className: 'list-type-lettered',
+      },
+    };
+  }
+  throw new Error(`unrecognized marker for listitem: ` +
+                  `${marker}`);
+}
+
 const NODE_TYPE_CONVERTERS = {
   heading(node) {
     return {
@@ -68,28 +90,7 @@ const NODE_TYPE_CONVERTERS = {
       throw new Error(`expected first child of list to be `
                       `listitem, not ${firstItem.node_type}`);
     }
-    const result = {};
-    if (firstItem.marker === '●') {
-      result.type = 'bullet_list';
-    } else if (firstItem.marker === '1.') {
-      Object.assign(result, {
-        type: 'ordered_list',
-        attrs: {
-          className: 'list-type-numbered',
-        },
-      });
-    } else if (firstItem.marker === 'a.') {
-      Object.assign(result, {
-        type: 'ordered_list',
-        attrs: {
-          className: 'list-type-lettered',
-        },
-      });
-    } else {
-      throw new Error(`unrecognized marker for listitem: ` +
-                      `${firstItem.marker}`);
-    }
-    return Object.assign(result, {
+    return Object.assign(createListNode(firstItem.marker), {
       content: flatMap(node.children, convertChild),
     });
   },
