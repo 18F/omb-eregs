@@ -28,6 +28,7 @@ export function testParagraphWorks() {
     "content": [{"type": "text", "text": "Hi I am a paragraph"}],
   }, {
     "type": "footnote",
+    "attrs": {"marker": "3"},
     "content": [{"type": "text", "text": "Hi I am a footnote"}],
   }]}, {}), {
     children: [{
@@ -38,6 +39,7 @@ export function testParagraphWorks() {
       }],
       children: [{
         node_type: 'footnote',
+        marker: '3',
         content: [{
           content_type: '__text__',
           text: 'Hi I am a footnote',

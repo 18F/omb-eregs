@@ -50,6 +50,7 @@ export const CHILD_CONVERTERS = {
   footnote(node) {
     return convertContent(node, {
       node_type: 'footnote',
+      marker: node.attrs.marker,
     });
   },
   paragraph(node, rest) {
