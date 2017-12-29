@@ -128,6 +128,37 @@ def test_parent():
         == 'root_0__sect_2__par_a'
 
 
+def test_ancestors():
+    root = tree.DocCursor.new_tree('root', '0')
+    root.add_child('sect')
+    sect2 = root.add_child('sect')
+    pa = sect2.add_child('par', 'a')
+    pa1 = pa.add_child('par', '1')
+    pa1.add_child('par', 'i')
+    sect2.add_child('par', 'b')
+
+    assert [n.identifier for n in root.ancestors()] == []
+    result = [n.identifier
+              for n in root['sect_2']['par_a']['par_1'].ancestors()]
+    assert result == [
+        'root_0__sect_2__par_a',
+        'root_0__sect_2',
+        'root_0',
+    ]
+    result = [
+        n.identifier
+        for n in root['sect_2']['par_a']['par_1']['par_i'].ancestors(
+            lambda n: n.node_type == 'par')
+    ]
+    assert result == ['root_0__sect_2__par_a__par_1', 'root_0__sect_2__par_a']
+    result = [
+        n.identifier
+        for n in root['sect_2']['par_a']['par_1']['par_i'].ancestors(
+            lambda n: n.node_type == 'sect')
+    ]
+    assert result == ['root_0__sect_2']
+
+
 @pytest.mark.django_db
 def test_create_save_load():
     """Integration test that shows we get the same results when converting
@@ -195,3 +226,15 @@ def test_default_policy():
     assert root.policy == policy1
     assert root['sec_1'].policy == policy1
     assert root['sec_2'].policy == policy2
+
+
+def test_jump_to():
+    root = tree.DocCursor.new_tree('root', '1')
+    root.add_child('sec')
+    root['sec_1'].add_child('para', 'a')
+    root.add_child('sec')
+    para_a = root['sec_2'].add_child('para', 'a')
+
+    assert root.jump_to('root_1').identifier == 'root_1'
+    assert para_a.jump_to('root_1').identifier == 'root_1'
+    assert para_a.jump_to('root_1__sec_1').identifier == 'root_1__sec_1'
