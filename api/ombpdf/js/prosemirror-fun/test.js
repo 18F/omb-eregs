@@ -42,5 +42,6 @@ export default function runTests() {
   } catch (e) {
     console.groupEnd();
     console.error(currTest, 'failed with exception', e);
+    console.log(e.message);
   }
 }
