@@ -10,6 +10,7 @@ import {splitListItem} from "prosemirror-schema-list";
 import convertDoc from './convert-doc';
 import runTests from './test';
 import schema from './policy-schema';
+import saveDoc from './save-doc';
 
 import styles from 'prosemirror-view/style/prosemirror.css';
 import styles from 'prosemirror-menu/style/menu.css';
@@ -33,7 +34,7 @@ window.fetch('/document/M-16-19')
           keymap(Object.assign({}, baseKeymap, {
             'Mod-z': undo,
             'Shift-Mod-z': redo,
-            'Mod-s': saveDocument,
+            'Mod-s': saveDoc,
             'Escape': selectParentNode,
             'Shift-Enter': splitListItem(schema.nodes.list_item),
           })),
@@ -44,20 +45,3 @@ window.fetch('/document/M-16-19')
   });
 
 window.addEventListener('load', runTests);
-
-function saveDocument(state, dispatch, view) {
-  if (!dispatch) {
-    return true;
-  }
-
-  const doc = state.doc.toJSON();
-  const data = new FormData();
-
-  data.append('doc', JSON.stringify(doc));
-
-  return window.fetch(window.location.pathname, {
-    method: 'POST',
-    body: data,
-  }).then(res => res.json())
-    .then(res => console.log(res));
-}
