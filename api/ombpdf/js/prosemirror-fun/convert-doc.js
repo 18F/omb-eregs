@@ -1,6 +1,7 @@
 import {Node} from "prosemirror-model";
 
 import schema from './policy-schema';
+import {toArray, flatMap} from './util';
 
 let warnings_logged = {};
 
@@ -41,14 +42,6 @@ function convertContent(node) {
       }
     };
   }
-}
-
-function toArray(obj) {
-  return Array.isArray(obj) ? obj : [obj];
-}
-
-function flatMap(array, fn) {
-  return array.reduce((all, curr) => all.concat(toArray(fn(curr))), []);
 }
 
 function collapseWhitespace(text) {
