@@ -1,29 +1,41 @@
-function convertContent(node, dbNode) {
+export function convertContent(node, dbNode) {
   const children = [];
   const content = [];
 
-  node.content.forEach(c => {
+  for (let i = 0; i < node.content.length; i++) {
+    const c = node.content[i];
     const childConverter = CHILD_CONVERTERS[c.type];
     const contentConverter = CONTENT_CONVERTERS[c.type];
 
     if (childConverter) {
-      children.push(childConverter(c));
+      const result = childConverter(c, node.content.slice(i + 1));
+      if (Array.isArray(result)) {
+        const [child, skipCount] = result;
+        i += skipCount;
+        children.push(child);
+      } else {
+        children.push(result);
+      }
     } else if (contentConverter) {
       content.push(contentConverter(c));
     } else {
       throw new Error(`No converter found for type ${c.type}`);
     }
-  });
+  }
 
   if (children.length) {
-    dbNode.children = children;
+    dbNode.children = (dbNode.children || []).concat(children);
   }
   if (content.length) {
-    dbNode.content = content;
+    dbNode.content = (dbNode.content || []).concat(content);
   }
 
   return dbNode;
 }
+
+const PARAGRAPH_CHILDREN = [
+  'footnote',
+];
 
 export const CONTENT_CONVERTERS = {
   text(node) {
@@ -35,6 +47,24 @@ export const CONTENT_CONVERTERS = {
 };
 
 export const CHILD_CONVERTERS = {
+  footnote(node) {
+    return convertContent(node, {
+      node_type: 'footnote',
+    });
+  },
+  paragraph(node, rest) {
+    const para = convertContent(node, {
+      node_type: 'para',
+    });
+    let skipCount = 0;
+    for (let i = 0; i < rest.length; i++) {
+      const c = rest[i];
+      if (!PARAGRAPH_CHILDREN.includes(c.type)) break;
+      convertContent({content: [c]}, para);
+      skipCount++;
+    }
+    return [para, skipCount];
+  },
   heading(node) {
     return convertContent(node, {
       node_type: 'heading',
