@@ -3,9 +3,11 @@
 // Babel.
 
 import * as convertDocTests from './test-convert-doc';
+import * as saveDocTests from './test-save-doc';
 
 const TESTS = [
   [convertDocTests, './test-convert-doc'],
+  [saveDocTests, './test-save-doc'],
 ];
 
 function collectTests() {
