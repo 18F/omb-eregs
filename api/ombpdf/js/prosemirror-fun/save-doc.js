@@ -8,14 +8,13 @@ export function convertContent(node, dbNode) {
     const contentConverter = CONTENT_CONVERTERS[c.type];
 
     if (childConverter) {
-      const result = childConverter(c, node.content.slice(i + 1));
-      if (Array.isArray(result)) {
-        const [child, skipCount] = result;
-        i += skipCount;
-        children.push(child);
-      } else {
-        children.push(result);
+      let result = childConverter(c, node.content.slice(i + 1));
+      if (!Array.isArray(result)) {
+        result = [result, 0];
       }
+      const [child, skipCount] = result;
+      i += skipCount;
+      children.push(child);
     } else if (contentConverter) {
       content.push(contentConverter(c));
     } else {
