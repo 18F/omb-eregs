@@ -32,6 +32,16 @@ export function convertContent(node, dbNode) {
   return dbNode;
 }
 
+function convertWhile(array, dbNode, predicate) {
+  let count = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (!predicate(array[i])) break;
+    convertContent({content: [array[i]]}, dbNode);
+    count++;
+  }
+  return count;
+}
+
 const PARAGRAPH_CHILDREN = [
   'footnote',
 ];
@@ -56,13 +66,9 @@ export const CHILD_CONVERTERS = {
     const para = convertContent(node, {
       node_type: 'para',
     });
-    let skipCount = 0;
-    for (let i = 0; i < rest.length; i++) {
-      const c = rest[i];
-      if (!PARAGRAPH_CHILDREN.includes(c.type)) break;
-      convertContent({content: [c]}, para);
-      skipCount++;
-    }
+    const skipCount = convertWhile(rest, para, c => {
+      return PARAGRAPH_CHILDREN.includes(c.type)
+    });
     return [para, skipCount];
   },
   heading(node) {
