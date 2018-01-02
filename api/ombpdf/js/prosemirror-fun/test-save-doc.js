@@ -1,6 +1,10 @@
 import assert from 'assert';
 
-import {convertContent, CHILD_CONVERTERS} from './save-doc';
+import {
+  convertContent,
+  CHILD_CONVERTERS,
+  ordinalToLetter,
+} from './save-doc';
 
 export function testSectionWorks() {
   assert.deepEqual(CHILD_CONVERTERS.section({
@@ -19,6 +23,49 @@ export function testSectionWorks() {
         text: 'Background',
       }],
     }],
+  });
+}
+
+export function testBulletListWorks() {
+  assert.deepEqual(convertContent({content: [{
+    type: 'bullet_list',
+    content: [{
+      type: 'list_item',
+      content: [{"type": "text", "text": "list item one"}],
+    }, {
+      type: 'list_item',
+      content: [{"type": "text", "text": "list item two"}],
+    }],
+  }]}, {}), {
+    "children": [
+      {
+        "node_type": "list",
+        "children": [
+          {
+            "node_type": "listitem",
+            "type_emblem": "0",
+            "marker": "●",
+            "content": [
+              {
+                "content_type": "__text__",
+                "text": "list item one"
+              }
+            ]
+          },
+          {
+            "node_type": "listitem",
+            "type_emblem": "1",
+            "marker": "●",
+            "content": [
+              {
+                "content_type": "__text__",
+                "text": "list item two"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   });
 }
 
@@ -47,4 +94,9 @@ export function testParagraphWorks() {
       }],
     }],
   });
+}
+
+export function testOrdinalToLetterWorks() {
+  assert.equal(ordinalToLetter(1), 'a');
+  assert.equal(ordinalToLetter(2), 'b');
 }

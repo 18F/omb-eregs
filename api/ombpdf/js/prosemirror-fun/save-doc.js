@@ -1,4 +1,4 @@
-export function convertContent(node, dbNode) {
+export function convertContent(node, dbNode, context) {
   const children = [];
   const content = [];
 
@@ -8,7 +8,7 @@ export function convertContent(node, dbNode) {
     const contentConverter = CONTENT_CONVERTERS[c.type];
 
     if (childConverter) {
-      let result = childConverter(c, node.content.slice(i + 1));
+      let result = childConverter(c, node.content.slice(i + 1), context);
       if (!Array.isArray(result)) {
         result = [result, 0];
       }
@@ -42,6 +42,21 @@ function convertWhile(array, dbNode, predicate) {
   return count;
 }
 
+function convertList(node) {
+  return convertContent(node, {
+    node_type: 'list',
+  }, {
+    list: node,
+    counter: 0,
+  });
+}
+
+export function ordinalToLetter(i) {
+  const LOWERCASE_A_CODEPOINT = 97;
+
+  return String.fromCodePoint(LOWERCASE_A_CODEPOINT + i - 1);
+}
+
 const PARAGRAPH_CHILDREN = [
   'footnote',
 ];
@@ -61,6 +76,38 @@ export const CHILD_CONVERTERS = {
       node_type: 'footnote',
       marker: node.attrs.marker,
     });
+  },
+  list_item(node, rest, context) {
+    let marker;
+    let emblem = context.counter.toString();
+
+    context.counter++;
+
+    if (context.list.type === 'bullet_list') {
+      marker = '●';
+    } else {
+      const className = context.list.attrs.className;
+      if (className === 'list-type-numbered') {
+        marker = `${context.counter}.`;
+      } else if (className === 'list-type-lettered') {
+        emblem = ordinalToLetter(context.counter);
+        marker = `${emblem}.`;
+      } else {
+        throw new Error(`unknown list className: ${className}`);
+      }
+    }
+
+    return convertContent(node, {
+      node_type: 'listitem',
+      type_emblem: emblem,
+      marker,
+    });
+  },
+  bullet_list(node) {
+    return convertList(node);
+  },
+  ordered_list(node) {
+    return convertList(node);
   },
   paragraph(node, rest) {
     const para = convertContent(node, {
