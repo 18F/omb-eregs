@@ -2,12 +2,21 @@ import assert from 'assert';
 
 import {
   convertContent,
-  CHILD_CONVERTERS,
   ordinalToLetter,
 } from './save-doc';
 
+import {toArray} from './util';
+
+function convertChildNode(node) {
+  return convertContent({content: toArray(node)}, {}).children[0];
+}
+
+function convertContentNode(node) {
+  return convertContent({content: [node]}, {}).content[0];
+}
+
 export function testSectionWorks() {
-  assert.deepEqual(CHILD_CONVERTERS.section({
+  assert.deepEqual(convertChildNode({
     "type": "section",
     "content": [{
         "type": "heading",
@@ -24,14 +33,6 @@ export function testSectionWorks() {
       }],
     }],
   });
-}
-
-function convertChildNode(node) {
-  return convertContent({content: [node]}, {}).children[0];
-}
-
-function convertContentNode(node) {
-  return convertContent({content: [node]}, {}).content[0];
 }
 
 export function testUnimplementedChildWorks() {
@@ -55,7 +56,7 @@ export function testUnimplementedContentWorks() {
 }
 
 export function testBulletListWorks() {
-  assert.deepEqual(convertContent({content: [{
+  assert.deepEqual(convertChildNode({
     type: 'bullet_list',
     content: [{
       type: 'list_item',
@@ -64,32 +65,28 @@ export function testBulletListWorks() {
       type: 'list_item',
       content: [{"type": "text", "text": "list item two"}],
     }],
-  }]}, {}), {
+  }), {
+    "node_type": "list",
     "children": [
       {
-        "node_type": "list",
-        "children": [
+        "node_type": "listitem",
+        "type_emblem": "0",
+        "marker": "●",
+        "content": [
           {
-            "node_type": "listitem",
-            "type_emblem": "0",
-            "marker": "●",
-            "content": [
-              {
-                "content_type": "__text__",
-                "text": "list item one"
-              }
-            ]
-          },
+            "content_type": "__text__",
+            "text": "list item one"
+          }
+        ]
+      },
+      {
+        "node_type": "listitem",
+        "type_emblem": "1",
+        "marker": "●",
+        "content": [
           {
-            "node_type": "listitem",
-            "type_emblem": "1",
-            "marker": "●",
-            "content": [
-              {
-                "content_type": "__text__",
-                "text": "list item two"
-              }
-            ]
+            "content_type": "__text__",
+            "text": "list item two"
           }
         ]
       }
@@ -98,27 +95,25 @@ export function testBulletListWorks() {
 }
 
 export function testParagraphWorks() {
-  assert.deepEqual(convertContent({content: [{
+  assert.deepEqual(convertChildNode([{
     "type": "paragraph",
     "content": [{"type": "text", "text": "Hi I am a paragraph"}],
   }, {
     "type": "footnote",
     "attrs": {"marker": "3"},
     "content": [{"type": "text", "text": "Hi I am a footnote"}],
-  }]}, {}), {
+  }]), {
+    node_type: 'para',
+    content: [{
+      content_type: '__text__',
+      text: 'Hi I am a paragraph',
+    }],
     children: [{
-      node_type: 'para',
+      node_type: 'footnote',
+      marker: '3',
       content: [{
         content_type: '__text__',
-        text: 'Hi I am a paragraph',
-      }],
-      children: [{
-        node_type: 'footnote',
-        marker: '3',
-        content: [{
-          content_type: '__text__',
-          text: 'Hi I am a footnote',
-        }],
+        text: 'Hi I am a footnote',
       }],
     }],
   });
