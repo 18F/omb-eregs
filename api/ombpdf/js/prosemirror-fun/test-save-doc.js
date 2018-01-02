@@ -26,6 +26,34 @@ export function testSectionWorks() {
   });
 }
 
+function convertChildNode(node) {
+  return convertContent({content: [node]}, {}).children[0];
+}
+
+function convertContentNode(node) {
+  return convertContent({content: [node]}, {}).content[0];
+}
+
+export function testUnimplementedChildWorks() {
+  const originalDbNode = {foo: 'bar'};
+  const recoveredDbNode = convertChildNode({
+    type: 'unimplemented_child',
+    attrs: {data: JSON.stringify(originalDbNode)},
+    content: [],
+  });
+  assert.deepEqual(originalDbNode, recoveredDbNode);
+}
+
+export function testUnimplementedContentWorks() {
+  const originalDbNode = {foo: 'bar'};
+  const recoveredDbNode = convertContentNode({
+    type: 'unimplemented_content',
+    attrs: {data: JSON.stringify(originalDbNode)},
+    content: [],
+  });
+  assert.deepEqual(originalDbNode, recoveredDbNode);
+}
+
 export function testBulletListWorks() {
   assert.deepEqual(convertContent({content: [{
     type: 'bullet_list',

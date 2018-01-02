@@ -67,7 +67,10 @@ export const CONTENT_CONVERTERS = {
       content_type: '__text__',
       text: node.text,
     };
-  }
+  },
+  unimplemented_content(node) {
+    return JSON.parse(node.attrs.data);
+  },
 };
 
 export const CHILD_CONVERTERS = {
@@ -132,6 +135,9 @@ export const CHILD_CONVERTERS = {
       section.title = firstChild.content[0].text;
     }
     return section;
+  },
+  unimplemented_child(node) {
+    return JSON.parse(node.attrs.data);
   },
 };
 
