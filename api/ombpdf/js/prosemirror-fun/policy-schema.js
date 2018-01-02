@@ -11,6 +11,9 @@ function add(obj, props) {
 export const nodes = {
   doc: {
     content: "section+",
+    attrs: {
+      ombPolicyId: {default: null},
+    },
   },
 
   paragraph: {

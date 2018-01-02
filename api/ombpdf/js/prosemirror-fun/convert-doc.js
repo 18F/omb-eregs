@@ -149,8 +149,11 @@ const CONTENT_TYPE_CONVERTERS = {
 export default function dbDocToProseMirrorDoc(root) {
   warnings_logged = {};
 
+  const ombPolicyId = (root.meta && root.meta.policy &&
+                       root.meta.policy.omb_policy_id);
   const doc = Node.fromJSON(schema, {
     type: 'doc',
+    attrs: {ombPolicyId},
     content: flatMap(
       root.children.filter(child => child.node_type !== 'preamble'),
       convertChild

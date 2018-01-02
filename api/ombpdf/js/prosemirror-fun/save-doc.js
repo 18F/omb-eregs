@@ -178,6 +178,11 @@ export const CHILD_CONVERTERS = {
 function proseMirrorDocToDbDoc(doc) {
   return convertContent(doc, {
     node_type: 'policy',
+    meta: {
+      policy: {
+        omb_policy_id: doc.attrs.ombPolicyId,
+      },
+    },
   });
 }
 

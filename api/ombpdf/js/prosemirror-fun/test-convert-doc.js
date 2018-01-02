@@ -5,7 +5,15 @@ import convertDoc from './convert-doc';
 import schema from './policy-schema';
 
 function makeDbDoc(children) {
-  return {node_type: 'policy', children: children};
+  return {
+    node_type: 'policy',
+    meta: {
+      policy: {
+        omb_policy_id: 'blah',
+      },
+    },
+    children: children
+  };
 }
 
 function captureWarnings(fn) {
