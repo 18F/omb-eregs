@@ -57,16 +57,50 @@ export function ordinalToLetter(i) {
   return String.fromCodePoint(LOWERCASE_A_CODEPOINT + i - 1);
 }
 
+function textNode(text) {
+  return {
+    content_type: '__text__',
+    text,
+  };
+}
+
 const PARAGRAPH_CHILDREN = [
   'footnote',
 ];
 
+export const MARK_CONVERTERS = {
+  external_link(node, mark) {
+    return {
+      content_type: 'external_link',
+      text: node.text,
+      href: mark.attrs.href,
+      inlines: [textNode(node.text)],
+    };
+  },
+  footnote_citation(node, mark) {
+    return {
+      content_type: 'footnote_citation',
+      text: node.text,
+      inlines: [textNode(node.text)],
+    };
+  },
+};
+
 export const CONTENT_CONVERTERS = {
   text(node) {
-    return {
-      content_type: '__text__',
-      text: node.text,
-    };
+    if (node.marks && node.marks.length > 0) {
+      if (node.marks.length > 1) {
+        throw new Error('nodes w/ multiple marks are currently unsupported');
+      }
+      const mark = node.marks[0];
+      const converter = MARK_CONVERTERS[mark.type];
+
+      if (!converter) {
+        throw new Error(`No converter found for mark type ${mark.type}`);
+      }
+      return converter(node, mark);
+    }
+    return textNode(node.text);
   },
   unimplemented_content(node) {
     return JSON.parse(node.attrs.data);

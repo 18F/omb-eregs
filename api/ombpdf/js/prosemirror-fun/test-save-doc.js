@@ -94,6 +94,42 @@ export function testBulletListWorks() {
   });
 }
 
+export function testFootnoteCitationWorks() {
+  const dbNode = convertContentNode({
+    type: 'text',
+    text: '1',
+    marks: [{type: 'footnote_citation'}],
+  });
+  assert.deepEqual(dbNode, {
+    "content_type": "footnote_citation",
+    "text": "1",
+    "inlines": [{
+        "content_type": "__text__",
+        "text": "1"
+    }]
+  });
+}
+
+export function testExternalLinkWorks() {
+  const dbNode = convertContentNode({
+    type: 'text',
+    text: 'example dot org',
+    marks: [{
+      type: 'external_link',
+      attrs: {href: 'http://example.org/'},
+    }],
+  });
+  assert.deepEqual(dbNode, {
+    "content_type": "external_link",
+    "text": "example dot org",
+    "href": "http://example.org/",
+    "inlines": [{
+        "content_type": "__text__",
+        "text": "example dot org"
+    }]
+  });
+}
+
 export function testParagraphWorks() {
   assert.deepEqual(convertChildNode([{
     "type": "paragraph",
