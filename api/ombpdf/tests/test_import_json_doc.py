@@ -1,7 +1,6 @@
 from document.models import ExternalLink, FootnoteCitation
 from ombpdf.import_json_doc import convert_node, derive_annotations
 
-
 PARA_WITH_LINK = {
     "node_type": 'para',
     "content": [{
