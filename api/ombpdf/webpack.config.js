@@ -4,9 +4,18 @@ var path = require('path');
 module.exports = {
   context: __dirname,
   watch: true,
+  devtool: 'inline-source-map',
   entry: {
-    'main': './js/main.js',
+    'main': './js/main.ts',
     'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
+  },
+  module: {
+    rules: [
+      { test: /\.tsx?$/, loader: 'ts-loader' },
+    ],
   },
   output: {
     path: path.join(__dirname, 'static/ombpdf/js/'),

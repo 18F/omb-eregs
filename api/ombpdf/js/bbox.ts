@@ -1,5 +1,12 @@
 class Bbox {
-  constructor(page, x0, y0, x1, y1) {
+  page: number;
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+
+  constructor(page: number, x0: number, y0: number,
+              x1: number, y1: number) {
     this.page = page;
     this.x0 = x0;
     this.y0 = y0;
@@ -7,7 +14,7 @@ class Bbox {
     this.y1 = y1;
   }
 
-  toCss() {
+  toCss(): string {
     return [
       `bottom: ${this.y0 - 1}px`,
       `left: ${this.x0}px`,
@@ -16,11 +23,11 @@ class Bbox {
     ].join('; ')
   }
 
-  toQuerystring() {
+  toQuerystring(): string {
     return `?bbox=${this.page},${this.x0},${this.y0},${this.x1},${this.y1}`;
   }
 
-  static fromQuerystring(text) {
+  static fromQuerystring(text): Bbox {
     const match = text.match(/bbox=([0-9,.]+)/);
 
     if (!match) {
@@ -41,7 +48,7 @@ class Bbox {
   }
 }
 
-function showBbox(bbox) {
+function showBbox(bbox: Bbox): HTMLDivElement {
   const pageEl = document.querySelector(`.page[data-page="${bbox.page}"]`);
   const bboxEl = document.createElement('div');
 
@@ -53,9 +60,9 @@ function showBbox(bbox) {
   return bboxEl;
 }
 
-let currBboxEl = null;
+let currBboxEl: HTMLDivElement = null;
 
-function setCurrBbox(bbox) {
+function setCurrBbox(bbox: Bbox) {
   if (currBboxEl !== null) {
     currBboxEl.parentNode.removeChild(currBboxEl);
     currBboxEl = null;
@@ -65,7 +72,16 @@ function setCurrBbox(bbox) {
   }
 }
 
-function dragInfoToBbox(dragInfo) {
+interface DragInfo {
+  page: number;
+  pageCanvas: HTMLCanvasElement;
+  startX: number;
+  startY: number;
+  currX: number;
+  currY: number;
+}
+
+function dragInfoToBbox(dragInfo: DragInfo): Bbox {
   if (dragInfo.startX === dragInfo.currX ||
       dragInfo.startY === dragInfo.currY) {
     return null;
@@ -95,11 +111,13 @@ function dragInfoToBbox(dragInfo) {
   return new Bbox(dragInfo.page, x0, y0, x1, y1);
 }
 
-let currDragInfo = null;
+let currDragInfo: DragInfo = null;
 
 window.addEventListener('mousedown', e => {
   if (e.target instanceof HTMLCanvasElement) {
     const pageEl = e.target.parentNode;
+
+    if (!(pageEl instanceof Element)) return;
 
     currDragInfo = {
       page: parseInt(pageEl.getAttribute('data-page')),
