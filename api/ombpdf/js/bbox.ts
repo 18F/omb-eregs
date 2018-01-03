@@ -27,7 +27,7 @@ class Bbox {
     return `?bbox=${this.page},${this.x0},${this.y0},${this.x1},${this.y1}`;
   }
 
-  static fromQuerystring(text): Bbox {
+  static fromQuerystring(text): Bbox | null {
     const match = text.match(/bbox=([0-9,.]+)/);
 
     if (!match) {
@@ -52,6 +52,9 @@ function showBbox(bbox: Bbox): HTMLDivElement {
   const pageEl = document.querySelector(`.page[data-page="${bbox.page}"]`);
   const bboxEl = document.createElement('div');
 
+  if (!pageEl)
+    throw new Error(`page ${bbox.page} not found!`);
+
   pageEl.appendChild(bboxEl);
 
   bboxEl.classList.add('bbox');
@@ -60,10 +63,10 @@ function showBbox(bbox: Bbox): HTMLDivElement {
   return bboxEl;
 }
 
-let currBboxEl: HTMLDivElement = null;
+let currBboxEl: HTMLDivElement | null = null;
 
-function setCurrBbox(bbox: Bbox) {
-  if (currBboxEl !== null) {
+function setCurrBbox(bbox: Bbox | null) {
+  if (currBboxEl !== null && currBboxEl.parentNode) {
     currBboxEl.parentNode.removeChild(currBboxEl);
     currBboxEl = null;
   }
@@ -81,7 +84,7 @@ interface DragInfo {
   currY: number;
 }
 
-function dragInfoToBbox(dragInfo: DragInfo): Bbox {
+function dragInfoToBbox(dragInfo: DragInfo): Bbox | null {
   if (dragInfo.startX === dragInfo.currX ||
       dragInfo.startY === dragInfo.currY) {
     return null;
@@ -111,7 +114,7 @@ function dragInfoToBbox(dragInfo: DragInfo): Bbox {
   return new Bbox(dragInfo.page, x0, y0, x1, y1);
 }
 
-let currDragInfo: DragInfo = null;
+let currDragInfo: DragInfo | null = null;
 
 window.addEventListener('mousedown', e => {
   if (e.target instanceof HTMLCanvasElement) {
@@ -119,8 +122,13 @@ window.addEventListener('mousedown', e => {
 
     if (!(pageEl instanceof Element)) return;
 
+    const pageNum = pageEl.getAttribute('data-page');
+
+    if (pageNum === null)
+      throw new Error("page lacks a data-page attribute!");
+
     currDragInfo = {
-      page: parseInt(pageEl.getAttribute('data-page')),
+      page: parseInt(pageNum),
       pageCanvas: e.target,
       startX: e.pageX,
       startY: e.pageY,
