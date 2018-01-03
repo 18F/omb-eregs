@@ -19,3 +19,4 @@ pytest-cov
 pytest-django
 pytest-watch
 tqdm
+mypy
