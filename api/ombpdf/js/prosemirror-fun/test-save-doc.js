@@ -147,6 +147,7 @@ export function testParagraphWorks() {
     children: [{
       node_type: 'footnote',
       marker: '3',
+      type_emblem: '3',
       content: [{
         content_type: '__text__',
         text: 'Hi I am a footnote',

@@ -112,6 +112,7 @@ export const CHILD_CONVERTERS = {
     return convertContent(node, {
       node_type: 'footnote',
       marker: node.attrs.marker,
+      type_emblem: node.attrs.marker,
     });
   },
   list_item(node, rest, context) {

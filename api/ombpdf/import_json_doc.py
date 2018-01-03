@@ -67,7 +67,17 @@ def annotator(fn: Annotator):
 @annotator
 def footnote_citation(cursor: JSONAwareCursor, content: JsonDict,
                       start: int) -> FootnoteCitation:
-    raise NotImplementedError()
+    text = content['text']
+    referencing = list(cursor.filter(
+        lambda m: m.node_type == 'footnote'
+        and m.type_emblem == text.strip()
+    ))
+    if not referencing:
+        raise ValueError(f'unable to find footnote for citation {text}')
+    return FootnoteCitation(
+        doc_node=cursor.model, start=start, end=start + len(text),
+        footnote_node=referencing[0].model,
+    )
 
 
 @annotator
