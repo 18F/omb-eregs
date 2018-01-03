@@ -26,12 +26,13 @@ def to_db(doc, policy):
     builder.build()
 
     writer.cursor.nested_set_renumber()
-    # Account for a Django bug which prevents us from saving these
-    # directly due to saving the DocNodes in a bulk_insert
+    # Work around for a Django bug (arguably) that will insert nulls in place
+    # of foreign key ids
+    # See https://code.djangoproject.com/ticket/23449
     for footnote_citation in writer.footnote_citations.values():
         footnote_citation.doc_node = footnote_citation.doc_node
         footnote_citation.footnote_node = footnote_citation.footnote_node
-        footnote_citation.save()
+    FootnoteCitation.objects.bulk_create(writer.footnote_citations.values())
 
     return writer.cursor
 
