@@ -11,4 +11,10 @@
   .list-item-text {
     @include paragraph-with-marker();
   }
+
+  .list-item-title {
+    @include font-serif-bold();
+    @include size-regular();
+    display: block;
+  }
 }

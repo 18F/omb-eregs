@@ -43,6 +43,9 @@ export default class DocumentNode {
     // to access this as it doesn't deal with inline elements
     this.text = fieldValues.text || '';
 
+    // a string to describe this node and all its children
+    this.title = fieldValues.title || '';
+
     // text like "a)" or "Section 22"; not essential to understanding a list
     // item, footnote, etc. but essential to correct display
     this.marker = fieldValues.marker || '';
