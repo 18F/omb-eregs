@@ -6,7 +6,16 @@ module.exports = {
   watch: true,
   entry: {
     'main': './js/main.js',
+    'prosemirror-fun': './js/prosemirror-fun/main.js',
     'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   output: {
     path: path.join(__dirname, 'static/ombpdf/js/'),

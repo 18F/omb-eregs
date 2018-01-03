@@ -20,7 +20,16 @@
   },
   "homepage": "https://github.com/toolness/omb-pdfminer-fun#readme",
   "dependencies": {
+    "css-loader": "0.28.7",
     "pdfjs-dist": "^2.0.185",
+    "prosemirror-commands": "^1.0.3",
+    "prosemirror-history": "^1.0.0",
+    "prosemirror-keymap": "^1.0.0",
+    "prosemirror-menu": "^1.0.0",
+    "prosemirror-state": "^1.0.0",
+    "prosemirror-view": "^1.0.5",
+    "prosemirror-schema-list": "^1.0.0",
+    "style-loader": "0.19.1",
     "webpack": "^3.10.0"
   }
 }

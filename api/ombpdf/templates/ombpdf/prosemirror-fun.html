@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+#editor {
+  border: 1px solid black;
+}
+
+.ProseMirror section {
+  border-left: 4px solid gray;
+  margin: 1em 0 1em 0;
+  padding: 0 0 0 1em;
+}
+
+.ProseMirror > section {
+  margin-left: 1em;
+}
+
+.ProseMirror .unimplemented {
+  font-family: monospace;
+  background: lightpink;
+  padding: 2px 4px;
+}
+
+.ProseMirror span.unimplemented {
+  display: inline-block;
+  margin: 0 2px;
+  font-size: 0.8rem;
+}
+
+.ProseMirror span.unimplemented:before {
+  content: attr(data-content-type);
+}
+
+.ProseMirror div.unimplemented {
+  margin: 10px 2px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.ProseMirror sup {
+  background-color: yellow;
+}
+
+.ProseMirror .footnote {
+  border-top: 1px dotted gray;
+  border-bottom: 1px dotted gray;
+}
+
+.ProseMirror .footnote:before {
+  content: attr(data-marker);
+  font-weight: bold;
+  margin-right: 0.5em;
+  background-color: yellow;
+}
+
+.ProseMirror ol.list-type-numbered {
+  list-style-type: decimal;
+}
+
+.ProseMirror ol.list-type-lettered {
+  list-style-type: lower-alpha;
+}
+</style>
+<title>ProseMirror fun</title>
+<h1>ProseMirror fun</h1>
+<h2>Editor</h2>
+<div id="editor"></div>
+{% load static %}
+<script src="{% static 'ombpdf/js/prosemirror-fun.bundle.js' %}"></script>

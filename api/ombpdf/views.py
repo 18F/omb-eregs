@@ -1,14 +1,16 @@
 import json
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.safestring import SafeString
+from django.views.decorators.csrf import csrf_exempt
 
 from ombpdf import html, rawlayout, semhtml
 from ombpdf.document import OMBDocument
 from ombpdf.download_pdfs import ROOT_DIR as DATA_DIR
+from ombpdf.import_json_doc import import_document
 from ombpdf.util import get_ltpages
 
 
@@ -81,3 +83,14 @@ def rawlayout_pdf(request, pdf):
 def semhtml_pdf(request, pdf):
     return HttpResponse(semhtml.to_html(to_doc(as_path(pdf))),
                         content_type='text/html')
+
+
+@csrf_exempt
+def prosemirror_fun(request):
+    if request.method == 'GET':
+        return render(request, 'ombpdf/prosemirror-fun.html')
+    else:
+        doc = json.loads(request.POST['doc'])
+        omb_policy_id = doc['meta']['policy']['omb_policy_id']
+        import_document(doc, omb_policy_id)
+        return JsonResponse(doc)
