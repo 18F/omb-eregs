@@ -1,8 +1,10 @@
-from typing import Any, Dict, List, NamedTuple, Optional, Type
+from collections import defaultdict
+from typing import (Any, Callable, DefaultDict, Dict, List, NamedTuple,
+                    Optional, Type)
 
 from django.db import transaction
 
-from document.models import Annotation, DocNode
+from document.models import Annotation, DocNode, ExternalLink, FootnoteCitation
 from document.tree import DocCursor
 from reqs.models import Policy
 
@@ -49,13 +51,54 @@ NODE_KEYS = [
     'title',
 ]
 
+Annotator = Callable[
+    [JSONAwareCursor, JsonDict, int],
+    Annotation
+]
 
-AnnotationDict = Dict[Type[Annotation], List[Annotation]]
+annotators: Dict[str, Annotator] = {}
 
 
-def derive_annotations(root: JSONAwareCursor) -> AnnotationDict:
-    # TODO: Implement this.
+def annotator(fn: Annotator):
+    annotators[fn.__name__] = fn
+    return fn
+
+
+@annotator
+def footnote_citation(cursor: JSONAwareCursor, content: JsonDict,
+                      start: int) -> FootnoteCitation:
     raise NotImplementedError()
+
+
+@annotator
+def external_link(cursor: JSONAwareCursor, content: JsonDict,
+                  start: int) -> ExternalLink:
+    return ExternalLink(
+        doc_node=cursor.model, start=start,
+        end=start + len(content['text']), href=content['href']
+    )
+
+
+AnnotationDict = DefaultDict[Type[Annotation], List[Annotation]]
+
+
+def derive_annotations(cursor: JSONAwareCursor) -> AnnotationDict:
+    annotations: AnnotationDict = defaultdict(list)
+    start = 0
+    for content in cursor.json_content:
+        content_type = content['content_type']
+        if content_type != '__text__':
+            if content_type not in annotators:
+                raise ValueError(f"no annotator found for {content_type}")
+            anno = annotators[content_type](cursor, content, start)
+            annotations[anno.__class__].append(anno)
+        start += len(content['text'])
+
+    for child_cursor in cursor.children():
+        for cls, annos in derive_annotations(child_cursor).items():
+            annotations[cls].extend(annos)
+
+    return annotations
 
 
 def get_content_text(content: List[JsonDict]):
