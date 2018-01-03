@@ -1,5 +1,5 @@
 import itertools
-from typing import Iterator
+from typing import Iterator, List
 
 from django.db import models
 
@@ -36,6 +36,11 @@ class DocNode(models.Model):
         return queryset.filter(
             left__gt=self.left, right__lt=self.right, policy_id=self.policy_id
         ).order_by('left')
+
+    def ancestor_node_types(self) -> List[str]:
+        # reverse so we get the closest ancestor first
+        ancestry = reversed(self.identifier.split('__'))
+        return [ident.rsplit('_')[0] for ident in ancestry]
 
     def annotations(self) -> Iterator['Annotation']:
         """Query all of our annotation types."""

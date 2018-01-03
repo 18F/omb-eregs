@@ -48,7 +48,7 @@ class DatabaseWriter(semtree.Writer):
 
     @property
     def sec_level(self):
-        return self.cursor.identifier.split('_').count('sec')
+        return self.cursor.ancestor_node_types().count('sec')
 
     def end_element(self, el):
         self.cursor.model.text = self.cursor.text.rstrip()
