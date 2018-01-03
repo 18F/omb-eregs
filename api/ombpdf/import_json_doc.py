@@ -119,7 +119,7 @@ def convert_node(node: JsonDict, policy: Optional[Policy]=None,
                  parent: Optional[JSONAwareCursor]=None) -> JSONAwareCursor:
     cleaned = CleanedNode.from_json(node)
     if parent is None:
-        cursor = JSONAwareCursor.new_tree(**cleaned.node, policy=policy)
+        cursor = JSONAwareCursor.new_tree(policy=policy, **cleaned.node)
     else:
         cursor = parent.add_child(**cleaned.node)
 
@@ -142,5 +142,3 @@ def import_document(doc: JsonDict, omb_policy_id: str):
     annotations_by_cls = derive_annotations(root)
     for cls, annotations in annotations_by_cls.items():
         cls.objects.bulk_create(annotations)
-
-    raise Exception('Remove this when we really want to commit')
