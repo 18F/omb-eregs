@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from ombpdf import html, rawlayout, semhtml
 from ombpdf.document import OMBDocument
 from ombpdf.download_pdfs import ROOT_DIR as DATA_DIR
+from ombpdf.import_json_doc import import_document
 from ombpdf.util import get_ltpages
 
 
@@ -90,5 +91,6 @@ def prosemirror_fun(request):
         return render(request, 'ombpdf/prosemirror-fun.html')
     else:
         doc = json.loads(request.POST['doc'])
-        # TODO: Import the document.
+        omb_policy_id = doc['meta']['policy']['omb_policy_id']
+        import_document(doc, omb_policy_id)
         return JsonResponse(doc)
