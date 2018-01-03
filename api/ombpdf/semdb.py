@@ -119,7 +119,7 @@ class DatabaseWriter(semtree.Writer):
 
     def end_footnote_list(self, fl):
         no_nodes = [key for key, value in self.footnote_citations.items()
-                    if not value.footnote_node]
+                    if not hasattr(value, 'footnote_node')]
         if no_nodes:
             logger.warning('Unresolved footnote citations exist: %s', no_nodes)
             for no_node_cite in no_nodes:

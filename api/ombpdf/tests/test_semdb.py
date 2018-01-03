@@ -1,4 +1,5 @@
 from datetime import date
+from unittest.mock import Mock
 
 import pytest
 from model_mommy import mommy
@@ -128,3 +129,21 @@ def test_footnotes():
     assert writer.footnote_citations[1].start == len('Some stuff')
     assert writer.footnote_citations[1].end == len('Some stuff1')
     assert 2 not in writer.footnote_citations
+
+
+def test_footnotes_citation_without_footnote(monkeypatch):
+    monkeypatch.setattr(semdb, 'logger', Mock())
+
+    writer = semdb.DatabaseWriter(mommy.prepare(Policy))
+    para = semtree.Paragraph()
+    footnote_list = semtree.FootnoteList()
+
+    writer.begin_paragraph(para)
+    writer.create_text('This has a citation')
+    writer.create_footnote_citation(semtree.FootnoteCitation(1))
+    writer.create_text(' but no footnote')
+    writer.end_paragraph(para)
+    writer.begin_footnote_list(footnote_list)
+    assert 1 in writer.footnote_citations
+    writer.end_footnote_list(footnote_list)
+    assert semdb.logger.warning.called
