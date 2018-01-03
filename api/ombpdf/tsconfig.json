@@ -3,6 +3,7 @@
     "target": "ES6",
     "module": "CommonJS",
     "strictNullChecks": true,
+    "alwaysStrict": true,
     "sourceMap": true
   }
 }
