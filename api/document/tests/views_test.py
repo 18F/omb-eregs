@@ -16,15 +16,15 @@ from reqs.models import Policy, Requirement
 def test_404s(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
-    root.add_child('sect')
+    root.add_child('sec')
     root.nested_set_renumber()
 
     assert client.get("/987654321").status_code == 404
     assert client.get(f"/{policy.pk}").status_code == 200
     assert client.get(f"/{policy.pk}/root_0").status_code == 200
     assert client.get(f"/{policy.pk}/root_1").status_code == 404
-    assert client.get(f"/{policy.pk}/root_0__sect_1").status_code == 200
-    assert client.get(f"/{policy.pk}/root_0__sect_2").status_code == 404
+    assert client.get(f"/{policy.pk}/root_0__sec_1").status_code == 200
+    assert client.get(f"/{policy.pk}/root_0__sec_2").status_code == 404
 
 
 @pytest.mark.django_db
@@ -32,9 +32,9 @@ def test_404s(client):
 def test_correct_data(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
-    sect1 = root.add_child('sect')
-    root.add_child('sect')
-    sect1.add_child('par', 'a')
+    sec1 = root.add_child('sec')
+    root.add_child('sec')
+    sec1.add_child('para', 'a')
     root.nested_set_renumber()
 
     def result(url):
@@ -45,10 +45,10 @@ def test_correct_data(client):
 
     assert result(f"/{policy.pk}") == serialize(root)
     assert result(f"/{policy.pk}/root_0") == serialize(root)
-    assert result(f"/{policy.pk}/root_0__sect_1") == serialize(root['sect_1'])
-    assert result(f"/{policy.pk}/root_0__sect_2") == serialize(root['sect_2'])
-    assert result(f"/{policy.pk}/root_0__sect_1__par_a") \
-        == serialize(root['sect_1']['par_a'])
+    assert result(f"/{policy.pk}/root_0__sec_1") == serialize(root['sec_1'])
+    assert result(f"/{policy.pk}/root_0__sec_2") == serialize(root['sec_2'])
+    assert result(f"/{policy.pk}/root_0__sec_1__para_a") \
+        == serialize(root['sec_1']['para_a'])
 
 
 @pytest.mark.django_db
