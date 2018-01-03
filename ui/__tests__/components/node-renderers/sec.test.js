@@ -1,4 +1,4 @@
-import Section from '../../../components/node-renderers/sec';
+import { Section } from '../../../components/node-renderers/sec';
 import {
   itIncludesTheIdentifier,
   itRendersChildNodes,

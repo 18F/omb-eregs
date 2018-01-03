@@ -8,6 +8,8 @@ from reqs.models import Policy
 
 
 class PolicySerializer(serializers.ModelSerializer):
+    title_with_number = serializers.CharField(read_only=True)
+
     class Meta:
         model = Policy
         fields = (
@@ -15,6 +17,7 @@ class PolicySerializer(serializers.ModelSerializer):
             'omb_policy_id',
             'original_url',
             'title',
+            'title_with_number',
         )
 
 

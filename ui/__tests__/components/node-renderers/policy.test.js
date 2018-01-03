@@ -3,6 +3,7 @@ import React from 'react';
 
 import Policy from '../../../components/node-renderers/policy';
 import DocumentNode from '../../../util/document-node';
+import PolicyObj from '../../../util/policy';
 import {
   itIncludesTheIdentifier,
   itRendersChildNodes,
@@ -13,12 +14,12 @@ jest.mock('../../../util/render-node');
 describe('<Policy />', () => {
   const meta = {
     descendant_footnotes: [],
-    policy: {
-      issuance_pretty: 'March 3, 2003',
+    policy: new PolicyObj({
+      issuance: '2003-03-03',
       omb_policy_id: 'M-44-55',
       original_url: 'http://example.com/thing.pdf',
       title: 'Magistrate',
-    },
+    }),
   };
   itIncludesTheIdentifier(Policy, { meta });
   itRendersChildNodes(Policy, { meta });
@@ -66,24 +67,5 @@ describe('<Policy />', () => {
 
     const date = result.find('LabeledText').first();
     expect(date.children().text()).toEqual('some date here');
-  });
-  it('renders footnotes at the bottom', () => {
-    const docNode = new DocumentNode({
-      meta: {
-        ...meta,
-        descendant_footnotes: [
-          new DocumentNode({ identifier: '1' }),
-          new DocumentNode({ identifier: '2' }),
-          new DocumentNode({ identifier: '3' }),
-        ],
-      },
-    });
-
-    const result = shallow(<Policy docNode={docNode} />);
-    const footnotes = result.find('.bottom-footnotes Footnote');
-    expect(footnotes).toHaveLength(3);
-    expect(footnotes.at(0).prop('docNode').identifier).toBe('1');
-    expect(footnotes.at(1).prop('docNode').identifier).toBe('2');
-    expect(footnotes.at(2).prop('docNode').identifier).toBe('3');
   });
 });

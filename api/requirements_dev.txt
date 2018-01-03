@@ -56,10 +56,12 @@ newrelic==2.90.0.75
 orderedmultidict==0.7.11
 pathtools==0.1.2          # via watchdog
 pbr==3.1.1                # via stevedore
+pdfminer.six==20170720
 pep8-naming==0.4.1
 psycopg2==2.7.3.1
 py==1.4.34                # via pytest
 pycodestyle==2.3.1        # via flake8
+pycryptodome==3.4.7
 pyflakes==1.5.0           # via flake8
 pyinotify==0.9.6
 pytest-cov==2.5.1
@@ -77,6 +79,7 @@ smmap2==2.0.3             # via gitdb2
 sqlparse==0.2.3           # via django-debug-toolbar
 stevedore==1.26.0         # via bandit
 testfixtures==5.2.0       # via flake8-isort
+tqdm==4.19.5
 urllib3==1.22
 watchdog==0.8.3           # via pytest-watch
 whitenoise==3.3.0

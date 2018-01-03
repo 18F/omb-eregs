@@ -22,6 +22,7 @@ class DocCursorSerializer(serializers.ModelSerializer):
             'meta',
             'node_type',
             'text',
+            'title',
             'type_emblem',
         )
 

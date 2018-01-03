@@ -2,13 +2,15 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import { PoliciesContainer } from '../../pages/policies';
+import Policy from '../../util/policy';
 
 describe('<PoliciesContainer />', () => {
   const pagedPolicies = {
-    results: [{ thing: 1 }, { thing: 2 }],
+    results: [{ id: 9 }, { id: 12 }],
     count: 2,
   };
-  const result = shallow(<PoliciesContainer pagedPolicies={pagedPolicies} />);
+  const result = shallow(<PoliciesContainer pagedPolicies={pagedPolicies} />)
+    .find('SearchFilterView');
 
   it('has a topics filter controls', () => {
     const controls = result.prop('filterControls');
@@ -28,8 +30,8 @@ describe('<PoliciesContainer />', () => {
   it('has correct pageContent', () => {
     const pageContent = result.prop('pageContent');
 
-    expect(pageContent.props.policies).toEqual(pagedPolicies.results);
-    expect(pageContent.props.count).toEqual(pagedPolicies.count);
+    pageContent.props.policies.forEach(p => expect(p).toBeInstanceOf(Policy));
+    expect(pageContent.props.policies.map(p => p.id)).toEqual([9, 12]);
   });
 
   it('has configured selectedFilters', () => {

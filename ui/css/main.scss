@@ -8,11 +8,15 @@ $fa-font-path: '~font-awesome/fonts';
 @import '~font-awesome/scss/font-awesome';
 @import '~basscss-sass/scss/basscss';
 @import '~nprogress/nprogress.css';
+@import '~katex/dist/katex.css';
 
 // App-wide
 @import 'base/colors';
 @import 'base/base';
 @import 'base/fonts';
+@import 'base/media-queries';
+@import 'base/spacing';
+@import 'base/type-size';
 @import 'base/util';
 
 @import 'layout/typography';
@@ -37,6 +41,7 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'module/tables';
 @import 'module/external-link';
 @import 'module/styleguide';
+@import 'module/node-heading';
 
 @import 'state/print';
 @import 'state/ie';

@@ -56,8 +56,8 @@ $footnote-vertical-margin: 24px;
     border-top: $footnote-border;
     border-bottom: $footnote-border;
     margin-top: $footnote-vertical-margin;
-    margin-bottom: 2rem;
-    padding-top: 1rem;
+    margin-bottom: $space-xl;
+    padding-top: $space;
     padding-bottom: 0.2em;
   }
 
@@ -80,7 +80,7 @@ $footnote-vertical-margin: 24px;
     font-size: .9rem;
     line-height: 1.5rem;
     text-align: right;
-    padding-right: .5em;
+    padding-right: $space-xs;
   }
 
   .footnote-text {
@@ -99,7 +99,7 @@ $footnote-vertical-margin: 24px;
     font-style: normal;
     font-size: .8em;
     display: block;
-    margin-top: 0.5rem;
+    margin-top: $space-xs;
     cursor: pointer;
 
     &::before {
@@ -111,9 +111,13 @@ $footnote-vertical-margin: 24px;
 }
 
 .bottom-footnotes {
-  border-top: 1px solid $color-blue;
-  margin-top: 2.5em;
-  padding-top: .75em;
+  margin-top: $space-xl;
+
+  .bottom-footnotes-border {
+    border: none;
+    border-bottom: 1px solid $color-blue;
+    margin-bottom: $space-sm;
+  }
 
   .node-footnote {
     @extend .clearfix;

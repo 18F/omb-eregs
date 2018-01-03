@@ -27,7 +27,9 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+    import ombpdf.urls
     urlpatterns.insert(0, url(r'^__debug__/', include(debug_toolbar.urls)))
+    urlpatterns.insert(0, url(r'^pdf/', include(ombpdf.urls)))
 
 if settings.MAX_URL:
     from django_cas_ng.views import login as cas_login

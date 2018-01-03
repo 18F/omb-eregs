@@ -1,0 +1,26 @@
+{
+  "name": "pdfminer-fun",
+  "version": "1.0.0",
+  "description": "[![CircleCI](https://circleci.com/gh/18F/omb-pdf.svg?style=svg)](https://circleci.com/gh/18F/omb-pdf)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toolness/omb-pdfminer-fun.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toolness/omb-pdfminer-fun/issues"
+  },
+  "homepage": "https://github.com/toolness/omb-pdfminer-fun#readme",
+  "dependencies": {
+    "pdfjs-dist": "^2.0.185",
+    "webpack": "^3.10.0"
+  }
+}
