@@ -1,15 +1,26 @@
 .styleguide-container {
   padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .styleguide-example {
-  border: 1px solid lightgray;
+  border: 1px solid $color-lt-gray;
   padding: 1rem 2.5rem;
 
   h4 {
     text-transform: uppercase;
-    color: gray;
+    color: $color-gray;
     letter-spacing: 1px;
     font-size: 1em;
   }
+}
+
+.example-title {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.styleguide-example>.document-header {
+  margin-bottom: 1rem;
 }
