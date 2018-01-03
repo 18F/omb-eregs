@@ -1,26 +1,22 @@
+$basic-spacing: 1rem;
+$medium-spacing: 2.5rem;
+
 .styleguide-container {
-  padding: 1rem;
+  padding: $basic-spacing;
   max-width: 800px;
   margin: 0 auto;
+
+  >.document-header {
+    margin-bottom: $basic-spacing;
+  }
 }
 
 .styleguide-example {
   border: 1px solid $color-lt-gray;
-  padding: 1rem 2.5rem;
-
-  h4 {
-    text-transform: uppercase;
-    color: $color-gray;
-    letter-spacing: 1px;
-    font-size: 1em;
-  }
+  padding: $basic-spacing $medium-spacing;
 }
 
 .example-title {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-.styleguide-example>.document-header {
-  margin-bottom: 1rem;
+  margin-top: $medium-spacing;
+  margin-bottom: $basic-spacing;
 }
