@@ -24,7 +24,9 @@ def test_useful_lines_are_not_culled(m_11_29_doc):
     assert 'opportunities to reduce duplication' in lastpage_text
 
 
-def test_calc_left_edge():
+def test_calc_left_edge(monkeypatch):
+    monkeypatch.setattr(document, 'logger', Mock())
+
     lines = [
         Mock(left_edge=10),
         Mock(left_edge=20),
@@ -34,3 +36,19 @@ def test_calc_left_edge():
         Mock(left_edge=10),
     ]
     assert document.calc_left_edge(lines) == 10
+    assert not document.logger.warning.called
+
+
+def test_no_significant_left_edge(monkeypatch):
+    monkeypatch.setattr(document, 'logger', Mock())
+
+    lines = [Mock(left_edge=i*10) for i in range(1, 20)]
+    assert document.calc_left_edge(lines) == 10
+    assert document.logger.warning.called
+
+
+def test_no_left_edge(monkeypatch):
+    monkeypatch.setattr(document, 'logger', Mock())
+
+    assert document.calc_left_edge([]) == 0
+    assert document.logger.warning.called

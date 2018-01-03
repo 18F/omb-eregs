@@ -24,7 +24,14 @@ def calc_left_edge(lines):
         left_edge for (left_edge, count) in counter.items()
         if count > total_lines * MIN_LEFT_EDGE_PERCENTAGE
     ]
-    return min(significant_edges)
+    if significant_edges:
+        return min(significant_edges)
+    elif counter:
+        logger.warning("Couldn't find a significant left edge")
+        return min(counter.keys())
+    else:
+        logger.warning("Couldn't find any left edge. Blank document?")
+        return 0
 
 
 class OMBDocument:
