@@ -1,4 +1,11 @@
-var pdfjsLib = require('pdfjs-dist');
+interface ScriptParams {
+  workerSrc: string;
+  pdfPath: string;
+}
+
+declare let SCRIPT_PARAMS: ScriptParams;
+
+import * as pdfjsLib from 'pdfjs-dist';
 
 // Setting worker path to worker bundle.
 pdfjsLib.PDFJS.workerSrc = SCRIPT_PARAMS.workerSrc;
@@ -7,9 +14,15 @@ pdfjsLib.PDFJS.workerSrc = SCRIPT_PARAMS.workerSrc;
 var loadingTask = pdfjsLib.getDocument(SCRIPT_PARAMS.pdfPath);
 
 loadingTask.promise.then(function (pdfDocument) {
-  document.querySelectorAll('.page').forEach(function(page, i) {
+  var pages = document.querySelectorAll('.page');
+  Array.from(pages).forEach(function(page, i) {
     var canvas = document.createElement('canvas');
-    page.prepend(canvas);
+
+    if (page.children.length > 0) {
+      page.insertBefore(canvas, page.children[0]);
+    } else {
+      page.appendChild(canvas);
+    }
 
     return pdfDocument.getPage(i + 1).then(function (pdfPage) {
       // Display page on the existing canvas with 100% scale.
