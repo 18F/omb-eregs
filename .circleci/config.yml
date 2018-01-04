@@ -117,7 +117,7 @@ jobs:
       - deploy:
           name: Deploy
           command: |
-            if [ "${CIRCLE_BRANCH}" == "api-webpack" ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               export CF_USERNAME=$CF_USERNAME_DEV
               export CF_PASSWORD=$CF_PASSWORD_DEV
               ./devops/circle-deploy.sh dev
