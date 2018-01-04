@@ -1,5 +1,7 @@
 import logging
 
+from django.db import transaction
+
 from document.models import DocNode, FootnoteCitation
 from document.tree import DocCursor
 
@@ -25,14 +27,16 @@ def to_db(doc, policy):
     builder = semtree.SemanticTreeBuilder(doc, writer)
     builder.build()
 
-    writer.cursor.nested_set_renumber()
-    # Work around for a Django bug (arguably) that will insert nulls in place
-    # of foreign key ids
-    # See https://code.djangoproject.com/ticket/23449
-    for footnote_citation in writer.footnote_citations.values():
-        footnote_citation.doc_node = footnote_citation.doc_node
-        footnote_citation.footnote_node = footnote_citation.footnote_node
-    FootnoteCitation.objects.bulk_create(writer.footnote_citations.values())
+    with transaction.atomic():
+        writer.cursor.nested_set_renumber()
+        # Work around for a Django bug (arguably) that will insert nulls in
+        # place of foreign key ids
+        # See https://code.djangoproject.com/ticket/23449
+        footnote_citations = writer.footnote_citations.values()
+        for footnote_citation in footnote_citations:
+            footnote_citation.doc_node = footnote_citation.doc_node
+            footnote_citation.footnote_node = footnote_citation.footnote_node
+        FootnoteCitation.objects.bulk_create(footnote_citations)
 
     return writer.cursor
 
