@@ -78,15 +78,15 @@ services:
     depends_on:
       - persistent_db
       - minio
-      - ombpdf-js-bundler
+      - api-webpack
 
-  ombpdf-js-bundler:
+  api-webpack:
     image: node:6
     volumes:
       - .:/usr/src/app:delegated
     environment:
       USE_POLLING: ${USE_POLLING:-false}
-    working_dir: /usr/src/app/api/ombpdf
+    working_dir: /usr/src/app/api
     command: .docker/deps_ok_then node_modules/.bin/webpack --watch
 
   prod: &PROD_UI
