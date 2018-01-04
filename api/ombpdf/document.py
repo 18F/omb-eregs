@@ -8,25 +8,46 @@ from . import fontsize, util
 from .annotators import AnnotatorTracker
 from .eqnamedtuple import eqnamedtuple
 
+# Minimum percentage of lines, out of all lines in the document, that
+# we should expect to be on the left edge of the page. This helps us
+# filter out outliers that might be left of the edge, but which might
+# represent e.g. decorative banner text.
+MIN_LEFT_EDGE_PERCENTAGE = 0.10
+
 logger = logging.getLogger(__name__)
 
 
-class OMBDocument:
-    # Minimum percentage of lines, out of all lines in the document, that
-    # we should expect to be on the left edge of the page. This helps us
-    # filter out outliers that might be left of the edge, but which might
-    # represent e.g. decorative banner text.
-    MIN_LEFT_EDGE_PERCENTAGE = 0.10
+def calc_left_edge(lines):
+    counter = Counter(line.left_edge for line in lines)
+    total_lines = sum(counter.values())
+    significant_edges = [
+        left_edge for (left_edge, count) in counter.items()
+        if count > total_lines * MIN_LEFT_EDGE_PERCENTAGE
+    ]
+    if significant_edges:
+        return min(significant_edges)
+    elif counter:
+        logger.warning("Couldn't find a significant left edge")
+        return min(counter.keys())
+    else:
+        logger.warning("Couldn't find any left edge. Blank document?")
+        return 0
 
+
+class OMBDocument:
     def __init__(self, ltpages, filename=None):
         stats = fontsize.get_font_size_stats(ltpages)
-        self.paragraph_fontsize = stats.most_common(1)[0][0]
+        if stats:
+            self.paragraph_fontsize = stats.most_common(1)[0][0]
+        else:
+            logger.warning('No text found. Image-only pdf?')
+            self.paragraph_fontsize = 0
         self.pages = [
             OMBPage(page, number)
             for page, number in zip(ltpages, range(1, len(ltpages) + 1))
         ]
         self.filename = filename
-        self.left_edge = self._calc_left_edge()
+        self.left_edge = calc_left_edge(self.lines)
         self.annotators = AnnotatorTracker(self)
 
         self._realign_lines_left_of_left_edge()
@@ -36,18 +57,6 @@ class OMBDocument:
             lines = [line for line in page if line.left_edge < self.left_edge]
             for line in lines:
                 line.left_edge = self.left_edge
-
-    def _calc_left_edge(self):
-        counter = Counter()
-        total_lines = 0
-        for line in self.lines:
-            counter[line.left_edge] += 1
-            total_lines += 1
-        significant_edges = [
-            left_edge for (left_edge, count) in counter.items()
-            if count > total_lines * self.MIN_LEFT_EDGE_PERCENTAGE
-        ]
-        return min(significant_edges)
 
     @property
     def lines(self):
