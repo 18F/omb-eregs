@@ -134,6 +134,12 @@ services:
       DEBUG: "true"
     entrypoint: .docker/activate_then flake8
 
+  mypy:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: .docker/activate_then mypy @mypy-files.txt
+
   manage.py:
     <<: *DEV_API
     entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
