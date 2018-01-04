@@ -37,7 +37,11 @@ def calc_left_edge(lines):
 class OMBDocument:
     def __init__(self, ltpages, filename=None):
         stats = fontsize.get_font_size_stats(ltpages)
-        self.paragraph_fontsize = stats.most_common(1)[0][0]
+        if stats:
+            self.paragraph_fontsize = stats.most_common(1)[0][0]
+        else:
+            logger.warning('No text found. Image-only pdf?')
+            self.paragraph_fontsize = 0
         self.pages = [
             OMBPage(page, number)
             for page, number in zip(ltpages, range(1, len(ltpages) + 1))

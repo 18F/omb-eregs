@@ -52,3 +52,12 @@ def test_no_left_edge(monkeypatch):
 
     assert document.calc_left_edge([]) == 0
     assert document.logger.warning.called
+
+
+def test_image_pdf(monkeypatch):
+    monkeypatch.setattr(document, 'logger', Mock())
+    mock_page = []
+
+    doc = document.OMBDocument([mock_page, mock_page, mock_page])
+    assert doc.paragraph_fontsize == 0
+    assert document.logger.warning.called
