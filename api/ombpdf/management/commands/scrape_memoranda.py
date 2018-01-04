@@ -20,6 +20,7 @@ Url = NewType('Url', str)
 
 BASE_URL = 'https://www.whitehouse.gov/omb/memoranda/'
 M_REGEX = re.compile('^(?P<m_number>M-\d\d-\d\d), .*')
+known_exceptions = ()  # no known failure cases
 logger = logging.getLogger(__name__)
 
 
@@ -48,7 +49,7 @@ def parse_pdf(policy: Policy, url: Url) -> bool:
         logger.info('Imported %s (%s nodes)', policy.omb_policy_id,
                     cursor.subtree_size())
         return True
-    except (DocNode.DoesNotExist, KeyError, ValueError):
+    except known_exceptions:
         logger.warning('Something went wrong when importing %s',
                        policy.omb_policy_id)
         return False
