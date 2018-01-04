@@ -3,10 +3,9 @@ var path = require('path');
 
 module.exports = {
   context: __dirname,
-  watch: true,
   devtool: 'inline-source-map',
   entry: {
-    'main': './js/main.ts',
+    'ombpdf.main': './ombpdf/js/main.ts',
     'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
   },
   resolve: {
@@ -18,8 +17,8 @@ module.exports = {
     ],
   },
   output: {
-    path: path.join(__dirname, 'static/ombpdf/js/'),
-    publicPath: 'static/ombpdf/js/',
+    path: path.join(__dirname, 'webpack-static/bundles/js/'),
+    publicPath: 'static/bundles/js/',
     filename: '[name].bundle.js'
   }
 };
