@@ -136,14 +136,12 @@ def test_footnotes_citation_without_footnote(monkeypatch):
 
     writer = semdb.DatabaseWriter(mommy.prepare(Policy))
     para = semtree.Paragraph()
-    footnote_list = semtree.FootnoteList()
 
     writer.begin_paragraph(para)
     writer.create_text('This has a citation')
     writer.create_footnote_citation(semtree.FootnoteCitation(1))
     writer.create_text(' but no footnote')
     writer.end_paragraph(para)
-    writer.begin_footnote_list(footnote_list)
     assert 1 in writer.footnote_citations
-    writer.end_footnote_list(footnote_list)
+    writer.end_document(semtree.Document(''))
     assert semdb.logger.warning.called

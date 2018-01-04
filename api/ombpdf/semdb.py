@@ -63,6 +63,12 @@ class DatabaseWriter(semtree.Writer):
 
     def end_document(self, doc):
         self.cursor_stack = self.cursor_stack[:1]
+        no_nodes = [key for key, value in self.footnote_citations.items()
+                    if not hasattr(value, 'footnote_node')]
+        if no_nodes:
+            logger.warning('Unresolved footnote citations exist: %s', no_nodes)
+            for no_node_cite in no_nodes:
+                del self.footnote_citations[no_node_cite]
 
     def begin_heading(self, heading):
         while heading.level <= self.sec_level:
@@ -118,12 +124,7 @@ class DatabaseWriter(semtree.Writer):
         self.cursor_stack = self.cursor_stack[:1]
 
     def end_footnote_list(self, fl):
-        no_nodes = [key for key, value in self.footnote_citations.items()
-                    if not hasattr(value, 'footnote_node')]
-        if no_nodes:
-            logger.warning('Unresolved footnote citations exist: %s', no_nodes)
-            for no_node_cite in no_nodes:
-                del self.footnote_citations[no_node_cite]
+        pass
 
     def begin_footnote(self, f):
         child_args = {
