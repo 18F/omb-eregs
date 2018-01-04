@@ -109,6 +109,7 @@ There are two types of entry points:
   * `manage.py`
   * `py.test`
   * `flake8`
+  * `mypy`
   * `pip-compile`
   * `npm`
   * `webpack`
@@ -219,6 +220,7 @@ We have unit tests for the API/admin (Python) and for the React-based frontend
 For Python unit tests, run:
 ```sh
 docker-compose run --rm flake8  # linting
+docker-compose run --rm mypy    # type checking
 docker-compose run --rm py.test # run tests once
 docker-compose run --rm ptw     # watch command to run tests whenever a file changes
 ```
