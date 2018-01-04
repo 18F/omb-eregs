@@ -1,22 +1,19 @@
-$basic-spacing: 1rem;
-$medium-spacing: 2.5rem;
-
 .styleguide-container {
-  padding: $basic-spacing;
+  padding: $space;
   max-width: 800px;
   margin: 0 auto;
 
   >.document-header {
-    margin-bottom: $basic-spacing;
+    margin-bottom: $space;
   }
 }
 
 .styleguide-example {
   border: 1px solid $color-lt-gray;
-  padding: $basic-spacing $medium-spacing;
+  padding: $space $space-lg;
 }
 
 .example-title {
-  margin-top: $medium-spacing;
-  margin-bottom: $basic-spacing;
+  margin-top: $space-lg;
+  margin-bottom: $space;
 }
