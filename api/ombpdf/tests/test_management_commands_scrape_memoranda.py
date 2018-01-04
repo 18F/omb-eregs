@@ -67,6 +67,7 @@ def test_parse_pdf_failure(monkeypatch):
     monkeypatch.setattr(scrape_memoranda, 'requests', Mock())
     monkeypatch.setattr(scrape_memoranda, 'OMBDocument', Mock())
     monkeypatch.setattr(scrape_memoranda, 'to_db', Mock())
+    monkeypatch.setattr(scrape_memoranda, 'known_exceptions', (ValueError,))
     scrape_memoranda.requests.get.return_value.content = b''
     scrape_memoranda.to_db.side_effect = ValueError()
 
