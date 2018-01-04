@@ -3,7 +3,6 @@ var path = require('path');
 
 module.exports = {
   context: __dirname,
-  watch: true,
   devtool: 'inline-source-map',
   entry: {
     'ombpdf.main': './ombpdf/js/main.ts',

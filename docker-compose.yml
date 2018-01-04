@@ -78,9 +78,9 @@ services:
     depends_on:
       - persistent_db
       - minio
-      - api-webpack
+      - api-webpack-watcher
 
-  api-webpack:
+  api-webpack-watcher: &API_WEBPACK
     image: node:6
     volumes:
       - .:/usr/src/app:delegated
@@ -176,6 +176,13 @@ services:
 
   webpack:
     <<: *DEV_UI
+    entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
+    command: ''
+    ports: []
+    depends_on: []
+
+  api-webpack:
+    <<: *API_WEBPACK
     entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
     command: ''
     ports: []
