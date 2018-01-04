@@ -31,6 +31,7 @@ def best_url(urls: List[Url]) -> Optional[Url]:
                 return url
         except RequestException:
             continue
+    return None
 
 
 def import_from_policy(policy: Policy) -> bool:
