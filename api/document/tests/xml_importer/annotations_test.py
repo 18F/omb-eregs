@@ -15,7 +15,7 @@ from reqs.models import Policy
 def test_footnote_annotations():
     policy = mommy.make(Policy)
     xml_span = etree.fromstring("<footnote_citation> 1  </footnote_citation>")
-    root = DocCursor.new_tree('sect', '2', policy=policy)
+    root = DocCursor.new_tree('sec', '2', policy=policy)
     for _ in range(8):
         root.add_child('para')
     root['para_2'].add_child('footnote', '3')  # not 1
@@ -33,7 +33,7 @@ def test_footnote_annotations():
 def test_footnote_annotations_missing(monkeypatch):
     monkeypatch.setattr(annotations.logger, 'warning', Mock())
     xml_span = etree.fromstring("<footnote_citation> 1  </footnote_citation>")
-    root = DocCursor.new_tree('sect', '2')
+    root = DocCursor.new_tree('sec', '2')
     for _ in range(8):
         root.add_child('para')
     root['para_2'].add_child('footnote', '3')  # not 1
