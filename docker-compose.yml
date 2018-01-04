@@ -185,8 +185,6 @@ services:
     <<: *API_WEBPACK
     entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
     command: ''
-    ports: []
-    depends_on: []
 
   pybash:
     <<: *DEV_API
