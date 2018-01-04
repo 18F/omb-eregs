@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Activate our python virtualenv and install dependencies.
+
 if [ -n "$DEBUG" ]; then
   if [ ! -d .venv-dev ]; then
     python -m venv .venv-dev
@@ -20,6 +22,19 @@ if [ -n "$DEBUG" ]; then
   pip-sync requirements_dev.txt
 else
   pip-sync requirements.txt
+fi
+
+# Install our node dependencies.
+
+if [ ! -x node_modules/.bin/deps-ok ]; then
+  echo "Installing deps-ok"
+  npm install --quiet deps-ok
+fi
+
+./node_modules/.bin/deps-ok &> /dev/null
+if [ $? -ne 0 ]; then
+  echo "Installing Node dependencies"
+  npm install --quiet
 fi
 
 exec "$@"

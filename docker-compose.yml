@@ -18,7 +18,8 @@ services:
     volumes:
       - database_data:/var/lib/postgresql/data
   python: &PYTHON     # This command is out of order to aid with config reuse
-    image: python:3.6.2
+    build:
+      context: api/.docker
     volumes:
       - .:/usr/src/app:delegated
     working_dir: /usr/src/app/api
@@ -78,16 +79,17 @@ services:
     depends_on:
       - persistent_db
       - minio
-      - ombpdf-js-bundler
+      - api-webpack
 
-  ombpdf-js-bundler:
-    image: node:6
+  api-webpack:
+    build:
+      context: api/.docker
     volumes:
       - .:/usr/src/app:delegated
     environment:
       USE_POLLING: ${USE_POLLING:-false}
-    working_dir: /usr/src/app/api/ombpdf
-    command: .docker/deps_ok_then node_modules/.bin/webpack --watch
+    working_dir: /usr/src/app/api
+    command: .docker/activate_then webpack --watch
 
   prod: &PROD_UI
     image: node:6
@@ -181,12 +183,12 @@ services:
     ports: []
     depends_on: []
 
-  pybash:
+  apibash:
     <<: *DEV_API
     entrypoint: .docker/wait_for_db_then .docker/activate_then bash
     command: ''
 
-  nodebash:
+  uibash:
     <<: *DEV_UI
     entrypoint: .docker/deps_ok_then .docker/modify_path_then bash
     command: ''

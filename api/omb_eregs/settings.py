@@ -188,6 +188,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.environ.get('TMPDIR', '.') + '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'webpack-static'),
+]
 
 # File storage
 
