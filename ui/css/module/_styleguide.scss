@@ -1,0 +1,19 @@
+.styleguide-container {
+  padding: $space;
+  max-width: 800px;
+  margin: 0 auto;
+
+  >.document-header {
+    margin-bottom: $space;
+  }
+}
+
+.styleguide-example {
+  border: 1px solid $color-lt-gray;
+  padding: $space $space-lg;
+}
+
+.example-title {
+  margin-top: $space-lg;
+  margin-bottom: $space;
+}
