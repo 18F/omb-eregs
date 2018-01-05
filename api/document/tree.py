@@ -13,7 +13,7 @@ class DocCursor():
     (a DiGraph). This DocCursor points to a specific node within that tree."""
     __slots__ = ('tree', 'identifier')
 
-    def __init__(self, tree: DiGraph, identifier: str):
+    def __init__(self, tree: DiGraph, identifier: str) -> None:
         self.tree = tree
         self.identifier = identifier
 
