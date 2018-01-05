@@ -2,7 +2,6 @@ from django.db.models import Count, IntegerField, OuterRef, Subquery
 from django.http import Http404
 from rest_framework import viewsets
 
-from document.models import annotate_with_has_docnodes
 from reqs.filtersets import (AgencyFilter, AgencyGroupFilter, PolicyFilter,
                              RequirementFilter, TopicFilter)
 from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
@@ -82,11 +81,11 @@ class PolicyViewSet(viewsets.ModelViewSet):
     search_fields = ('title',)
 
     def get_queryset(self):
-        queryset = annotate_with_has_docnodes(super().get_queryset()) \
-            .filter(public=True) \
+        queryset = super().get_queryset() \
+            .annotate_with_has_docnodes() \
             .annotate(total_reqs=relevant_reqs_count({}),
                       relevant_reqs=relevant_reqs_count(self.request.GET)) \
-            .filter(relevant_reqs__gt=0)
+            .filter(public=True, relevant_reqs__gt=0)
         return queryset
 
     def get_object(self):

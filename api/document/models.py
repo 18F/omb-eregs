@@ -3,11 +3,9 @@ from typing import Iterator, List
 
 from django.db import models
 
-from reqs.models import Policy, Requirement
-
 
 class DocNode(models.Model):
-    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
+    policy = models.ForeignKey('reqs.Policy', on_delete=models.CASCADE)
     # e.g. part_447__subpart_A__sec_1__para_b
     identifier = models.CharField(max_length=1024)
     # e.g. para
@@ -50,17 +48,6 @@ class DocNode(models.Model):
                                self.inlinerequirements.all())
 
 
-def annotate_with_has_docnodes(queryset=None):
-    """We frequently want to filter a Policy queryset by whether or not the
-    policies have associated DocNodes. This annotates a queryset with that
-    data."""
-    if queryset is None:
-        queryset = Policy.objects.all()
-
-    subquery = DocNode.objects.filter(policy=models.OuterRef('pk'))
-    return queryset.annotate(has_docnodes=models.Exists(subquery))
-
-
 class Annotation(models.Model):
     doc_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='%(class)ss')
@@ -91,4 +78,4 @@ class ExternalLink(Annotation):
 
 class InlineRequirement(Annotation):
     requirement = models.ForeignKey(
-        Requirement, on_delete=models.CASCADE, related_name='+')
+        'reqs.Requirement', on_delete=models.CASCADE, related_name='+')

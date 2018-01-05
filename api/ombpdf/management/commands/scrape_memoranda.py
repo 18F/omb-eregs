@@ -8,7 +8,6 @@ import requests
 from django.core.management.base import BaseCommand
 from lxml import etree
 
-from document.models import annotate_with_has_docnodes
 from ombpdf.document import OMBDocument
 from ombpdf.download_pdfs import download_with_progress
 from ombpdf.semdb import to_db
@@ -58,9 +57,9 @@ def scrape_memoranda() -> Tuple[Set[MemoId], Set[MemoId]]:
     pdf listed on OMB's site."""
     successes, failures = set(), set()
     url_by_num = scrape_urls()
-    query = annotate_with_has_docnodes() \
-        .filter(omb_policy_id__in=url_by_num.keys()) \
-        .filter(has_docnodes=False)     # not replacing data
+    query = Policy.objects.annotate_with_has_docnodes() \
+        .filter(omb_policy_id__in=url_by_num.keys(),
+                has_docnodes=False)     # not replacing data
     for policy in query:
         if parse_pdf(policy, url_by_num[policy.omb_policy_id]):
             successes.add(policy.omb_policy_id)
