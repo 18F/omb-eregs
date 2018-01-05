@@ -12,11 +12,10 @@ flake8-string-format
 flake8-tuple
 jedi
 model_mommy
+mypy
 pep8-naming
 pyinotify
 pytest
 pytest-cov
 pytest-django
 pytest-watch
-tqdm
-mypy
