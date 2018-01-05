@@ -36,7 +36,8 @@ def best_url(urls: List[Url]) -> Optional[Url]:
 
 def import_from_policy(policy: Policy) -> bool:
     """Convert a policy to a list of potential urls to try, pick the first
-    that works, then attempt to parse."""
+    that works, then attempt to parse. Return whether or not the whole process
+    was successful."""
     uri = policy.uri.strip()
     urls_to_try = [Url(uri)]
     if OLD_DOMAIN in uri:
