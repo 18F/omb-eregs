@@ -78,15 +78,15 @@ services:
     depends_on:
       - persistent_db
       - minio
-      - ombpdf-js-bundler
+      - api-webpack-watcher
 
-  ombpdf-js-bundler:
+  api-webpack-watcher: &API_WEBPACK
     image: node:6
     volumes:
       - .:/usr/src/app:delegated
     environment:
       USE_POLLING: ${USE_POLLING:-false}
-    working_dir: /usr/src/app/api/ombpdf
+    working_dir: /usr/src/app/api
     command: .docker/deps_ok_then node_modules/.bin/webpack --watch
 
   prod: &PROD_UI
@@ -134,6 +134,12 @@ services:
       DEBUG: "true"
     entrypoint: .docker/activate_then flake8
 
+  mypy:
+    <<: *PYTHON
+    environment:
+      DEBUG: "true"
+    entrypoint: .docker/activate_then mypy @mypy-files.txt
+
   manage.py:
     <<: *DEV_API
     entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
@@ -174,6 +180,11 @@ services:
     command: ''
     ports: []
     depends_on: []
+
+  api-webpack:
+    <<: *API_WEBPACK
+    entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
+    command: ''
 
   pybash:
     <<: *DEV_API

@@ -3,7 +3,7 @@
   background-color: $color-white;
   color: $color-gray;
   font-size: 0.75rem;
-  padding: 0.25rem 1rem;
+  padding: 0.25rem $space;
   line-height: 0.9375rem;
   align-items: center;
 }
@@ -59,20 +59,20 @@
   .header-search {
     padding-top: 0;
     padding-right: 0;
-    padding-bottom: 1rem;
-    padding-left: 1rem;
+    padding-bottom: $space;
+    padding-left: $space;
   }
 
   .header-search-form {
-    padding-bottom: 1rem;
+    padding-bottom: $space;
   }
 }
 
 .header-search-form {
   @extend .no-print;
   position: absolute;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: $space;
+  padding-right: $space;
   right: 0;
 
   form {

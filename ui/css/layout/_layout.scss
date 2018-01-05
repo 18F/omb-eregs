@@ -5,30 +5,30 @@ body {
 @media (max-width: 52em) {
   .main {
     border: 0;
-    padding: .5rem 1rem;
+    padding: $space-xs $space;
     width: 100%;
   }
 }
 
 .document-container {
   margin: 0 auto;
-  padding-top: 2em;
+  padding-top: $space-xl;
   padding-bottom: 4em;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: $space;
+  padding-right: $space;
 }
 
 @media #{$breakpoint-sm} {
   .document-container {
-    padding-left: 1.5em;
-    padding-right: 1.5em;
+    padding-left: $space-lg;
+    padding-right: $space-lg;
   }
 }
 
 @media #{$breakpoint-lg} {
   .document-container {
-    padding-left: 2em;
-    padding-right: 2em;
+    padding-left: $space-xl;
+    padding-right: $space-xl;
   }
 }
 

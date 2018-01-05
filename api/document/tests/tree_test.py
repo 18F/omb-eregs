@@ -17,28 +17,28 @@ def test_new_tree():
 
 def test_item_access():
     root = tree.DocCursor.new_tree('root', '0')
-    sec1 = root.add_child('sect', '1', text='section 1')
-    root.add_child('sect', '2', text='section 2')
-    sec1.add_child('par', 'a', text='paragraph a')
-    sec1.add_child('par', 'b')
+    sec1 = root.add_child('sec', '1', text='section 1')
+    root.add_child('sec', '2', text='section 2')
+    sec1.add_child('para', 'a', text='paragraph a')
+    sec1.add_child('para', 'b')
 
-    assert root['sect_1'].text == 'section 1'
-    assert root['sect_2'].text == 'section 2'
-    assert root['sect_1']['par_a'].text == 'paragraph a'
+    assert root['sec_1'].text == 'section 1'
+    assert root['sec_2'].text == 'section 2'
+    assert root['sec_1']['para_a'].text == 'paragraph a'
 
 
 def test_depths():
     root = tree.DocCursor.new_tree('root', '0')
-    sec1 = root.add_child('sect')
-    root.add_child('sect')
-    sec1.add_child('par', 'a')
-    sec1.add_child('par', 'b')
+    sec1 = root.add_child('sec')
+    root.add_child('sec')
+    sec1.add_child('para', 'a')
+    sec1.add_child('para', 'b')
 
     assert root.depth == 0
-    assert root['sect_1'].depth == 1
-    assert root['sect_2'].depth == 1
-    assert root['sect_1']['par_a'].depth == 2
-    assert root['sect_1']['par_b'].depth == 2
+    assert root['sec_1'].depth == 1
+    assert root['sec_2'].depth == 1
+    assert root['sec_1']['para_a'].depth == 2
+    assert root['sec_1']['para_b'].depth == 2
 
 
 def test_children_are_sorted():
@@ -54,42 +54,42 @@ def test_children_are_sorted():
 
 def test_next_emblem():
     root = tree.DocCursor.new_tree('root', '0')
-    root.add_child('sect')
-    root.add_child('sect')
-    root.add_child('sect')
+    root.add_child('sec')
+    root.add_child('sec')
+    root.add_child('sec')
     root.add_child('appendix')
     root.add_child('appendix')
 
-    assert root.next_emblem('sect') == '4'
+    assert root.next_emblem('sec') == '4'
     assert root.next_emblem('appendix') == '3'
     assert set(root.tree.nodes()) == {
-        'root_0', 'root_0__sect_1', 'root_0__sect_2', 'root_0__sect_3',
+        'root_0', 'root_0__sec_1', 'root_0__sec_2', 'root_0__sec_3',
         'root_0__appendix_1', 'root_0__appendix_2',
     }
 
 
 def test_walk():
     root = tree.DocCursor.new_tree('root', '0')
-    sect1 = root.add_child('sect')
-    sect2 = root.add_child('sect')
-    sect1.add_child('par', 'a')
-    sect1.add_child('par', 'b')
-    sect2.add_child('par', '1')
+    sec1 = root.add_child('sec')
+    sec2 = root.add_child('sec')
+    sec1.add_child('para', 'a')
+    sec1.add_child('para', 'b')
+    sec2.add_child('para', '1')
 
     idents = [n.identifier for n in root.walk()]
     assert idents == [
-        'root_0', 'root_0__sect_1', 'root_0__sect_1__par_a',
-        'root_0__sect_1__par_b', 'root_0__sect_2', 'root_0__sect_2__par_1',
+        'root_0', 'root_0__sec_1', 'root_0__sec_1__para_a',
+        'root_0__sec_1__para_b', 'root_0__sec_2', 'root_0__sec_2__para_1',
     ]
 
 
 def test_nested_sets():
     root = tree.DocCursor.new_tree('root', '0')
-    sect1 = root.add_child('sect')
-    sect2 = root.add_child('sect')
-    sect1.add_child('par', 'a')
-    sect1.add_child('par', 'b')
-    sect2.add_child('par', '1')
+    sec1 = root.add_child('sec')
+    sec2 = root.add_child('sec')
+    sec1.add_child('para', 'a')
+    sec1.add_child('para', 'b')
+    sec2.add_child('para', '1')
 
     assert root.subtree_size() == 6
     assert root.left is None
@@ -98,34 +98,65 @@ def test_nested_sets():
     root.nested_set_renumber(bulk_create=False)
 
     assert root.left == 1
-    assert root['sect_1'].left == 2
-    assert root['sect_1']['par_a'].left == 3
-    assert root['sect_1']['par_a'].right == 4
-    assert root['sect_1']['par_b'].left == 5
-    assert root['sect_1']['par_b'].right == 6
-    assert root['sect_1'].right == 7
-    assert root['sect_2'].left == 8
-    assert root['sect_2']['par_1'].left == 9
-    assert root['sect_2']['par_1'].right == 10
-    assert root['sect_2'].right == 11
+    assert root['sec_1'].left == 2
+    assert root['sec_1']['para_a'].left == 3
+    assert root['sec_1']['para_a'].right == 4
+    assert root['sec_1']['para_b'].left == 5
+    assert root['sec_1']['para_b'].right == 6
+    assert root['sec_1'].right == 7
+    assert root['sec_2'].left == 8
+    assert root['sec_2']['para_1'].left == 9
+    assert root['sec_2']['para_1'].right == 10
+    assert root['sec_2'].right == 11
     assert root.right == 12
 
 
 def test_parent():
     root = tree.DocCursor.new_tree('root', '0')
-    root.add_child('sect')
-    sect2 = root.add_child('sect')
-    pa = sect2.add_child('par', 'a')
-    pa.add_child('par', '1')
-    sect2.add_child('par', 'b')
+    root.add_child('sec')
+    sec2 = root.add_child('sec')
+    pa = sec2.add_child('para', 'a')
+    pa.add_child('para', '1')
+    sec2.add_child('para', 'b')
 
     assert root.parent() is None
-    assert root['sect_1'].parent().identifier == 'root_0'
-    assert root['sect_2'].parent().identifier == 'root_0'
-    assert root['sect_2']['par_a'].parent().identifier == 'root_0__sect_2'
-    assert root['sect_2']['par_b'].parent().identifier == 'root_0__sect_2'
-    assert root['sect_2']['par_a']['par_1'].parent().identifier \
-        == 'root_0__sect_2__par_a'
+    assert root['sec_1'].parent().identifier == 'root_0'
+    assert root['sec_2'].parent().identifier == 'root_0'
+    assert root['sec_2']['para_a'].parent().identifier == 'root_0__sec_2'
+    assert root['sec_2']['para_b'].parent().identifier == 'root_0__sec_2'
+    assert root['sec_2']['para_a']['para_1'].parent().identifier \
+        == 'root_0__sec_2__para_a'
+
+
+def test_ancestors():
+    root = tree.DocCursor.new_tree('root', '0')
+    root.add_child('sec')
+    sec2 = root.add_child('sec')
+    pa = sec2.add_child('para', 'a')
+    pa1 = pa.add_child('para', '1')
+    pa1.add_child('para', 'i')
+    sec2.add_child('para', 'b')
+
+    assert [n.identifier for n in root.ancestors()] == []
+    result = [n.identifier
+              for n in root['sec_2']['para_a']['para_1'].ancestors()]
+    assert result == [
+        'root_0__sec_2__para_a',
+        'root_0__sec_2',
+        'root_0',
+    ]
+    result = [
+        n.identifier
+        for n in root['sec_2']['para_a']['para_1']['para_i'].ancestors(
+            lambda n: n.node_type == 'para')
+    ]
+    assert result == ['root_0__sec_2__para_a__para_1', 'root_0__sec_2__para_a']
+    result = [
+        n.identifier
+        for n in root['sec_2']['para_a']['para_1']['para_i'].ancestors(
+            lambda n: n.node_type == 'sec')
+    ]
+    assert result == ['root_0__sec_2']
 
 
 @pytest.mark.django_db
@@ -134,10 +165,10 @@ def test_create_save_load():
     data from the database."""
     policy = mommy.make(Policy)
     root = tree.DocCursor.new_tree('root', '0', text='Root', policy=policy)
-    sect1 = root.add_child('sect', text='First Section')
-    sect1.add_child('par', 'a')
-    sect1.add_child('par', 'b', text='Paragraph b')
-    root.add_child('sect')
+    sec1 = root.add_child('sec', text='First Section')
+    sec1.add_child('para', 'a')
+    sec1.add_child('para', 'b', text='Paragraph b')
+    root.add_child('sec')
     app1 = root.add_child('appendix')
     app1.add_child('apppar', 'i', text='Appendix par i')
 
@@ -149,8 +180,8 @@ def test_create_save_load():
 
     assert new_root.subtree_size() == 7
     assert new_root.text == 'Root'
-    assert new_root['sect_1'].text == 'First Section'
-    assert new_root['sect_1']['par_b'].text == 'Paragraph b'
+    assert new_root['sec_1'].text == 'First Section'
+    assert new_root['sec_1']['para_b'].text == 'Paragraph b'
     assert new_root['appendix_1']['apppar_i'].text == 'Appendix par i'
 
 
@@ -195,3 +226,15 @@ def test_default_policy():
     assert root.policy == policy1
     assert root['sec_1'].policy == policy1
     assert root['sec_2'].policy == policy2
+
+
+def test_jump_to():
+    root = tree.DocCursor.new_tree('root', '1')
+    root.add_child('sec')
+    root['sec_1'].add_child('para', 'a')
+    root.add_child('sec')
+    para_a = root['sec_2'].add_child('para', 'a')
+
+    assert root.jump_to('root_1').identifier == 'root_1'
+    assert para_a.jump_to('root_1').identifier == 'root_1'
+    assert para_a.jump_to('root_1__sec_1').identifier == 'root_1__sec_1'

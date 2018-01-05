@@ -8,7 +8,8 @@ describe('<RequirementsContainer />', () => {
     results: [{ thing: 1 }, { thing: 2 }],
     count: 2,
   };
-  const result = shallow(<RequirementsContainer pagedReqs={pagedReqs} />);
+  const result = shallow(<RequirementsContainer pagedReqs={pagedReqs} />)
+    .find('SearchFilterView');
 
   it('has a topics filter controls', () => {
     const controls = result.prop('filterControls');

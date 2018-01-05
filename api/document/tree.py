@@ -122,6 +122,13 @@ class DocCursor():
         if predecessors:
             return type(self)(self.tree, predecessors[0])
 
+    def ancestors(self, filter_fn=None):
+        parent = self.parent()
+        if parent and (not filter_fn or filter_fn(parent)):
+            yield parent
+        if parent:
+            yield from parent.ancestors(filter_fn)
+
     def add_models(self, models):
         """Convert a (linear) list of DocNodes into a tree-aware version.
         We assume that the models are already sorted."""
@@ -133,14 +140,17 @@ class DocCursor():
             self.tree.add_node(child.identifier, model=child)
             self.tree.add_edge(parent.identifier, child.identifier,
                                sort_order=parent.next_sort_order())
-            parent = self.__class__(self.tree, child.identifier)
+            parent = type(self)(self.tree, child.identifier)
         return self
 
     def filter(self, filter_fn: Callable[[DocNode], bool]):
         """Find a model in the tree that matches our filtering function."""
         for identifier, model in self.tree.nodes(data='model'):
             if filter_fn(model):
-                yield self.__class__(self.tree, identifier)
+                yield type(self)(self.tree, identifier)
+
+    def jump_to(self, identifier):
+        return type(self)(self.tree, identifier)
 
 
 class XMLAwareCursor(DocCursor):

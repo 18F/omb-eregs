@@ -37,9 +37,10 @@ ALLOWED_HOSTS = env.uris
 
 INSTALLED_APPS = (
     'document',
+    'ombpdf',
     'reqs.apps.ReqsConfig',
     'django.contrib.contenttypes',
-    # must be after taggit and contenttypes, but before auth
+    # must be after contenttypes, but before auth
     'ereqs_admin.apps.EreqsAdminConfig',
     'corsheaders',
     'django_filters',
@@ -58,7 +59,7 @@ INSTALLED_APPS = (
     'django.contrib.postgres',
 )
 if DEBUG:
-    INSTALLED_APPS += ('ombpdf', 'debug_toolbar',)
+    INSTALLED_APPS += ('debug_toolbar',)
 
 MIDDLEWARE = (
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -188,6 +189,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.environ.get('TMPDIR', '.') + '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'webpack-static'),
+]
 
 # File storage
 

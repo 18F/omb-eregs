@@ -1,9 +1,11 @@
+import Policy from './policy';
+
 export class Meta {
   constructor(args) {
     const fieldValues = args || {};
     // policy meta data (e.g. slugs, pdf url, etc.)  associated with this
     // document
-    this.policy = fieldValues.policy || {};
+    this.policy = new Policy(fieldValues.policy || {});
 
     // footnotes referenced in this DocumentNode or its children. E.g. used to
     // consolidate footnotes in tables
@@ -40,6 +42,9 @@ export default class DocumentNode {
     // the plain text for a node (sans any markers). We generally don't want
     // to access this as it doesn't deal with inline elements
     this.text = fieldValues.text || '';
+
+    // a string to describe this node and all its children
+    this.title = fieldValues.title || '';
 
     // text like "a)" or "Section 22"; not essential to understanding a list
     // item, footnote, etc. but essential to correct display

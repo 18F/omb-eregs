@@ -5,7 +5,7 @@
 
 var pages = document.querySelectorAll('.page');
 
-function isElPartlyInViewport (el) {
+function isElPartlyInViewport (el: Element) {
   var rect = el.getBoundingClientRect();
 
   return (
@@ -17,7 +17,7 @@ function isElPartlyInViewport (el) {
 }
 
 function setInViewport() {
-  pages.forEach(function(page, i) {
+  Array.from(pages).forEach(function(page, i) {
     page.classList.toggle('in-viewport', isElPartlyInViewport(page));
   });
 }

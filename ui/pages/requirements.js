@@ -10,6 +10,7 @@ import ExistingFilters from '../components/filters/existing-container';
 import FilterListView from '../components/filters/list-view';
 import SelectorContainer from '../components/filters/selector';
 import { requirementsData } from '../util/api/queries';
+import pageTitle from '../util/page-title';
 
 export function PoliciesTab({ router }) {
   const reqQuery = router.query;
@@ -69,20 +70,23 @@ export function RequirementsContainer({
     </div>
   );
   return (
-    <SearchFilterView
-      filterControls={filterControls}
-      pageContent={<RequirementsView requirements={pagedReqs.results} count={pagedReqs.count} />}
-      selectedFilters={
-        <ExistingFilters
-          agencies={existingAgencies}
-          fieldNames={fieldNames}
-          policies={existingPolicies}
-          route="requirements"
-          topics={existingTopics}
-        />
-      }
-      tabs={tabs}
-    />
+    <React.Fragment>
+      { pageTitle('Requirement Search Results') }
+      <SearchFilterView
+        filterControls={filterControls}
+        pageContent={<RequirementsView requirements={pagedReqs.results} count={pagedReqs.count} />}
+        selectedFilters={
+          <ExistingFilters
+            agencies={existingAgencies}
+            fieldNames={fieldNames}
+            policies={existingPolicies}
+            route="requirements"
+            topics={existingTopics}
+          />
+        }
+        tabs={tabs}
+      />
+    </React.Fragment>
   );
 }
 RequirementsContainer.propTypes = {

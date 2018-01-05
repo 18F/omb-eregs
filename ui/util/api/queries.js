@@ -1,4 +1,3 @@
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
@@ -7,15 +6,6 @@ import { apiNameField, search } from '../../lookup-search';
 import { routes } from '../../routes';
 
 const NUM_POLICIES = 4;
-// See https://momentjs.com/docs/#/displaying/ for options
-const DATE_FORMAT = 'MMMM D, YYYY';
-
-export function formatIssuance(policy) {
-  return {
-    ...policy,
-    issuance_pretty: moment(policy.issuance).format(DATE_FORMAT),
-  };
-}
 
 export async function propagate404(fn) {
   try {
@@ -30,9 +20,7 @@ export async function propagate404(fn) {
 
 export async function homepageData() {
   const results = await endpoints.policies.fetchResults({ ordering: '-issuance' });
-  return {
-    recentPolicies: results.slice(0, NUM_POLICIES).map(formatIssuance),
-  };
+  return { recentPolicies: results.slice(0, NUM_POLICIES) };
 }
 
 export function policiesData({ query }) {
@@ -134,10 +122,12 @@ export const cleanSearchParamTypes = PropTypes.shape({
   }).isRequired,
 });
 
-export async function searchRedirectData({ query }) {
-  const userParams = cleanSearchParams(query);
-  const pagedEntries = await search(userParams.lookup, userParams.q, userParams.page);
-  return { pagedEntries, userParams };
+export function searchRedirectData({ query }) {
+  return propagate404(async () => {
+    const userParams = cleanSearchParams(query);
+    const pagedEntries = await search(userParams.lookup, userParams.q, userParams.page);
+    return { pagedEntries, userParams };
+  });
 }
 
 /*
@@ -158,7 +148,5 @@ export function redirectQuery(query, insertParam, idToInsert) {
 
 export async function documentData({ query }) {
   const docNode = await endpoints.document.fetchOne(query.policyId);
-  const policy = formatIssuance(docNode.meta.policy);
-  docNode.meta = { ...docNode.meta, policy };
   return { docNode };
 }

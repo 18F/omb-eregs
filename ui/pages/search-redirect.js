@@ -6,6 +6,7 @@ import Link from '../components/link';
 import PagersContainer from '../components/pagers';
 import { apiNameField } from '../lookup-search';
 import { cleanSearchParamTypes, redirectQuery, searchRedirectData } from '../util/api/queries';
+import pageTitle from '../util/page-title';
 
 function Entry({ entry, userParams }) {
   const name = entry[apiNameField[userParams.lookup]];
@@ -32,6 +33,7 @@ export function SearchRedirect({ pagedEntries, userParams }) {
 
   return (
     <div className="max-width-4 mx-auto my3">
+      { pageTitle('Search Results') }
       <div>
         <Link route={userParams.redirect.route} params={userParams.redirect.query}>
           Return to view requirements

@@ -17,11 +17,11 @@ def test_end_to_end():
         title='Some Title', uri='http://example.com/thing.pdf',
     )
     root = DocCursor.new_tree('root', '0', policy=policy, title='Policy A')
-    root.add_child('sect', text='Section 1', title='First Section')
-    sect2 = root.add_child('sect', title='Section 2')
-    pa = sect2.add_child('par', 'a', marker='(a)')
-    pa.add_child('par', '1', text='Paragraph (a)(1)', marker='(1)')
-    sect2.add_child('par', 'b', marker='b.')
+    root.add_child('sec', text='Section 1', title='First Section')
+    sec2 = root.add_child('sec', title='Section 2')
+    pa = sec2.add_child('para', 'a', marker='(a)')
+    pa.add_child('para', '1', text='Paragraph (a)(1)', marker='(1)')
+    sec2.add_child('para', 'b', marker='b.')
     root.nested_set_renumber()
 
     result = doc_cursor.DocCursorSerializer(
@@ -31,6 +31,7 @@ def test_end_to_end():
         'node_type': 'root',
         'type_emblem': '0',
         'text': '',
+        'title': 'Policy A',
         'marker': '',
         'depth': 0,
         'content': [],
@@ -41,6 +42,7 @@ def test_end_to_end():
                 'omb_policy_id': 'M-18-18',
                 'original_url': 'http://example.com/thing.pdf',
                 'title': 'Some Title',
+                'title_with_number': 'M-18-18: Some Title',
             },
             'table_of_contents': {
                 'identifier': 'root_0',
@@ -48,11 +50,11 @@ def test_end_to_end():
                 'children': [
                     {
                         'children': [],
-                        'identifier': 'root_0__sect_1',
+                        'identifier': 'root_0__sec_1',
                         'title': 'First Section',
                     }, {
                         'children': [],
-                        'identifier': 'root_0__sect_2',
+                        'identifier': 'root_0__sec_2',
                         'title': 'Section 2',
                     },
                 ],
@@ -60,10 +62,11 @@ def test_end_to_end():
         },
         'children': [
             {
-                'identifier': 'root_0__sect_1',
-                'node_type': 'sect',
+                'identifier': 'root_0__sec_1',
+                'node_type': 'sec',
                 'type_emblem': '1',
                 'text': 'Section 1',
+                'title': 'First Section',
                 'marker': '',
                 'depth': 1,
                 'meta': {},
@@ -75,30 +78,33 @@ def test_end_to_end():
                 'children': [],
             },
             {
-                'identifier': 'root_0__sect_2',
-                'node_type': 'sect',
+                'identifier': 'root_0__sec_2',
+                'node_type': 'sec',
                 'type_emblem': '2',
                 'text': '',
+                'title': 'Section 2',
                 'marker': '',
                 'depth': 1,
                 'meta': {},
                 'content': [],
                 'children': [
                     {
-                        'identifier': 'root_0__sect_2__par_a',
-                        'node_type': 'par',
+                        'identifier': 'root_0__sec_2__para_a',
+                        'node_type': 'para',
                         'type_emblem': 'a',
                         'text': '',
+                        'title': '',
                         'marker': '(a)',
                         'depth': 2,
                         'meta': {},
                         'content': [],
                         'children': [
                             {
-                                'identifier': 'root_0__sect_2__par_a__par_1',
-                                'node_type': 'par',
+                                'identifier': 'root_0__sec_2__para_a__para_1',
+                                'node_type': 'para',
                                 'type_emblem': '1',
                                 'text': 'Paragraph (a)(1)',
+                                'title': '',
                                 'marker': '(1)',
                                 'depth': 3,
                                 'meta': {},
@@ -112,10 +118,11 @@ def test_end_to_end():
                         ],
                     },
                     {
-                        'identifier': 'root_0__sect_2__par_b',
-                        'node_type': 'par',
+                        'identifier': 'root_0__sec_2__para_b',
+                        'node_type': 'para',
                         'type_emblem': 'b',
                         'text': '',
+                        'title': '',
                         'marker': 'b.',
                         'depth': 2,
                         'meta': {},

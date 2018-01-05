@@ -1,11 +1,11 @@
 import {
   cleanSearchParams,
   documentData,
-  formatIssuance,
   homepageData,
   policiesData,
   redirectQuery,
   requirementsData,
+  searchRedirectData,
 } from '../../../util/api/queries';
 import endpoints from '../../../util/api/endpoints';
 
@@ -13,17 +13,6 @@ jest.mock('../../../util/api/endpoints');
 
 const error404 = new Error('Not Found');
 error404.response = { status: 404 };
-
-describe('formatIssuance', () => {
-  it('handles reasonable input', () => {
-    const result = formatIssuance({ issuance: '2001-12-20' });
-    expect(result.issuance_pretty).toEqual('December 20, 2001');
-  });
-  it('fails gracefully', () => {
-    const result = formatIssuance({ issuance: null });
-    expect(result.issuance_pretty).toEqual('Invalid date');
-  });
-});
 
 describe('homepageData', () => {
   it('makes the correct request', () => {
@@ -38,17 +27,6 @@ describe('homepageData', () => {
     );
     return homepageData().then(({ recentPolicies }) => {
       expect(recentPolicies.map(r => r.id)).toEqual([1, 2, 3, 4]);
-    });
-  });
-  it('formats issuance date', () => {
-    endpoints.topics.fetchResults.mockImplementationOnce(() =>
-      Promise.resolve([{ issuance: '2002-03-04' }, { issuance: '2020-11-10' }]),
-    );
-    return homepageData().then(({ recentPolicies }) => {
-      expect(recentPolicies.map(r => r.issuance_pretty)).toEqual([
-        'March 4, 2002',
-        'November 10, 2020',
-      ]);
     });
   });
 });
@@ -125,10 +103,7 @@ describe('documentData()', () => {
     expect(result).toEqual({
       docNode: {
         meta: {
-          policy: {
-            issuance: '2012-12-12',
-            issuance_pretty: 'December 12, 2012',
-          },
+          policy: { issuance: '2012-12-12' },
         },
       },
     });
@@ -153,6 +128,23 @@ describe('requirementsData()', () => {
     });
 
     const result = await requirementsData({ query: { page: 99999 } });
+    expect(result).toEqual({ statusCode: 404 });
+  });
+});
+
+describe('searchRedirect()', () => {
+  it('passes up 404s', async () => {
+    endpoints.topics.fetch.mockImplementationOnce(() => {
+      throw error404;
+    });
+    const query = {
+      insertParam: 'goesHere',
+      lookup: 'topics',
+      page: '9999',
+      redirectRoute: 'requirements',
+    };
+
+    const result = await searchRedirectData({ query });
     expect(result).toEqual({ statusCode: 404 });
   });
 });

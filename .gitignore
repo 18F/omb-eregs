@@ -9,12 +9,13 @@ node_modules
 reqs/static/js/bundle.js
 ui-dist
 ui/static/font/fontawesome-webfont*
+ui/static/font/KaTeX*
 ui/static/styles.css*
 jest*
 ui/lcov-report/
 ui/lcov.info
 .next
-api/ombpdf/static/ombpdf/js/
+api/webpack-static/
 
 # Data
 *.csv
@@ -84,6 +85,9 @@ instance/
 
 # Scrapy stuff:
 .scrapy
+
+# Mypy stuff:
+.mypy_cache/
 
 # Sphinx documentation
 docs/_build/
