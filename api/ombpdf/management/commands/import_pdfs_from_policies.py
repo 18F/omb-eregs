@@ -4,10 +4,9 @@ from typing import List, Optional, Set, Tuple
 
 import requests
 from django.core.management.base import BaseCommand
-from django.db.models import Exists, OuterRef
 from requests.exceptions import RequestException
 
-from document.models import DocNode
+from document.models import annotate_with_has_docnodes
 from ombpdf.management.commands.scrape_memoranda import Url, parse_pdf
 from reqs.models import Policy
 
@@ -53,9 +52,7 @@ def import_pdfs_from_policies() -> Tuple[Set[str], Set[str]]:
     """Attempt to import document text from all pdf policies which haven't
     already been imported."""
     successes, failures = set(), set()
-    has_docnodes = Exists(DocNode.objects.filter(policy=OuterRef('pk')))
-    query = Policy.objects \
-        .annotate(has_docnodes=has_docnodes) \
+    query = annotate_with_has_docnodes() \
         .filter(uri__endswith='.pdf') \
         .filter(has_docnodes=False)     # not replacing data
     for policy in query:

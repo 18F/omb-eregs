@@ -50,6 +50,17 @@ class DocNode(models.Model):
                                self.inlinerequirements.all())
 
 
+def annotate_with_has_docnodes(queryset=None):
+    """We frequently want to filter a Policy queryset by whether or not the
+    policies have associated DocNodes. This annotates a queryset with that
+    data."""
+    if queryset is None:
+        queryset = Policy.objects.all()
+
+    subquery = DocNode.objects.filter(policy=models.OuterRef('pk'))
+    return queryset.annotate(has_docnodes=models.Exists(subquery))
+
+
 class Annotation(models.Model):
     doc_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='%(class)ss')
