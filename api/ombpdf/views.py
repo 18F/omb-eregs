@@ -65,7 +65,7 @@ def rawlayout_pdf(request, pdf):
 
     script_params = {
         'pdfPath': reverse('raw_pdf', kwargs={'pdf': pdf}),
-        'workerSrc': static('ombpdf/js/pdf.worker.bundle.js'),
+        'workerSrc': static('bundles/js/pdf.worker.bundle.js'),
     }
 
     html, ctx = rawlayout.to_html(doc)
