@@ -11,7 +11,7 @@ ui-dist
 ui/static/font/fontawesome-webfont*
 ui/static/font/KaTeX*
 ui/static/styles.css*
-jest*
+jest_*
 ui/lcov-report/
 ui/lcov.info
 .next
