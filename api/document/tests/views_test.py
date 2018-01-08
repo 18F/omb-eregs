@@ -13,6 +13,46 @@ from reqs.models import Policy, Requirement
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
+def test_put_403s_for_anon_users(client):
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.nested_set_renumber()
+
+    assert client.put(f"/{policy.pk}").status_code == 403
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
+@pytest.mark.xfail(
+    reason="Need to actually implement the serializer(s)!",
+    raises=NotImplementedError
+)
+def test_put_works_for_admin_users(admin_client):
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.add_child('sec')
+    root.nested_set_renumber()
+
+    # Get the original document...
+    response = admin_client.get(f"/{policy.pk}")
+    assert response.status_code == 200
+    result = response.json()
+
+    # Modify it a bit...
+    result['children'][0]['title'] = 'boop'
+
+    response = admin_client.put(f"/{policy.pk}", data=json.dumps(result),
+                                content_type='application/json')
+    assert response.status_code == 200
+
+    # Now fetch it again, and make sure our modification stuck.
+    response = admin_client.get(f"/{policy.pk}")
+    assert response.status_code == 200
+    assert response.json()['children'][0]['title'] == 'boop'
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
 def test_404s(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)

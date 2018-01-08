@@ -1,6 +1,6 @@
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
 from document.models import DocNode, FootnoteCitation, InlineRequirement
@@ -27,7 +27,7 @@ def optimize(queryset):
                          requirement_prefetch)
 
 
-class TreeView(RetrieveAPIView):
+class TreeView(RetrieveUpdateAPIView):
     serializer_class = DocCursorSerializer
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer,
                         AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer)
