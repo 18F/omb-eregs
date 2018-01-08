@@ -3,11 +3,9 @@ from typing import Iterator, List
 
 from django.db import models
 
-from reqs.models import Policy, Requirement
-
 
 class DocNode(models.Model):
-    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
+    policy = models.ForeignKey('reqs.Policy', on_delete=models.CASCADE)
     # e.g. part_447__subpart_A__sec_1__para_b
     identifier = models.CharField(max_length=1024)
     # e.g. para
@@ -80,4 +78,4 @@ class ExternalLink(Annotation):
 
 class InlineRequirement(Annotation):
     requirement = models.ForeignKey(
-        Requirement, on_delete=models.CASCADE, related_name='+')
+        'reqs.Requirement', on_delete=models.CASCADE, related_name='+')

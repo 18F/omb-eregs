@@ -63,21 +63,21 @@ def test_topics_counts_filter_req(policy_topic_setup):
 
 
 @pytest.mark.django_db
-def test_has_docnode_works(policy_setup):
+def test_has_docnodes_works(policy_setup):
     (policies, reqs) = policy_setup
     client = APIClient()
 
     path = "/policies/?requirements__req_id=" + reqs[1][1].req_id
     response = client.get(path).json()
 
-    assert response['results'][0]['has_docnode'] is False
+    assert response['results'][0]['has_docnodes'] is False
 
     policies[1].docnode = mommy.make(DocNode, policy=policies[1])
     policies[1].save()
 
     response = client.get(path).json()
 
-    assert response['results'][0]['has_docnode'] is True
+    assert response['results'][0]['has_docnodes'] is True
 
 
 @pytest.mark.django_db

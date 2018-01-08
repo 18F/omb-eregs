@@ -13,8 +13,9 @@ gunicorn
 lxml
 networkx
 newrelic
+pdfminer.six
 psycopg2
 python-dateutil
 requests
+tqdm
 whitenoise
-pdfminer.six
