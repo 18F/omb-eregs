@@ -1,3 +1,4 @@
+from io import BytesIO
 from unittest.mock import Mock
 
 import pytest
@@ -46,10 +47,10 @@ def test_scrape_urls(monkeypatch):
 
 def test_parse_pdf_calls(monkeypatch):
     """Lots of mocking here, just to confirm all the pieces are called."""
-    monkeypatch.setattr(scrape_memoranda, 'requests', Mock())
+    monkeypatch.setattr(scrape_memoranda, 'download_with_progress', Mock())
     monkeypatch.setattr(scrape_memoranda, 'OMBDocument', Mock())
     monkeypatch.setattr(scrape_memoranda, 'to_db', Mock())
-    scrape_memoranda.requests.get.return_value.content = b'some content'
+    scrape_memoranda.download_with_progress.return_value = BytesIO(b'thing')
 
     assert scrape_memoranda.parse_pdf(
         mommy.prepare(Policy), 'http://example.com/some/pdf/here.pdf')
@@ -57,18 +58,18 @@ def test_parse_pdf_calls(monkeypatch):
     assert scrape_memoranda.OMBDocument.from_file.called
     pdf_bytes = scrape_memoranda.OMBDocument.from_file.call_args[0][0]
     assert pdf_bytes.name == 'here.pdf'
-    assert pdf_bytes.read() == b'some content'
+    assert pdf_bytes.read() == b'thing'
 
     assert scrape_memoranda.to_db.called
 
 
 def test_parse_pdf_failure(monkeypatch):
     """An exception should mark the parse as failed."""
-    monkeypatch.setattr(scrape_memoranda, 'requests', Mock())
+    monkeypatch.setattr(scrape_memoranda, 'download_with_progress', Mock())
     monkeypatch.setattr(scrape_memoranda, 'OMBDocument', Mock())
     monkeypatch.setattr(scrape_memoranda, 'to_db', Mock())
     monkeypatch.setattr(scrape_memoranda, 'known_exceptions', (ValueError,))
-    scrape_memoranda.requests.get.return_value.content = b''
+    scrape_memoranda.download_with_progress.return_value = BytesIO(b'')
     scrape_memoranda.to_db.side_effect = ValueError()
 
     assert not scrape_memoranda.parse_pdf(mommy.prepare(Policy), '')

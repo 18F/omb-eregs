@@ -1,17 +1,15 @@
 import logging
 import re
-from io import BytesIO
 from os.path import basename
 from typing import Dict, NewType, Set, Tuple
 from urllib.parse import urljoin, urlparse
 
 import requests
 from django.core.management.base import BaseCommand
-from django.db.models import Exists, OuterRef
 from lxml import etree
 
-from document.models import DocNode
 from ombpdf.document import OMBDocument
+from ombpdf.download_pdfs import download_with_progress
 from ombpdf.semdb import to_db
 from reqs.models import Policy
 
@@ -41,8 +39,7 @@ def parse_pdf(policy: Policy, url: Url) -> bool:
     """Fetch and attempt to parse a PDF. Return whether or not this was
     successful."""
     try:
-        content = requests.get(url).content
-        pdf = BytesIO(content)
+        pdf = download_with_progress(url)
         pdf.name = basename(urlparse(url).path)     # this used by from_file
         doc = OMBDocument.from_file(pdf)
         cursor = to_db(doc, policy)
@@ -60,11 +57,9 @@ def scrape_memoranda() -> Tuple[Set[MemoId], Set[MemoId]]:
     pdf listed on OMB's site."""
     successes, failures = set(), set()
     url_by_num = scrape_urls()
-    has_docnodes = Exists(DocNode.objects.filter(policy=OuterRef('pk')))
-    query = Policy.objects \
-        .annotate(has_docnodes=has_docnodes) \
-        .filter(omb_policy_id__in=url_by_num.keys()) \
-        .filter(has_docnodes=False)     # not replacing data
+    query = Policy.objects.annotate_with_has_docnodes() \
+        .filter(omb_policy_id__in=url_by_num.keys(),
+                has_docnodes=False)     # not replacing data
     for policy in query:
         if parse_pdf(policy, url_by_num[policy.omb_policy_id]):
             successes.add(policy.omb_policy_id)

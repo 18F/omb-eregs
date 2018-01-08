@@ -41,16 +41,15 @@ def add_content(serialized_content: List[Dict], parent: etree.Element) -> None:
     parent."""
     previous = None
     for content in serialized_content:
-        is_text = content['content_type'] == PlainTextSerializer.CONTENT_TYPE
-        # parent.text vs previous.tail is a nuance of lxml
-        if is_text and previous is None:
-            parent.text = content['text']
-        elif is_text:
-            previous.tail = content['text']
-        else:
+        if content['content_type'] != PlainTextSerializer.CONTENT_TYPE:
             child = etree.SubElement(parent, content['content_type'])
             add_content(content['inlines'], child)
             previous = child
+        # parent.text vs previous.tail is a nuance of lxml
+        elif previous is None:
+            parent.text = content['text']
+        else:
+            previous.tail = content['text']
 
 
 class AkomaNtosoRenderer(renderers.BaseRenderer):

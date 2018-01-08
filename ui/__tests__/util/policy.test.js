@@ -3,7 +3,7 @@ import Policy from '../../util/policy';
 function policy(props = {}) {
   return new Policy({
     id: 1,
-    has_docnode: false,
+    has_docnodes: false,
     omb_policy_id: 'M-16-19',
     ...props,
   });
@@ -20,18 +20,18 @@ describe('Policy', () => {
 
   describe('hasDocument()', () => {
     it('returns false if the policy has no document', () => {
-      expect(policy({ has_docnode: false }).hasDocument()).toBe(false);
+      expect(policy({ has_docnodes: false }).hasDocument()).toBe(false);
     });
 
     it('returns true if the policy has a document', () => {
-      expect(policy({ has_docnode: true }).hasDocument()).toBe(true);
+      expect(policy({ has_docnodes: true }).hasDocument()).toBe(true);
     });
   });
 
   describe('getDocumentLinkProps()', () => {
     it('returns link props with OMB policy id', () => {
       expect(policy({
-        has_docnode: true,
+        has_docnodes: true,
         omb_policy_id: 'blarg',
       }).getDocumentLinkProps()).toEqual({
         route: 'document',
