@@ -1,5 +1,5 @@
 from django.db.models import Prefetch
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
@@ -51,3 +51,7 @@ class TreeView(RetrieveAPIView):
         return {
             'policy': getattr(self, 'policy', None),
         }
+
+
+def editor(request):
+    return render(request, 'document/editor.html')
