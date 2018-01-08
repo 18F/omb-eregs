@@ -181,6 +181,11 @@ services:
     ports: []
     depends_on: []
 
+  api-npm:
+    <<: *API_WEBPACK
+    entrypoint: .docker/deps_ok_then npm
+    command: ''
+
   api-webpack:
     <<: *API_WEBPACK
     entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
