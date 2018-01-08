@@ -70,6 +70,11 @@ jobs:
             COMPOSE_FILE: docker-compose-circle.yml
           command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
       - run:
+          name: API JS tests
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm api-npm test
+      - run:
           name: API Build JS
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
