@@ -1,13 +1,34 @@
+from typing import Any, Dict, List
+
 from rest_framework import serializers
 
 from document.models import DocNode
 from document.serializers.content import (NestedAnnotationSerializer,
                                           nest_annotations)
 from document.serializers.meta import Meta, MetaSerializer
+from document.tree import DocCursor
+
+JsonDict = Dict[str, Any]
+
+
+class DocCursorField(serializers.Field):
+    def get_attribute(self, instance: DocCursor) -> DocCursor:
+        return instance
+
+
+class ChildrenField(DocCursorField):
+    def to_representation(self, instance: DocCursor) -> List[JsonDict]:
+        return DocCursorSerializer(
+            instance.children(), many=True,
+            context={**self.context, 'is_root': False},
+        ).data
+
+    def to_internal_value(self, data: List[JsonDict]) -> DocCursor:
+        raise NotImplementedError()
 
 
 class DocCursorSerializer(serializers.ModelSerializer):
-    children = serializers.SerializerMethodField()
+    children = ChildrenField()
     content = serializers.SerializerMethodField()
     meta = serializers.SerializerMethodField()
 
@@ -25,12 +46,6 @@ class DocCursorSerializer(serializers.ModelSerializer):
             'title',
             'type_emblem',
         )
-
-    def get_children(self, instance):
-        return type(self)(
-            instance.children(), many=True,
-            context={**self.context, 'is_root': False},
-        ).data
 
     def get_content(self, instance):
         """Include all annotations of the text."""
