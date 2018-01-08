@@ -5,6 +5,7 @@ module.exports = {
   context: __dirname,
   devtool: 'inline-source-map',
   entry: {
+    'document.main': './document/js/main.ts',
     'ombpdf.main': './ombpdf/js/main.ts',
     'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
   },
@@ -14,6 +15,10 @@ module.exports = {
   module: {
     rules: [
       { test: /\.tsx?$/, loader: 'ts-loader' },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   output: {

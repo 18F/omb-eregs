@@ -106,3 +106,8 @@ def test_query_count(client):
         # 11: fetch inline requirements _and_ referenced req for child nodes
         # 12: fetch cite elements for child nodes
         assert len(capture) == 12
+
+
+@pytest.mark.urls('document.urls')
+def test_editor_works(client):
+    assert client.get('/editor').status_code == 200
