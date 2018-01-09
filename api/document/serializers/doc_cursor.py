@@ -2,8 +2,7 @@ from typing import List
 
 from rest_framework import serializers
 
-from document.json_importer.importer import (PRIMITIVE_DOC_NODE_FIELDS,
-                                             import_json_doc)
+from document.json_importer.importer import import_json_doc
 from document.models import DocNode
 from document.serializers.content import (NestedAnnotationSerializer,
                                           nest_annotations)
@@ -67,12 +66,11 @@ class DocCursorSerializer(serializers.ModelSerializer):
             'title',
             'type_emblem',
         )
-        read_only_fields = tuple(
-            field for field in fields
-            if field not in PRIMITIVE_DOC_NODE_FIELDS + [
-                'children',
-                'content'
-            ]
+        read_only_fields = (
+            'depth',
+            'identifier',
+            'meta',
+            'text',
         )
 
     def __init__(self, *args, **kwargs):

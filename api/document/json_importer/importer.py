@@ -1,4 +1,4 @@
-from typing import List, NamedTuple, Optional
+from typing import List, Optional
 
 from django.db import transaction
 
@@ -9,57 +9,35 @@ from reqs.models import Policy
 from .annotations import derive_annotations
 
 
-class PreparedNode(NamedTuple):
-    node: JsonDict
-    content: List[JsonDict]
-    children: List[JsonDict]
-
-    @classmethod
-    def from_json(cls, node):
-        prepped = {}
-        for key in PRIMITIVE_DOC_NODE_FIELDS:
-            if key in node:
-                prepped[key] = node[key]
-        content = node.get('content', [])
-        prepped['text'] = get_content_text(content)
-        return cls(
-            node=prepped,
-            content=content,
-            children=node.get('children', []),
-        )
-
-
-PRIMITIVE_DOC_NODE_FIELDS = [
-    # TODO: Include 'identifier' here?
-    'node_type',
-    'type_emblem',
-    'marker',
-    'title',
-]
-
-
 def get_content_text(content: List[JsonDict]):
     return ''.join(c['text'] for c in content)
 
 
 def convert_node(node: JsonDict, policy: Optional[Policy]=None,
                  parent: Optional[JSONAwareCursor]=None) -> JSONAwareCursor:
-    prepped = PreparedNode.from_json(node)
-    if parent is None:
-        cursor = JSONAwareCursor.new_tree(policy=policy, **prepped.node)
-    else:
-        cursor = parent.add_child(**prepped.node)
+    kwargs = node.copy()
+    children = kwargs.pop('children')
+    content = kwargs.pop('content')
+    kwargs['text'] = get_content_text(content)
 
-    for child in prepped.children:
+    if parent is None:
+        cursor = JSONAwareCursor.new_tree(policy=policy, **kwargs)
+    else:
+        cursor = parent.add_child(**kwargs)
+
+    for child in children:
         convert_node(child, parent=cursor)
 
-    cursor.json_content = prepped.content
+    cursor.json_content = content
 
     return cursor
 
 
 @transaction.atomic
 def import_json_doc(policy: Policy, doc: JsonDict) -> JSONAwareCursor:
+    """Imports a document from a JSON blob. It is assumed that the
+    blob has been validated and normalized by a Django REST API
+    serializer."""
     DocNode.objects.filter(policy=policy).delete()
 
     root = convert_node(doc, policy=policy)

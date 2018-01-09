@@ -2,6 +2,7 @@ from document.json_importer.importer import convert_node
 
 PARA_WITH_LINK = {
     "node_type": 'para',
+    "children": [],
     "content": [{
         "content_type": '__text__',
         "text": 'Hello ',

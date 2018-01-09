@@ -27,6 +27,7 @@ def test_derive_annotations_works_with_footnote_citation():
             "node_type": "footnote",
             "marker": '3',
             "type_emblem": '3',
+            "children": [],
             "content": [{
                 "content_type": '__text__',
                 "text": 'Hi I am a footnote',
