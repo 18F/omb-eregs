@@ -1,0 +1,11 @@
+{% extends 'admin_interface:admin/base_site.html' %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static "bundles/css/admin/override.css" %}"
+  />
+{% endblock %}

@@ -2,6 +2,7 @@ boto3
 cfenv
 django>=1.11,<1.12
 django-admin-interface
+django-apptemplates
 django-cas-ng
 django-cors-headers
 django-filter
