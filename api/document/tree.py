@@ -1,10 +1,12 @@
 from collections import Counter
-from typing import Callable, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from networkx import DiGraph
 from networkx.algorithms.dag import descendants
 
 from document.models import DocNode
+
+JsonDict = Dict[str, Any]
 
 
 class DocCursor():
@@ -20,6 +22,18 @@ class DocCursor():
     def __getattr__(self, attr):
         """Delegate fields/methods to wrapped model."""
         return getattr(self.model, attr)
+
+    @property
+    def _prefetched_objects_cache(self):
+        """Django REST Framework thinks we're a bona fide Django model,
+        and its UpdateModelMixin sometimes writes to the model's
+        undocumented _prefetched_objects_cache property, so we'll
+        need to make it writable too."""
+        return self.model._prefetched_objects_cache
+
+    @_prefetched_objects_cache.setter
+    def _prefetched_objects_cache(self, value):
+        self.model._prefetched_objects_cache = value
 
     @classmethod
     def new_tree(cls, node_type: str, type_emblem: str='1', policy=None,
@@ -163,3 +177,15 @@ class XMLAwareCursor(DocCursor):
     @xml_node.setter
     def xml_node(self, value):
         self.tree.node[self.identifier]['xml_node'] = value
+
+
+class JSONAwareCursor(DocCursor):
+    """Extension of DocCursor which also tracks the JSON which created each
+    node."""
+    @property
+    def json_content(self) -> List[JsonDict]:
+        return self.tree.node[self.identifier].get('json_content')
+
+    @json_content.setter
+    def json_content(self, value: List[JsonDict]):
+        self.tree.node[self.identifier]['json_content'] = value

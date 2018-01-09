@@ -23,14 +23,10 @@ def test_put_403s_for_anon_users(client):
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
-@pytest.mark.xfail(
-    reason="Need to actually implement the serializer(s)!",
-    raises=NotImplementedError
-)
 def test_put_works_for_admin_users(admin_client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
-    root.add_child('sec')
+    root.add_child('sec', text='blah')
     root.nested_set_renumber()
 
     # Get the original document...
@@ -40,6 +36,7 @@ def test_put_works_for_admin_users(admin_client):
 
     # Modify it a bit...
     result['children'][0]['title'] = 'boop'
+    result['children'][0]['content'][0]['text'] = 'hallo'
 
     response = admin_client.put(f"/{policy.pk}", data=json.dumps(result),
                                 content_type='application/json')
@@ -48,7 +45,9 @@ def test_put_works_for_admin_users(admin_client):
     # Now fetch it again, and make sure our modification stuck.
     response = admin_client.get(f"/{policy.pk}")
     assert response.status_code == 200
-    assert response.json()['children'][0]['title'] == 'boop'
+    result = response.json()
+    assert result['children'][0]['title'] == 'boop'
+    assert result['children'][0]['content'][0]['text'] == 'hallo'
 
 
 @pytest.mark.django_db
