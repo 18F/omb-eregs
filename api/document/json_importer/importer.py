@@ -98,7 +98,7 @@ def derive_annotations(cursor: JSONAwareCursor) -> AnnotationDict:
 
 
 def get_content_text(content: List[JsonDict]):
-    return ''.join([c['text'] for c in content])
+    return ''.join(c['text'] for c in content)
 
 
 def convert_node(node: JsonDict, policy: Optional[Policy]=None,
