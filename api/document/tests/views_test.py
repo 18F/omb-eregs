@@ -23,6 +23,16 @@ def test_put_403s_for_anon_users(client):
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
+def test_put_fails_with_identifier(admin_client):
+    response = admin_client.put(f"/blarg/flarg")
+    assert response.status_code == 400
+    assert response.json() == {
+        'detail': 'Identifiers are unsupported on PUT requests.'
+    }
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
 def test_put_works_for_admin_users(admin_client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
