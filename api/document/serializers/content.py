@@ -98,11 +98,15 @@ class NestedAnnotationSerializer(serializers.Serializer):
             raise ValidationError("missing content_type")
         if content_type not in self.content_type_mapping:
             raise ValidationError(f"unknown content_type: {content_type}")
-        # TODO: Actually validate the data based on its content type.
-        return data
+        serializer = self.content_type_mapping[content_type]()
+        return serializer.to_internal_value(data)
 
 
 class BaseAnnotationSerializer(serializers.Serializer):
+    # This determines whether the annotation is a leaf of our
+    # content tree.
+    IS_LEAF = False
+
     content_type = serializers.SerializerMethodField()
     inlines = serializers.SerializerMethodField()
     text = serializers.SerializerMethodField()
@@ -123,19 +127,34 @@ class BaseAnnotationSerializer(serializers.Serializer):
         return self.CONTENT_TYPE
 
     def get_inlines(self, instance: NestableAnnotation):
+        if self.IS_LEAF:
+            return []
         return NestedAnnotationSerializer(
             instance.children, context=self.context, many=True).data
 
     def get_text(self, instance: Annotation):
         return self.doc_node_text[instance.start:instance.end]
 
+    def to_internal_value(self, data: JsonDict) -> JsonDict:
+        inlines = [] if self.IS_LEAF else data.get('inlines', [])
+        result = super().to_internal_value(data)
+        result['content_type'] = self.CONTENT_TYPE
+        result['inlines'] = []
+        if inlines:
+            serializer = NestedAnnotationSerializer()
+            result['inlines'].extend([
+                serializer.to_internal_value(item) for item in inlines
+            ])
+        if self.IS_LEAF:
+            serializer = serializers.CharField(trim_whitespace=False)
+            result['text'] = serializer.to_internal_value(data.get('text'))
+        return result
+
 
 class PlainTextSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = '__text__'
 
-    def get_inlines(self, instance: PlainText):
-        """PlainText nodes are the leaves of our content tree."""
-        return []
+    IS_LEAF = True
 
 
 class FootnoteCitationSerializer(BaseAnnotationSerializer):

@@ -182,5 +182,5 @@ def test_error_raised_on_missing_content_type():
 def test_text_deserialization_works():
     serializer = content.NestedAnnotationSerializer()
 
-    obj = {'content_type': '__text__', 'text': 'hello'}
+    obj = {'content_type': '__text__', 'text': 'hello', 'inlines': []}
     assert serializer.to_internal_value(obj) == obj
