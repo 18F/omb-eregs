@@ -42,8 +42,10 @@ class ContentField(DocCursorField):
         ).data
 
     def to_internal_value(self, data: List[JsonDict]) -> List[JsonDict]:
-        # TODO: Actually validate the data.
-        return data
+        serializer = NestedAnnotationSerializer()
+        return [
+            serializer.to_internal_value(item) for item in data
+        ]
 
 
 class DocCursorSerializer(serializers.ModelSerializer):

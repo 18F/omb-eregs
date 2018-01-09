@@ -2,10 +2,11 @@ from collections import defaultdict
 from typing import Iterator, List, Optional
 
 from rest_framework import serializers
+from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
-from document.tree import DocCursor
+from document.tree import DocCursor, JsonDict
 from reqs.models import Requirement
 
 
@@ -85,9 +86,20 @@ class NestedAnnotationSerializer(serializers.Serializer):
         lambda: BaseAnnotationSerializer,   # will raise an exception when used
     )
 
+    content_type_mapping = {}
+
     def to_representation(self, data: NestableAnnotation):
         serializer = self.serializer_mapping[data.annotation_class]
         return serializer(data, context=self.context).data
+
+    def to_internal_value(self, data: JsonDict) -> JsonDict:
+        content_type = data.get('content_type')
+        if content_type is None:
+            raise ValidationError("missing content_type")
+        if content_type not in self.content_type_mapping:
+            raise ValidationError(f"unknown content_type: {content_type}")
+        # TODO: Actually validate the data based on its content type.
+        return data
 
 
 class BaseAnnotationSerializer(serializers.Serializer):
@@ -166,4 +178,9 @@ NestedAnnotationSerializer.serializer_mapping.update({
     FootnoteCitation: FootnoteCitationSerializer,
     ExternalLink: ExternalLinkSerializer,
     InlineRequirement: InlineRequirementSerializer,
+})
+
+NestedAnnotationSerializer.content_type_mapping.update({
+    serializer.CONTENT_TYPE: serializer
+    for serializer in NestedAnnotationSerializer.serializer_mapping.values()
 })
