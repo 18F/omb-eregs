@@ -2,7 +2,7 @@ from document.json_importer.annotations import derive_annotations
 from document.json_importer.importer import convert_node
 from document.models import ExternalLink, FootnoteCitation
 
-from .importer_test import PARA_WITH_LINK
+from .importer_test import PARA_WITH_LINK, text
 
 
 def test_derive_annotations_works_with_external_link():
@@ -21,17 +21,14 @@ def test_derive_annotations_works_with_footnote_citation():
         "node_type": 'para',
         "content": [{
             "content_type": 'footnote_citation',
-            "text": '3',
+            "inlines": [text('3')],
         }],
         "children": [{
             "node_type": "footnote",
             "marker": '3',
             "type_emblem": '3',
             "children": [],
-            "content": [{
-                "content_type": '__text__',
-                "text": 'Hi I am a footnote',
-            }],
+            "content": [text('Hi I am a footnote')],
         }],
     })
     annos = derive_annotations(para)

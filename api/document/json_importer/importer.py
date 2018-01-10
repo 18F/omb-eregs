@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from django.db import transaction
 
@@ -6,11 +6,7 @@ from document.models import DocNode
 from document.tree import JSONAwareCursor, JsonDict
 from reqs.models import Policy
 
-from .annotations import derive_annotations
-
-
-def get_content_text(content: List[JsonDict]):
-    return ''.join(c['text'] for c in content)
+from .annotations import derive_annotations, get_content_text
 
 
 def convert_node(node: JsonDict, policy: Optional[Policy]=None,

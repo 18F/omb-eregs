@@ -1,14 +1,19 @@
 from document.json_importer.importer import convert_node
 
+
+def text(value: str):
+    return {
+        "content_type": "__text__",
+        "text": value
+    }
+
+
 PARA_WITH_LINK = {
     "node_type": 'para',
     "children": [],
-    "content": [{
-        "content_type": '__text__',
-        "text": 'Hello ',
-    }, {
+    "content": [text('Hello '), {
         "content_type": 'external_link',
-        "text": 'there',
+        "inlines": [text('there')],
         "href": 'http://example.org/',
     }],
 }
