@@ -2,10 +2,11 @@ from collections import defaultdict
 from typing import Iterator, List, Optional
 
 from rest_framework import serializers
+from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
-from document.tree import DocCursor
+from document.tree import DocCursor, PrimitiveDict
 from reqs.models import Requirement
 
 
@@ -85,12 +86,27 @@ class NestedAnnotationSerializer(serializers.Serializer):
         lambda: BaseAnnotationSerializer,   # will raise an exception when used
     )
 
+    content_type_mapping = {}
+
     def to_representation(self, data: NestableAnnotation):
         serializer = self.serializer_mapping[data.annotation_class]
         return serializer(data, context=self.context).data
 
+    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
+        content_type = data.get('content_type')
+        if content_type is None:
+            raise ValidationError("missing content_type")
+        if content_type not in self.content_type_mapping:
+            raise ValidationError(f"unknown content_type: {content_type}")
+        serializer = self.content_type_mapping[content_type]()
+        return serializer.to_internal_value(data)
+
 
 class BaseAnnotationSerializer(serializers.Serializer):
+    # This determines whether the annotation is a leaf of our
+    # content tree.
+    IS_LEAF = False
+
     content_type = serializers.SerializerMethodField()
     inlines = serializers.SerializerMethodField()
     text = serializers.SerializerMethodField()
@@ -111,19 +127,34 @@ class BaseAnnotationSerializer(serializers.Serializer):
         return self.CONTENT_TYPE
 
     def get_inlines(self, instance: NestableAnnotation):
+        if self.IS_LEAF:
+            return []
         return NestedAnnotationSerializer(
             instance.children, context=self.context, many=True).data
 
     def get_text(self, instance: Annotation):
         return self.doc_node_text[instance.start:instance.end]
 
+    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
+        inlines = [] if self.IS_LEAF else data.get('inlines', [])
+        result = super().to_internal_value(data)
+        result['content_type'] = self.CONTENT_TYPE
+        result['inlines'] = []
+        if inlines:
+            serializer = NestedAnnotationSerializer()
+            result['inlines'].extend([
+                serializer.to_internal_value(item) for item in inlines
+            ])
+        if self.IS_LEAF:
+            serializer = serializers.CharField(trim_whitespace=False)
+            result['text'] = serializer.to_internal_value(data.get('text'))
+        return result
+
 
 class PlainTextSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = '__text__'
 
-    def get_inlines(self, instance: PlainText):
-        """PlainText nodes are the leaves of our content tree."""
-        return []
+    IS_LEAF = True
 
 
 class FootnoteCitationSerializer(BaseAnnotationSerializer):
@@ -166,4 +197,9 @@ NestedAnnotationSerializer.serializer_mapping.update({
     FootnoteCitation: FootnoteCitationSerializer,
     ExternalLink: ExternalLinkSerializer,
     InlineRequirement: InlineRequirementSerializer,
+})
+
+NestedAnnotationSerializer.content_type_mapping.update({
+    serializer.CONTENT_TYPE: serializer
+    for serializer in NestedAnnotationSerializer.serializer_mapping.values()
 })

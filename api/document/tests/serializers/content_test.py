@@ -1,5 +1,6 @@
 import pytest
 from model_mommy import mommy
+from rest_framework.serializers import ValidationError
 
 from document.models import DocNode, ExternalLink, PlainText
 from document.serializers import content
@@ -160,3 +161,26 @@ def test_inline_requirement_with_link_integration():
         },
         {'content_type': '__text__', 'inlines': [], 'text': '.'},
     ]
+
+
+def test_error_raised_on_invalid_content_type():
+    serializer = content.NestedAnnotationSerializer()
+
+    with pytest.raises(ValidationError,
+                       match="unknown content_type: blarg"):
+        serializer.to_internal_value({'content_type': 'blarg'})
+
+
+def test_error_raised_on_missing_content_type():
+    serializer = content.NestedAnnotationSerializer()
+
+    with pytest.raises(ValidationError,
+                       match="missing content_type"):
+        serializer.to_internal_value({'foo': 'bar'})
+
+
+def test_text_deserialization_works():
+    serializer = content.NestedAnnotationSerializer()
+
+    obj = {'content_type': '__text__', 'text': 'hello', 'inlines': []}
+    assert serializer.to_internal_value(obj) == obj

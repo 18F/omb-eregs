@@ -1,7 +1,9 @@
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
-from rest_framework.generics import RetrieveAPIView
+from rest_framework import status
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
+from rest_framework.response import Response
 
 from document.models import DocNode, FootnoteCitation, InlineRequirement
 from document.renderers import AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer
@@ -27,7 +29,7 @@ def optimize(queryset):
                          requirement_prefetch)
 
 
-class TreeView(RetrieveAPIView):
+class TreeView(RetrieveUpdateAPIView):
     serializer_class = DocCursorSerializer
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer,
                         AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer)
@@ -51,6 +53,13 @@ class TreeView(RetrieveAPIView):
         return {
             'policy': getattr(self, 'policy', None),
         }
+
+    def put(self, request, *args, **kwargs):
+        if self.kwargs.get('identifier'):
+            return Response({
+                'detail': 'Identifiers are unsupported on PUT requests.',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return super().put(request, *args, **kwargs)
 
 
 def editor(request):
