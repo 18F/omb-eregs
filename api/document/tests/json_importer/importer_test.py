@@ -3,14 +3,14 @@ from typing import List
 from document.json_importer.importer import PrimitiveDict, convert_node
 
 
-def text(value: str):
+def text(value: str) -> PrimitiveDict:
     return {
         "content_type": "__text__",
         "text": value
     }
 
 
-def external_link(href: str, inlines: List[PrimitiveDict]):
+def external_link(href: str, inlines: List[PrimitiveDict]) -> PrimitiveDict:
     return {
         "content_type": "external_link",
         "href": href,
