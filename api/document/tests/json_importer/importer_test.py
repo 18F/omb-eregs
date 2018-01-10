@@ -1,4 +1,6 @@
-from document.json_importer.importer import convert_node
+from typing import List
+
+from document.json_importer.importer import PrimitiveDict, convert_node
 
 
 def text(value: str):
@@ -8,14 +10,21 @@ def text(value: str):
     }
 
 
+def external_link(href: str, inlines: List[PrimitiveDict]):
+    return {
+        "content_type": "external_link",
+        "href": href,
+        "inlines": inlines,
+    }
+
+
 PARA_WITH_LINK = {
     "node_type": 'para',
     "children": [],
-    "content": [text('Hello '), {
-        "content_type": 'external_link',
-        "inlines": [text('there')],
-        "href": 'http://example.org/',
-    }],
+    "content": [
+        text('Hello '),
+        external_link('http://example.org/', [text('there')])
+    ],
 }
 
 

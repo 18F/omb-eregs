@@ -2,32 +2,23 @@ from document.json_importer.annotations import derive_annotations
 from document.json_importer.importer import convert_node
 from document.models import ExternalLink, FootnoteCitation
 
-from .importer_test import PARA_WITH_LINK, text
+from .importer_test import PARA_WITH_LINK, external_link, text
 
 
 def test_derive_annotations_works_with_nested_content():
     para = convert_node({
         "node_type": 'para',
-        "content": [{
-            "content_type": 'external_link',
-            "href": 'http://one.org',
-            "inlines": [
+        "content": [
+            external_link('http://one.org', [
                 text('foo'),
-                {
-                    "content_type": 'external_link',
-                    "href": 'http://two.org',
-                    "inlines": [text('bar')],
-                },
+                external_link('http://two.org', [text('bar')]),
                 text('baz'),
-                {
-                    "content_type": 'external_link',
-                    "href": 'http://three.org',
-                    "inlines": [text('quux')],
-                }
-            ],
-        }],
+                external_link('http://three.org', [text('quux')]),
+            ])
+        ],
         "children": [],
     })
+
     annos = derive_annotations(para)
 
     assert len(annos) == 1
