@@ -2,10 +2,10 @@ from collections import defaultdict
 from typing import Callable, DefaultDict, Dict, Iterator, List, Tuple, Type
 
 from document.models import Annotation, ExternalLink, FootnoteCitation
-from document.tree import JSONAwareCursor, JsonDict
+from document.tree import JSONAwareCursor, PrimitiveDict
 
 Annotator = Callable[
-    [JSONAwareCursor, JsonDict, int],
+    [JSONAwareCursor, PrimitiveDict, int],
     Annotation
 ]
 
@@ -18,7 +18,7 @@ def annotator(fn: Annotator):
 
 
 @annotator
-def footnote_citation(cursor: JSONAwareCursor, content: JsonDict,
+def footnote_citation(cursor: JSONAwareCursor, content: PrimitiveDict,
                       start: int) -> FootnoteCitation:
     text = get_content_text(content['inlines'])
     referencing = list(cursor.filter(
@@ -34,7 +34,7 @@ def footnote_citation(cursor: JSONAwareCursor, content: JsonDict,
 
 
 @annotator
-def external_link(cursor: JSONAwareCursor, content: JsonDict,
+def external_link(cursor: JSONAwareCursor, content: PrimitiveDict,
                   start: int) -> ExternalLink:
     text = get_content_text(content['inlines'])
     return ExternalLink(
@@ -46,8 +46,8 @@ def external_link(cursor: JSONAwareCursor, content: JsonDict,
 AnnotationDict = DefaultDict[Type[Annotation], List[Annotation]]
 
 
-def find_annotations(items: List[JsonDict],
-                     start: int=0) -> Iterator[Tuple[JsonDict, int]]:
+def find_annotations(items: List[PrimitiveDict],
+                     start: int=0) -> Iterator[Tuple[PrimitiveDict, int]]:
     for content in items:
         if content['content_type'] == '__text__':
             start += len(content['text'])
@@ -76,7 +76,7 @@ def derive_annotations(cursor: JSONAwareCursor) -> AnnotationDict:
     return annotations
 
 
-def get_content_text(content: List[JsonDict]):
+def get_content_text(content: List[PrimitiveDict]):
     chunks = []
     for c in content:
         if c['content_type'] == '__text__':

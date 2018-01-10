@@ -3,13 +3,13 @@ from typing import Optional
 from django.db import transaction
 
 from document.models import DocNode
-from document.tree import JSONAwareCursor, JsonDict
+from document.tree import JSONAwareCursor, PrimitiveDict
 from reqs.models import Policy
 
 from .annotations import derive_annotations, get_content_text
 
 
-def convert_node(node: JsonDict, policy: Optional[Policy]=None,
+def convert_node(node: PrimitiveDict, policy: Optional[Policy]=None,
                  parent: Optional[JSONAwareCursor]=None) -> JSONAwareCursor:
     kwargs = node.copy()
     children = kwargs.pop('children')
@@ -30,7 +30,7 @@ def convert_node(node: JsonDict, policy: Optional[Policy]=None,
 
 
 @transaction.atomic
-def import_json_doc(policy: Policy, doc: JsonDict) -> JSONAwareCursor:
+def import_json_doc(policy: Policy, doc: PrimitiveDict) -> JSONAwareCursor:
     """Imports a document from a JSON blob. It is assumed that the
     blob has been validated and normalized by a Django REST API
     serializer."""

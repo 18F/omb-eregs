@@ -7,7 +7,7 @@ from document.models import DocNode
 from document.serializers.content import (NestedAnnotationSerializer,
                                           nest_annotations)
 from document.serializers.meta import Meta, MetaSerializer
-from document.tree import DocCursor, JSONAwareCursor, JsonDict
+from document.tree import DocCursor, JSONAwareCursor, PrimitiveDict
 
 
 class DocCursorField(serializers.Field):
@@ -16,13 +16,14 @@ class DocCursorField(serializers.Field):
 
 
 class ChildrenField(DocCursorField):
-    def to_representation(self, instance: DocCursor) -> List[JsonDict]:
+    def to_representation(self, instance: DocCursor) -> List[PrimitiveDict]:
         return DocCursorSerializer(
             instance.children(), many=True,
             context={**self.context, 'is_root': False},
         ).data
 
-    def to_internal_value(self, data: List[JsonDict]) -> List[JsonDict]:
+    def to_internal_value(self,
+                          data: List[PrimitiveDict]) -> List[PrimitiveDict]:
         serializer = DocCursorSerializer(
             context={**self.context, 'is_root': False},
         )
@@ -30,7 +31,7 @@ class ChildrenField(DocCursorField):
 
 
 class ContentField(DocCursorField):
-    def to_representation(self, instance: DocCursor) -> List[JsonDict]:
+    def to_representation(self, instance: DocCursor) -> List[PrimitiveDict]:
         annotations = nest_annotations(
             instance.annotations(), len(instance.text))
         return NestedAnnotationSerializer(
@@ -40,7 +41,8 @@ class ContentField(DocCursorField):
             many=True,
         ).data
 
-    def to_internal_value(self, data: List[JsonDict]) -> List[JsonDict]:
+    def to_internal_value(self,
+                          data: List[PrimitiveDict]) -> List[PrimitiveDict]:
         serializer = NestedAnnotationSerializer()
         return [
             serializer.to_internal_value(item) for item in data
@@ -87,5 +89,5 @@ class DocCursorSerializer(serializers.ModelSerializer):
         return MetaSerializer(meta, context={'parent_serializer': self}).data
 
     def update(self, instance: DocCursor,
-               validated_data: JsonDict) -> JSONAwareCursor:
+               validated_data: PrimitiveDict) -> JSONAwareCursor:
         return import_json_doc(instance.policy, validated_data)

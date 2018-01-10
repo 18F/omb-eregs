@@ -6,7 +6,7 @@ from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
-from document.tree import DocCursor, JsonDict
+from document.tree import DocCursor, PrimitiveDict
 from reqs.models import Requirement
 
 
@@ -92,7 +92,7 @@ class NestedAnnotationSerializer(serializers.Serializer):
         serializer = self.serializer_mapping[data.annotation_class]
         return serializer(data, context=self.context).data
 
-    def to_internal_value(self, data: JsonDict) -> JsonDict:
+    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
         content_type = data.get('content_type')
         if content_type is None:
             raise ValidationError("missing content_type")
@@ -135,7 +135,7 @@ class BaseAnnotationSerializer(serializers.Serializer):
     def get_text(self, instance: Annotation):
         return self.doc_node_text[instance.start:instance.end]
 
-    def to_internal_value(self, data: JsonDict) -> JsonDict:
+    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
         inlines = [] if self.IS_LEAF else data.get('inlines', [])
         result = super().to_internal_value(data)
         result['content_type'] = self.CONTENT_TYPE

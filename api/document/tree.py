@@ -6,7 +6,7 @@ from networkx.algorithms.dag import descendants
 
 from document.models import DocNode
 
-JsonDict = Dict[str, Any]
+PrimitiveDict = Dict[str, Any]
 
 
 class DocCursor():
@@ -183,9 +183,9 @@ class JSONAwareCursor(DocCursor):
     """Extension of DocCursor which also tracks the JSON which created each
     node."""
     @property
-    def json_content(self) -> List[JsonDict]:
+    def json_content(self) -> List[PrimitiveDict]:
         return self.tree.node[self.identifier].get('json_content')
 
     @json_content.setter
-    def json_content(self, value: List[JsonDict]):
+    def json_content(self, value: List[PrimitiveDict]):
         self.tree.node[self.identifier]['json_content'] = value
