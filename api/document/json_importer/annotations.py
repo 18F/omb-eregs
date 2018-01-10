@@ -36,10 +36,10 @@ def footnote_citation(cursor: JSONAwareCursor, content: PrimitiveDict,
 @annotator
 def external_link(cursor: JSONAwareCursor, content: PrimitiveDict,
                   start: int) -> ExternalLink:
-    text = get_content_text(content['inlines'])
     return ExternalLink(
         doc_node=cursor.model, start=start,
-        end=start + len(text), href=content['href']
+        end=start + get_content_length(content['inlines']),
+        href=content['href']
     )
 
 
@@ -53,10 +53,8 @@ def find_annotations(items: List[PrimitiveDict],
             start += len(content['text'])
         else:
             yield (content, start)
-            for icontent, istart in find_annotations(content['inlines'],
-                                                     start):
-                yield (icontent, istart)
-                start = istart
+            yield from find_annotations(content['inlines'], start)
+            start += get_content_length(content['inlines'])
 
 
 def derive_annotations(cursor: JSONAwareCursor) -> AnnotationDict:
@@ -74,6 +72,16 @@ def derive_annotations(cursor: JSONAwareCursor) -> AnnotationDict:
             annotations[cls].extend(annos)
 
     return annotations
+
+
+def get_content_length(content: List[PrimitiveDict]) -> int:
+    length = 0
+    for c in content:
+        if c['content_type'] == '__text__':
+            length += len(c['text'])
+        else:
+            length += get_content_length(c['inlines'])
+    return length
 
 
 def get_content_text(content: List[PrimitiveDict]):
