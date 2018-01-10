@@ -1,36 +1,15 @@
-from typing import List
+from document.json_importer.importer import convert_node
 
-from document.json_importer.importer import PrimitiveDict, convert_node
-
-
-def text(value: str) -> PrimitiveDict:
-    return {
-        "content_type": "__text__",
-        "text": value
-    }
-
-
-def external_link(href: str, inlines: List[PrimitiveDict]) -> PrimitiveDict:
-    return {
-        "content_type": "external_link",
-        "href": href,
-        "inlines": inlines,
-    }
-
-
-PARA_WITH_LINK = {
-    "node_type": 'para',
-    "children": [],
-    "content": [
-        text('Hello '),
-        external_link('http://example.org/', [text('there')])
-    ],
-}
+from . import factories as f
 
 
 def test_convert_paragraph_works():
-    para = convert_node(PARA_WITH_LINK)
+    para_primitive = f.para(content=[
+        f.text('Hello '),
+        f.external_link('http://example.org/', [f.text('there')])
+    ])
+    para = convert_node(para_primitive)
 
     assert para.node_type == 'para'
     assert para.text == 'Hello there'
-    assert para.json_content == PARA_WITH_LINK['content']
+    assert para.json_content == para_primitive['content']
