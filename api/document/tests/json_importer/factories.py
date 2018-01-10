@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from document.tree import PrimitiveDict
 
@@ -19,7 +19,7 @@ def external_link(href: str, inlines: List[PrimitiveDict]) -> PrimitiveDict:
 
 
 def para(content: List[PrimitiveDict],
-         children: Optional[List[PrimitiveDict]]=None) -> PrimitiveDict:
+         children: List[PrimitiveDict]=None) -> PrimitiveDict:
     return {
         "node_type": "para",
         "content": content,
@@ -35,7 +35,7 @@ def footnote_citation(inlines: List[PrimitiveDict]) -> PrimitiveDict:
 
 
 def footnote(marker: int, content=List[PrimitiveDict],
-             children: Optional[List[PrimitiveDict]]=None) -> PrimitiveDict:
+             children: List[PrimitiveDict]=None) -> PrimitiveDict:
     return {
         "node_type": "footnote",
         "marker": str(marker),
