@@ -34,7 +34,9 @@ docker-compose run --rm manage.py migrate  # set up database
 docker-compose run --rm manage.py createsuperuser
 # [fill out information]
 docker-compose up dev-api
-# Ctrl-c to kill
+# [Wait while it sets up]
+# Starting development server at http://0.0.0.0:8001/
+# Quit the server with CONTROL-C.
 ```
 
 Then navigate to http://localhost:8001/admin/ and log in.
@@ -103,19 +105,34 @@ There are two types of entry points:
     for UI, 8001 for API).
   * `prod` - Run the UI and API apps in "production" mode (port 9002 for UI,
     9001 for API). Note that this requires the JS be compiled already.
-1. One use commands which run until complete. These are ran via
+1. One-use commands which run until complete. These are ran via
   `docker-compose run --rm` (the `--rm` just deletes the images after running;
   it's not strictly required)
-  * `manage.py`
-  * `py.test`
+  * `api-npm`
+  * `api-webpack`
+  * `bandit`
   * `flake8`
+  * `manage.py`
   * `mypy`
-  * `pip-compile`
   * `npm`
-  * `webpack`
+  * `pip-compile`
   * `psql`
+  * `ptw`
+  * `py.test`
+  * `webpack`
 
 ### Resolving common container issues
+
+#### Restarting
+
+If the app is throwing an unexpected exception, it might be due to needing new
+libraries or needing to run a database migration. As a first debugging step,
+try bouncing the system:
+
+```sh
+docker-compose down
+docker-compose up dev
+```
 
 #### Bundles aren't being rebuilt when I change them
 

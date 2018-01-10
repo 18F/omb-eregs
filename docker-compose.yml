@@ -33,7 +33,7 @@ services:
     network_mode: service:proxy
   prod-api: &PROD_API
     <<: *PYTHON
-    command: .docker/wait_for_db_then .docker/activate_then ./run_api.sh
+    command: .docker/activate_then .docker/wait_for_db_then ./run_api.sh
     environment: &API_ENV
       DATABASE_URL: postgres://postgres@persistent_db/postgres
       PORT: 9001
@@ -68,6 +68,7 @@ services:
 
   dev-api: &DEV_API
     <<: *PROD_API
+    command: .docker/activate_then .docker/wait_for_webpack_then .docker/wait_for_db_then ./run_api.sh
     environment:
       <<: *API_ENV
       PORT: 8001

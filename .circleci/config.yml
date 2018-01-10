@@ -75,7 +75,7 @@ jobs:
             COMPOSE_FILE: docker-compose-circle.yml
           command: docker-compose run --rm api-npm test
       - run:
-          name: API Build JS
+          name: API Build JS & CSS
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
           command: |
