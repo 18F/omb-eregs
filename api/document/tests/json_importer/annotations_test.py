@@ -2,22 +2,18 @@ from document.json_importer.annotations import derive_annotations
 from document.json_importer.importer import convert_node
 from document.models import ExternalLink, FootnoteCitation
 
-from .importer_test import PARA_WITH_LINK, external_link, text
+from . import factories as f
 
 
 def test_derive_annotations_works_with_nested_content():
-    para = convert_node({
-        "node_type": 'para',
-        "content": [
-            external_link('http://one.org', [
-                text('foo'),
-                external_link('http://two.org', [text('bar')]),
-                text('baz'),
-                external_link('http://three.org', [text('quux')]),
-            ])
-        ],
-        "children": [],
-    })
+    para = convert_node(f.para(content=[
+        f.external_link('http://one.org', [
+            f.text('foo'),
+            f.external_link('http://two.org', [f.text('bar')]),
+            f.text('baz'),
+            f.external_link('http://three.org', [f.text('quux')]),
+        ])
+    ]))
 
     annos = derive_annotations(para)
 
@@ -37,7 +33,10 @@ def test_derive_annotations_works_with_nested_content():
 
 
 def test_derive_annotations_works_with_external_link():
-    annos = derive_annotations(convert_node(PARA_WITH_LINK))
+    annos = derive_annotations(convert_node(f.para(content=[
+        f.text('Hello '),
+        f.external_link('http://example.org/', [f.text('there')])
+    ])))
 
     assert len(annos) == 1
     assert len(annos[ExternalLink]) == 1
@@ -48,20 +47,11 @@ def test_derive_annotations_works_with_external_link():
 
 
 def test_derive_annotations_works_with_footnote_citation():
-    para = convert_node({
-        "node_type": 'para',
-        "content": [{
-            "content_type": 'footnote_citation',
-            "inlines": [text('3')],
-        }],
-        "children": [{
-            "node_type": "footnote",
-            "marker": '3',
-            "type_emblem": '3',
-            "children": [],
-            "content": [text('Hi I am a footnote')],
-        }],
-    })
+    para = convert_node(f.para(
+        content=[f.footnote_citation([f.text('3')])],
+        children=[f.footnote(3, content=[f.text('Hi I am a footnote')])]
+    ))
+
     annos = derive_annotations(para)
 
     assert len(annos) == 1
