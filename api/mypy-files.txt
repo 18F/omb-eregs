@@ -4,6 +4,8 @@ document/serializers/meta.py
 document/serializers/doc_cursor.py
 document/tree.py
 document/xml_importer/importer.py
+document/json_importer/
+document/tests/json_importer/
 ombpdf/download_pdfs.py
 ombpdf/management/commands/import_pdfs_from_policies.py
 reqs/management/commands/link_agencies.py
