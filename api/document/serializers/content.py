@@ -102,22 +102,71 @@ class NestedAnnotationSerializer(serializers.Serializer):
         return serializer.to_internal_value(data)
 
 
-class BaseAnnotationSerializer(serializers.Serializer):
-    # This determines whether the annotation is a leaf of our
-    # content tree.
-    IS_LEAF = False
+class NestableAnnotationField(serializers.Field):
+    def get_attribute(self,
+                      instance: NestableAnnotation) -> NestableAnnotation:
+        return instance
 
-    content_type = serializers.SerializerMethodField()
-    inlines = serializers.SerializerMethodField()
-    text = serializers.SerializerMethodField()
 
-    @property
-    def CONTENT_TYPE(self):     # noqa; this is a constant
-        raise NotImplementedError('Unknown annotation type')
+class InlinesField(NestableAnnotationField):
+    def __init__(self, is_leaf_node: bool):
+        super().__init__()
+        self.is_leaf_node = is_leaf_node
+
+    def to_representation(self,
+                          instance: NestableAnnotation) -> List[PrimitiveDict]:
+        if self.is_leaf_node:
+            return []
+        return NestedAnnotationSerializer(
+            instance.children, context=self.context, many=True).data
+
+    def to_internal_value(self,
+                          data: List[PrimitiveDict]) -> List[PrimitiveDict]:
+        if not self.is_leaf_node:
+            serializer = NestedAnnotationSerializer(many=True)
+            return serializer.to_internal_value(data)
+        elif data:
+            raise ValidationError('leaf nodes cannot contain nested content')
+        return []
+
+
+class TextField(NestableAnnotationField):
+    def __init__(self, is_leaf_node: bool):
+        super().__init__()
+        self.is_leaf_node = is_leaf_node
 
     @property
     def doc_node_text(self):
         return self.context['cursor'].text
+
+    def to_representation(self, instance: NestableAnnotation) -> str:
+        return self.doc_node_text[instance.start:instance.end]
+
+    def to_internal_value(self, data: str) -> str:
+        if self.is_leaf_node:
+            serializer = serializers.CharField(trim_whitespace=False)
+            return serializer.to_internal_value(data)
+
+        # If this isn't a leaf node, we're not going to complain,
+        # because we do fill out this value on non-leaf nodes during
+        # serialization, and we want clients to be able to modify
+        # serialized responses and send them back without having to
+        # do too much work.
+        #
+        # However, that said, we *will* throw away the text value on
+        # non-leaf nodes during deserialization, to make sure it's not
+        # accidentally used by anything further down the pipeline.
+        return ''
+
+
+class BaseAnnotationSerializer(serializers.Serializer):
+    content_type = serializers.SerializerMethodField()
+    inlines = InlinesField(is_leaf_node=False)
+    text = TextField(is_leaf_node=False)
+
+    @property
+    def CONTENT_TYPE(self):     # noqa; this is a constant
+        raise NotImplementedError('Unknown annotation type')
 
     @property
     def cursor_tree(self):
@@ -126,35 +175,16 @@ class BaseAnnotationSerializer(serializers.Serializer):
     def get_content_type(self, instance: NestableAnnotation):
         return self.CONTENT_TYPE
 
-    def get_inlines(self, instance: NestableAnnotation):
-        if self.IS_LEAF:
-            return []
-        return NestedAnnotationSerializer(
-            instance.children, context=self.context, many=True).data
-
-    def get_text(self, instance: Annotation):
-        return self.doc_node_text[instance.start:instance.end]
-
     def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
-        inlines = [] if self.IS_LEAF else data.get('inlines', [])
         result = super().to_internal_value(data)
         result['content_type'] = self.CONTENT_TYPE
-        result['inlines'] = []
-        if inlines:
-            serializer = NestedAnnotationSerializer()
-            result['inlines'].extend([
-                serializer.to_internal_value(item) for item in inlines
-            ])
-        if self.IS_LEAF:
-            serializer = serializers.CharField(trim_whitespace=False)
-            result['text'] = serializer.to_internal_value(data.get('text'))
         return result
 
 
 class PlainTextSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = '__text__'
-
-    IS_LEAF = True
+    inlines = InlinesField(is_leaf_node=True)
+    text = TextField(is_leaf_node=True)
 
 
 class FootnoteCitationSerializer(BaseAnnotationSerializer):
