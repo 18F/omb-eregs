@@ -10,9 +10,64 @@ PrimitiveDict = Dict[str, Any]
 
 
 class DocCursor():
-    """DocNodes don't keep track of their children/relationships within a
+    """
+    DocNodes don't keep track of their children/relationships within a
     tree, so we will generally access them indirectly through a wrapping tree
-    (a DiGraph). This DocCursor points to a specific node within that tree."""
+    (a DiGraph). This DocCursor points to a specific node within that tree.
+
+    Note, though, that the DocCursor doesn't actually need to be
+    backed by a database at all, and can be constructed independently
+    of one. In fact, this a convenient way to create DocNodes before
+    committing them to a database.
+
+    For example, here we'll create a document structure:
+
+        >>> root = DocCursor.new_tree('root')
+        >>> sec1 = root.add_child('sec', '1', text='section 1')
+        >>> para = sec1.add_child('para', 'a', text='paragraph a')
+
+    Here's its structure:
+
+        >>> print(root)
+        <root identifier="root_1" type_emblem="1">
+          <sec identifier="root_1__sec_1" type_emblem="1">
+            section 1
+            <para identifier="root_1__sec_1__para_a" type_emblem="a">
+              paragraph a
+            </para>
+          </sec>
+        </root>
+
+    Note that the above XML doesn't conform to any particular schema; it's
+    just a familiar notation we're using to visualize the structure of
+    the document.
+
+    The underlying DocNode model can be revealed through the `.model`
+    property:
+
+        >>> root.model
+        <DocNode: DocNode object>
+
+    As a convenience, properties of the underlying model can be accessed
+    on the DocCursor too, e.g.:
+
+        >>> root.node_type
+        'root'
+        >>> root.depth
+        0
+
+    Convenience methods are also provided for traversing the document;
+
+        >>> [node.node_type for node in root.walk()]
+        ['root', 'sec', 'para']
+
+        >>> [node.node_type for node in para.ancestors()]
+        ['sec', 'root']
+
+        >>> root.jump_to('root_1__sec_1').node_type
+        'sec'
+    """
+
     __slots__ = ('tree', 'identifier')
 
     def __init__(self, tree: DiGraph, identifier: str) -> None:
@@ -109,6 +164,33 @@ class DocCursor():
         for child in self.children():
             for cursor in child.walk():
                 yield cursor
+
+    @property
+    def _opening_tag(self):
+        attr_strs = []
+        for attr in ['identifier', 'marker', 'title', 'type_emblem']:
+            val = getattr(self, attr, None)
+            if val:
+                attr_strs.append(f'{attr}="{val}"')
+        attr_str = ' ' + ' '.join(attr_strs) if attr_strs else ''
+        return f'<{self.node_type}{attr_str}>'
+
+    @property
+    def _closing_tag(self):
+        return f'</{self.node_type}>'
+
+    def _describe(self, indent=''):
+        lines = [f'{indent}{self._opening_tag}']
+        next_indent = indent + '  '
+        if self.text:
+            lines.append(f'{next_indent}{self.text}')
+        for child in self.children():
+            lines.extend(child._describe(next_indent))
+        lines.append(f'{indent}{self._closing_tag}')
+        return lines
+
+    def __str__(self):
+        return '\n'.join(self._describe())
 
     def nested_set_renumber(self, left=1, bulk_create=True):
         """The nested set model tracks parent/child relationships by requiring
