@@ -89,6 +89,21 @@ class NestedAnnotationSerializer(serializers.Serializer):
     content_type_mapping: Dict[
         str, Type['BaseAnnotationSerializer']] = {}
 
+    @classmethod
+    def register(cls, klass: Type['BaseAnnotationSerializer']) \
+            -> Type['BaseAnnotationSerializer']:
+        name = klass.__name__
+
+        if klass.ANNOTATION_CLASS is None:
+            raise ValueError(f'{name} must define ANNOTATION_CLASS')
+        cls.serializer_mapping[klass.ANNOTATION_CLASS] = klass
+
+        if klass.CONTENT_TYPE is None:
+            raise ValueError(f'{name} must define CONTENT_TYPE')
+        cls.content_type_mapping[klass.CONTENT_TYPE] = klass
+
+        return klass
+
     def to_representation(self, data: NestableAnnotation):
         serializer = self.serializer_mapping.get(data.annotation_class)
         if serializer is None:
@@ -167,8 +182,9 @@ class BaseAnnotationSerializer(serializers.Serializer):
     inlines = InlinesField(is_leaf_node=False)
     text = TextField(is_leaf_node=False)
 
-    # Subclasses need to implement this.
-    CONTENT_TYPE = ''
+    # Subclasses need to implement these.
+    CONTENT_TYPE: Optional[str] = None
+    ANNOTATION_CLASS: Optional[Type['Annotation']] = None
 
     @property
     def cursor_tree(self):
@@ -183,14 +199,18 @@ class BaseAnnotationSerializer(serializers.Serializer):
         return result
 
 
+@NestedAnnotationSerializer.register
 class PlainTextSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = '__text__'
+    ANNOTATION_CLASS = PlainText
     inlines = InlinesField(is_leaf_node=True)
     text = TextField(is_leaf_node=True)
 
 
+@NestedAnnotationSerializer.register
 class FootnoteCitationSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'footnote_citation'
+    ANNOTATION_CLASS = FootnoteCitation
     footnote_node = serializers.SerializerMethodField()
 
     def get_footnote_node(self, instance: FootnoteCitation):
@@ -201,8 +221,10 @@ class FootnoteCitationSerializer(BaseAnnotationSerializer):
             footnote_tree, context={'is_root': False}).data
 
 
+@NestedAnnotationSerializer.register
 class ExternalLinkSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'external_link'
+    ANNOTATION_CLASS = ExternalLink
     href = serializers.URLField()
 
 
@@ -214,24 +236,14 @@ class RequirementSerializer(serializers.ModelSerializer):
         )
 
 
+@NestedAnnotationSerializer.register
 class InlineRequirementSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'requirement'
+    ANNOTATION_CLASS = InlineRequirement
     requirement = RequirementSerializer()
 
 
+@NestedAnnotationSerializer.register
 class CiteSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'cite'
-
-
-NestedAnnotationSerializer.serializer_mapping.update({
-    Cite: CiteSerializer,
-    PlainText: PlainTextSerializer,
-    FootnoteCitation: FootnoteCitationSerializer,
-    ExternalLink: ExternalLinkSerializer,
-    InlineRequirement: InlineRequirementSerializer,
-})
-
-NestedAnnotationSerializer.content_type_mapping.update({
-    serializer.CONTENT_TYPE: serializer
-    for serializer in NestedAnnotationSerializer.serializer_mapping.values()
-})
+    ANNOTATION_CLASS = Cite
