@@ -10,14 +10,13 @@ $fa-font-path: '~font-awesome/fonts';
 @import '~nprogress/nprogress.css';
 @import '~katex/dist/katex.css';
 
-// App-wide
-@import 'base/colors';
+@import 'shared-styles/base/colors';
+@import 'shared-styles/base/media-queries';
+@import 'shared-styles/base/spacing';
+@import 'shared-styles/base/type-size';
+@import 'shared-styles/base/util';
 @import 'base/base';
 @import 'base/fonts';
-@import 'base/media-queries';
-@import 'base/spacing';
-@import 'base/type-size';
-@import 'base/util';
 
 @import 'layout/typography';
 @import 'layout/layout';
