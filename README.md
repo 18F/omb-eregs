@@ -56,7 +56,14 @@ This runs in development mode (including automatic JS recompilation). To run
 in prod mode, run
 
 ```bash
-docker-compose run --rm webpack  # to build the server JS
+# Build the UI styles
+docker-compose run --rm webpack
+# Build the UI app
+NODE_ENV=production docker-compose run --rm npm run build
+# Build the API styles
+docker-compose run --rm api-webpack
+# Collect all static files for the admin
+DEBUG=false docker-compose run --rm manage.py collectstatic
 docker-compose up prod
 ```
 
