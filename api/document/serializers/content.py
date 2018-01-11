@@ -1,5 +1,4 @@
-from collections import defaultdict
-from typing import Iterator, List, Optional
+from typing import Dict, Iterator, List, Optional, Type
 
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -14,11 +13,11 @@ class NestableAnnotation:
     """Wraps an Annotation with references to annotations it contains and its
     parent."""
     def __init__(self, annotation: Annotation,
-                 parent: Optional['NestedAnnotation']):
+                 parent: Optional['NestableAnnotation']) -> None:
         self.annotation = annotation
         # NestableAnnotations point up to the parent and down to children
         self.parent = parent
-        self.children: List[NestedAnnotation] = []
+        self.children: List['NestableAnnotation'] = []
         if parent:
             parent.children.append(self)
 
@@ -71,6 +70,8 @@ def nest_annotations(annotations: Iterator[Annotation],
         # We're not allowing non-nested overlapping annotations, so we won't
         # compare ends when determining nesting
         while anote not in last:
+            if last.parent is None:
+                raise AssertionError('last.parent is None!')
             last = last.parent
         # Enforce all annotations to be nested rather than overlapping
         anote.end = min(anote.end, last.end)
@@ -82,14 +83,16 @@ def nest_annotations(annotations: Iterator[Annotation],
 class NestedAnnotationSerializer(serializers.Serializer):
     """Figures out which AnnotationSerializer to use when serializing
     content."""
-    serializer_mapping = defaultdict(
-        lambda: BaseAnnotationSerializer,   # will raise an exception when used
-    )
+    serializer_mapping: Dict[
+        Type[Annotation], Type['BaseAnnotationSerializer']] = {}
 
-    content_type_mapping = {}
+    content_type_mapping: Dict[
+        str, Type['BaseAnnotationSerializer']] = {}
 
     def to_representation(self, data: NestableAnnotation):
-        serializer = self.serializer_mapping[data.annotation_class]
+        serializer = self.serializer_mapping.get(data.annotation_class)
+        if serializer is None:
+            raise NotImplementedError('Unknown annotation type')
         return serializer(data, context=self.context).data
 
     def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
@@ -109,7 +112,7 @@ class NestableAnnotationField(serializers.Field):
 
 
 class InlinesField(NestableAnnotationField):
-    def __init__(self, is_leaf_node: bool):
+    def __init__(self, is_leaf_node: bool) -> None:
         super().__init__()
         self.is_leaf_node = is_leaf_node
 
@@ -123,15 +126,15 @@ class InlinesField(NestableAnnotationField):
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
         if not self.is_leaf_node:
-            serializer = NestedAnnotationSerializer(many=True)
-            return serializer.to_internal_value(data)
+            serializer = NestedAnnotationSerializer()
+            return [serializer.to_internal_value(d) for d in data]
         elif data:
             raise ValidationError('leaf nodes cannot contain nested content')
         return []
 
 
 class TextField(NestableAnnotationField):
-    def __init__(self, is_leaf_node: bool):
+    def __init__(self, is_leaf_node: bool) -> None:
         super().__init__()
         self.is_leaf_node = is_leaf_node
 
@@ -164,9 +167,8 @@ class BaseAnnotationSerializer(serializers.Serializer):
     inlines = InlinesField(is_leaf_node=False)
     text = TextField(is_leaf_node=False)
 
-    @property
-    def CONTENT_TYPE(self):     # noqa; this is a constant
-        raise NotImplementedError('Unknown annotation type')
+    # Subclasses need to implement this.
+    CONTENT_TYPE = ''
 
     @property
     def cursor_tree(self):
