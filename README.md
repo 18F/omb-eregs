@@ -1,4 +1,4 @@
-# OMB eRequirements
+# Welcome to the OMB Policy Library
 This repository contains a tool to make White House Office of Management and Budget (OMB) policy requirements easier to view, comply with, and maintain.
 
 The repository contains a Django application where requirements are maintained by the OMB team. The Django application also serves an API. The repo also contains an agency- and public-facing tool to view and filter the requirements, and see related information about them. The public-facing tool is comprised of an isomorphic Node and React application.
@@ -13,6 +13,14 @@ YouTube](https://www.youtube.com/playlist?list=PLu2xTIVb2mmQb-QURyZQEoqK4c2XrW43
 [![CircleCI](https://circleci.com/gh/18F/omb-eregs.svg?style=svg)](https://circleci.com/gh/18F/omb-eregs)
 [![Code Climate](https://codeclimate.com/github/18F/omb-eregs/badges/gpa.svg)](https://codeclimate.com/github/18F/omb-eregs)
 [![Dependency Status](https://gemnasium.com/badges/github.com/18F/omb-eregs.svg)](https://gemnasium.com/github.com/18F/omb-eregs)
+
+## Product Background
+
+### Product Vision
+We are creating software that simplifies large, complex, hard to navigate policies for agency implementers so they can comply easily and quickly. This saves them time, money, and frustration, so that they can get back to fulfilling their agency’s mission. 
+
+### Product Roadmap
+[Work in progress roadmap here, available internal to stakeholders and the team currently](https://docs.google.com/document/d/1foKuxVYb18X1a1Evtz33T-hqDU2ymAUppLOeBpt5Tvg/edit#)
 
 
 ## Running
