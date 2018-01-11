@@ -3,9 +3,9 @@ from os.path import basename
 from typing import List, Optional, Set, Tuple
 
 import requests
+import reversion
 from django.core.management.base import BaseCommand
 from requests.exceptions import RequestException
-import reversion
 
 from ombpdf.management.commands.scrape_memoranda import Url, parse_pdf
 from reqs.models import Policy, WorkflowPhases
