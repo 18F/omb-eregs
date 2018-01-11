@@ -123,10 +123,8 @@ class InlinesField(NestableAnnotationField):
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
         if not self.is_leaf_node:
-            serializer = NestedAnnotationSerializer()
-            return [
-                serializer.to_internal_value(item) for item in data
-            ]
+            serializer = NestedAnnotationSerializer(many=True)
+            return serializer.to_internal_value(data)
         elif data:
             raise ValidationError('leaf nodes cannot contain nested content')
         return []

@@ -186,6 +186,14 @@ def test_text_deserialization_works():
     assert serializer.to_internal_value(obj) == obj
 
 
+def test_inlines_work_on_non_leaf_nodes():
+    node = {
+        'content_type': '__text__', 'text': 'blah', 'inlines': [],
+    }
+    assert content.InlinesField(is_leaf_node=False)\
+        .to_internal_value([node]) == [node]
+
+
 def test_no_error_raised_on_empty_inlines_in_leaf_nodes():
     assert content.InlinesField(is_leaf_node=True).to_internal_value([]) == []
 
