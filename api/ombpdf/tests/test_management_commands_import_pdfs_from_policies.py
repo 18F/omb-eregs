@@ -6,7 +6,7 @@ from model_mommy import mommy
 from requests.exceptions import ConnectionError
 
 from ombpdf.management.commands import import_pdfs_from_policies
-from reqs.models import Policy
+from reqs.models import Policy, WorkflowPhases
 
 
 def test_best_url(monkeypatch):
@@ -96,3 +96,11 @@ def test_import_pdfs_from_policies(monkeypatch):
                          f'{p3.pk}: no-exception-2'}
     assert failures == {f'{p4.pk}: exception-but-a-pdf'}
     # p2 doesn't show up as it's not a pdf
+
+    # make sure the policy objects have the correct workflow_phases:
+    p1_db = Policy.objects.get(id=p1.pk)
+    assert p1_db.workflow_phase == WorkflowPhases.cleanup.name
+    p3_db = Policy.objects.get(id=p3.pk)
+    assert p3_db.workflow_phase == WorkflowPhases.cleanup.name
+    p4_db = Policy.objects.get(id=p4.pk)
+    assert p4_db.workflow_phase == WorkflowPhases.failed.name

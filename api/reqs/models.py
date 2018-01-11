@@ -69,6 +69,34 @@ class PolicyTypes(Enum):
     strategy = 'Strategy'
 
 
+@unique
+class WorkflowPhases(Enum):
+    """
+    We're assuming two potential workflows.
+
+    Import Workflow
+
+    0.  Policy exists in DB, but no document is associated with it. (blank)
+    1a. Import from policy.uri failed ('Failed Import')
+    1b. Text has been imported, but not checked/cleaned up. ('Cleanup')
+    2.  Text has been checked/cleaned up and is ready for review. ('Review')
+    3.  Text has been published. ('Published')
+
+    Edit Workflow
+
+    0.  Policy exists in DB, but no document is associated with it. (blank)
+    1.  Text is being created/edited in the tool, but is not yet read for
+        review. ('Edit')
+    2.  Text is ready for review. ('Review')
+    3.  Text has been published. ('Published')
+    """
+    edit = 'Edit'
+    cleanup = 'Cleanup'
+    failed = 'Failed Import'
+    published = 'Published'
+    review = 'Review'
+
+
 class Office(models.Model):
     name = models.CharField(max_length=256)
 
@@ -110,6 +138,10 @@ class Policy(models.Model):
     issuing_body = models.CharField(max_length=512)
     managing_offices = models.ManyToManyField(
         Office, blank=True, related_name='policies')
+    workflow_phase = models.CharField(
+        max_length=32, choices=[(e.name, e.value) for e in WorkflowPhases],
+        blank=True
+    )
 
     @property
     def title_with_number(self):
