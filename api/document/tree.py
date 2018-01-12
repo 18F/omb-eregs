@@ -22,25 +22,18 @@ class DocCursor():
 
     For example, here we'll create a document structure:
 
-        >>> root = DocCursor.new_tree('root')
+        >>> root = DocCursor.new_tree('root', title='my cool doc')
         >>> sec1 = root.add_child('sec', '1', text='section 1')
         >>> para = sec1.add_child('para', 'a', text='paragraph a')
 
-    Here's its structure:
+    Each of the above variables is a DocCursor pointing to a
+    part of the document. We can see where they're pointing:
 
-        >>> print(root)
-        <root identifier="root_1" type_emblem="1">
-          <sec identifier="root_1__sec_1" type_emblem="1">
-            section 1
-            <para identifier="root_1__sec_1__para_a" type_emblem="a">
-              paragraph a
-            </para>
-          </sec>
-        </root>
-
-    Note that the above XML doesn't conform to any particular schema; it's
-    just a familiar notation we're using to visualize the structure of
-    the document.
+        >>> print(sec1)
+        parent: root_1 title="my cool doc"
+        |- sec_1
+           'section 1'
+           |- para_a
 
     The underlying DocNode model can be revealed through the `.model`
     property:
@@ -166,31 +159,43 @@ class DocCursor():
                 yield cursor
 
     @property
-    def _opening_tag(self):
+    def _parent_desc(self):
+        parent = self.parent()
+        if parent is None:
+            return "None"
+        return f"{parent.identifier}{parent._attr_str}"
+
+    @property
+    def _attr_str(self):
         attr_strs = []
-        for attr in ['identifier', 'marker', 'title', 'type_emblem']:
+        for attr in ['title', 'marker']:
             val = getattr(self, attr, None)
             if val:
                 attr_strs.append(f'{attr}="{val}"')
-        attr_str = ' ' + ' '.join(attr_strs) if attr_strs else ''
-        return f'<{self.node_type}{attr_str}>'
+        return (' ' + ' '.join(attr_strs)) if attr_strs else ''
 
     @property
-    def _closing_tag(self):
-        return f'</{self.node_type}>'
+    def _short_desc(self):
+        return f"{self.node_type}_{self.type_emblem}{self._attr_str}"
 
-    def _describe(self, indent=''):
-        lines = [f'{indent}{self._opening_tag}']
-        next_indent = indent + '  '
-        if self.text:
-            lines.append(f'{next_indent}{self.text}')
-        for child in self.children():
-            lines.extend(child._describe(next_indent))
-        lines.append(f'{indent}{self._closing_tag}')
-        return lines
+    def _short_text(self, max_len=40):
+        text = self.text
+        if len(text) > max_len:
+            text = text[:max_len] + '...'
+        return repr(text)
 
     def __str__(self):
-        return '\n'.join(self._describe())
+        indent = ''
+        lines = [
+            f"{indent}parent: {self._parent_desc}",
+            f"{indent}|- {self._short_desc}",
+        ]
+        next_indent = indent + '   '
+        if self.text:
+            lines.append(f'{next_indent}{self._short_text()}')
+        for child in self.children():
+            lines.append(f'{next_indent}|- {child._short_desc}')
+        return '\n'.join(lines)
 
     def nested_set_renumber(self, left=1, bulk_create=True):
         """The nested set model tracks parent/child relationships by requiring
