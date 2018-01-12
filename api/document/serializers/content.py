@@ -92,15 +92,10 @@ class NestedAnnotationSerializer(serializers.Serializer):
     @classmethod
     def register(cls, klass: Type['BaseAnnotationSerializer']) \
             -> Type['BaseAnnotationSerializer']:
-        name = klass.__name__
+        obj = klass()
 
-        if klass.ANNOTATION_CLASS is None:
-            raise ValueError(f'{name} must define ANNOTATION_CLASS')
-        cls.serializer_mapping[klass.ANNOTATION_CLASS] = klass
-
-        if klass.CONTENT_TYPE is None:
-            raise ValueError(f'{name} must define CONTENT_TYPE')
-        cls.content_type_mapping[klass.CONTENT_TYPE] = klass
+        cls.serializer_mapping[obj.ANNOTATION_CLASS] = klass
+        cls.content_type_mapping[obj.CONTENT_TYPE] = klass
 
         return klass
 
@@ -182,9 +177,13 @@ class BaseAnnotationSerializer(serializers.Serializer):
     inlines = InlinesField(is_leaf_node=False)
     text = TextField(is_leaf_node=False)
 
-    # Subclasses need to implement these.
-    CONTENT_TYPE: Optional[str] = None
-    ANNOTATION_CLASS: Optional[Type['Annotation']] = None
+    @property
+    def CONTENT_TYPE(self) -> str:  # noqa
+        raise NotImplementedError()
+
+    @property
+    def ANNOTATION_CLASS(self) -> Type['Annotation']:  # noqa
+        raise NotImplementedError()
 
     @property
     def cursor_tree(self):
