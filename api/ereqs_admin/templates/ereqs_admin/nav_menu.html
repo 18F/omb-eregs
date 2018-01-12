@@ -1,0 +1,26 @@
+{% if menu %}
+<ul class="nav-menu">
+  {% for top_menu in menu %}
+  <li>
+    {% if top_menu.url %}<a href="{{ top_menu.url }}">{% endif %}
+    {% if top_menu.active %}<strong>{% endif %}
+    {{ top_menu.title }}
+    {% if top_menu.active %}</strong>{% endif %}
+    {% if top_menu.url %}</a>{% endif %}
+    {% if top_menu.children %}
+      <ul>
+        {% for child_menu in top_menu.children %}
+          <li>
+            {% if child_menu.url %}<a href="{{ child_menu.url }}">{% endif %}
+            {% if child_menu.active %}<strong>{% endif %}
+            {{ child_menu.title }}
+            {% if child_menu.active %}</strong>{% endif %}
+            {% if child_menu.url %}</a>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
