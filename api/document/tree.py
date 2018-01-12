@@ -248,7 +248,11 @@ class DocCursor():
             while child.left > parent.right:
                 parents_parent = parent.parent()
                 if parents_parent is None:
-                    raise AssertionError("Parent's parent must exist!")
+                    raise AssertionError(
+                        "Couldn't convert DocNodes into a tree. "
+                        "Perhaps they weren't sorted or there was data "
+                        "corruption?"
+                    )
                 parent = parents_parent
             self.tree.add_node(child.identifier, model=child)
             self.tree.add_edge(parent.identifier, child.identifier,
