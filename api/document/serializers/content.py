@@ -80,41 +80,6 @@ def nest_annotations(annotations: Iterator[Annotation],
     return root.children
 
 
-class NestedAnnotationSerializer(serializers.Serializer):
-    """Figures out which AnnotationSerializer to use when serializing
-    content."""
-    serializer_mapping: Dict[
-        Type[Annotation], Type['BaseAnnotationSerializer']] = {}
-
-    content_type_mapping: Dict[
-        str, Type['BaseAnnotationSerializer']] = {}
-
-    @classmethod
-    def register(cls, klass: Type['BaseAnnotationSerializer']) \
-            -> Type['BaseAnnotationSerializer']:
-        obj = klass()
-
-        cls.serializer_mapping[obj.ANNOTATION_CLASS] = klass
-        cls.content_type_mapping[obj.CONTENT_TYPE] = klass
-
-        return klass
-
-    def to_representation(self, data: NestableAnnotation):
-        serializer = self.serializer_mapping.get(data.annotation_class)
-        if serializer is None:
-            raise NotImplementedError('Unknown annotation type')
-        return serializer(data, context=self.context).data
-
-    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
-        content_type = data.get('content_type')
-        if content_type is None:
-            raise ValidationError("missing content_type")
-        if content_type not in self.content_type_mapping:
-            raise ValidationError(f"unknown content_type: {content_type}")
-        serializer = self.content_type_mapping[content_type]()
-        return serializer.to_internal_value(data)
-
-
 class NestableAnnotationField(serializers.Field):
     def get_attribute(self,
                       instance: NestableAnnotation) -> NestableAnnotation:
@@ -196,6 +161,41 @@ class BaseAnnotationSerializer(serializers.Serializer):
         result = super().to_internal_value(data)
         result['content_type'] = self.CONTENT_TYPE
         return result
+
+
+class NestedAnnotationSerializer(serializers.Serializer):
+    """Figures out which AnnotationSerializer to use when serializing
+    content."""
+    serializer_mapping: Dict[
+        Type[Annotation], Type[BaseAnnotationSerializer]] = {}
+
+    content_type_mapping: Dict[
+        str, Type[BaseAnnotationSerializer]] = {}
+
+    @classmethod
+    def register(cls, klass: Type[BaseAnnotationSerializer]) \
+            -> Type[BaseAnnotationSerializer]:
+        obj = klass()
+
+        cls.serializer_mapping[obj.ANNOTATION_CLASS] = klass
+        cls.content_type_mapping[obj.CONTENT_TYPE] = klass
+
+        return klass
+
+    def to_representation(self, data: NestableAnnotation):
+        serializer = self.serializer_mapping.get(data.annotation_class)
+        if serializer is None:
+            raise NotImplementedError('Unknown annotation type')
+        return serializer(data, context=self.context).data
+
+    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
+        content_type = data.get('content_type')
+        if content_type is None:
+            raise ValidationError("missing content_type")
+        if content_type not in self.content_type_mapping:
+            raise ValidationError(f"unknown content_type: {content_type}")
+        serializer = self.content_type_mapping[content_type]()
+        return serializer.to_internal_value(data)
 
 
 @NestedAnnotationSerializer.register
