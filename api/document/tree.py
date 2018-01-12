@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import Any, Callable, Dict, Iterator, List, Optional
+from typing import Any, Callable, Dict, Iterator, List, Optional, Type, TypeVar
 
 from networkx import DiGraph
 from networkx.algorithms.dag import descendants
@@ -7,6 +7,8 @@ from networkx.algorithms.dag import descendants
 from document.models import DocNode
 
 PrimitiveDict = Dict[str, Any]
+
+T = TypeVar('T', bound='DocCursor')
 
 
 class DocCursor():
@@ -89,8 +91,8 @@ class DocCursor():
         self.model._prefetched_objects_cache = value
 
     @classmethod
-    def new_tree(cls, node_type: str, type_emblem: str='1', policy=None,
-                 **attrs) -> 'DocCursor':
+    def new_tree(cls: Type[T], node_type: str, type_emblem: str='1',
+                 policy=None, **attrs) -> T:
         attrs = {**attrs, 'policy': policy}
         tree = DiGraph(policy=policy)
         identifier = f"{node_type}_{type_emblem}"
@@ -102,8 +104,8 @@ class DocCursor():
         return cls(tree, identifier)
 
     @classmethod
-    def load_from_model(cls, root_node: DocNode, subtree: bool=True,
-                        queryset=None) -> 'DocCursor':
+    def load_from_model(cls: Type[T], root_node: DocNode, subtree: bool=True,
+                        queryset=None) -> T:
         tree = DiGraph()
         tree.add_node(root_node.identifier, model=root_node)
         root = cls(tree, root_node.identifier)
@@ -115,13 +117,13 @@ class DocCursor():
     def model(self) -> DocNode:
         return self.tree.node[self.identifier]['model']
 
-    def __getitem__(self, child_suffix: str) -> 'DocCursor':
+    def __getitem__(self: T, child_suffix: str) -> T:
         child_id = f"{self.identifier}__{child_suffix}"
         if child_id not in self.tree:
             raise KeyError(f"No {child_id} element")
         return self.__class__(self.tree, child_id)
 
-    def children(self) -> Iterator['DocCursor']:
+    def children(self: T) -> Iterator[T]:
         edges = [(sort_order, idx) for _, idx, sort_order
                  in self.tree.out_edges(self.identifier, data='sort_order')]
         for _, identifier in sorted(edges):
@@ -135,8 +137,8 @@ class DocCursor():
         child_type_counts = Counter(c.node_type for c in self.children())
         return str(child_type_counts[node_type] + 1)
 
-    def add_child(self, node_type: str, type_emblem: Optional[str] = None,
-                  **attrs) -> 'DocCursor':
+    def add_child(self: T, node_type: str, type_emblem: Optional[str] = None,
+                  **attrs) -> T:
         if type_emblem is None:
             type_emblem = self.next_emblem(node_type)
         if 'policy' not in attrs:
@@ -156,7 +158,7 @@ class DocCursor():
         # Using "descendants" is a bit more efficient than recursion
         return len(descendants(self.tree, self.identifier)) + 1
 
-    def walk(self) -> Iterator['DocCursor']:
+    def walk(self: T) -> Iterator[T]:
         """An iterator of all the nodes in this tree."""
         yield self
         for child in self.children():
@@ -223,21 +225,21 @@ class DocCursor():
     def next_sort_order(self) -> int:
         return self.tree.out_degree(self.identifier)
 
-    def parent(self) -> Optional['DocCursor']:
+    def parent(self: T) -> Optional[T]:
         predecessors = list(self.tree.predecessors(self.identifier))
         if predecessors:
             return type(self)(self.tree, predecessors[0])
         return None
 
-    def ancestors(self, filter_fn: Callable[['DocCursor'], bool]=None) \
-            -> Iterator['DocCursor']:
+    def ancestors(self: T, filter_fn: Callable[[T], bool]=None) \
+            -> Iterator[T]:
         parent = self.parent()
         if parent and (not filter_fn or filter_fn(parent)):
             yield parent
         if parent:
             yield from parent.ancestors(filter_fn)
 
-    def add_models(self, models: Iterator[DocNode]) -> 'DocCursor':
+    def add_models(self: T, models: Iterator[DocNode]) -> T:
         """Convert a (linear) list of DocNodes into a tree-aware version.
         We assume that the models are already sorted."""
         parent = self
@@ -254,14 +256,13 @@ class DocCursor():
             parent = type(self)(self.tree, child.identifier)
         return self
 
-    def filter(self, filter_fn: Callable[[DocNode], bool]) \
-            -> Iterator['DocCursor']:
+    def filter(self: T, filter_fn: Callable[[DocNode], bool]) -> Iterator[T]:
         """Find a model in the tree that matches our filtering function."""
         for identifier, model in self.tree.nodes(data='model'):
             if filter_fn(model):
                 yield type(self)(self.tree, identifier)
 
-    def jump_to(self, identifier: str) -> 'DocCursor':
+    def jump_to(self: T, identifier: str) -> T:
         return type(self)(self.tree, identifier)
 
 
