@@ -23,6 +23,13 @@ def test_nest_annotations_no_overlapping():
     ]
 
 
+def test_nest_annotations_raises_assertion_error():
+    with pytest.raises(AssertionError, matches="doesn't fit in the text"):
+        content.nest_annotations([
+            mommy.prepare(ExternalLink, start=50, end=60),
+        ], 30)
+
+
 def test_nest_annotations_entirely_nested():
     annotations = [
         mommy.prepare(ExternalLink, start=4, end=8),
