@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Iterator, List, Optional
 
 from networkx import DiGraph
 from networkx.algorithms.dag import descendants
@@ -85,7 +85,7 @@ class DocCursor():
 
     @classmethod
     def new_tree(cls, node_type: str, type_emblem: str='1', policy=None,
-                 **attrs):
+                 **attrs) -> 'DocCursor':
         attrs = {**attrs, 'policy': policy}
         tree = DiGraph(policy=policy)
         identifier = f"{node_type}_{type_emblem}"
@@ -98,7 +98,7 @@ class DocCursor():
 
     @classmethod
     def load_from_model(cls, root_node: DocNode, subtree: bool=True,
-                        queryset=None):
+                        queryset=None) -> 'DocCursor':
         tree = DiGraph()
         tree.add_node(root_node.identifier, model=root_node)
         root = cls(tree, root_node.identifier)
@@ -107,7 +107,7 @@ class DocCursor():
         return root
 
     @property
-    def model(self):
+    def model(self) -> DocNode:
         return self.tree.node[self.identifier]['model']
 
     def __getitem__(self, child_suffix: str):
@@ -116,13 +116,13 @@ class DocCursor():
             raise KeyError(f"No {child_id} element")
         return self.__class__(self.tree, child_id)
 
-    def children(self):
+    def children(self) -> Iterator['DocCursor']:
         edges = [(sort_order, idx) for _, idx, sort_order
                  in self.tree.out_edges(self.identifier, data='sort_order')]
         for _, identifier in sorted(edges):
             yield self.__class__(self.tree, identifier=identifier)
 
-    def next_emblem(self, node_type):
+    def next_emblem(self, node_type: str) -> str:
         """While we sometimes know a unique identifier within a parent (for
         example, due to having a paragraph marker such as "(ix)"), much of the
         time we'll just number them sequentially. This method gives us the
@@ -131,7 +131,7 @@ class DocCursor():
         return str(child_type_counts[node_type] + 1)
 
     def add_child(self, node_type: str, type_emblem: Optional[str] = None,
-                  **attrs):
+                  **attrs) -> 'DocCursor':
         if type_emblem is None:
             type_emblem = self.next_emblem(node_type)
         if 'policy' not in attrs:
@@ -147,11 +147,11 @@ class DocCursor():
                            sort_order=self.next_sort_order())
         return self.__class__(self.tree, identifier=identifier)
 
-    def subtree_size(self):
+    def subtree_size(self) -> int:
         # Using "descendants" is a bit more efficient than recursion
         return len(descendants(self.tree, self.identifier)) + 1
 
-    def walk(self):
+    def walk(self) -> Iterator['DocCursor']:
         """An iterator of all the nodes in this tree."""
         yield self
         for child in self.children():
@@ -159,14 +159,14 @@ class DocCursor():
                 yield cursor
 
     @property
-    def _parent_desc(self):
+    def _parent_desc(self) -> str:
         parent = self.parent()
         if parent is None:
             return "None"
         return f"{parent.identifier}{parent._attr_str}"
 
     @property
-    def _attr_str(self):
+    def _attr_str(self) -> str:
         attr_strs = []
         for attr in ['title', 'marker']:
             val = getattr(self, attr, None)
@@ -175,16 +175,16 @@ class DocCursor():
         return (' ' + ' '.join(attr_strs)) if attr_strs else ''
 
     @property
-    def _short_desc(self):
+    def _short_desc(self) -> str:
         return f"{self.node_type}_{self.type_emblem}{self._attr_str}"
 
-    def _short_text(self, max_len=40):
+    def _short_text(self, max_len: int=40) -> str:
         text = self.text
         if len(text) > max_len:
             text = text[:max_len] + '...'
         return repr(text)
 
-    def __str__(self):
+    def __str__(self) -> str:
         indent = ''
         lines = [
             f"{indent}parent: {self._parent_desc}",
@@ -197,7 +197,7 @@ class DocCursor():
             lines.append(f'{next_indent}|- {child._short_desc}')
         return '\n'.join(lines)
 
-    def nested_set_renumber(self, left=1, bulk_create=True):
+    def nested_set_renumber(self, left=1, bulk_create=True) -> None:
         """The nested set model tracks parent/child relationships by requiring
         ancestors's left-right range strictly contain any descendant's
         left-right range. To set that up correctly, we need to renumber our
@@ -212,45 +212,51 @@ class DocCursor():
         if bulk_create:
             self._bulk_create()
 
-    def _bulk_create(self):
+    def _bulk_create(self) -> None:
         DocNode.objects.bulk_create(node.model for node in self.walk())
 
-    def next_sort_order(self):
+    def next_sort_order(self) -> int:
         return self.tree.out_degree(self.identifier)
 
-    def parent(self):
+    def parent(self) -> Optional['DocCursor']:
         predecessors = list(self.tree.predecessors(self.identifier))
         if predecessors:
             return type(self)(self.tree, predecessors[0])
+        return None
 
-    def ancestors(self, filter_fn=None):
+    def ancestors(self, filter_fn: Callable[['DocCursor'], bool]=None) \
+            -> Iterator['DocCursor']:
         parent = self.parent()
         if parent and (not filter_fn or filter_fn(parent)):
             yield parent
         if parent:
             yield from parent.ancestors(filter_fn)
 
-    def add_models(self, models):
+    def add_models(self, models: Iterator[DocNode]) -> 'DocCursor':
         """Convert a (linear) list of DocNodes into a tree-aware version.
         We assume that the models are already sorted."""
         parent = self
         for child in models:
             # not a child of this parent; move cursor up
             while child.left > parent.right:
-                parent = parent.parent()
+                parents_parent = parent.parent()
+                if parents_parent is None:
+                    raise AssertionError("Parent's parent must exist!")
+                parent = parents_parent
             self.tree.add_node(child.identifier, model=child)
             self.tree.add_edge(parent.identifier, child.identifier,
                                sort_order=parent.next_sort_order())
             parent = type(self)(self.tree, child.identifier)
         return self
 
-    def filter(self, filter_fn: Callable[[DocNode], bool]):
+    def filter(self, filter_fn: Callable[[DocNode], bool]) \
+            -> Iterator['DocCursor']:
         """Find a model in the tree that matches our filtering function."""
         for identifier, model in self.tree.nodes(data='model'):
             if filter_fn(model):
                 yield type(self)(self.tree, identifier)
 
-    def jump_to(self, identifier):
+    def jump_to(self, identifier: str) -> 'DocCursor':
         return type(self)(self.tree, identifier)
 
 
