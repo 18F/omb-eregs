@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 from model_mommy import mommy
 from rest_framework.serializers import ValidationError
@@ -215,3 +217,11 @@ def test_error_raised_on_inlines_in_leaf_nodes():
 
 def test_text_deserializes_to_empty_str_on_non_leaf_nodes():
     assert content.TextField(is_leaf_node=False).to_internal_value('u') == ''
+
+
+def test_to_representation_raises_error_on_unknown_annotation_type():
+    with pytest.raises(NotImplementedError,
+                       matches="Annotation type 'int' is not registered"):
+        content.NestedAnnotationSerializer().to_representation(Mock(
+            annotation_class=int
+        ))

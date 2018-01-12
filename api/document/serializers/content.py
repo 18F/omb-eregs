@@ -189,7 +189,10 @@ class NestedAnnotationSerializer(serializers.Serializer):
     def to_representation(self, data: NestableAnnotation):
         serializer = self.serializer_mapping.get(data.annotation_class)
         if serializer is None:
-            raise NotImplementedError('Unknown annotation type')
+            raise NotImplementedError(
+                "Annotation type '{data.annotation_class.__name__}' is "
+                "not registered"
+            )
         return serializer(data, context=self.context).data
 
     def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
