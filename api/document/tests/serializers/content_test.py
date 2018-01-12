@@ -225,3 +225,19 @@ def test_to_representation_raises_error_on_unknown_annotation_type():
         content.NestedAnnotationSerializer().to_representation(Mock(
             annotation_class=int
         ))
+
+
+def test_unimplemented_content_type_or_annotation_class_raises_error():
+    class BadSerializer(content.BaseAnnotationSerializer):
+        pass
+
+    with pytest.raises(NotImplementedError):
+        BadSerializer().CONTENT_TYPE
+
+    with pytest.raises(NotImplementedError):
+        BadSerializer().ANNOTATION_CLASS
+
+
+def test_nestable_annotation_repr_works():
+    na = content.NestableAnnotation('my annotation', None)
+    assert repr(na) == "NestableAnnotation('my annotation') []"
