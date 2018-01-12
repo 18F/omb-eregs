@@ -71,7 +71,11 @@ def nest_annotations(annotations: Iterator[Annotation],
         # compare ends when determining nesting
         while anote not in last:
             if last.parent is None:
-                raise AssertionError('last.parent is None!')
+                raise AssertionError(
+                    f"{type(anote).__name__} {anote.pk} "
+                    f"({anote.start} - {anote.end}) doesn't fit in "
+                    f"the text (0 - {text_length}). Data corruption?"
+                )
             last = last.parent
         # Enforce all annotations to be nested rather than overlapping
         anote.end = min(anote.end, last.end)
