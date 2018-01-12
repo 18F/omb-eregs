@@ -59,6 +59,11 @@ class DocCursor():
 
         >>> root.jump_to('root_1__sec_1').node_type
         'sec'
+
+    Immediate children of a cursor's node can also be retrieved:
+
+        >>> root['sec_1'].node_type
+        'sec'
     """
 
     __slots__ = ('tree', 'identifier')
@@ -110,7 +115,7 @@ class DocCursor():
     def model(self) -> DocNode:
         return self.tree.node[self.identifier]['model']
 
-    def __getitem__(self, child_suffix: str):
+    def __getitem__(self, child_suffix: str) -> 'DocCursor':
         child_id = f"{self.identifier}__{child_suffix}"
         if child_id not in self.tree:
             raise KeyError(f"No {child_id} element")
