@@ -13,7 +13,8 @@ from .. import factories as f
 
 @pytest.mark.django_db
 def test_end_to_end():
-    """Create a tree, then serialize it."""
+    """Create a tree, then serialize it. Trivially modify the serialized
+    value and deserialize it."""
     policy = mommy.make(
         Policy, issuance=date(2001, 2, 3), omb_policy_id='M-18-18',
         title='Some Title', uri='http://example.com/thing.pdf',
@@ -135,6 +136,15 @@ def test_end_to_end():
             },
         ],
     }
+
+    result['title'] = 'MODIFIED Policy A'
+
+    val = doc_cursor.DocCursorSerializer().to_internal_value(result)
+
+    new_root = doc_cursor.DocCursorSerializer().update(root, val)
+
+    assert new_root.title == 'MODIFIED Policy A'
+    assert new_root.policy.pk == policy.pk
 
 
 @pytest.mark.django_db
