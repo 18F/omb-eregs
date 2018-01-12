@@ -1,6 +1,6 @@
 from document.json_importer.importer import convert_node
 
-from . import factories as f
+from .. import factories as f
 
 
 def test_convert_paragraph_works():

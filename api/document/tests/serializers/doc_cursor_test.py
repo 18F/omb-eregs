@@ -8,6 +8,8 @@ from document.serializers import doc_cursor
 from document.tree import DocCursor
 from reqs.models import Policy
 
+from .. import factories as f
+
 
 @pytest.mark.django_db
 def test_end_to_end():
@@ -275,3 +277,18 @@ def test_content_outside():
     assert [c['content_type'] for c in content] == [
         'external_link', '__text__', 'external_link',
     ]
+
+
+def test_children_field_to_internal_value_works():
+    # TODO: We really shouldn't *have* to supply a type_emblem here,
+    # because the deserializer will ultimately pass the payload through
+    # DocCursor, which will auto-assign one.
+    para = {'type_emblem': 'a', **f.para([])}
+    assert doc_cursor.ChildrenField().to_internal_value([para]) == [para]
+
+
+def test_content_field_to_internal_value_works():
+    # TODO: We really shouldn't *have* to specify inlines here,
+    # especially since text nodes aren't even allowed to have any!
+    text = {'inlines': [], **f.text('boop')}
+    assert doc_cursor.ContentField().to_internal_value([text]) == [text]

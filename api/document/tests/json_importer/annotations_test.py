@@ -2,7 +2,7 @@ from document.json_importer.annotations import derive_annotations
 from document.json_importer.importer import convert_node
 from document.models import ExternalLink, FootnoteCitation
 
-from . import factories as f
+from .. import factories as f
 
 
 def test_derive_annotations_works_with_nested_content():
