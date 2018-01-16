@@ -21,7 +21,14 @@ const schema = new Schema({
       toDOM: () => ['div', { 'class': 'unimplemented' }, 0],
     },
   },
-  marks: {},
+  marks: {
+    unimplemented_content: {
+      attrs: {
+        data: {}, // will hold unrendered content
+      },
+      toDOM: () => ['span', { 'class': 'unimplemented' }],
+    },
+  },
 });
 
 export default schema;

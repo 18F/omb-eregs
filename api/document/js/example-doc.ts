@@ -20,6 +20,21 @@ const EXAMPLE_DOC = {
         text: 'node_type_here',
       }],
     },
+    {
+      type: 'paragraph',
+      content: [
+        { type: 'text', text: 'Some words then a ' },
+        {
+          type: 'text',
+          text: 'link',
+          marks: [{
+            type: 'unimplemented_content',
+            attrs: { data: '{"some": "content"}' },
+          }],
+        },
+        { type: 'text', text: '.' },
+      ],
+    },
   ],
 };
 
