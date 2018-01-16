@@ -22,6 +22,10 @@ $nav-menu-active: false;
 $banner-height: 60px;
 $nav-menu-width: if($nav-menu-active, 200px, 0);
 
+* {
+  box-sizing: border-box;
+}
+
 #header {
   // Remove padding so our nav-menu can start at left:0
   padding: 0;
@@ -34,7 +38,7 @@ $nav-menu-width: if($nav-menu-active, 200px, 0);
 }
 
 .breadcrumbs,
-.messagelist,
+ul.messagelist,
 #content {
   margin-left: $nav-menu-width;
 
@@ -69,4 +73,135 @@ $nav-menu-width: if($nav-menu-active, 200px, 0);
   @if not($nav-menu-active) {
     display: none;
   }
+}
+
+.app-admin_interface,
+.admin-interface {
+  background: #F0F0F0;
+}
+
+.object-tools a {
+  border-radius: 3px;
+  background: #FEFEFE;
+  color: #808080;
+  border: 1px solid #E4E4E4;
+  text-transform: none;
+}
+
+#content-main .submit-row input.default {
+  text-transform: none;
+}
+
+.app-admin_interface .form-row {
+  background: white;
+}
+
+.module {
+  background: none;
+}
+
+#content  h1 {
+  font-weight: 500;
+  color: #000;
+  font-size: 24px;
+  padding: 10px;
+}
+
+.admin-interface {
+  .inline-group .tabular thead th:last-child:not([class]):not([style]) {
+    text-align: left;
+  }
+
+  .module.wide h2 {
+    background: none;
+    padding: 1rem;
+    font-weight: 500;
+    color: #000;
+    font-size: 24px;
+  }
+
+  .inline-group thead th {
+    padding: 1rem;
+  }
+
+  td,
+  th,
+  thead th,
+  tfoot td {
+    line-height: 1.5rem;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .form-row [type="number"],
+  .form-row [type="text"] {
+    // width: 100%;
+  }
+
+  .form-row label {
+    width: 100%;
+    background: none;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    padding-left: 0px;
+    padding-bottom: 0.5rem;
+  }
+
+  .checkbox-row label {
+    width: auto;
+    padding-left: 10px;
+  }
+
+  .button,
+  input[type=submit],
+  input[type=button],
+  .submit-row input,
+  a.button {
+    padding: 4px 15px;
+  }
+
+  #changelist .paginator {
+    line-height: 30px;
+  }
+
+  .form-row {
+    padding: 10px 20px;
+  }
+
+  form .module.aligned div.help{
+    margin-left: 0px;
+    padding-left: 0px;
+  }
+
+  .submit-row {
+    padding: 0px;
+    background: none;
+  }
+
+  .submit-row input,
+  .submit-row a.deletelink {
+    padding: 9px 15px;
+    height: 34px;
+  }
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=number],
+textarea,
+select,
+.vTextField {
+  border-radius: 0px;
+  border: 1px solid #B4B4B4;
+  font-size: 16px;
+}
+
+.timezonewarning {
+  font-size: 16px;
+  color: #999;
+  padding-top: 0.5rem;
+  display: inline-block;
 }
