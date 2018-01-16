@@ -72,7 +72,7 @@ services:
     environment:
       <<: *API_ENV
       PORT: 8001
-      DEBUG: "true"
+      DEBUG: ${DEBUG:-true}
       USE_POLLING: ${USE_POLLING:-false}
       # Uncomment the following line for MAX logins
       # MAX_URL: https://login.test.max.gov/cas/login
@@ -98,8 +98,8 @@ services:
     command: .docker/deps_ok_then npm start
     environment:
       PORT: 9002
-      NODE_ENV: production
-      API_URL: 'http://localhost:9001/'
+      NODE_ENV: ${NODE_ENV:-production}
+      API_URL: ${API_URL:-http://localhost:9001/}
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
         }}}]}
@@ -112,8 +112,8 @@ services:
     command: .docker/deps_ok_then .docker/watch-run.sh
     environment:
       PORT: 8002
-      NODE_ENV: development
-      API_URL: 'http://localhost:8001/'
+      NODE_ENV: ${NODE_ENV:-development}
+      API_URL: ${API_URL:-http://localhost:8001/}
       USE_POLLING: ${USE_POLLING:-false}
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
@@ -126,19 +126,19 @@ services:
   bandit:
     <<: *PYTHON
     environment:
-      DEBUG: "true"
+      DEBUG: ${DEBUG:-true}
     entrypoint: .docker/activate_then bandit
 
   flake8:
     <<: *PYTHON
     environment:
-      DEBUG: "true"
+      DEBUG: ${DEBUG:-true}
     entrypoint: .docker/activate_then flake8
 
   mypy:
     <<: *PYTHON
     environment:
-      DEBUG: "true"
+      DEBUG: ${DEBUG:-true}
     entrypoint: .docker/activate_then mypy @mypy-files.txt
 
   manage.py:
@@ -156,7 +156,7 @@ services:
   pip-compile:
     <<: *PYTHON
     environment:
-      DEBUG: "true"
+      DEBUG: ${DEBUG:-true}
     entrypoint: .docker/activate_then pip-compile
 
   psql:
