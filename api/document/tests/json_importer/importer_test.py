@@ -38,5 +38,4 @@ def test_import_json_doc_works():
     para2 = import_json_doc(policy, para_primitive)
     assert para.pk != para2.pk
 
-    with pytest.raises(DocNode.DoesNotExist):
-        assert para.model.refresh_from_db()
+    assert not DocNode.objects.filter(pk=para.pk).exists()
