@@ -3,14 +3,22 @@ import { Schema } from 'prosemirror-model';
 const schema = new Schema({
   nodes: {
     doc: {
-      content: 'paragraph+',
+      content: '(paragraph | unimplemented_node)+',
     },
     paragraph: {
       content: 'inline*',
-      toDOM() { return ['p', 0]; },
+      toDOM: () => ['p', 0],
     },
     text: {
       group: 'inline',
+    },
+    unimplemented_node: {
+      content: 'inline*',
+      atom: true,
+      attrs: {
+        data: {}, // will hold unrendered content
+      },
+      toDOM: () => ['div', { 'class': 'unimplemented' }, 0],
     },
   },
   marks: {},
