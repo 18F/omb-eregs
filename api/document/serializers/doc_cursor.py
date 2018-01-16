@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import List
 
 from rest_framework import serializers
 
@@ -49,19 +49,17 @@ class ContentField(DocCursorField):
         ]
 
 
-def docnode_field_attrs(field: str, attrs: List[str]) -> Dict[str, Any]:
+class DocCursorSerializer(serializers.Serializer):
     """
-    Translate Django model field attributes from the DocNode model
-    into attributes that Django REST Framework serializers
-    understand.
+    A Serializer for the DocCursor class.
 
     Note that we're doing this manually instead of using
-    serializers.ModelSerializer because:
+    DRF's serializers.ModelSerializer because:
 
         * DocCursor isn't actually a Django model.  It's *like*
-          a model in a lot of ways, but its just different
-          enough that annoying workarounds would be needed
-          to make it work with ModelSerializer.
+          a model in a lot of ways, but it's not actually a
+          model, so we don't want to cause complications with
+          DRF down the road.
 
         * There are enough deviations between the Django model's
           validation and the REST API's validation that we'd
@@ -69,37 +67,27 @@ def docnode_field_attrs(field: str, attrs: List[str]) -> Dict[str, Any]:
           ModelSerializer's defaults.
     """
 
-    attr_map = {
-        'blank': 'allow_blank',
-    }
-    metadata = DocNode._meta.get_field(field)
-    result = {
-        attr_map.get(attr, attr): getattr(metadata, attr)
-        for attr in attrs
-    }
-    if result.get('allow_blank'):
-        result['required'] = False
-    return result
-
-
-class DocCursorSerializer(serializers.Serializer):
     # Read/write fields.
     children = ChildrenField()
     content = ContentField()
     marker = serializers.CharField(
-        **docnode_field_attrs('marker', ['max_length', 'blank']),
+        max_length=DocNode._meta.get_field('marker').max_length,
+        allow_blank=True,
+        required=False,
     )
     node_type = serializers.CharField(
-        **docnode_field_attrs('node_type', ['max_length']),
+        max_length=DocNode._meta.get_field('node_type').max_length,
     )
     title = serializers.CharField(
-        **docnode_field_attrs('title', ['max_length', 'blank']),
+        max_length=DocNode._meta.get_field('title').max_length,
+        allow_blank=True,
+        required=False,
     )
 
     # Type emblems are required by our DocNode model, but they aren't
     # required by our API; if not supplied, they will be auto-generated.
     type_emblem = serializers.CharField(
-        **docnode_field_attrs('type_emblem', ['max_length']),
+        max_length=DocNode._meta.get_field('type_emblem').max_length,
         required=False,
     )
 
