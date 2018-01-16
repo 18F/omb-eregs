@@ -1,4 +1,4 @@
-import {Schema} from "prosemirror-model";
+import { Schema } from 'prosemirror-model';
 
 const schema = new Schema({
   nodes: {
