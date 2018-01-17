@@ -62,6 +62,10 @@ def test_num_is_converted():
     assert convert_xml_node('<b><num>3</num></b>')['marker'] == '3'
 
 
+def test_num_is_not_present_as_child():
+    assert convert_xml_node('<b><num>3</num></b>')['children'] == []
+
+
 def test_error_raised_on_multiple_num_elements():
     with pytest.raises(ParseError,
                        match="<a> contains multiple <num> elements"):
@@ -91,6 +95,10 @@ def test_xml_attribs_do_not_overwrite_content_data_keys():
 def test_content_always_exists():
     assert convert_xml_node('<blah/>')['content'] == []
     assert convert_xml_node('<blah><content/></blah>')['content'] == []
+
+
+def test_content_is_not_present_as_child():
+    assert convert_xml_node('<b><content>u</content></b>')['children'] == []
 
 
 def test_bare_content_text_is_converted():
@@ -126,8 +134,12 @@ def test_error_raised_on_multiple_content_elements():
 
 
 def test_children_are_converted():
-    assert convert_xml_node('<a><b/></a>')['children'] == [{
+    assert convert_xml_node('<a><b/><c/></a>')['children'] == [{
         "node_type": "b",
+        "content": [],
+        "children": [],
+    }, {
+        "node_type": "c",
         "content": [],
         "children": [],
     }]

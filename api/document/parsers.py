@@ -7,10 +7,10 @@ from rest_framework.parsers import BaseParser
 from document.tree import PrimitiveDict
 
 
-def text(text: str) -> PrimitiveDict:
+def text(text_content: str) -> PrimitiveDict:
     return {
         'content_type': '__text__',
-        'text': text
+        'text': text_content
     }
 
 
