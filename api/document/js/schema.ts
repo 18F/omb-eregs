@@ -9,6 +9,11 @@ const schema = new Schema({
       content: 'text+',
       toDOM: () => ['p', 0],
     },
+    para: {
+      content: 'inline? block*',
+      group: 'block',
+      toDOM: () => ['div', 0],
+    },
     sec: {
       content: 'block+',
       group: 'block',

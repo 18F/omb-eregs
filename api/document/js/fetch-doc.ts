@@ -9,6 +9,12 @@ export function convertNode(node) {
 }
 
 const NODE_TYPE_CONVERTERS = {
+  para(node) {
+    const text = (node.text || '').replace(/\s+/g, ' ');
+    const inlineContent = schema.nodes.inline.create({}, schema.text(text));
+    const childContent = (node.children || []).map(convertNode);
+    return schema.nodes.para.create({}, [inlineContent].concat(childContent));
+  },
   policy: node =>
     schema.nodes.doc.create({}, (node.children || []).map(convertNode)),
   sec: node =>

@@ -39,6 +39,21 @@ describe('convertNode()', () => {
     expect(result.content.child(1).type.name).toBe('unimplemented_node');
   });
 
+  it('loads paragraph text', () => {
+    const node = {
+      node_type: 'para',
+      text: 'Some text here',
+      children: [{ node_type: 'unknown-child' }],
+    };
+
+    const result = convertNode(node);
+    expect(result.content.childCount).toBe(2);
+    expect(result.content.child(0).type.name).toBe('inline');
+    expect(result.content.child(0).content.childCount).toBe(1);
+    expect(result.content.child(0).content.child(0).text).toBe('Some text here');
+    expect(result.content.child(1).type.name).toBe('unimplemented_node');
+  });
+
   describe('unimplemented_node', () => {
     it('saves original data', () => {
       const node = {
