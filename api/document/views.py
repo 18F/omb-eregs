@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
 from rest_framework import status
@@ -73,5 +74,9 @@ class TreeView(GenericAPIView):
         return Response(serializer.data)
 
 
-def editor(request):
+@login_required
+def editor(request, policy_id):
+    # Verify that the policy is valid; 404 when not. We don't actually load
+    # the document content as they'll be retrieved from the API
+    policy_or_404(policy_id)
     return render(request, 'document/editor.html')

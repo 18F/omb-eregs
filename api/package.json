@@ -28,6 +28,7 @@
     "@types/prosemirror-menu": "^1.0.0",
     "@types/prosemirror-state": "^1.0.0",
     "@types/prosemirror-view": "^1.0.0",
+    "axios": "^0.17.1",
     "css-loader": "0.28.7",
     "pdfjs-dist": "^2.0.185",
     "prosemirror-commands": "^1.0.3",

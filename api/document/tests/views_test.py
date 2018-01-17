@@ -157,6 +157,17 @@ def test_query_count(client):
         assert len(capture) == 12
 
 
-@pytest.mark.urls('document.urls')
-def test_editor_works(client):
-    assert client.get('/editor').status_code == 200
+@pytest.mark.django_db
+def test_editor_requires_admin(client):
+    mommy.make(Policy, omb_policy_id='M-11-22')
+    result = client.get('/admin/document-editor/M-11-22')
+    assert result.status_code == 302
+
+
+@pytest.mark.django_db
+def test_editor_checks_policy(admin_client):
+    mommy.make(Policy, omb_policy_id='M-11-22')
+    result = admin_client.get('/admin/document-editor/M-99-88')
+    assert result.status_code == 404
+    result = admin_client.get('/admin/document-editor/M-11-22')
+    assert result.status_code == 200
