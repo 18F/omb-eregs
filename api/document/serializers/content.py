@@ -1,11 +1,11 @@
-from collections import defaultdict
-from typing import Iterator, List, Optional
+from typing import Dict, Iterator, List, Optional, Type
 
 from rest_framework import serializers
+from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
-from document.tree import DocCursor
+from document.tree import DocCursor, PrimitiveDict
 from reqs.models import Requirement
 
 
@@ -13,11 +13,11 @@ class NestableAnnotation:
     """Wraps an Annotation with references to annotations it contains and its
     parent."""
     def __init__(self, annotation: Annotation,
-                 parent: Optional['NestedAnnotation']):
+                 parent: Optional['NestableAnnotation']) -> None:
         self.annotation = annotation
         # NestableAnnotations point up to the parent and down to children
         self.parent = parent
-        self.children: List[NestedAnnotation] = []
+        self.children: List['NestableAnnotation'] = []
         if parent:
             parent.children.append(self)
 
@@ -70,6 +70,12 @@ def nest_annotations(annotations: Iterator[Annotation],
         # We're not allowing non-nested overlapping annotations, so we won't
         # compare ends when determining nesting
         while anote not in last:
+            if last.parent is None:
+                raise AssertionError(
+                    f"{type(anote).__name__} {anote.pk} "
+                    f"({anote.start} - {anote.end}) doesn't fit in "
+                    f"the text (0 - {text_length}). Data corruption?"
+                )
             last = last.parent
         # Enforce all annotations to be nested rather than overlapping
         anote.end = min(anote.end, last.end)
@@ -78,30 +84,75 @@ def nest_annotations(annotations: Iterator[Annotation],
     return root.children
 
 
-class NestedAnnotationSerializer(serializers.Serializer):
-    """Figures out which AnnotationSerializer to use when serializing
-    content."""
-    serializer_mapping = defaultdict(
-        lambda: BaseAnnotationSerializer,   # will raise an exception when used
-    )
-
-    def to_representation(self, data: NestableAnnotation):
-        serializer = self.serializer_mapping[data.annotation_class]
-        return serializer(data, context=self.context).data
+class NestableAnnotationField(serializers.Field):
+    def get_attribute(self,
+                      instance: NestableAnnotation) -> NestableAnnotation:
+        return instance
 
 
-class BaseAnnotationSerializer(serializers.Serializer):
-    content_type = serializers.SerializerMethodField()
-    inlines = serializers.SerializerMethodField()
-    text = serializers.SerializerMethodField()
+class InlinesField(NestableAnnotationField):
+    def __init__(self, is_leaf_node: bool) -> None:
+        super().__init__()
+        self.is_leaf_node = is_leaf_node
 
-    @property
-    def CONTENT_TYPE(self):     # noqa; this is a constant
-        raise NotImplementedError('Unknown annotation type')
+    def to_representation(self,
+                          instance: NestableAnnotation) -> List[PrimitiveDict]:
+        if self.is_leaf_node:
+            return []
+        return NestedAnnotationSerializer(
+            instance.children, context=self.context, many=True).data
+
+    def to_internal_value(self,
+                          data: List[PrimitiveDict]) -> List[PrimitiveDict]:
+        if not self.is_leaf_node:
+            serializer = NestedAnnotationSerializer()
+            return [serializer.to_internal_value(d) for d in data]
+        elif data:
+            raise ValidationError('leaf nodes cannot contain nested content')
+        return []
+
+
+class TextField(NestableAnnotationField):
+    def __init__(self, is_leaf_node: bool) -> None:
+        super().__init__()
+        self.is_leaf_node = is_leaf_node
 
     @property
     def doc_node_text(self):
         return self.context['cursor'].text
+
+    def to_representation(self, instance: NestableAnnotation) -> str:
+        return self.doc_node_text[instance.start:instance.end]
+
+    def to_internal_value(self, data: str) -> str:
+        if self.is_leaf_node:
+            serializer = serializers.CharField(trim_whitespace=False)
+            return serializer.to_internal_value(data)
+
+        # If this isn't a leaf node, we're not going to complain,
+        # because we do fill out this value on non-leaf nodes during
+        # serialization, and we want clients to be able to modify
+        # serialized responses and send them back without having to
+        # do too much work.
+        #
+        # However, that said, we *will* throw away the text value on
+        # non-leaf nodes during deserialization, to make sure it's not
+        # accidentally used by anything further down the pipeline.
+        return ''
+
+
+class BaseAnnotationSerializer(serializers.Serializer):
+    content_type = serializers.SerializerMethodField()
+    inlines = InlinesField(is_leaf_node=False)
+    text = TextField(is_leaf_node=False)
+
+    @property
+    def CONTENT_TYPE(self) -> str:  # noqa
+        raise NotImplementedError()
+
+    @property
+    def ANNOTATION_CLASS(self) -> Type['Annotation']:  # noqa
+        raise NotImplementedError()
 
     @property
     def cursor_tree(self):
@@ -110,24 +161,62 @@ class BaseAnnotationSerializer(serializers.Serializer):
     def get_content_type(self, instance: NestableAnnotation):
         return self.CONTENT_TYPE
 
-    def get_inlines(self, instance: NestableAnnotation):
-        return NestedAnnotationSerializer(
-            instance.children, context=self.context, many=True).data
-
-    def get_text(self, instance: Annotation):
-        return self.doc_node_text[instance.start:instance.end]
+    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
+        result = super().to_internal_value(data)
+        result['content_type'] = self.CONTENT_TYPE
+        return result
 
 
+class NestedAnnotationSerializer(serializers.Serializer):
+    """Figures out which AnnotationSerializer to use when serializing
+    content."""
+    serializer_mapping: Dict[
+        Type[Annotation], Type[BaseAnnotationSerializer]] = {}
+
+    content_type_mapping: Dict[
+        str, Type[BaseAnnotationSerializer]] = {}
+
+    @classmethod
+    def register(cls, klass: Type[BaseAnnotationSerializer]) \
+            -> Type[BaseAnnotationSerializer]:
+        obj = klass()
+
+        cls.serializer_mapping[obj.ANNOTATION_CLASS] = klass
+        cls.content_type_mapping[obj.CONTENT_TYPE] = klass
+
+        return klass
+
+    def to_representation(self, data: NestableAnnotation):
+        serializer = self.serializer_mapping.get(data.annotation_class)
+        if serializer is None:
+            raise NotImplementedError(
+                "Annotation type '{data.annotation_class.__name__}' is "
+                "not registered"
+            )
+        return serializer(data, context=self.context).data
+
+    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
+        content_type = data.get('content_type')
+        if content_type is None:
+            raise ValidationError("missing content_type")
+        if content_type not in self.content_type_mapping:
+            raise ValidationError(f"unknown content_type: {content_type}")
+        serializer = self.content_type_mapping[content_type]()
+        return serializer.to_internal_value(data)
+
+
+@NestedAnnotationSerializer.register
 class PlainTextSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = '__text__'
+    ANNOTATION_CLASS = PlainText
+    inlines = InlinesField(is_leaf_node=True)
+    text = TextField(is_leaf_node=True)
 
-    def get_inlines(self, instance: PlainText):
-        """PlainText nodes are the leaves of our content tree."""
-        return []
 
-
+@NestedAnnotationSerializer.register
 class FootnoteCitationSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'footnote_citation'
+    ANNOTATION_CLASS = FootnoteCitation
     footnote_node = serializers.SerializerMethodField()
 
     def get_footnote_node(self, instance: FootnoteCitation):
@@ -138,8 +227,10 @@ class FootnoteCitationSerializer(BaseAnnotationSerializer):
             footnote_tree, context={'is_root': False}).data
 
 
+@NestedAnnotationSerializer.register
 class ExternalLinkSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'external_link'
+    ANNOTATION_CLASS = ExternalLink
     href = serializers.URLField()
 
 
@@ -151,19 +242,14 @@ class RequirementSerializer(serializers.ModelSerializer):
         )
 
 
+@NestedAnnotationSerializer.register
 class InlineRequirementSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'requirement'
+    ANNOTATION_CLASS = InlineRequirement
     requirement = RequirementSerializer()
 
 
+@NestedAnnotationSerializer.register
 class CiteSerializer(BaseAnnotationSerializer):
     CONTENT_TYPE = 'cite'
-
-
-NestedAnnotationSerializer.serializer_mapping.update({
-    Cite: CiteSerializer,
-    PlainText: PlainTextSerializer,
-    FootnoteCitation: FootnoteCitationSerializer,
-    ExternalLink: ExternalLinkSerializer,
-    InlineRequirement: InlineRequirementSerializer,
-})
+    ANNOTATION_CLASS = Cite

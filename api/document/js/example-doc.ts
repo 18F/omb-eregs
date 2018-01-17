@@ -1,6 +1,6 @@
-import {Node} from "prosemirror-model";
+import { Node } from 'prosemirror-model';
 
-import schema from "./schema";
+import schema from './schema';
 
 const EXAMPLE_DOC = {
   type: 'doc',
