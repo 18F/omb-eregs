@@ -34,7 +34,7 @@ $nav-menu-width: if($nav-menu-active, 200px, 0);
 // Add the padding back to *other* elements in the header
 #branding,
 #user-tools {
-  padding: 10px 40px;
+  padding: $space-sm 40px;
 }
 
 .breadcrumbs,
@@ -77,14 +77,14 @@ ul.messagelist,
 
 .app-admin_interface,
 .admin-interface {
-  background: #F0F0F0;
+  background: $color-very-lt-gray;
 }
 
 .object-tools a {
   border-radius: 3px;
-  background: #FEFEFE;
-  color: #808080;
-  border: 1px solid #E4E4E4;
+  background: $color-lt-gray;
+  color: $color-gray;
+  border: 1px solid $color-gray;
   text-transform: none;
 }
 
@@ -93,7 +93,7 @@ ul.messagelist,
 }
 
 .app-admin_interface .form-row {
-  background: white;
+  background: $color-white;
 }
 
 .module {
@@ -102,9 +102,9 @@ ul.messagelist,
 
 #content  h1 {
   font-weight: 500;
-  color: #000;
-  font-size: 24px;
-  padding: 10px;
+  color: $color-black;
+  font-size: $space-lg;
+  padding: $space-sm;
 }
 
 .admin-interface {
@@ -114,14 +114,14 @@ ul.messagelist,
 
   .module.wide h2 {
     background: none;
-    padding: 1rem;
+    padding: $space;
     font-weight: 500;
-    color: #000;
-    font-size: 24px;
+    color: $color-black;
+    font-size: $space-lg;
   }
 
   .inline-group thead th {
-    padding: 1rem;
+    padding: $space;
   }
 
   td,
@@ -129,8 +129,8 @@ ul.messagelist,
   thead th,
   tfoot td {
     line-height: 1.5rem;
-    padding: 1rem;
-    font-size: 1rem;
+    padding: $space;
+    font-size: $space;
   }
 
   .form-row [type="number"],
@@ -141,16 +141,16 @@ ul.messagelist,
   .form-row label {
     width: 100%;
     background: none;
-    font-size: 18px;
+    font-size: $space-lg;
     font-weight: 700;
-    color: #000;
+    color: $color-black;
     padding-left: 0px;
-    padding-bottom: 0.5rem;
+    padding-bottom: $space-xs;
   }
 
   .checkbox-row label {
     width: auto;
-    padding-left: 10px;
+    padding-left: $space-sm;
   }
 
   .button,
@@ -158,7 +158,7 @@ ul.messagelist,
   input[type=button],
   .submit-row input,
   a.button {
-    padding: 4px 15px;
+    padding: $space-xs $space;
   }
 
   #changelist .paginator {
@@ -166,7 +166,7 @@ ul.messagelist,
   }
 
   .form-row {
-    padding: 10px 20px;
+    padding: $space $space-lg;
   }
 
   form .module.aligned div.help{
@@ -181,8 +181,14 @@ ul.messagelist,
 
   .submit-row input,
   .submit-row a.deletelink {
-    padding: 9px 15px;
+    padding: $space-xs $space;
     height: 34px;
+  }
+
+  .aligned label + p,
+  .aligned label + div.help,
+  .aligned label + div.readonly {
+    margin-left: 0px;
   }
 }
 
@@ -195,13 +201,12 @@ textarea,
 select,
 .vTextField {
   border-radius: 0px;
-  border: 1px solid #B4B4B4;
-  font-size: 16px;
+  border: 1px solid $color-gray;
+  @include size-regular();
 }
 
 .timezonewarning {
-  font-size: 16px;
-  color: #999;
-  padding-top: 0.5rem;
+  @include size-regular();
+  padding-top: $space-xs;
   display: inline-block;
 }
