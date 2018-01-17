@@ -78,18 +78,6 @@ class DocCursor():
         """Delegate fields/methods to wrapped model."""
         return getattr(self.model, attr)
 
-    @property
-    def _prefetched_objects_cache(self):
-        """Django REST Framework thinks we're a bona fide Django model,
-        and its UpdateModelMixin sometimes writes to the model's
-        undocumented _prefetched_objects_cache property, so we'll
-        need to make it writable too."""
-        return self.model._prefetched_objects_cache
-
-    @_prefetched_objects_cache.setter
-    def _prefetched_objects_cache(self, value):
-        self.model._prefetched_objects_cache = value
-
     @classmethod
     def new_tree(cls: Type[T], node_type: str, type_emblem: str='1',
                  policy=None, **attrs) -> T:
