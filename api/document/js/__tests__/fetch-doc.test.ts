@@ -53,22 +53,8 @@ describe('convertNode()', () => {
 
       const result = convertNode(node);
       expect(result.type).toBe('unimplemented_node');
-      expect(result.attrs).toEqual({ data: JSON.stringify(node) });
-      expect(result.content).toHaveLength(1);   // not the nested children
-    });
-
-    it('includes the node type as text', () => {
-      const result = convertNode({ node_type: 'something-unknown' });
-      expect(result.content).toEqual(
-        [{ type: 'text', text: 'something-unknown' }]);
-    });
-
-    it('falls back if no node type is present', () => {
-      const node = { bad: 'data' };
-      const result = convertNode(node);
-      expect(result.attrs).toEqual({ data: JSON.stringify(node) });
-      expect(result.content).toEqual(
-        [{ type: 'text', text: '[no-node-type]' }]);
+      expect(result.attrs).toEqual({ data: node });
+      expect(result.content).toBeUndefined();
     });
   });
 });

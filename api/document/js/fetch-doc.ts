@@ -10,17 +10,13 @@ export function convertNode(node) {
 }
 
 const NODE_TYPE_CONVERTERS = {
-  unimplemented_node: node => ({
-    type: 'unimplemented_node',
-    attrs: { data: JSON.stringify(node) },
-    content: [{
-      type: 'text',
-      text: node.node_type || '[no-node-type]',
-    }],
-  }),
   policy: node => ({
     type: 'doc',
     content: (node.children || []).map(convertNode),
+  }),
+  unimplemented_node: node => ({
+    type: 'unimplemented_node',
+    attrs: { data: node },
   }),
 };
 

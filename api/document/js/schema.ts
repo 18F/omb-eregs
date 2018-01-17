@@ -3,22 +3,23 @@ import { Schema } from 'prosemirror-model';
 const schema = new Schema({
   nodes: {
     doc: {
-      content: '(paragraph | unimplemented_node)+',
+      content: 'block+',
     },
-    paragraph: {
-      content: 'inline*',
+    inline: {
+      content: 'text+',
       toDOM: () => ['p', 0],
     },
-    text: {
-      group: 'inline',
-    },
+    text: {},
     unimplemented_node: {
-      content: 'inline*',
+      group: 'block',
       atom: true,
       attrs: {
         data: {}, // will hold unrendered content
       },
-      toDOM: () => ['div', { class: 'unimplemented' }, 0],
+      toDOM(node) {
+        const nodeType = node.attrs.data.node_type || '[no-node-type]';
+        return ['div', { class: 'unimplemented' }, nodeType];
+      },
     },
   },
   marks: {
