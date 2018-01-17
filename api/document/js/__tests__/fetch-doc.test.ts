@@ -33,10 +33,10 @@ describe('convertNode()', () => {
 
     const result = convertNode(node);
 
-    expect(result.type).toBe('doc');
-    expect(result.content).toHaveLength(2);
-    expect(result.content.map(c => c.type)).toEqual(
-      ['unimplemented_node', 'unimplemented_node'])
+    expect(result.type.name).toBe('doc');
+    expect(result.content.childCount).toBe(2);
+    expect(result.content.child(0).type.name).toBe('unimplemented_node');
+    expect(result.content.child(1).type.name).toBe('unimplemented_node');
   });
 
   describe('unimplemented_node', () => {
@@ -52,9 +52,9 @@ describe('convertNode()', () => {
       };
 
       const result = convertNode(node);
-      expect(result.type).toBe('unimplemented_node');
+      expect(result.type.name).toBe('unimplemented_node');
       expect(result.attrs).toEqual({ data: node });
-      expect(result.content).toBeUndefined();
+      expect(result.content.childCount).toBe(0);
     });
   });
 });
