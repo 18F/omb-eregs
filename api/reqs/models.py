@@ -76,7 +76,8 @@ class WorkflowPhases(Enum):
 
     Import Workflow
 
-    0.  Policy exists in DB, but no document is associated with it. (blank)
+    0.  Policy exists in DB, but no document is associated with it. ('No
+        Document')
     1a. Import from policy.uri failed ('Failed Import')
     1b. Text has been imported, but not checked/cleaned up. ('Cleanup')
     2.  Text has been checked/cleaned up and is ready for review. ('Review')
@@ -84,7 +85,8 @@ class WorkflowPhases(Enum):
 
     Edit Workflow
 
-    0.  Policy exists in DB, but no document is associated with it. (blank)
+    0.  Policy exists in DB, but no document is associated with it. ('No
+        Document')
     1.  Text is being created/edited in the tool, but is not yet read for
         review. ('Edit')
     2.  Text is ready for review. ('Review')
@@ -93,6 +95,7 @@ class WorkflowPhases(Enum):
     edit = 'Edit'
     cleanup = 'Cleanup'
     failed = 'Failed Import'
+    no_doc = 'No Document'
     published = 'Published'
     review = 'Review'
 
