@@ -98,9 +98,9 @@ def test_import_pdfs_from_policies(monkeypatch):
     # p2 doesn't show up as it's not a pdf
 
     # make sure the policy objects have the correct workflow_phases:
-    p1_db = Policy.objects.get(id=p1.pk)
-    assert p1_db.workflow_phase == WorkflowPhases.cleanup.name
-    p3_db = Policy.objects.get(id=p3.pk)
-    assert p3_db.workflow_phase == WorkflowPhases.cleanup.name
-    p4_db = Policy.objects.get(id=p4.pk)
-    assert p4_db.workflow_phase == WorkflowPhases.failed.name
+    p1.refresh_from_db()
+    assert p1.workflow_phase == WorkflowPhases.cleanup.name
+    p3.refresh_from_db()
+    assert p3.workflow_phase == WorkflowPhases.cleanup.name
+    p4.refresh_from_db()
+    assert p4.workflow_phase == WorkflowPhases.failed.name
