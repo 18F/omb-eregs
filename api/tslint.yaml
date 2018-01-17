@@ -1,0 +1,9 @@
+extends: tslint-config-airbnb
+rules:
+  # Requires extra type information which we haven't configured
+  no-boolean-literal-compare: false
+  # Requires extra type information which we haven't configured
+  strict-boolean-expressions: false
+  # Deprecated in favor of no-this-assignment
+  no-var-self: false
+  no-this-assignment: true
