@@ -18,7 +18,7 @@ const schema = new Schema({
       attrs: {
         data: {}, // will hold unrendered content
       },
-      toDOM: () => ['div', { 'class': 'unimplemented' }, 0],
+      toDOM: () => ['div', { class: 'unimplemented' }, 0],
     },
   },
   marks: {
@@ -26,7 +26,7 @@ const schema = new Schema({
       attrs: {
         data: {}, // will hold unrendered content
       },
-      toDOM: () => ['span', { 'class': 'unimplemented' }],
+      toDOM: () => ['span', { class: 'unimplemented' }],
     },
   },
 });
