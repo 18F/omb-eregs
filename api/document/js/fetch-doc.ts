@@ -14,6 +14,10 @@ const NODE_TYPE_CONVERTERS = {
     type: 'doc',
     content: (node.children || []).map(convertNode),
   }),
+  sec: node => ({
+    type: 'sec',
+    content: (node.children || []).map(convertNode),
+  }),
   unimplemented_node: node => ({
     type: 'unimplemented_node',
     attrs: { data: node },

@@ -9,6 +9,11 @@ const schema = new Schema({
       content: 'text+',
       toDOM: () => ['p', 0],
     },
+    sec: {
+      content: 'block+',
+      group: 'block',
+      toDOM: () => ['section', 0],
+    },
     text: {},
     unimplemented_node: {
       group: 'block',

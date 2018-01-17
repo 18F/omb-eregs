@@ -26,8 +26,8 @@ describe('convertNode()', () => {
     const node = {
       node_type: 'policy',
       children: [
-        { node_type: 'sec', children: [] },
-        { node_type: 'sec', children: [] },
+        { node_type: 'aaaaa', children: [] },
+        { node_type: 'bbbbb', children: [] },
       ],
     };
 
