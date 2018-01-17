@@ -5,13 +5,14 @@ from typing import Dict, NewType, Set, Tuple
 from urllib.parse import urljoin, urlparse
 
 import requests
+import reversion
 from django.core.management.base import BaseCommand
 from lxml import etree
 
 from ombpdf.document import OMBDocument
 from ombpdf.download_pdfs import download_with_progress
 from ombpdf.semdb import to_db
-from reqs.models import Policy
+from reqs.models import Policy, WorkflowPhases
 
 MemoId = NewType('MemoId', str)
 Url = NewType('Url', str)
@@ -42,6 +43,9 @@ def parse_pdf(policy: Policy, url: Url) -> bool:
         pdf = download_with_progress(url)
         pdf.name = basename(urlparse(url).path)     # this used by from_file
         doc = OMBDocument.from_file(pdf)
+        with reversion.create_revision():
+            policy.workflow_phase = WorkflowPhases.cleanup.name
+            policy.save()
         cursor = to_db(doc, policy)
         logger.info('Imported %s (%s nodes)', policy.omb_policy_id,
                     cursor.subtree_size())
@@ -49,6 +53,9 @@ def parse_pdf(policy: Policy, url: Url) -> bool:
     except known_exceptions:
         logger.warning('Something went wrong when importing %s',
                        policy.omb_policy_id)
+        with reversion.create_revision():
+            policy.workflow_phase = WorkflowPhases.failed.name
+            policy.save()
         return False
 
 
