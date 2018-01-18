@@ -276,6 +276,10 @@ DEBUG_TOOLBAR_CONFIG = {
 
 ADMIN_TITLE = 'OMB Policy Library Editor'
 
+# We only use accounts for admin access at the moment
+LOGIN_REDIRECT_URL = '/admin/'
+LOGIN_URL = '/admin/login/'
+
 if DEBUG and os.environ.get('USE_POLLING') == 'true':
     import django.utils.autoreload
 
