@@ -7138,6 +7138,11 @@
       "resolved": "https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.2.tgz",
       "dev": true
     },
+    "system-font-css": {
+      "version": "2.0.1",
+      "from": "system-font-css@latest",
+      "resolved": "https://registry.npmjs.org/system-font-css/-/system-font-css-2.0.1.tgz"
+    },
     "table": {
       "version": "4.0.2",
       "from": "table@>=4.0.1 <5.0.0",

@@ -9,14 +9,15 @@ $fa-font-path: '~font-awesome/fonts';
 @import '~basscss-sass/scss/basscss';
 @import '~nprogress/nprogress.css';
 @import '~katex/dist/katex.css';
+@import '~system-font-css/system-font';
 
 @import 'shared-styles/base/colors';
+@import 'shared-styles/base/fonts';
 @import 'shared-styles/base/media-queries';
 @import 'shared-styles/base/spacing';
 @import 'shared-styles/base/type-size';
 @import 'shared-styles/base/util';
 @import 'base/base';
-@import 'base/fonts';
 
 @import 'layout/typography';
 @import 'layout/layout';
