@@ -4,7 +4,7 @@
 @import '../shared-styles/base/type-size';
 @import '../shared-styles/base/util';
 
-$nav-menu-active: true;
+$nav-menu-active: false;
 
 $banner-height: 60px;
 $nav-menu-width: if($nav-menu-active, 200px, 0);
