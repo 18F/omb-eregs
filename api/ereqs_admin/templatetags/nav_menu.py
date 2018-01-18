@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import NamedTuple, Optional, Tuple
 
 from django import template
@@ -32,15 +33,22 @@ class MenuItem(NamedTuple):     # type: ignore
         return self._replace(children=self.children + (child,))
 
 
-menu_archetype = MenuItem.new('', children=(
-    MenuItem.new('Policies', children=(
-        MenuItem.new('View all policies',
-                     url=reverse('admin:reqs_policy_changelist')),
-        MenuItem.new('Add new', url=reverse('admin:reqs_policy_add')),
-    )),
-    MenuItem.new('Users', url=reverse('admin:auth_user_changelist')),
-    # Settings depends on the user id, so is added later
-))
+@lru_cache()
+def get_menu_archetype():
+    # Note that we need to create this lazily because we're not
+    # guaranteed to have 'admin' in our URLconf namespace at the
+    # time this is called. See e.g.:
+    #
+    #     https://github.com/18F/omb-eregs/issues/863
+    return MenuItem.new('', children=(
+        MenuItem.new('Policies', children=(
+            MenuItem.new('View all policies',
+                        url=reverse('admin:reqs_policy_changelist')),
+            MenuItem.new('Add new', url=reverse('admin:reqs_policy_add')),
+        )),
+        MenuItem.new('Users', url=reverse('admin:auth_user_changelist')),
+        # Settings depends on the user id, so is added later
+    ))
 
 
 @register.inclusion_tag('ereqs_admin/nav_menu.html', takes_context=True)
@@ -48,7 +56,7 @@ def nav_menu(context: RequestContext):
     active_path = context['request'].path
     user = context['user']
     if user.is_authenticated:
-        menu_root = menu_archetype.append_child(MenuItem.new(
+        menu_root = get_menu_archetype().append_child(MenuItem.new(
             'Settings', url=reverse('admin:auth_user_change', args=(user.pk,))
         ))
         menu_root = menu_root.update_active(active_path)

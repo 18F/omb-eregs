@@ -5,5 +5,12 @@
     "strictNullChecks": true,
     "alwaysStrict": true,
     "sourceMap": true
-  }
+  },
+  "lib": [
+    "DOM",
+    "ES6",
+    "DOM.Iterable",
+    "ScriptHost",
+    "ES5.Promise"
+  ]
 }

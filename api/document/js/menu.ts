@@ -1,4 +1,4 @@
-import {menuBar, undoItem, redoItem, MenuItem} from "prosemirror-menu";
+import { menuBar, undoItem, redoItem, MenuItem } from 'prosemirror-menu';
 
 const menu = menuBar({
   floating: true,
@@ -11,7 +11,7 @@ const menu = menuBar({
       // https://github.com/ProseMirror/prosemirror-menu/issues/12
       undoItem as any as MenuItem,
       redoItem as any as MenuItem,
-    ]
+    ],
   ],
 });
 

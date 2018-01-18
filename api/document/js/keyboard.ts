@@ -1,6 +1,6 @@
-import {baseKeymap} from "prosemirror-commands";
-import {undo, redo} from "prosemirror-history";
-import {keymap} from "prosemirror-keymap";
+import { baseKeymap } from 'prosemirror-commands';
+import { undo, redo } from 'prosemirror-history';
+import { keymap } from 'prosemirror-keymap';
 
 const keyboard = keymap({
   ...baseKeymap,

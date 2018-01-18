@@ -1,7 +1,7 @@
-import {EditorView} from "prosemirror-view";
+import { EditorView } from 'prosemirror-view';
 
-import createEditorState from "./state";
-import exampleDoc from "./example-doc";
+import createEditorState from './create-editor-state';
+import fetchDoc from './fetch-doc';
 
 // We need to load our CSS via require() rather than import;
 // using the latter raises errors about not being able to find
@@ -15,8 +15,8 @@ import exampleDoc from "./example-doc";
 // deals with it correctly. I could be wrong, though. -AV
 declare function require(path: string): null;
 
-require("prosemirror-view/style/prosemirror.css");
-require("prosemirror-menu/style/menu.css");
+require('prosemirror-view/style/prosemirror.css');
+require('prosemirror-menu/style/menu.css');
 
 const EDITOR_ID = 'editor';
 
@@ -27,8 +27,9 @@ function getEl(id: string): Element {
   return el;
 }
 
-window.addEventListener('load', () => {
-  const view = new EditorView(getEl(EDITOR_ID), {
-    state: createEditorState(exampleDoc),
+window.addEventListener('load', async () => {
+  const doc = await fetchDoc();
+  new EditorView(getEl(EDITOR_ID), {
+    state: createEditorState(doc),
   });
 });
