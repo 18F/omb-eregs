@@ -7,12 +7,12 @@ const schema = new Schema({
     },
     inline: {
       content: 'text+',
-      toDOM: () => ['p', 0],
+      toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
     },
     para: {
       content: 'inline? block*',
       group: 'block',
-      toDOM: () => ['div', 0],
+      toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
     sec: {
       content: 'block+',
