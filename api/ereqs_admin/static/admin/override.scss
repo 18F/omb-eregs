@@ -4,8 +4,10 @@
 @import '../shared-styles/base/type-size';
 @import '../shared-styles/base/util';
 
+$nav-menu-active: true;
+
 $banner-height: 60px;
-$nav-menu-width: 200px;
+$nav-menu-width: if($nav-menu-active, 200px, 0);
 
 #header {
   // Remove padding so our nav-menu can start at left:0
@@ -36,6 +38,11 @@ $nav-menu-width: 200px;
   margin-top: $banner-height;
   padding: 0 $space;
   width: 100%;
+
+  @if not($nav-menu-active) {
+    display: none;
+  }
+
 }
 
 .nav-menu {
@@ -45,4 +52,8 @@ $nav-menu-width: 200px;
   padding: 0;
   position: absolute;
   width: $nav-menu-width;
+
+  @if not($nav-menu-active) {
+    display: none;
+  }
 }
