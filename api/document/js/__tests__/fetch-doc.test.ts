@@ -47,11 +47,27 @@ describe('convertNode()', () => {
     };
 
     const result = convertNode(node);
+    expect(result.type.name).toBe('para');
     expect(result.content.childCount).toBe(2);
     expect(result.content.child(0).type.name).toBe('inline');
     expect(result.content.child(0).content.childCount).toBe(1);
     expect(result.content.child(0).content.child(0).text).toBe('Some text here');
     expect(result.content.child(1).type.name).toBe('unimplemented_node');
+  });
+
+  it('figures out heading depth', () => {
+    const node = {
+      children: [{ node_type: 'ignored-child' }],
+      identifier: 'policy_1__sec_1__thing_c__sec_4__heading_1',
+      node_type: 'heading',
+      text: 'Some heading',
+    };
+
+    const result = convertNode(node);
+    expect(result.type.name).toBe('heading');
+    expect(result.attrs.depth).toBe(3);
+    expect(result.content.childCount).toBe(1);
+    expect(result.content.child(0).text).toBe('Some heading');
   });
 
   describe('unimplemented_node', () => {

@@ -9,6 +9,13 @@ const schema = new Schema({
       content: 'text+',
       toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
     },
+    heading: {
+      content: 'text+',
+      attrs: {
+        depth: {}, // will hold the header depth
+      },
+      toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
+    },
     para: {
       content: 'inline? block*',
       group: 'block',
