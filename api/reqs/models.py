@@ -143,7 +143,7 @@ class Policy(models.Model):
         Office, blank=True, related_name='policies')
     workflow_phase = models.CharField(
         max_length=32, choices=[(e.name, e.value) for e in WorkflowPhases],
-        blank=True
+        default=WorkflowPhases.no_doc.name
     )
 
     @property
