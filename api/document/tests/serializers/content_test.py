@@ -207,6 +207,11 @@ def test_no_error_raised_on_empty_inlines_in_leaf_nodes():
     assert content.InlinesField(is_leaf_node=True).to_internal_value([]) == []
 
 
+def test_text_required_is_set_properly():
+    assert content.TextField(is_leaf_node=True).required
+    assert not content.TextField(is_leaf_node=False).required
+
+
 def test_error_raised_on_inlines_in_leaf_nodes():
     serializer = content.InlinesField(is_leaf_node=True)
 

@@ -113,8 +113,8 @@ class InlinesField(NestableAnnotationField):
 
 
 class TextField(NestableAnnotationField):
-    def __init__(self, is_leaf_node: bool, **kwargs) -> None:
-        super().__init__(**kwargs)
+    def __init__(self, is_leaf_node: bool) -> None:
+        super().__init__(required=is_leaf_node)
         self.is_leaf_node = is_leaf_node
 
     @property
@@ -144,7 +144,7 @@ class TextField(NestableAnnotationField):
 class BaseAnnotationSerializer(serializers.Serializer):
     content_type = serializers.SerializerMethodField()
     inlines = InlinesField(is_leaf_node=False)
-    text = TextField(is_leaf_node=False, default='', required=False)
+    text = TextField(is_leaf_node=False)
 
     @property
     def CONTENT_TYPE(self) -> str:  # noqa
