@@ -33,7 +33,7 @@ def test_put_fails_with_identifier(admin_client):
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
-def test_put_works_for_admin_users(admin_client):
+def test_json_put_works_for_admin_users(admin_client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sec', text='blah')
@@ -57,6 +57,33 @@ def test_put_works_for_admin_users(admin_client):
     assert response.status_code == 200
     result = response.json()
     assert result['children'][0]['title'] == 'boop'
+    assert result['children'][0]['content'][0]['text'] == 'hallo'
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
+def test_akn_put_works_for_admin_users(admin_client):
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.add_child('sec', text='blah')
+    root.nested_set_renumber()
+
+    # Get the original document...
+    response = admin_client.get(f"/{policy.pk}?format=akn")
+    assert response.status_code == 200
+    assert response['content-type'] == 'application/akn+xml; charset=utf-8'
+
+    # Modify it a bit...
+    xml = response.content.replace(b'blah', b'hallo')
+
+    response = admin_client.put(f"/{policy.pk}", data=xml,
+                                content_type='application/akn+xml')
+    assert response.status_code == 200
+
+    # Now fetch it again, and make sure our modification stuck.
+    response = admin_client.get(f"/{policy.pk}")
+    assert response.status_code == 200
+    result = response.json()
     assert result['children'][0]['content'][0]['text'] == 'hallo'
 
 

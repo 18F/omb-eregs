@@ -3,10 +3,12 @@ from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.parsers import JSONParser
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 
 from document.models import DocNode, FootnoteCitation, InlineRequirement
+from document.parsers import AkomaNtosoParser
 from document.renderers import AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer
 from document.serializers.doc_cursor import DocCursorSerializer
 from document.tree import DocCursor
@@ -34,6 +36,7 @@ class TreeView(GenericAPIView):
     serializer_class = DocCursorSerializer
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer,
                         AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer)
+    parser_classes = (JSONParser, AkomaNtosoParser)
     queryset = DocNode.objects.none()   # Used to determine permissions
 
     def get_object(self):

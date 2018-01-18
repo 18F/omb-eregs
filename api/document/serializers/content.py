@@ -92,7 +92,7 @@ class NestableAnnotationField(serializers.Field):
 
 class InlinesField(NestableAnnotationField):
     def __init__(self, is_leaf_node: bool) -> None:
-        super().__init__()
+        super().__init__(default=lambda: [])
         self.is_leaf_node = is_leaf_node
 
     def to_representation(self,
