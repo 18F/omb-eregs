@@ -40,7 +40,7 @@ const schema = new Schema({
     },
   },
   marks: {
-    unimplemented_content: {
+    unimplemented_mark: {
       attrs: {
         data: {}, // will hold unrendered content
       },
