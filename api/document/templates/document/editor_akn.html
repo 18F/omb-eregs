@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <style>
+    #editor {
+      border: 1px solid black;
+    }
+    </style>
+    <title>Akoma Ntoso Document editor</title>
+  </head>
+  <body>
+    <h1>Akoma Ntoso Document editor</h1>
+    <p>Use <kbd>Ctrl</kbd>+<kbd>S</kbd> to save.</p>
+    <pre id="status"></pre>
+    <div id="editor"></div>
+    {% csrf_token %}
+    {% load static %}
+    <script src="{% static 'bundles/js/document.akn.main.bundle.js' %}"></script>
+  </body>
+</html>
