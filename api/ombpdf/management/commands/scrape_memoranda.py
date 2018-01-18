@@ -43,10 +43,10 @@ def parse_pdf(policy: Policy, url: Url) -> bool:
         pdf = download_with_progress(url)
         pdf.name = basename(urlparse(url).path)     # this used by from_file
         doc = OMBDocument.from_file(pdf)
+        cursor = to_db(doc, policy)
         with reversion.create_revision():
             policy.workflow_phase = WorkflowPhases.cleanup.name
             policy.save()
-        cursor = to_db(doc, policy)
         logger.info('Imported %s (%s nodes)', policy.omb_policy_id,
                     cursor.subtree_size())
         return True

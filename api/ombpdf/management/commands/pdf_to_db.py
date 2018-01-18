@@ -25,18 +25,22 @@ class Command(BaseCommand):
         policy_name = options['policy'] or Path(fp.name).stem.upper()
         policy = fetch_policy(policy_name)
 
-        with reversion.create_revision():
-            if policy is None:
-                raise CommandError(f"Policy '{policy_name}' not found.")
-                policy.workflow_phase = WorkflowPhases.failed.name
-            else:
+        if policy is None:
+            raise CommandError(f"Policy '{policy_name}' not found.")
+
+        try:
+            self.stdout.write(f'Deleting any current document for "{policy}".')
+            DocNode.objects.filter(policy=policy).delete()
+
+            doc = OMBDocument.from_file(fp)
+            to_db(doc, policy)
+
+            with reversion.create_revision():
                 policy.workflow_phase = WorkflowPhases.cleanup.name
-            policy.save()
-
-        self.stdout.write(f'Deleting any current document for "{policy}".')
-        DocNode.objects.filter(policy=policy).delete()
-
-        doc = OMBDocument.from_file(fp)
-        to_db(doc, policy)
+                policy.save()
+        except Exception:
+            with reversion.create_revision():
+                policy.workflow_phase = WorkflowPhases.failed.name
+                policy.save()
 
         self.stdout.write(f'Imported document for "{policy}" into database.')
