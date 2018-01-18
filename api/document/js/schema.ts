@@ -24,7 +24,7 @@ const schema = new Schema({
     sec: {
       content: 'block+',
       group: 'block',
-      toDOM: () => ['section', 0],
+      toDOM: () => ['section', { class: 'node-section' }, 0],
     },
     text: {},
     unimplemented_node: {
