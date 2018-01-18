@@ -50,7 +50,7 @@ Besides financial and time savings by offering a more effective and organized us
 **Metric:** ETrack the usage of the sharing link
 
 ### Product Roadmap
-[Work in progress roadmap here, available internal to stakeholders and the team currently](https://docs.google.com/document/d/1foKuxVYb18X1a1Evtz33T-hqDU2ymAUppLOeBpt5Tvg/edit#)
+[Work in progress roadmap available to stakeholders and the team currently](https://docs.google.com/document/d/1foKuxVYb18X1a1Evtz33T-hqDU2ymAUppLOeBpt5Tvg/edit#)
 
 
 ## Running
