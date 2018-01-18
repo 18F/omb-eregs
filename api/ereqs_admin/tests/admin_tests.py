@@ -5,7 +5,7 @@ import requests
 from django.contrib.auth.models import User
 from model_mommy import mommy
 
-from reqs.models import Policy
+from reqs.models import Policy, WorkflowPhases
 
 
 @pytest.mark.urls('ereqs_admin.tests.both_user_forms_urls')
@@ -86,7 +86,8 @@ def test_user_edit_max(admin_client):
 
 
 def test_pdf_upload(admin_client):
-    policy = mommy.make(Policy, title='First Policy')
+    policy = mommy.make(Policy, title='First Policy',
+                        uri='http://example.com/oge-450-a.pdf')
     policy_url = '/admin/reqs/policy/{0}/change/'.format(policy.id)
     form = admin_client.get(policy_url)
     form_text = form.content.decode('utf-8')
@@ -104,11 +105,15 @@ def test_pdf_upload(admin_client):
         'issuing_body': policy.issuing_body,
         'sunset': '2015-01-01',
         'policy_status': policy.policy_status,
+        'workflow_phase': WorkflowPhases.no_doc.name,
     }
     pdf_path = '{0}/oge-450-a.pdf'.format(pathlib.Path(__file__).parent)
     with open(pdf_path, 'rb') as f:
         data['document_source'] = f
-        admin_client.post(policy_url, data)
+        posted = admin_client.post(policy_url, data)
+
+    # Successful no-error POSTs will return 302s:
+    assert posted.status_code == 302
 
     updated_form = admin_client.get(policy_url)
     updated_text = updated_form.content.decode('utf-8')
@@ -140,11 +145,14 @@ def test_not_pdf_upload(admin_client):
         'issuing_body': policy.issuing_body,
         'sunset': '2015-01-01',
         'policy_status': policy.policy_status,
+        'workflow_phase': WorkflowPhases.no_doc.name,
     }
     not_pdf_path = '{0}/not-a-pdf.txt'.format(pathlib.Path(__file__).parent)
     with open(not_pdf_path, 'rb') as f:
         data['document_source'] = f
         resp = admin_client.post(policy_url, data)
+    # POSTs with errors will return 200s:
+    assert resp.status_code == 200
     resp_text = resp.content.decode('utf-8')
     assert 'The file must be a PDF.' in resp_text
     updated_policy = Policy.objects.get(id=policy.id)
