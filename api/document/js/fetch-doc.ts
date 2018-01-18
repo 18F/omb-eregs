@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Node } from 'prosemirror-model';
 
 import schema from './schema';
 
@@ -10,24 +9,24 @@ export function convertNode(node) {
 }
 
 const NODE_TYPE_CONVERTERS = {
-  unimplemented_node: node => ({
-    type: 'unimplemented_node',
-    attrs: { data: JSON.stringify(node) },
-    content: [{
-      type: 'text',
-      text: node.node_type || '[no-node-type]',
-    }],
-  }),
-  policy: node => ({
-    type: 'doc',
-    content: (node.children || []).map(convertNode),
-  }),
+  para(node) {
+    const text = (node.text || '').replace(/\s+/g, ' ');
+    const inlineContent = schema.nodes.inline.create({}, schema.text(text));
+    const childContent = (node.children || []).map(convertNode);
+    return schema.nodes.para.create({}, [inlineContent].concat(childContent));
+  },
+  policy: node =>
+    schema.nodes.doc.create({}, (node.children || []).map(convertNode)),
+  sec: node =>
+    schema.nodes.sec.create({}, (node.children || []).map(convertNode)),
+  unimplemented_node: node =>
+    schema.nodes.unimplemented_node.create({ data: node }),
 };
 
 export default function fetchDoc(path?: string) {
   const pathParts = (path || window.location.href).split('/');
   const policyId = pathParts[pathParts.length - 1];
   return axios.get(`/document/${policyId}`)
-    .then(response => Node.fromJSON(schema, convertNode(response.data)));
+    .then(response => convertNode(response.data));
 }
 
