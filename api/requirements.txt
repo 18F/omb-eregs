@@ -12,6 +12,7 @@ chardet==3.0.4            # via pdfminer.six, requests
 decorator==4.1.2          # via networkx
 dj-database-url==0.4.2
 django-admin-interface==0.5.2
+django-apptemplates==1.4
 django-cas-ng==3.5.8
 django-colorfield==0.1.14  # via django-admin-interface
 django-cors-headers==2.1.0
@@ -40,5 +41,6 @@ pytz==2017.2              # via django
 requests==2.18.4
 s3transfer==0.1.10        # via boto3
 six==1.10.0               # via furl, orderedmultidict, pdfminer.six, python-cas, python-dateutil
+tqdm==4.19.5
 urllib3==1.22             # via requests
 whitenoise==3.3.0

@@ -2,6 +2,7 @@ boto3
 cfenv
 django>=1.11,<1.12
 django-admin-interface
+django-apptemplates
 django-cas-ng
 django-cors-headers
 django-filter
@@ -13,8 +14,9 @@ gunicorn
 lxml
 networkx
 newrelic
+pdfminer.six
 psycopg2
 python-dateutil
 requests
+tqdm
 whitenoise
-pdfminer.six

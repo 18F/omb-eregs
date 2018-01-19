@@ -1,5 +1,8 @@
+from unittest.mock import Mock
+
 import pytest
 from model_mommy import mommy
+from rest_framework.serializers import ValidationError
 
 from document.models import DocNode, ExternalLink, PlainText
 from document.serializers import content
@@ -20,6 +23,13 @@ def test_nest_annotations_no_overlapping():
     assert [r.annotation_class for r in result] == [
         PlainText, ExternalLink, PlainText, ExternalLink, PlainText,
     ]
+
+
+def test_nest_annotations_raises_assertion_error():
+    with pytest.raises(AssertionError, matches="doesn't fit in the text"):
+        content.nest_annotations([
+            mommy.prepare(ExternalLink, start=50, end=60),
+        ], 30)
 
 
 def test_nest_annotations_entirely_nested():
@@ -160,3 +170,74 @@ def test_inline_requirement_with_link_integration():
         },
         {'content_type': '__text__', 'inlines': [], 'text': '.'},
     ]
+
+
+def test_error_raised_on_invalid_content_type():
+    serializer = content.NestedAnnotationSerializer()
+
+    with pytest.raises(ValidationError,
+                       match="unknown content_type: blarg"):
+        serializer.to_internal_value({'content_type': 'blarg'})
+
+
+def test_error_raised_on_missing_content_type():
+    serializer = content.NestedAnnotationSerializer()
+
+    with pytest.raises(ValidationError,
+                       match="missing content_type"):
+        serializer.to_internal_value({'foo': 'bar'})
+
+
+def test_text_deserialization_works():
+    serializer = content.NestedAnnotationSerializer()
+
+    obj = {'content_type': '__text__', 'text': 'hello', 'inlines': []}
+    assert serializer.to_internal_value(obj) == obj
+
+
+def test_inlines_work_on_non_leaf_nodes():
+    node = {
+        'content_type': '__text__', 'text': 'blah', 'inlines': [],
+    }
+    assert content.InlinesField(is_leaf_node=False)\
+        .to_internal_value([node]) == [node]
+
+
+def test_no_error_raised_on_empty_inlines_in_leaf_nodes():
+    assert content.InlinesField(is_leaf_node=True).to_internal_value([]) == []
+
+
+def test_error_raised_on_inlines_in_leaf_nodes():
+    serializer = content.InlinesField(is_leaf_node=True)
+
+    with pytest.raises(ValidationError,
+                       match="leaf nodes cannot contain nested content"):
+        serializer.to_internal_value(['hi'])
+
+
+def test_text_deserializes_to_empty_str_on_non_leaf_nodes():
+    assert content.TextField(is_leaf_node=False).to_internal_value('u') == ''
+
+
+def test_to_representation_raises_error_on_unknown_annotation_type():
+    with pytest.raises(NotImplementedError,
+                       matches="Annotation type 'int' is not registered"):
+        content.NestedAnnotationSerializer().to_representation(Mock(
+            annotation_class=int
+        ))
+
+
+def test_unimplemented_content_type_or_annotation_class_raises_error():
+    class BadSerializer(content.BaseAnnotationSerializer):
+        pass
+
+    with pytest.raises(NotImplementedError):
+        BadSerializer().CONTENT_TYPE
+
+    with pytest.raises(NotImplementedError):
+        BadSerializer().ANNOTATION_CLASS
+
+
+def test_nestable_annotation_repr_works():
+    na = content.NestableAnnotation('my annotation', None)
+    assert repr(na) == "NestableAnnotation('my annotation') []"

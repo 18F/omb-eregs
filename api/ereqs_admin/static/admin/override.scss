@@ -1,0 +1,59 @@
+@import '../shared-styles/base/colors';
+@import '../shared-styles/base/media-queries';
+@import '../shared-styles/base/spacing';
+@import '../shared-styles/base/type-size';
+@import '../shared-styles/base/util';
+
+$nav-menu-active: false;
+
+$banner-height: 60px;
+$nav-menu-width: if($nav-menu-active, 200px, 0);
+
+#header {
+  // Remove padding so our nav-menu can start at left:0
+  padding: 0;
+}
+
+// Add the padding back to *other* elements in the header
+#branding,
+#user-tools {
+  padding: 10px 40px;
+}
+
+.breadcrumbs,
+.messagelist,
+#content {
+  margin-left: $nav-menu-width;
+
+  // we don't display the nav-menu when we're in a popup/ on the login screen
+  .popup &,
+  .login & {
+    margin-left: 0;
+  }
+}
+
+.title-bar {
+  color: $color-white;
+  background: $color-gray;
+  margin-top: $banner-height;
+  padding: 0 $space;
+  width: 100%;
+
+  @if not($nav-menu-active) {
+    display: none;
+  }
+
+}
+
+.nav-menu {
+  background: $color-black;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: $nav-menu-width;
+
+  @if not($nav-menu-active) {
+    display: none;
+  }
+}

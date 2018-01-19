@@ -24,7 +24,7 @@ class GroupWithAgenciesSerializer(serializers.ModelSerializer):
 
 
 class PolicySerializer(serializers.ModelSerializer):
-    has_docnode = serializers.BooleanField(read_only=True)
+    has_docnodes = serializers.BooleanField(read_only=True)
     total_reqs = serializers.IntegerField(read_only=True)
     relevant_reqs = serializers.IntegerField(read_only=True)
     title_with_number = serializers.CharField(read_only=True)
@@ -47,7 +47,8 @@ class PolicySerializer(serializers.ModelSerializer):
             'title_with_number',
             'total_reqs',
             'uri',
-            'has_docnode',
+            'has_docnodes',
+            'workflow_phase',
         )
 
 

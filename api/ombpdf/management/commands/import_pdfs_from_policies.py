@@ -3,13 +3,12 @@ from os.path import basename
 from typing import List, Optional, Set, Tuple
 
 import requests
+import reversion
 from django.core.management.base import BaseCommand
-from django.db.models import Exists, OuterRef
 from requests.exceptions import RequestException
 
-from document.models import DocNode
 from ombpdf.management.commands.scrape_memoranda import Url, parse_pdf
-from reqs.models import Policy
+from reqs.models import Policy, WorkflowPhases
 
 OLD_DOMAIN = 'www.whitehouse.gov'
 NEW_DOMAIN = 'obamawhitehouse.archives.gov'
@@ -53,17 +52,19 @@ def import_pdfs_from_policies() -> Tuple[Set[str], Set[str]]:
     """Attempt to import document text from all pdf policies which haven't
     already been imported."""
     successes, failures = set(), set()
-    has_docnodes = Exists(DocNode.objects.filter(policy=OuterRef('pk')))
-    query = Policy.objects \
-        .annotate(has_docnodes=has_docnodes) \
-        .filter(uri__endswith='.pdf') \
-        .filter(has_docnodes=False)     # not replacing data
+    query = Policy.objects.annotate_with_has_docnodes() \
+        .filter(uri__endswith='.pdf',
+                has_docnodes=False)  # not replacing data
     for policy in query:
         ident = f"{policy.pk}: {policy.title_with_number}"
-        if import_from_policy(policy):
-            successes.add(ident)
-        else:
-            failures.add(ident)
+        with reversion.create_revision():
+            if import_from_policy(policy):
+                policy.workflow_phase = WorkflowPhases.cleanup.name
+                successes.add(ident)
+            else:
+                policy.workflow_phase = WorkflowPhases.failed.name
+                failures.add(ident)
+            policy.save()
     return successes, failures
 
 

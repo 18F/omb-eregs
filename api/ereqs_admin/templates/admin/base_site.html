@@ -1,0 +1,18 @@
+{% extends 'admin_interface:admin/base_site.html' %}
+{% load nav_menu static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static "bundles/css/admin/override.css" %}"
+  />
+{% endblock %}
+
+{% block nav-global %}
+  <div class="title-bar">
+    {{ title }}
+  </div>
+  {% nav_menu %}
+{% endblock %}

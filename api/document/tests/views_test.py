@@ -13,6 +13,82 @@ from reqs.models import Policy, Requirement
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
+def test_put_403s_for_anon_users(client):
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.nested_set_renumber()
+
+    assert client.put(f"/{policy.pk}").status_code == 403
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
+def test_put_fails_with_identifier(admin_client):
+    response = admin_client.put(f"/blarg/flarg")
+    assert response.status_code == 400
+    assert response.json() == {
+        'detail': 'Identifiers are unsupported on PUT requests.'
+    }
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
+def test_json_put_works_for_admin_users(admin_client):
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.add_child('sec', text='blah')
+    root.nested_set_renumber()
+
+    # Get the original document...
+    response = admin_client.get(f"/{policy.pk}")
+    assert response.status_code == 200
+    result = response.json()
+
+    # Modify it a bit...
+    result['children'][0]['title'] = 'boop'
+    result['children'][0]['content'][0]['text'] = 'hallo'
+
+    response = admin_client.put(f"/{policy.pk}", data=json.dumps(result),
+                                content_type='application/json')
+    assert response.status_code == 200
+
+    # Now fetch it again, and make sure our modification stuck.
+    response = admin_client.get(f"/{policy.pk}")
+    assert response.status_code == 200
+    result = response.json()
+    assert result['children'][0]['title'] == 'boop'
+    assert result['children'][0]['content'][0]['text'] == 'hallo'
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
+def test_akn_put_works_for_admin_users(admin_client):
+    policy = mommy.make(Policy)
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.add_child('sec', text='blah')
+    root.nested_set_renumber()
+
+    # Get the original document...
+    response = admin_client.get(f"/{policy.pk}?format=akn")
+    assert response.status_code == 200
+    assert response['content-type'] == 'application/akn+xml; charset=utf-8'
+
+    # Modify it a bit...
+    xml = response.content.replace(b'blah', b'hallo')
+
+    response = admin_client.put(f"/{policy.pk}", data=xml,
+                                content_type='application/akn+xml')
+    assert response.status_code == 200
+
+    # Now fetch it again, and make sure our modification stuck.
+    response = admin_client.get(f"/{policy.pk}")
+    assert response.status_code == 200
+    result = response.json()
+    assert result['children'][0]['content'][0]['text'] == 'hallo'
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
 def test_404s(client):
     policy = mommy.make(Policy)
     root = DocCursor.new_tree('root', '0', policy=policy)
@@ -106,3 +182,19 @@ def test_query_count(client):
         # 11: fetch inline requirements _and_ referenced req for child nodes
         # 12: fetch cite elements for child nodes
         assert len(capture) == 12
+
+
+@pytest.mark.django_db
+def test_editor_requires_admin(client):
+    mommy.make(Policy, omb_policy_id='M-11-22')
+    result = client.get('/admin/document-editor/M-11-22')
+    assert result.status_code == 302
+
+
+@pytest.mark.django_db
+def test_editor_checks_policy(admin_client):
+    mommy.make(Policy, omb_policy_id='M-11-22')
+    result = admin_client.get('/admin/document-editor/M-99-88')
+    assert result.status_code == 404
+    result = admin_client.get('/admin/document-editor/M-11-22')
+    assert result.status_code == 200

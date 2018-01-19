@@ -1,5 +1,5 @@
 {
-  "name": "pdfminer-fun",
+  "name": "omb-eregs-api",
   "version": "1.0.0",
   "description": "[![CircleCI](https://circleci.com/gh/18F/omb-pdf.svg?style=svg)](https://circleci.com/gh/18F/omb-pdf)",
   "main": "index.js",
@@ -7,7 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "tslint document/**/*.ts",
+    "test": "NODE_ENV=test jest --coverage",
+    "test:watch": "NODE_ENV=test jest --watch"
   },
   "repository": {
     "type": "git",
@@ -20,9 +22,46 @@
   },
   "homepage": "https://github.com/toolness/omb-pdfminer-fun#readme",
   "dependencies": {
+    "@types/prosemirror-commands": "^1.0.0",
+    "@types/prosemirror-history": "^1.0.0",
+    "@types/prosemirror-keymap": "^1.0.0",
+    "@types/prosemirror-menu": "^1.0.0",
+    "@types/prosemirror-state": "^1.0.0",
+    "@types/prosemirror-view": "^1.0.0",
+    "axios": "^0.17.1",
+    "css-loader": "0.28.7",
+    "pdfjs-dist": "^2.0.185",
+    "prosemirror-commands": "^1.0.3",
+    "prosemirror-history": "^1.0.0",
+    "prosemirror-keymap": "^1.0.0",
+    "prosemirror-menu": "^1.0.0",
+    "prosemirror-state": "^1.0.0",
+    "prosemirror-view": "^1.0.5",
+    "style-loader": "0.19.1",
     "ts-loader": "^3.2.0",
     "typescript": "^2.6.2",
-    "pdfjs-dist": "^2.0.185",
     "webpack": "^3.10.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.0.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "jest": "^22.0.4",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "tslint": "^5.9.1",
+    "tslint-config-airbnb": "^5.4.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/jest-ts-preprocessor.js"
+    },
+    "testMatch": [
+      "**/__tests__/*.(ts|tsx|js)"
+    ]
   }
 }

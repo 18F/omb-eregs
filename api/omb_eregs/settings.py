@@ -125,13 +125,17 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+            ],
+            'loaders': [
+                'apptemplates.Loader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
             ],
         },
     },
@@ -188,7 +192,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.environ.get('TMPDIR', '.') + '/static/'
+STATIC_ROOT = 'collected-static'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'webpack-static'),
 ]
@@ -271,6 +275,10 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 ADMIN_TITLE = 'OMB Policy Library Editor'
+
+# We only use accounts for admin access at the moment
+LOGIN_REDIRECT_URL = '/admin/'
+LOGIN_URL = '/admin/login/'
 
 if DEBUG and os.environ.get('USE_POLLING') == 'true':
     import django.utils.autoreload

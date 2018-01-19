@@ -3,11 +3,22 @@ from typing import Iterator, List
 
 from django.db import models
 
-from reqs.models import Policy, Requirement
-
 
 class DocNode(models.Model):
-    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
+    '''
+    Represents a node in a document.
+
+    A node has a node type, e.g. 'par' (for a paragraph) or
+    'sec' (for a section).
+
+    It also has plain text content, which may be annotated--via a subclass
+    of the Annotation model--with semantic details such as external
+    links or footnote citations.
+
+    It also can have a single parent, and any number of children.
+    '''
+
+    policy = models.ForeignKey('reqs.Policy', on_delete=models.CASCADE)
     # e.g. part_447__subpart_A__sec_1__para_b
     identifier = models.CharField(max_length=1024)
     # e.g. para
@@ -20,6 +31,10 @@ class DocNode(models.Model):
     # Plain text title for this node (for use in tables of contents, etc.)
     title = models.CharField(max_length=128, blank=True, db_index=True)
 
+    # These fields are used for storing the document heirarchy in a flat
+    # relational database as per the nested set model:
+    #
+    # https://en.wikipedia.org/wiki/Nested_set_model
     left = models.PositiveIntegerField()
     right = models.PositiveIntegerField()
     depth = models.PositiveIntegerField()
@@ -51,6 +66,11 @@ class DocNode(models.Model):
 
 
 class Annotation(models.Model):
+    '''
+    Represents an annotation of some range of text in a DocNode, such as
+    a footnote citation or an external link.
+    '''
+
     doc_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='%(class)ss')
     start = models.PositiveIntegerField()    # inclusive; within doc_node.text
@@ -80,4 +100,4 @@ class ExternalLink(Annotation):
 
 class InlineRequirement(Annotation):
     requirement = models.ForeignKey(
-        Requirement, on_delete=models.CASCADE, related_name='+')
+        'reqs.Requirement', on_delete=models.CASCADE, related_name='+')

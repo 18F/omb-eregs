@@ -70,12 +70,24 @@ jobs:
             COMPOSE_FILE: docker-compose-circle.yml
           command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
       - run:
-          name: API Build JS
+          name: API TSlint
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm api-npm run lint
+      - run:
+          name: API JS tests
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+          command: docker-compose run --rm api-npm test
+      - run:
+          name: API Build and Collect Static Files
+          environment:
+            COMPOSE_FILE: docker-compose-circle.yml
+            DEBUG: "false"
           command: |
             docker-compose run --rm api-webpack
-            docker cp holder:/usr/src/app/api/webpack-static/. ./api/webpack-static
+            docker-compose run --rm manage.py collectstatic --noinput
+            docker cp holder:/usr/src/app/api/collected-static/. ./api/collected-static
 
       - run:
           name: Submit Coverage
@@ -107,12 +119,14 @@ jobs:
           name: Build Next App
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
+            NODE_ENV: production
           command: |
             if [ "${CIRCLE_BRANCH}" == "release" ]; then
-              docker-compose run -e NODE_ENV=production -e API_URL=https://policy-api.cio.gov/ npm run build
+              export API_URL=https://policy-api.cio.gov/
             else
-              docker-compose run -e NODE_ENV=production -e API_URL=https://omb-eregs-api-demo.app.cloud.gov npm run build
+              export API_URL=https://omb-eregs-api-demo.app.cloud.gov/
             fi
+            docker-compose run --rm npm run build
             docker cp holder:/usr/src/app/ui/.next ui/.next
       - deploy:
           name: Deploy
