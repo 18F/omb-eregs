@@ -39,7 +39,7 @@ class TreeView(GenericAPIView):
     parser_classes = (JSONParser, AkomaNtosoParser)
     queryset = DocNode.objects.none()   # Used to determine permissions
 
-    def get_object(self):
+    def get_object(self, prefetch_related=True):
         policy = policy_or_404(self.kwargs['policy_id'])
         # we'll pass this policy down when we serialize
         self.policy = policy
@@ -48,9 +48,13 @@ class TreeView(GenericAPIView):
             query_args['identifier'] = self.kwargs['identifier']
         else:
             query_args['depth'] = 0
-        root_doc = get_object_or_404(optimize(DocNode.objects), **query_args)
+        queryset = DocNode.objects
+        if prefetch_related:
+            queryset = optimize(queryset)
+        root_doc = get_object_or_404(queryset, **query_args)
         root = DocCursor.load_from_model(root_doc, subtree=False)
-        root.add_models(optimize(root_doc.descendants()))
+        if prefetch_related:
+            root.add_models(optimize(root_doc.descendants()))
         return root
 
     def get_serializer_context(self):
@@ -59,7 +63,7 @@ class TreeView(GenericAPIView):
         }
 
     def get(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance = self.get_object(prefetch_related=True)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
@@ -69,10 +73,19 @@ class TreeView(GenericAPIView):
                 'detail': 'Identifiers are unsupported on PUT requests.',
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        instance = self.get_object()
+        # We don't care about prefetching related data because we're
+        # about to delete all of it anyways.
+        instance = self.get_object(prefetch_related=False)
+
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        # Now we'll retrieve the data we just wrote to the DB
+        # with prefetching, to avoid the "n+1" query problem
+        # during serialization.
+        instance = self.get_object(prefetch_related=True)
+        serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
 
