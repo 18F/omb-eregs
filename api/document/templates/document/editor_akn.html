@@ -6,15 +6,57 @@
     #editor {
       border: 1px solid black;
     }
+
+    /* https://meta.superuser.com/q/4788 */
+    kbd {
+      -moz-border-radius:3px;
+      -moz-box-shadow:0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+      -webkit-border-radius:3px;
+      -webkit-box-shadow:0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+      background-color:#f7f7f7;
+      border:1px solid #ccc;
+      border-radius:3px;
+      box-shadow:0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+      color:#333;
+      display:inline-block;
+      font-family:Arial,Helvetica,sans-serif;
+      font-size:11px;
+      line-height:1.4;
+      margin:0 .1em;
+      padding:.1em .6em;
+      text-shadow:0 1px 0 #fff;
+    }
     </style>
     <title>Akoma Ntoso Document editor</title>
   </head>
   <body>
     <h1>Akoma Ntoso Document editor</h1>
-    <p>To save, use <kbd>Ctrl</kbd>+<kbd>S</kbd> (or <kbd>⌘</kbd>+<kbd>S</kbd> on Macs).</p>
     <pre id="status"></pre>
     <div id="editor"></div>
     {% csrf_token %}
+    <h2>Help</h2>
+    <dl>
+      <dt><kbd>Ctrl</kbd>+<kbd>S</kbd> or <kbd>⌘</kbd>+<kbd>S</kbd></dt>
+      <dd>Save document</dd>
+
+      <dt><kbd>Ctrl</kbd>+<kbd>F</kbd> or <kbd>⌘</kbd>+<kbd>F</kbd></dt>
+      <dd>Start searching</dd>
+
+      <dt><kbd>Ctrl</kbd>+<kbd>G</kbd> or <kbd>⌘</kbd>+<kbd>G</kbd></dt>
+      <dd>Find next</dd>
+
+      <dt><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>G</kbd> or
+        <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>G</kbd></dt>
+      <dd>Find previous</dd>
+
+      <dt><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>F</kbd> or
+        <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd></dt>
+      <dd>Replace</dd>
+
+      <dt><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>R</kbd> or
+        <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd></dt>
+      <dd>Replace all</dd>
+    </dl>
     {% load static %}
     <script src="{% static 'bundles/js/document.akn.main.bundle.js' %}"></script>
   </body>

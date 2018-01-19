@@ -1,6 +1,9 @@
 import axios from 'axios';
 import * as CodeMirror from "codemirror";
 import "codemirror/mode/xml/xml.js";
+import "codemirror/addon/search/search.js";
+import "codemirror/addon/search/searchcursor.js";
+import "codemirror/addon/dialog/dialog.js";
 
 
 // We need to load our CSS via require() rather than import;
@@ -17,6 +20,7 @@ declare function require(path: string): null;
 
 require('codemirror/lib/codemirror.css');
 require('codemirror/theme/eclipse.css');
+require('codemirror/addon/dialog/dialog.css');
 
 const EDITOR_SEL = '#editor';
 
