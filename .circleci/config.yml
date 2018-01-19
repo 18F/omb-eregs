@@ -122,9 +122,9 @@ jobs:
             NODE_ENV: production
           command: |
             if [ "${CIRCLE_BRANCH}" == "release" ]; then
-              API_URL=https://policy-api.cio.gov/
+              export API_URL=https://policy-api.cio.gov/
             else
-              API_URL=https://omb-eregs-api-demo.app.cloud.gov/
+              export API_URL=https://omb-eregs-api-demo.app.cloud.gov/
             fi
             docker-compose run --rm npm run build
             docker cp holder:/usr/src/app/ui/.next ui/.next
