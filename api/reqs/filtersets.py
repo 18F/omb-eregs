@@ -38,6 +38,7 @@ class PolicyFilter(django_filters.FilterSet):
             'issuing_body': ('exact', 'icontains'),
             'sunset': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
                        'month', 'day', 'isnull'),
+            'workflow_phase': ('exact', 'in'),
         }
 
 
