@@ -81,13 +81,7 @@ class TreeView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        # Now we'll retrieve the data we just wrote to the DB
-        # with prefetching, to avoid the "n+1" query problem
-        # during serialization.
-        instance = self.get_object(prefetch_related=True)
-        serializer = self.get_serializer(instance)
-
-        return Response(serializer.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @login_required
