@@ -13,7 +13,10 @@ from reqs.models import Policy, WorkflowPhases
 OLD_DOMAIN = 'www.whitehouse.gov'
 NEW_DOMAIN = 'obamawhitehouse.archives.gov'
 PROBLEM_PDFS = (
+    'BILLS-103s1587enr.pdf',
     'a11_2016.pdf',
+    'a136_revised_2014.pdf',
+    'hr_5005_enr.pdf',
 )
 logger = logging.getLogger(__name__)
 
