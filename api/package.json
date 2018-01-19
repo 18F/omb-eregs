@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "lint": "tslint document/js/**/*.ts",
+    "lint": "tslint 'document/**/*.ts'",
     "test": "NODE_ENV=test jest --coverage",
     "test:watch": "NODE_ENV=test jest --watch"
   },
