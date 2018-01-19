@@ -32,10 +32,10 @@ The primary risks we are facing is updating antiquated documentation processes a
 Besides financial and time savings by offering a more effective and organized user experience, these are some of our draft current goals for the MVP launch of the product:
 
 **Goal:** Users are less confused about what is required of them by policy. 
-**Metric:** EHelp ‘tickets’ (Calls, emails, etc.) to OMB desk officers go down in volume/length of time. 
+**Metric:** Help ‘tickets’ (Calls, emails, etc.) to OMB desk officers go down in volume/length of time. 
 
 **Goal:** Users can quickly/easily find the parts of policy that they need. 
-**Metric:** ETime spend searching for policy reduces.
+**Metric:** Time spend searching for policy reduces.
 
 **Goal:** Convert the policy library to pure digital data:
 **Metric:** 100% of policies will be in real text as opposed to PDF, by the time we’re done.
@@ -44,10 +44,10 @@ Besides financial and time savings by offering a more effective and organized us
 **Metric:** Editing and approval process is significantly reduced
 
 **Goal:** Create a policy input parser that has a high level of accuracy dealing with messy source docs
-**Metric:** EMore than 80% of the policies imported require minimal editing/fixes
+**Metric:** More than 80% of the policies imported require minimal editing/fixes
 
 **Goal:** Sharing of policy information is valuable and used frequently
-**Metric:** ETrack the usage of the sharing link
+**Metric:** Track the usage of the sharing link
 
 ### Product Roadmap
 [Work in progress roadmap available to stakeholders and the team currently](https://docs.google.com/document/d/1foKuxVYb18X1a1Evtz33T-hqDU2ymAUppLOeBpt5Tvg/edit#)
