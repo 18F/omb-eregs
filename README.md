@@ -16,11 +16,41 @@ YouTube](https://www.youtube.com/playlist?list=PLu2xTIVb2mmQb-QURyZQEoqK4c2XrW43
 
 ## Product Background
 
-### Product Vision
+### History
+The OMB Policy Library project was born out of the team who launched eRegulations for multiple agencies. [The history of eRegs and more documentation, previous agency work, and examples is available here](https://eregs.github.io/story/).
+
+### Product Vision Statement & Goals
 We are creating software that simplifies large, complex, hard to navigate policies for agency implementers so they can comply easily and quickly. This saves them time, money, and frustration, so that they can get back to fulfilling their agency’s mission. 
 
+### Users & Stakeholders
+While the long-term results of the project will affect many layers of the government, public, and industry, the current project's stakeholders are primarily those that are affected, charged with writing, and enforcing policy guidance. This includes Federal agency Policy Analysts, CIOs, Agency Policy Writers, and agency leadership figures. Our MVP pilot is working with the OMB OFCIO office, and they serve as the initial Stakeholders.
+
+### Risks & Mitigation Strategies
+The primary risks we are facing is updating antiquated documentation processes and tools, and trying to improve them without making the conversion too onerous on agencies. By intensely focusing on user-centered design, we are working with agency stakeholders and users to inform us on how to most effectively relieve the burden they face, while also not adding to their workload.
+
+### Metrics
+Besides financial and time savings by offering a more effective and organized user experience, these are some of our draft current goals for the MVP launch of the product:
+
+**Goal:** Users are less confused about what is required of them by policy. 
+**Metric:** Help ‘tickets’ (Calls, emails, etc.) to OMB desk officers go down in volume/length of time. 
+
+**Goal:** Users can quickly/easily find the parts of policy that they need. 
+**Metric:** Time spend searching for policy reduces.
+
+**Goal:** Convert the policy library to pure digital data:
+**Metric:** 100% of policies will be in real text as opposed to PDF, by the time we’re done.
+
+**Goal:** Reduce the time it takes to update a policy and publish it
+**Metric:** Editing and approval process is significantly reduced
+
+**Goal:** Create a policy input parser that has a high level of accuracy dealing with messy source docs
+**Metric:** More than 80% of the policies imported require minimal editing/fixes
+
+**Goal:** Sharing of policy information is valuable and used frequently
+**Metric:** Track the usage of the sharing link
+
 ### Product Roadmap
-[Work in progress roadmap here, available internal to stakeholders and the team currently](https://docs.google.com/document/d/1foKuxVYb18X1a1Evtz33T-hqDU2ymAUppLOeBpt5Tvg/edit#)
+[Work in progress roadmap available to stakeholders and the team currently](https://docs.google.com/document/d/1foKuxVYb18X1a1Evtz33T-hqDU2ymAUppLOeBpt5Tvg/edit#)
 
 
 ## Running
