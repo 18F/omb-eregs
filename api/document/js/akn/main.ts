@@ -5,6 +5,8 @@ import "codemirror/addon/search/search.js";
 import "codemirror/addon/search/searchcursor.js";
 import "codemirror/addon/dialog/dialog.js";
 
+import { getEl } from "../util";
+
 
 // We need to load our CSS via require() rather than import;
 // using the latter raises errors about not being able to find
@@ -23,13 +25,6 @@ require('codemirror/theme/eclipse.css');
 require('codemirror/addon/dialog/dialog.css');
 
 const EDITOR_SEL = '#editor';
-
-function getEl(selector: string): HTMLElement {
-  const el = document.querySelector(selector);
-  if (!el || !(el instanceof HTMLElement))
-    throw new Error(`element with selector '${selector}' not found`);
-  return el;
-}
 
 function fetchDoc(path?: string) {
   const pathParts = (path || window.location.href).split('/');

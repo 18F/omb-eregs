@@ -1,5 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 
+import { getEl } from './util';
 import createEditorState from './create-editor-state';
 import fetchDoc from './fetch-doc';
 
@@ -18,18 +19,11 @@ declare function require(path: string): null;
 require('prosemirror-view/style/prosemirror.css');
 require('prosemirror-menu/style/menu.css');
 
-const EDITOR_ID = 'editor';
-
-function getEl(id: string): Element {
-  const el = document.getElementById(id);
-  if (!el)
-    throw new Error(`element with id '${id}' not found`);
-  return el;
-}
+const EDITOR_SEL = '#editor';
 
 window.addEventListener('load', async () => {
   const doc = await fetchDoc();
-  new EditorView(getEl(EDITOR_ID), {
+  new EditorView(getEl(EDITOR_SEL), {
     state: createEditorState(doc),
   });
 });
