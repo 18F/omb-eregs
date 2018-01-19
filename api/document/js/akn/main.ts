@@ -59,12 +59,13 @@ function setStatusError(e: Error) {
   if (data) {
     errMsg += '\n' + JSON.stringify(data, null, 2);
   }
-  setStatus(errMsg);
+  setStatus(errMsg, "error");
 }
 
-function setStatus(msg: string) {
+function setStatus(msg: string, className: "error"|"" = "") {
   let status = getEl("#status");
   status.textContent = msg;
+  status.className = className;
 }
 
 function createEditor(value: string) {
