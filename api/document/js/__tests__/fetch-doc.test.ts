@@ -5,13 +5,6 @@ import fetchDoc, { convertNode } from '../fetch-doc';
 jest.mock('axios');
 
 describe('fetchDoc()', () => {
-  it('hits the right url', () => {
-    axios.get = jest.fn(() => ({ then: jest.fn() }));
-    fetchDoc('/admin/document-editor/M-12-34');
-    expect(axios.get).toHaveBeenCalledWith('/document/M-12-34');
-  });
-
-
   it('raises 404, etc. Eventually we will catch them', () => {
     const error404: any = new Error('Not Found');
     error404.response = { status: 404 };
