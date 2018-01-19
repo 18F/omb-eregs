@@ -23,10 +23,6 @@ const NODE_TYPE_CONVERTERS = {
     schema.nodes.unimplemented_node.create({ data: node }),
 };
 
-export default function fetchDoc(path?: string) {
-  const pathParts = (path || window.location.href).split('/');
-  const policyId = pathParts[pathParts.length - 1];
-  return axios.get(`/document/${policyId}`)
-    .then(response => convertNode(response.data));
+export default function fetchDoc(path: string) {
+  return axios.get(path).then(response => convertNode(response.data));
 }
-

@@ -36,7 +36,7 @@
   <body>
     <h1>Akoma Ntoso Document editor</h1>
     <pre id="status"></pre>
-    <div id="editor"></div>
+    <div id="editor" data-document-url="{{ document_url }}"></div>
     {% csrf_token %}
     <h2>Help</h2>
     <dl>

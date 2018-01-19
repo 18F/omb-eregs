@@ -5,7 +5,7 @@ import 'codemirror/addon/search/search.js';
 import 'codemirror/addon/search/searchcursor.js';
 import 'codemirror/addon/dialog/dialog.js';
 
-import { getEl } from '../util';
+import { getEl, getElAttr } from '../util';
 
 
 // We need to load our CSS via require() rather than import;
@@ -17,13 +17,6 @@ require('codemirror/theme/eclipse.css');
 require('codemirror/addon/dialog/dialog.css');
 
 const EDITOR_SEL = '#editor';
-
-function fetchDoc(path?: string) {
-  const pathParts = (path || window.location.href).split('/');
-  const policyId = pathParts[pathParts.length - 2];
-  return axios.get(`/document/${policyId}?format=akn`)
-    .then(response => response.data);
-}
 
 function saveDoc(data: string, path?: string) {
   const pathParts = (path || window.location.href).split('/');
@@ -73,8 +66,10 @@ function createEditor(value: string) {
 
 window.addEventListener('load', () => {
   setStatus('Loading document...');
-  fetchDoc().then((value) => {
-    setStatus('Document loaded.');
-    createEditor(value);
-  }).catch(setStatusError);
+  axios.get(getElAttr(EDITOR_SEL, 'data-document-url'))
+    .then(response => response.data)
+    .then((value) => {
+      setStatus('Document loaded.');
+      createEditor(value);
+    }).catch(setStatusError);
 });

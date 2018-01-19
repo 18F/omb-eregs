@@ -20,7 +20,7 @@
   </head>
   <body>
     <h1>Document editor</h1>
-    <div id="editor"></div>
+    <div id="editor" data-document-url="{{ document_url }}"></div>
     {% load static %}
     <script src="{% static 'bundles/js/document.main.bundle.js' %}"></script>
   </body>

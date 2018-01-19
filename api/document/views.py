@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
@@ -89,7 +90,9 @@ def editor(request, policy_id):
     # Verify that the policy is valid; 404 when not. We don't actually load
     # the document content as they'll be retrieved from the API
     policy_or_404(policy_id)
-    return render(request, 'document/editor.html')
+    return render(request, 'document/editor.html', {
+        'document_url': reverse('document', kwargs={'policy_id': policy_id}),
+    })
 
 
 @login_required
@@ -97,4 +100,7 @@ def editor_akn(request, policy_id):
     # Verify that the policy is valid; 404 when not. We don't actually load
     # the document content as they'll be retrieved from the API
     policy_or_404(policy_id)
-    return render(request, 'document/editor_akn.html')
+    base_document_url = reverse('document', kwargs={'policy_id': policy_id})
+    return render(request, 'document/editor_akn.html', {
+        'document_url': f'{base_document_url}?format=akn',
+    })
