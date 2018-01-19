@@ -17,18 +17,25 @@ require('codemirror/theme/eclipse.css');
 require('codemirror/addon/dialog/dialog.css');
 
 const EDITOR_SEL = '#editor';
+const DOC_URL_ATTR = 'data-document-url';
+const AKN_CONTENT_TYPE = 'application/akn+xml';
 
-function saveDoc(data: string, path?: string) {
-  const pathParts = (path || window.location.href).split('/');
-  const policyId = pathParts[pathParts.length - 2];
+function fetchDoc() {
+  return axios({
+    method: 'GET',
+    url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
+    headers: { Accept: AKN_CONTENT_TYPE },
+  }).then(response => response.data);
+}
+
+function saveDoc(data: string) {
   return axios({
     data,
     method: 'put',
-    url: `/document/${policyId}`,
+    url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
     headers: {
-      'Content-Type': 'application/akn+xml',
-      'X-CSRFToken': getEl('[name=csrfmiddlewaretoken]')
-        .getAttribute('value'),
+      'Content-Type': AKN_CONTENT_TYPE,
+      'X-CSRFToken': getElAttr('[name=csrfmiddlewaretoken]', 'value'),
     },
   });
 }
@@ -66,10 +73,8 @@ function createEditor(value: string) {
 
 window.addEventListener('load', () => {
   setStatus('Loading document...');
-  axios.get(getElAttr(EDITOR_SEL, 'data-document-url'))
-    .then(response => response.data)
-    .then((value) => {
-      setStatus('Document loaded.');
-      createEditor(value);
-    }).catch(setStatusError);
+  fetchDoc().then((value) => {
+    setStatus('Document loaded.');
+    createEditor(value);
+  }).catch(setStatusError);
 });

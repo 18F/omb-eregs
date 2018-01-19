@@ -85,22 +85,20 @@ class TreeView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@login_required
-def editor(request, policy_id):
+def render_editor(request, policy_id, filename):
     # Verify that the policy is valid; 404 when not. We don't actually load
     # the document content as they'll be retrieved from the API
     policy_or_404(policy_id)
-    return render(request, 'document/editor.html', {
+    return render(request, filename, {
         'document_url': reverse('document', kwargs={'policy_id': policy_id}),
     })
 
 
 @login_required
+def editor(request, policy_id):
+    return render_editor(request, policy_id, 'document/editor.html')
+
+
+@login_required
 def editor_akn(request, policy_id):
-    # Verify that the policy is valid; 404 when not. We don't actually load
-    # the document content as they'll be retrieved from the API
-    policy_or_404(policy_id)
-    base_document_url = reverse('document', kwargs={'policy_id': policy_id})
-    return render(request, 'document/editor_akn.html', {
-        'document_url': f'{base_document_url}?format=akn',
-    })
+    return render_editor(request, policy_id, 'document/editor_akn.html')
