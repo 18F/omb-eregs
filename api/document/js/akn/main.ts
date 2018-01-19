@@ -69,15 +69,14 @@ function createEditor(value: string) {
     mode: 'xml',
     theme: 'eclipse',
     value,
-    extraKeys: {
-      'Ctrl-S': cm => {
-        setStatus("Saving...");
-        saveDoc(cm.getValue()).then(_ => {
-          setStatus(`Document saved at ${new Date()}.`);
-        }).catch(setStatusError);
-      }
-    },
   });
+
+  CodeMirror['commands'].save = cm => {
+    setStatus("Saving...");
+    saveDoc(cm.getValue()).then(_ => {
+      setStatus(`Document saved at ${new Date()}.`);
+    }).catch(setStatusError);
+  };
 }
 
 window.addEventListener('load', () => {
