@@ -11,14 +11,6 @@ import { getEl } from '../util';
 // We need to load our CSS via require() rather than import;
 // using the latter raises errors about not being able to find
 // the module.
-//
-// I *suspect* it is because ts-loader (the TypeScript plugin for
-// webpack) probably loads import statements on its own,
-// without going through webpack, and it doesn't know what to
-// do with non-standard kinds of imports like CSS, so using require()
-// likely bypasses TypeScript and goes straight to webpack, which
-// deals with it correctly. I could be wrong, though. -AV
-declare function require(path: string): null;
 
 require('codemirror/lib/codemirror.css');
 require('codemirror/theme/eclipse.css');
