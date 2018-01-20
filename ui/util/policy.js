@@ -17,6 +17,7 @@ export default class Policy {
     this.ombPolicyId = initial.ombPolicyId || initial.omb_policy_id || '';
     this.originalUrl = initial.originalUrl || initial.original_url || '';
     this.relevantReqs = initial.relevantReqs || initial.relevant_reqs || 0;
+    this.slug = initial.slug || '';
     this.title = initial.title || '';
     this.titleWithNumber = initial.titleWithNumber || initial.title_with_number || '';
     this.totalReqs = initial.totalReqs || initial.total_reqs || 0;
@@ -24,14 +25,14 @@ export default class Policy {
   }
 
   hasDocument() {
-    return this.ombPolicyId && this.hasDocnodes;
+    return this.hasDocnodes;
   }
 
   getDocumentLinkProps() {
     return {
       route: 'document',
       params: {
-        policyId: this.ombPolicyId,
+        policyId: this.ombPolicyId || this.slug,
       },
     };
   }

@@ -5,6 +5,7 @@ function policy(props = {}) {
     id: 1,
     has_docnodes: false,
     omb_policy_id: 'M-16-19',
+    slug: 'ew-a-slug',
     ...props,
   });
 }
@@ -32,10 +33,22 @@ describe('Policy', () => {
     it('returns link props with OMB policy id', () => {
       expect(policy({
         has_docnodes: true,
-        omb_policy_id: 'blarg',
+        omb_policy_id: 'blarg', // preferred
+        slug: 'something-else',
       }).getDocumentLinkProps()).toEqual({
         route: 'document',
         params: { policyId: 'blarg' },
+      });
+    });
+
+    it('returns link props with a slug', () => {
+      expect(policy({
+        has_docnodes: true,
+        omb_policy_id: '',
+        slug: 'some-slug-here',
+      }).getDocumentLinkProps()).toEqual({
+        route: 'document',
+        params: { policyId: 'some-slug-here' },
       });
     });
   });
