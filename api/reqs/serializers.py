@@ -42,6 +42,7 @@ class PolicySerializer(serializers.ModelSerializer):
             'policy_number',
             'policy_type',
             'relevant_reqs',
+            'slug',
             'sunset',
             'title',
             'title_with_number',
