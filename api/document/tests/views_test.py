@@ -50,7 +50,7 @@ def test_json_put_works_for_admin_users(admin_client):
 
     response = admin_client.put(f"/{policy.pk}", data=json.dumps(result),
                                 content_type='application/json')
-    assert response.status_code == 200
+    assert response.status_code == 204
 
     # Now fetch it again, and make sure our modification stuck.
     response = admin_client.get(f"/{policy.pk}")
@@ -78,7 +78,7 @@ def test_akn_put_works_for_admin_users(admin_client):
 
     response = admin_client.put(f"/{policy.pk}", data=xml,
                                 content_type='application/akn+xml')
-    assert response.status_code == 200
+    assert response.status_code == 204
 
     # Now fetch it again, and make sure our modification stuck.
     response = admin_client.get(f"/{policy.pk}")
@@ -184,17 +184,19 @@ def test_query_count(client):
         assert len(capture) == 12
 
 
+@pytest.mark.parametrize('path_suffix', ['', '/akn'])
 @pytest.mark.django_db
-def test_editor_requires_admin(client):
+def test_editor_requires_admin(client, path_suffix):
     mommy.make(Policy, omb_policy_id='M-11-22')
-    result = client.get('/admin/document-editor/M-11-22')
+    result = client.get(f'/admin/document-editor/M-11-22{path_suffix}')
     assert result.status_code == 302
 
 
+@pytest.mark.parametrize('path_suffix', ['', '/akn'])
 @pytest.mark.django_db
-def test_editor_checks_policy(admin_client):
+def test_editor_checks_policy(admin_client, path_suffix):
     mommy.make(Policy, omb_policy_id='M-11-22')
-    result = admin_client.get('/admin/document-editor/M-99-88')
+    result = admin_client.get(f'/admin/document-editor/M-99-88{path_suffix}')
     assert result.status_code == 404
-    result = admin_client.get('/admin/document-editor/M-11-22')
+    result = admin_client.get(f'/admin/document-editor/M-11-22{path_suffix}')
     assert result.status_code == 200

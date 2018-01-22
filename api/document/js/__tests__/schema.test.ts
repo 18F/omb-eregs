@@ -23,7 +23,7 @@ describe('unimplemented_node', () => {
 });
 
 describe('heading', () => {
-  [2, 3, 4, 5].forEach(depth => {
+  [2, 3, 4, 5].forEach((depth) => {
     const hTag = `H${depth}`;
 
     it(`uses the ${hTag} tag`, () => {

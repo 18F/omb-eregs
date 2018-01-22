@@ -23,7 +23,7 @@ def footnote_citation(cursor: JSONAwareCursor, content: PrimitiveDict,
     text = get_content_text(content['inlines'])
     referencing = list(cursor.filter(
         lambda m: m.node_type == 'footnote'
-        and m.type_emblem == text.strip()
+        and m.type_emblem == text.strip() or m.marker == text.strip()
     ))
     if not referencing:
         raise ValueError(f'unable to find footnote for citation {text}')

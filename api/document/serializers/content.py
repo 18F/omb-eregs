@@ -114,7 +114,7 @@ class InlinesField(NestableAnnotationField):
 
 class TextField(NestableAnnotationField):
     def __init__(self, is_leaf_node: bool) -> None:
-        super().__init__()
+        super().__init__(required=is_leaf_node)
         self.is_leaf_node = is_leaf_node
 
     @property
