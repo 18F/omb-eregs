@@ -11,6 +11,7 @@ import { getEl, getElAttr } from '../util';
 // We need to load our CSS via require() rather than import;
 // using the latter raises errors about not being able to find
 // the module.
+declare function require(path: string): null;
 
 require('codemirror/lib/codemirror.css');
 require('codemirror/theme/eclipse.css');

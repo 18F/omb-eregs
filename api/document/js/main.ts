@@ -14,6 +14,7 @@ import fetchDoc from './fetch-doc';
 // do with non-standard kinds of imports like CSS, so using require()
 // likely bypasses TypeScript and goes straight to webpack, which
 // deals with it correctly. I could be wrong, though. -AV
+declare function require(path: string): null;
 
 require('prosemirror-view/style/prosemirror.css');
 require('prosemirror-menu/style/menu.css');
