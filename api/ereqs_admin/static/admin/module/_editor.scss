@@ -1,0 +1,12 @@
+.editor-container {
+  border: 1px solid $color-black;
+
+  .unimplemented {
+    font-family: monospace;
+    background: lightpink;
+  }
+
+  div.unimplemented {
+    padding: 2px 4px;
+  }
+}

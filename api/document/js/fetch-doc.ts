@@ -9,6 +9,15 @@ export function convertNode(node) {
 }
 
 const NODE_TYPE_CONVERTERS = {
+  heading(node) {
+    // Duplicates logic in `ui`
+    const depth = node.identifier
+      .split('_')
+      .filter(e => e === 'sec')
+      .length + 1;
+    const text = (node.text || '').replace(/\s+/g, ' ');
+    return schema.nodes.heading.create({ depth }, schema.text(text));
+  },
   para(node) {
     const text = (node.text || '').replace(/\s+/g, ' ');
     const inlineContent = schema.nodes.inline.create({}, schema.text(text));
