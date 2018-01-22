@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { flatten } from 'lodash/array';
 import { Mark, Node } from 'prosemirror-model';
 
 import schema from './schema';
@@ -18,9 +19,9 @@ export function convertContent(content, marks: Mark[]): Node[] {
     content.content_type : 'unimplemented_mark';
   const mark = CONTENT_TYPE_CONVERTERS[contentType](content);
   const updatedMarks = marks.concat([mark]);
-  const children = (content.inlines || []).map(child =>
+  const nestedChildNodes = (content.inlines || []).map(child =>
     convertContent(child, updatedMarks));
-  return [].concat(...children);
+  return flatten(nestedChildNodes);
 }
 
 const NODE_TYPE_CONVERTERS = {
@@ -35,8 +36,7 @@ const NODE_TYPE_CONVERTERS = {
   },
   para(node) {
     const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
-    const empty: Node[] = [];
-    const inlineContent = schema.nodes.inline.create({}, empty.concat(...nested));
+    const inlineContent = schema.nodes.inline.create({}, flatten(nested));
     const childContent = (node.children || []).map(convertNode);
     return schema.nodes.para.create({}, [inlineContent].concat(childContent));
   },

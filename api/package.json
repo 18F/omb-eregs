@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/toolness/omb-pdfminer-fun#readme",
   "dependencies": {
+    "@types/lodash": "^4.14.93",
     "@types/prosemirror-commands": "^1.0.0",
     "@types/prosemirror-history": "^1.0.0",
     "@types/prosemirror-keymap": "^1.0.0",
@@ -30,6 +31,7 @@
     "@types/prosemirror-view": "^1.0.0",
     "axios": "^0.17.1",
     "css-loader": "0.28.7",
+    "lodash": "^4.17.4",
     "pdfjs-dist": "^2.0.185",
     "prosemirror-commands": "^1.0.3",
     "prosemirror-history": "^1.0.0",
