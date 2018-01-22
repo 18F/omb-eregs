@@ -9,7 +9,7 @@ import renderNode from '../../util/render-node';
 export default function Paragraph({ docNode }) {
   return (
     <div className="node-paragraph" id={docNode.identifier}>
-      <p className="m0">{ renderContents(docNode.content) }</p>
+      <p className="node-paragraph-text">{ renderContents(docNode.content) }</p>
       { docNode.children.map(renderNode) }
     </div>
   );
