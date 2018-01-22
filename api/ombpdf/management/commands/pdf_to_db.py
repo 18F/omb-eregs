@@ -1,12 +1,14 @@
 from argparse import FileType
 from pathlib import Path
 
+import reversion
 from django.core.management.base import BaseCommand, CommandError
 
 from document.management.commands.import_xml_doc import fetch_policy
 from document.models import DocNode
 from ombpdf.document import OMBDocument
 from ombpdf.semdb import to_db
+from reqs.models import WorkflowPhases
 
 
 class Command(BaseCommand):
@@ -26,10 +28,19 @@ class Command(BaseCommand):
         if policy is None:
             raise CommandError(f"Policy '{policy_name}' not found.")
 
-        self.stdout.write(f'Deleting any current document for "{policy}".')
-        DocNode.objects.filter(policy=policy).delete()
+        try:
+            self.stdout.write(f'Deleting any current document for "{policy}".')
+            DocNode.objects.filter(policy=policy).delete()
 
-        doc = OMBDocument.from_file(fp)
-        to_db(doc, policy)
+            doc = OMBDocument.from_file(fp)
+            to_db(doc, policy)
+
+            with reversion.create_revision():
+                policy.workflow_phase = WorkflowPhases.cleanup.name
+                policy.save()
+        except Exception:
+            with reversion.create_revision():
+                policy.workflow_phase = WorkflowPhases.failed.name
+                policy.save()
 
         self.stdout.write(f'Imported document for "{policy}" into database.')

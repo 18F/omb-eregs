@@ -48,6 +48,7 @@ class PolicySerializer(serializers.ModelSerializer):
             'total_reqs',
             'uri',
             'has_docnodes',
+            'workflow_phase',
         )
 
 

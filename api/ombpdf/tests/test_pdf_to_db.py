@@ -4,7 +4,7 @@ from django.core.management.base import CommandError
 from model_mommy import mommy
 
 from ombpdf.download_pdfs import download
-from reqs.models import Policy
+from reqs.models import Policy, WorkflowPhases
 
 pdf_path = None
 
@@ -28,4 +28,5 @@ def test_it_works():
     call_command('pdf_to_db', str(pdf_path))
 
     policy.refresh_from_db()
+    assert policy.workflow_phase == WorkflowPhases.cleanup.name
     assert policy.docnode_set.all().exists()
