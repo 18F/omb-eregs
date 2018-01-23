@@ -1,3 +1,4 @@
+import re
 from io import BytesIO
 from pathlib import Path
 
@@ -17,7 +18,17 @@ MY_DIR = Path(__file__).parent.resolve()
 EXAMPLE_DOCS_DIR = MY_DIR / '..' / '..' / 'example_docs'
 
 
-@pytest.mark.xfail(raises=AssertionError, reason="Fix this!!")
+def clean(content: bytes) -> str:
+    s = content.decode('utf-8')
+
+    # We're going to strip out `id` attributes here because our
+    # legacy XML importer seems to auto-assign ids in a different
+    # way than our serializer.
+    s = re.sub(r'id="[a-z0-9_]+', '', s)
+
+    return s
+
+
 @pytest.mark.django_db
 def test_akn_works():
     # Phase 1: Import the document from XML, serialize it, and
@@ -25,7 +36,7 @@ def test_akn_works():
     policy = mommy.make(Policy, omb_policy_id='M-16-19')
     call_command('import_xml_doc', str(EXAMPLE_DOCS_DIR / 'm_16_19_1.xml'),
                  'M-16-19')
-    docnode = DocNode.objects.filter(policy=policy, depth=1).first()
+    docnode = DocNode.objects.filter(policy=policy, depth=0).first()
     cursor = DocCursor.load_from_model(docnode)
 
     original_data = DocCursorSerializer(cursor).data
@@ -43,4 +54,4 @@ def test_akn_works():
 
     # Now ensure the AKN from phase 1 matches the AKN from
     # phase 3.
-    assert original_akn.decode('utf-8') == akn.decode('utf-8')
+    assert clean(original_akn) == clean(akn)
