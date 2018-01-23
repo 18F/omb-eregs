@@ -8,15 +8,6 @@ import 'codemirror/addon/dialog/dialog.js';
 import { getEl, getElAttr } from '../util';
 
 
-// We need to load our CSS via require() rather than import;
-// using the latter raises errors about not being able to find
-// the module.
-declare function require(path: string): null;
-
-require('codemirror/lib/codemirror.css');
-require('codemirror/theme/eclipse.css');
-require('codemirror/addon/dialog/dialog.css');
-
 const EDITOR_SEL = '#editor';
 const DOC_URL_ATTR = 'data-document-url';
 const AKN_CONTENT_TYPE = 'application/akn+xml';
