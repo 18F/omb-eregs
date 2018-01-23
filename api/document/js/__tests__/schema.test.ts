@@ -21,3 +21,15 @@ describe('unimplemented_node', () => {
     expect(result.textContent).toBe('[no-node-type]');
   });
 });
+
+describe('heading', () => {
+  [2, 3, 4, 5].forEach((depth) => {
+    const hTag = `H${depth}`;
+
+    it(`uses the ${hTag} tag`, () => {
+      const node = schema.nodes.heading.create({ depth });
+      const result = serializer.serializeNode(node);
+      expect(result.nodeName).toBe(hTag);
+    });
+  });
+});

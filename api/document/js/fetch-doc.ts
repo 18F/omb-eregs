@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { flatten } from 'lodash/array';
+import { Mark, Node } from 'prosemirror-model';
 
 import schema from './schema';
 
@@ -8,10 +10,33 @@ export function convertNode(node) {
   return NODE_TYPE_CONVERTERS[nodeType](node);
 }
 
+export function convertContent(content, marks: Mark[]): Node[] {
+  if (content.content_type === '__text__') {
+    const text = (content.text || '').replace(/\s+/g, ' ');
+    return [schema.text(text, marks)];
+  }
+  const contentType = content.content_type in CONTENT_TYPE_CONVERTERS ?
+    content.content_type : 'unimplemented_mark';
+  const mark = CONTENT_TYPE_CONVERTERS[contentType](content);
+  const updatedMarks = marks.concat([mark]);
+  const nestedChildNodes = (content.inlines || []).map(child =>
+    convertContent(child, updatedMarks));
+  return flatten(nestedChildNodes);
+}
+
 const NODE_TYPE_CONVERTERS = {
-  para(node) {
+  heading(node) {
+    // Duplicates logic in `ui`
+    const depth = node.identifier
+      .split('_')
+      .filter(e => e === 'sec')
+      .length + 1;
     const text = (node.text || '').replace(/\s+/g, ' ');
-    const inlineContent = schema.nodes.inline.create({}, schema.text(text));
+    return schema.nodes.heading.create({ depth }, schema.text(text));
+  },
+  para(node) {
+    const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
+    const inlineContent = schema.nodes.inline.create({}, flatten(nested));
     const childContent = (node.children || []).map(convertNode);
     return schema.nodes.para.create({}, [inlineContent].concat(childContent));
   },
@@ -23,10 +48,11 @@ const NODE_TYPE_CONVERTERS = {
     schema.nodes.unimplemented_node.create({ data: node }),
 };
 
-export default function fetchDoc(path?: string) {
-  const pathParts = (path || window.location.href).split('/');
-  const policyId = pathParts[pathParts.length - 1];
-  return axios.get(`/document/${policyId}`)
-    .then(response => convertNode(response.data));
-}
+const CONTENT_TYPE_CONVERTERS = {
+  unimplemented_mark: content =>
+    schema.marks.unimplemented_mark.create({ data: content }),
+};
 
+export default function fetchDoc(path: string) {
+  return axios.get(path).then(response => convertNode(response.data));
+}

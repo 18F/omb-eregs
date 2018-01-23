@@ -103,6 +103,20 @@ def test_add_content_one_tag():
         b'<content><stuff>some things</stuff></content>')
 
 
+def test_add_content_attrib():
+    xml_el = etree.fromstring('<content />')
+    renderers.add_content(
+        [{
+            'content_type': 'stuff',
+            'href': 'http://bop',
+            'inlines': [],
+        }],
+        xml_el
+    )
+    assert etree.tostring(xml_el) == (
+        b'<content><stuff href="http://bop"/></content>')
+
+
 def test_add_content_nested():
     content = [
         {'content_type': '__text__', 'text': 'Beginning '},

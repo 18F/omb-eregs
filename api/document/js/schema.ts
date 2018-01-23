@@ -7,17 +7,24 @@ const schema = new Schema({
     },
     inline: {
       content: 'text+',
-      toDOM: () => ['p', 0],
+      toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
+    },
+    heading: {
+      content: 'text+',
+      attrs: {
+        depth: {}, // will hold the header depth
+      },
+      toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
     },
     para: {
       content: 'inline? block*',
       group: 'block',
-      toDOM: () => ['div', 0],
+      toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
     sec: {
       content: 'block+',
       group: 'block',
-      toDOM: () => ['section', 0],
+      toDOM: () => ['section', { class: 'node-section' }, 0],
     },
     text: {},
     unimplemented_node: {
@@ -33,7 +40,7 @@ const schema = new Schema({
     },
   },
   marks: {
-    unimplemented_content: {
+    unimplemented_mark: {
       attrs: {
         data: {}, // will hold unrendered content
       },

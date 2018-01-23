@@ -57,5 +57,8 @@ class AkomaNtosoParser(BaseParser):
     media_type = 'application/akn+xml'
 
     def parse(self, stream, media_type=None, parser_context=None):
-        root = etree.fromstring(stream.read().decode('utf-8'))
+        try:
+            root = etree.fromstring(stream.read().decode('utf-8'))
+        except etree.XMLSyntaxError as e:
+            raise ParseError(f'XML syntax error - {e}')
         return convert_node(root)

@@ -41,7 +41,8 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'module/tables';
 @import 'module/external-link';
 @import 'module/styleguide';
-@import 'module/node-heading';
+@import 'shared-styles/module/heading';
+@import 'shared-styles/module/paragraph';
 
 @import 'state/print';
 @import 'state/ie';
