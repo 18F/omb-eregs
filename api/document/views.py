@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from rest_framework import status
@@ -8,29 +7,12 @@ from rest_framework.parsers import JSONParser
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 
-from document.models import DocNode, FootnoteCitation, InlineRequirement
+from document.models import DocNode
 from document.parsers import AkomaNtosoParser
 from document.renderers import AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer
 from document.serializers.doc_cursor import DocCursorSerializer
 from document.tree import DocCursor
 from reqs.views.policies import policy_or_404
-
-
-def optimize(queryset):
-    """To avoid the "n+1" query problem, we will optimize our querysets by
-    either joining 1-to-1 relations (via select_related) or ensuring a single
-    query for many-to-many relations (via prefetch_related)."""
-    footnote_prefetch = Prefetch(
-        'footnotecitations',
-        queryset=FootnoteCitation.objects.select_related('footnote_node'),
-    )
-    requirement_prefetch = Prefetch(
-        'inlinerequirements',
-        queryset=InlineRequirement.objects.select_related('requirement'),
-    )
-    return queryset.\
-        prefetch_related(footnote_prefetch, 'cites', 'externallinks',
-                         requirement_prefetch)
 
 
 class TreeView(GenericAPIView):
@@ -51,11 +33,11 @@ class TreeView(GenericAPIView):
             query_args['depth'] = 0
         queryset = DocNode.objects
         if prefetch_related:
-            queryset = optimize(queryset)
+            queryset = queryset.prefetch_annotations()
         root_doc = get_object_or_404(queryset, **query_args)
         root = DocCursor.load_from_model(root_doc, subtree=False)
         if prefetch_related:
-            root.add_models(optimize(root_doc.descendants()))
+            root.add_models(root_doc.descendants().prefetch_annotations())
         return root
 
     def get_serializer_context(self):
