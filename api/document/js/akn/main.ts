@@ -47,10 +47,10 @@ function setStatusError(e: Error) {
   if (data) {
     errMsg += '\n' + JSON.stringify(data, null, 2);
   }
-  setStatus(errMsg, 'error');
+  setStatus(errMsg, 'editor-status-error');
 }
 
-function setStatus(msg: string, className: 'error'|'' = '') {
+function setStatus(msg: string, className: 'editor-status-error'|'' = '') {
   const status = getEl('#status');
   status.textContent = msg;
   status.className = className;
