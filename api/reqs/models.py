@@ -149,7 +149,7 @@ class Policy(models.Model):
         return self.requirements.prefetch_related('topics').distinct()
 
     @property
-    def has_docnodes(self):
+    def has_document(self):
         return self.workflow_phase == WorkflowPhases.published.name
 
     def __str__(self):

@@ -36,7 +36,7 @@ class PolicySerializer(serializers.ModelSerializer):
             'id',
             'issuance',
             'issuing_body',
-            'has_docnodes',
+            'has_document',
             'omb_policy_id',
             'original_url',
             'policy_number',

@@ -33,7 +33,7 @@ def test_original_url():
     assert policy.original_url == 'http://example.com/uploaded'
 
 
-@pytest.mark.parametrize('phase, has_docnodes', (
+@pytest.mark.parametrize('phase, has_document', (
     (models.WorkflowPhases.edit, False),
     (models.WorkflowPhases.cleanup, False),
     (models.WorkflowPhases.failed, False),
@@ -41,9 +41,9 @@ def test_original_url():
     (models.WorkflowPhases.published, True),
     (models.WorkflowPhases.review, False),
 ))
-def test_has_docnodes(phase, has_docnodes):
+def test_has_document(phase, has_document):
     policy = models.Policy(workflow_phase=phase.name)
-    assert policy.has_docnodes is has_docnodes
+    assert policy.has_document is has_document
 
 
 @pytest.mark.django_db

@@ -10,7 +10,7 @@ const DATE_FORMAT = 'MMMM D, YYYY';
 
 export default class Policy {
   constructor(initial) {
-    this.hasDocnodes = initial.hasDocnodes || initial.has_docnodes || false;
+    this.hasDocument = initial.hasDocument || initial.has_document || false;
     this.id = initial.id || '';
     this.issuance = initial.issuance || '';
     this.issuingBody = initial.issuingBody || initial.issuing_body || '';
@@ -22,10 +22,6 @@ export default class Policy {
     this.titleWithNumber = initial.titleWithNumber || initial.title_with_number || '';
     this.totalReqs = initial.totalReqs || initial.total_reqs || 0;
     Object.freeze(this);
-  }
-
-  hasDocument() {
-    return this.hasDocnodes;
   }
 
   getDocumentLinkProps() {
