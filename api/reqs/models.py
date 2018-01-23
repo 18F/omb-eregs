@@ -4,8 +4,6 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy
 
-from document.models import DocNode
-
 
 class Agency(models.Model):
     class Meta:
@@ -107,22 +105,10 @@ class Office(models.Model):
         return self.name
 
 
-class PolicyQueryset(models.QuerySet):
-    def annotate_with_has_docnodes(self):
-        """We frequently want to filter a Policy queryset by whether or not
-        the policies have associated DocNodes. This annotates a queryset with
-        that data."""
-
-        subquery = DocNode.objects.filter(policy=models.OuterRef('pk'))
-        return self.annotate(has_docnodes=models.Exists(subquery))
-
-
 class Policy(models.Model):
     class Meta:
         verbose_name_plural = ugettext_lazy('Policies')
         ordering = ['policy_number']
-
-    objects = PolicyQueryset.as_manager()
 
     policy_number = models.IntegerField(unique=True)
     title = models.CharField(max_length=1024)
@@ -161,6 +147,10 @@ class Policy(models.Model):
     @property
     def requirements_with_topics(self):
         return self.requirements.prefetch_related('topics').distinct()
+
+    @property
+    def has_docnodes(self):
+        return self.workflow_phase == WorkflowPhases.published.name
 
     def __str__(self):
         text = self.title_with_number

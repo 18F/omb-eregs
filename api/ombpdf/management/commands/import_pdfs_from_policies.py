@@ -55,9 +55,13 @@ def import_pdfs_from_policies() -> Tuple[Set[str], Set[str]]:
     """Attempt to import document text from all pdf policies which haven't
     already been imported."""
     successes, failures = set(), set()
-    query = Policy.objects.annotate_with_has_docnodes() \
-        .filter(uri__endswith='.pdf',
-                has_docnodes=False)  # not replacing data
+    query = Policy.objects.filter(
+        uri__endswith='.pdf',
+        workflow_phase__in=(    # not replacing data
+            WorkflowPhases.no_doc.name,
+            WorkflowPhases.failed.name,
+        ),
+    )
     for policy in query:
         ident = f"{policy.pk}: {policy.title_with_number}"
         with reversion.create_revision():
