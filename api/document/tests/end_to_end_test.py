@@ -1,4 +1,3 @@
-import re
 from io import BytesIO
 from pathlib import Path
 
@@ -16,17 +15,6 @@ from reqs.models import Policy
 MY_DIR = Path(__file__).parent.resolve()
 
 EXAMPLE_DOCS_DIR = MY_DIR / '..' / '..' / 'example_docs'
-
-
-def clean(content: bytes) -> str:
-    s = content.decode('utf-8')
-
-    # We're going to strip out `id` attributes here because our
-    # legacy XML importer seems to auto-assign ids in a different
-    # way than our serializer.
-    s = re.sub(r'id="[a-z0-9_]+', '', s)
-
-    return s
 
 
 def get_cursor_for_policy(policy: Policy) -> DocCursor:
@@ -62,4 +50,4 @@ def test_akn_works():
 
     # Now ensure the AKN from phase 1 matches the AKN from
     # phase 3.
-    assert clean(original_akn) == clean(akn)
+    assert original_akn.decode('utf-8') == akn.decode('utf-8')
