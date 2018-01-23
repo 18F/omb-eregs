@@ -41,7 +41,7 @@ const NODE_TYPE_CONVERTERS = {
     return schema.nodes.para.create({}, [inlineContent].concat(childContent));
   },
   policy: node =>
-    schema.nodes.doc.create({}, (node.children || []).map(convertNode)),
+    schema.nodes.policy.create({}, (node.children || []).map(convertNode)),
   sec: node =>
     schema.nodes.sec.create({}, (node.children || []).map(convertNode)),
   unimplemented_node: node =>
