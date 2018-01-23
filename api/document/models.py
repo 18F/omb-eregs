@@ -4,6 +4,27 @@ from typing import Iterator, List
 from django.db import models
 
 
+class DocNodeQuerySet(models.QuerySet):
+    def prefetch_annotations(self):
+        '''
+        To avoid the "n+1" query problem, we will optimize our querysets by
+        either joining 1-to-1 relations (via select_related) or ensuring a
+        single query for many-to-many relations (via prefetch_related).
+        '''
+
+        footnote_prefetch = models.Prefetch(
+            'footnotecitations',
+            queryset=FootnoteCitation.objects.select_related('footnote_node'),
+        )
+        requirement_prefetch = models.Prefetch(
+            'inlinerequirements',
+            queryset=InlineRequirement.objects.select_related('requirement'),
+        )
+        return self.\
+            prefetch_related(footnote_prefetch, 'cites', 'externallinks',
+                             requirement_prefetch)
+
+
 class DocNode(models.Model):
     '''
     Represents a node in a document.
@@ -38,6 +59,8 @@ class DocNode(models.Model):
     left = models.PositiveIntegerField()
     right = models.PositiveIntegerField()
     depth = models.PositiveIntegerField()
+
+    objects = DocNodeQuerySet.as_manager()
 
     class Meta:
         unique_together = ('policy', 'identifier')
