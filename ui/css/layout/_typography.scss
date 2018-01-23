@@ -2,37 +2,6 @@
 // ==========================================================================
 // typography.scss contains both global and application specific typography
 
-// Basic font mixins
-@mixin font-san-serif() {
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-style: normal;
-}
-
-@mixin font-san-serif-bold() {
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-weight: 800;
-}
-
-@mixin font-san-serif-light() {
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-weight: 300;
-}
-
-@mixin font-serif() {
-  font-family: "Georgia", serif;
-  font-style: normal;
-}
-
-@mixin font-serif-bold() {
-  font-family: "Georgia", serif;
-  font-weight: 800;
-}
-
-@mixin font-serif-light() {
-  font-family: "Georgia", serif;
-  font-weight: 300;
-}
-
 body {
   @include font-san-serif();
 }
