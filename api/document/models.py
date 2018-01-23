@@ -25,6 +25,12 @@ class DocNodeQuerySet(models.QuerySet):
                              requirement_prefetch)
 
 
+# Django's `PositiveIntegerField` is named in a very misleading way,
+# because it actually allows values of 0. For developers who aren't
+# aware of this oddity, we'll alias it to something more accurate.
+NonNegativeIntegerField = models.PositiveIntegerField
+
+
 class DocNode(models.Model):
     '''
     Represents a node in a document.
@@ -56,9 +62,9 @@ class DocNode(models.Model):
     # relational database as per the nested set model:
     #
     # https://en.wikipedia.org/wiki/Nested_set_model
-    left = models.PositiveIntegerField()
-    right = models.PositiveIntegerField()
-    depth = models.PositiveIntegerField()
+    left = NonNegativeIntegerField()
+    right = NonNegativeIntegerField()
+    depth = NonNegativeIntegerField()
 
     objects = DocNodeQuerySet.as_manager()
 
@@ -96,8 +102,8 @@ class Annotation(models.Model):
 
     doc_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='%(class)ss')
-    start = models.PositiveIntegerField()    # inclusive; within doc_node.text
-    end = models.PositiveIntegerField()      # exclusive; within doc_node.text
+    start = NonNegativeIntegerField()  # inclusive; within doc_node.text
+    end = NonNegativeIntegerField()    # exclusive; within doc_node.text
 
     class Meta:
         abstract = True
