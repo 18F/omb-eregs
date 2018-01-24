@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Callable, DefaultDict, Dict, Iterator, List, Tuple, Type
 
-from document.models import Annotation, ExternalLink, FootnoteCitation
+from document.models import Annotation, Cite, ExternalLink, FootnoteCitation
 from document.tree import JSONAwareCursor, PrimitiveDict
 
 Annotator = Callable[
@@ -41,6 +41,14 @@ def external_link(cursor: JSONAwareCursor, content: PrimitiveDict,
         end=start + get_content_length(content['inlines']),
         href=content['href']
     )
+
+
+@annotator
+def cite(cursor: JSONAwareCursor, content: PrimitiveDict,
+         start: int) -> Cite:
+    text = get_content_text(content['inlines'])
+    return Cite(doc_node=cursor.model, start=start,
+                end=start + len(text))
 
 
 AnnotationDict = DefaultDict[Type[Annotation], List[Annotation]]
