@@ -22,7 +22,7 @@ export default class Api {
   contentType: string;
   csrfToken: string;
 
-  constructor(url: string, contentType: string, csrfToken: string) {
+  constructor({ contentType, csrfToken, url }) {
     this.url = url;
     this.contentType = contentType;
     this.csrfToken = csrfToken;

@@ -8,11 +8,11 @@ const EDITOR_SEL = '#editor';
 const DOC_URL_ATTR = 'data-document-url';
 
 window.addEventListener('load', () => {
-  const api = new Api(
-    getElAttr(EDITOR_SEL, DOC_URL_ATTR),
-    'application/json',
-    getElAttr('[name=csrfmiddlewaretoken]', 'value'),
-  );
+  const api = new Api({
+    contentType: 'application/json',
+    csrfToken: getElAttr('[name=csrfmiddlewaretoken]', 'value'),
+    url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
+  });
 
   api.fetch().then((data) => {
     const state = createEditorState(data, api);

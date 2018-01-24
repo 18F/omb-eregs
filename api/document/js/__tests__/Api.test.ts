@@ -16,7 +16,11 @@ function mockSetStatus() {
   return textContent;
 }
 
-const api = new Api('http://example.com/path', 'c-type', 'some-token');
+const api = new Api({
+  contentType: 'c-type',
+  csrfToken: 'some-token',
+  url: 'http://example.com/path',
+});
 
 describe('fetch()', () => {
   it('passes the correct args', () => {

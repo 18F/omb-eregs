@@ -24,11 +24,11 @@ function createEditor(value: string, api: Api) {
 }
 
 window.addEventListener('load', () => {
-  const api = new Api(
-    getElAttr(EDITOR_SEL, DOC_URL_ATTR),
-    AKN_CONTENT_TYPE,
-    getElAttr('[name=csrfmiddlewaretoken]', 'value'),
-  );
+  const api = new Api({
+    contentType: AKN_CONTENT_TYPE,
+    csrfToken: getElAttr('[name=csrfmiddlewaretoken]', 'value'),
+    url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
+  });
 
   api.fetch().then(data => createEditor(data, api));
 });
