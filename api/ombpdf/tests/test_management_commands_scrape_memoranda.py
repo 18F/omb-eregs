@@ -94,7 +94,7 @@ def test_scrape_memoranda(monkeypatch):
 
     for i in range(1, 5):
         workflow_phase = WorkflowPhases.no_doc.name
-        if i == 1:  # Immitate a policy having "already" been processed
+        if i == 1:  # Imitate a policy having "already" been processed
             workflow_phase = WorkflowPhases.published.name
         mommy.make(Policy, omb_policy_id=f'M-0{i}-0{i}',
                    workflow_phase=workflow_phase)

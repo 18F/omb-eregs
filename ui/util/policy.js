@@ -10,7 +10,8 @@ const DATE_FORMAT = 'MMMM D, YYYY';
 
 export default class Policy {
   constructor(initial) {
-    this.hasDocument = initial.hasDocument || initial.has_document || false;
+    this.hasPublishedDocument =
+      initial.hasPublishedDocument || initial.has_published_document || false;
     this.id = initial.id || '';
     this.issuance = initial.issuance || '';
     this.issuingBody = initial.issuingBody || initial.issuing_body || '';

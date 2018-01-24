@@ -13,7 +13,7 @@ export default function PolicyView({ policy, topicsIds }) {
   const countClass = relevantReqCount === '99+' ? 'ninety-nine-plus' : '';
   let policyTitle = policy.titleWithNumber;
 
-  if (policy.hasDocument) {
+  if (policy.hasPublishedDocument) {
     policyTitle = (
       <Link {...policy.getDocumentLinkProps()}>
         {policyTitle}
