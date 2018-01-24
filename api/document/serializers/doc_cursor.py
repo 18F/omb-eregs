@@ -139,15 +139,11 @@ class DocCursorSerializer(serializers.Serializer):
             if f['content_type'] == 'footnote_citation'
         ]
 
-        unresolved_citations = [
-            c for c in citations
-            if c not in footnote_emblems
-        ]
-
-        for citation in unresolved_citations:
-            raise ValidationError(
-                f"Citation for '{citation}' has no matching footnote"
-            )
+        for citation in citations:
+            if citation not in footnote_emblems:
+                raise ValidationError(
+                    f"Citation for '{citation}' has no matching footnote"
+                )
 
     def validate_footnote_emblems(self, data: PrimitiveDict) -> Set[str]:
         footnote_emblems = [
