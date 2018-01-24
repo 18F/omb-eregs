@@ -34,6 +34,12 @@ const NODE_TYPE_CONVERTERS = {
     const text = (node.text || '').replace(/\s+/g, ' ');
     return schema.nodes.heading.create({ depth }, schema.text(text));
   },
+  list: node =>
+    schema.nodes.list.create({}, (node.children || []).map(parseDoc)),
+  listitem: node => schema.nodes.listitem.create({}, [
+    schema.nodes.listitemMarker.create({}, schema.text(node.marker)),
+    schema.nodes.listitemBody.create({}, (node.children || []).map(parseDoc)),
+  ]),
   para(node) {
     const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
     const inlineContent = schema.nodes.inline.create({}, flatten(nested));

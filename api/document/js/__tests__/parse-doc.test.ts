@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import parseDoc, { convertContent } from '../parse-doc';
+import { apiFactory } from '../serialize-doc';
 
 jest.mock('axios');
 
@@ -58,6 +59,46 @@ describe('parseDoc()', () => {
     expect(result.attrs.depth).toBe(3);
     expect(result.content.childCount).toBe(1);
     expect(result.content.child(0).text).toBe('Some heading');
+  });
+
+  it('loads lists', () => {
+    const node = apiFactory.node('list', { children: [
+      apiFactory.node('listitem', {
+        marker: 'aaa',
+        children: [
+          apiFactory.node('para', { content: [apiFactory.text('p1-of-a')] }),
+        ],
+      }),
+      apiFactory.node('listitem', {
+        marker: 'bbb',
+        children: [
+          apiFactory.node('para', { content: [apiFactory.text('p1-of-b')] }),
+          apiFactory.node('para', { content: [apiFactory.text('p1-of-b')] }),
+        ],
+      }),
+    ] });
+
+    const result = parseDoc(node);
+    expect(result.type.name).toBe('list');
+    expect(result.content.childCount).toBe(2);
+    const lis = [result.content.child(0), result.content.child(1)];
+    expect(lis.map(li => li.type.name)).toEqual(['listitem', 'listitem']);
+    expect(lis.map(li => li.content.childCount)).toEqual([2, 2]);
+
+    const markers = lis.map(li => li.content.child(0));
+    expect(markers.map(m => m.type.name)).toEqual(
+      ['listitemMarker', 'listitemMarker']);
+    expect(markers.map(m => m.textContent)).toEqual(['aaa', 'bbb']);
+
+    const [body1, body2] = lis.map(li => li.content.child(1));
+    expect(body1.type.name).toBe('listitemBody');
+    expect(body1.content.childCount).toBe(1);
+    expect(body1.content.child(0).type.name).toBe('para');
+
+    expect(body2.type.name).toBe('listitemBody');
+    expect(body2.content.childCount).toBe(2);
+    expect(body2.content.child(0).type.name).toBe('para');
+    expect(body2.content.child(1).type.name).toBe('para');
   });
 
   describe('unimplemented_node', () => {
