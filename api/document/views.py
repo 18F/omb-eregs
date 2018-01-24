@@ -67,20 +67,23 @@ class TreeView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-def render_editor(request, policy_id, filename):
+def render_editor(request, policy_id, filename, title):
     # Verify that the policy is valid; 404 when not. We don't actually load
     # the document content as they'll be retrieved from the API
     policy_or_404(policy_id)
     return render(request, filename, {
         'document_url': reverse('document', kwargs={'policy_id': policy_id}),
+        'title': title,
     })
 
 
 @login_required
 def editor(request, policy_id):
-    return render_editor(request, policy_id, 'document/editor.html')
+    return render_editor(request, policy_id, 'document/editor.html',
+                         'Document Editor')
 
 
 @login_required
 def editor_akn(request, policy_id):
-    return render_editor(request, policy_id, 'document/editor_akn.html')
+    return render_editor(request, policy_id, 'document/editor_akn.html',
+                         'Akoma Ntoso Editor')

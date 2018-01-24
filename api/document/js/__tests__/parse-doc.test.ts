@@ -1,20 +1,10 @@
 import axios from 'axios';
 
-import fetchDoc, { convertContent, convertNode } from '../fetch-doc';
+import parseDoc, { convertContent } from '../parse-doc';
 
 jest.mock('axios');
 
-describe('fetchDoc()', () => {
-  it('raises 404, etc. Eventually we will catch them', () => {
-    const error404: any = new Error('Not Found');
-    error404.response = { status: 404 };
-
-    axios.get = jest.fn(() => { throw error404; });
-    expect(() => fetchDoc('/admin/document-editor/M-12-34')).toThrow(error404);
-  });
-});
-
-describe('convertNode()', () => {
+describe('parseDoc()', () => {
   it('handles the root', () => {
     const node = {
       node_type: 'policy',
@@ -24,7 +14,7 @@ describe('convertNode()', () => {
       ],
     };
 
-    const result = convertNode(node);
+    const result = parseDoc(node);
 
     expect(result.type.name).toBe('policy');
     expect(result.content.childCount).toBe(2);
@@ -45,7 +35,7 @@ describe('convertNode()', () => {
       children: [{ node_type: 'unknown-child' }],
     };
 
-    const result = convertNode(node);
+    const result = parseDoc(node);
     expect(result.type.name).toBe('para');
     expect(result.content.childCount).toBe(2);
     expect(result.content.child(0).type.name).toBe('inline');
@@ -63,7 +53,7 @@ describe('convertNode()', () => {
       text: 'Some heading',
     };
 
-    const result = convertNode(node);
+    const result = parseDoc(node);
     expect(result.type.name).toBe('heading');
     expect(result.attrs.depth).toBe(3);
     expect(result.content.childCount).toBe(1);
@@ -82,7 +72,7 @@ describe('convertNode()', () => {
         ],
       };
 
-      const result = convertNode(node);
+      const result = parseDoc(node);
       expect(result.type.name).toBe('unimplemented_node');
       expect(result.attrs).toEqual({ data: node });
       expect(result.content.childCount).toBe(0);

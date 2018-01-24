@@ -8,11 +8,17 @@
       rel="stylesheet"
       type="text/css"
     />
-    <title>Document editor</title>
+    <title>{{ title }}</title>
   </head>
   <body>
-    <h1>Document editor</h1>
+    <h1>{{ title }}</h1>
+    <pre id="status"></pre>
     <div class="editor-container" id="editor" data-document-url="{{ document_url }}"></div>
-    <script src="{% static 'bundles/js/document.main.bundle.js' %}"></script>
+    {% csrf_token %}
+    {% block instructions %}
+    {% endblock %}
+    {% block editor-js %}
+      <script src="{% static 'bundles/js/document.main.bundle.js' %}"></script>
+    {% endblock %}
   </body>
 </html>
