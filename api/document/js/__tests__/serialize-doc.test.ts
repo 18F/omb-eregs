@@ -1,10 +1,10 @@
 import { Fragment } from 'prosemirror-model';
 
-import { apiFactory, convertNode, convertTexts } from '../save-doc';
+import serializeDoc, { apiFactory, convertTexts } from '../serialize-doc';
 import schema from '../schema';
 
 
-describe('convertNode()', () => {
+describe('serializeDoc()', () => {
   it('converts nested nodes', () => {
     const node = schema.nodes.policy.create({}, [
       schema.nodes.sec.create({}, [
@@ -20,7 +20,7 @@ describe('convertNode()', () => {
       ),
     ]);
 
-    const result = convertNode(node);
+    const result = serializeDoc(node);
     expect(result).toEqual(apiFactory.node('policy', {
       children: [
         apiFactory.node('sec', {
@@ -51,7 +51,7 @@ describe('convertNode()', () => {
       { depth: 2 }, // this will be ignored
       schema.text('Stuff stuff'),
     );
-    const result = convertNode(node);
+    const result = serializeDoc(node);
     expect(result).toEqual({
       node_type: 'heading',
       children: [],
@@ -63,7 +63,7 @@ describe('convertNode()', () => {
     const node = schema.nodes.unimplemented_node.create({
       data: { some: 'random', attrs: 'here' },
     });
-    const result = convertNode(node);
+    const result = serializeDoc(node);
     expect(result).toEqual({ some: 'random', attrs: 'here' });
   });
 });
