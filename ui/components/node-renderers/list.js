@@ -6,7 +6,7 @@ import renderNode from '../../util/render-node';
 
 export default function List({ docNode }) {
   return (
-    <ol className="list-reset node-list" id={docNode.identifier}>
+    <ol className="node-list" id={docNode.identifier}>
       { docNode.children.map(renderNode) }
     </ol>
   );

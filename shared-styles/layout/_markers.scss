@@ -4,11 +4,12 @@ $marker-width-desktop: $marker-width-mobile + 8;
 $marker-whitespace-desktop: $marker-whitespace-mobile + 4;
 
 @mixin paragraph-marker() {
-  @extend .col;
-  @extend .right-align;
-  width: $marker-width-mobile;
-  margin-right: $marker-whitespace-mobile;
+  @include col(1);
+
   display: inline-block;
+  margin-right: $marker-whitespace-mobile;
+  text-align: right;
+  width: $marker-width-mobile;
 
   @media #{$on-desktop} {
     width: $marker-width-desktop;
@@ -17,8 +18,8 @@ $marker-whitespace-desktop: $marker-whitespace-mobile + 4;
 }
 
 @mixin paragraph-with-marker() {
-  @extend .col;
-  @extend .col-11;
+  @include col(11);
+
   width: calc(100% - #{$marker-width-mobile + $marker-whitespace-mobile});
   word-wrap: break-word;
 
