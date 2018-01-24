@@ -1,8 +1,9 @@
 import { Schema } from 'prosemirror-model';
 
 const schema = new Schema({
+  topNode: 'policy',
   nodes: {
-    doc: {
+    policy: {
       content: 'block+',
     },
     inline: {
