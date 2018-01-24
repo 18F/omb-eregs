@@ -4,6 +4,8 @@ from pathlib import Path
 import pytest
 from django.core.management import call_command
 from model_mommy import mommy
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 
 from document.models import DocNode
 from document.parsers import AkomaNtosoParser
@@ -25,29 +27,33 @@ def get_cursor_for_policy(policy: Policy) -> DocCursor:
     return cursor
 
 
+@pytest.mark.parametrize("parser_class,renderer_class", [
+    (AkomaNtosoParser, AkomaNtosoRenderer),
+    (JSONParser, JSONRenderer),
+])
 @pytest.mark.django_db
-def test_akn_works():
+def test_end_to_end(parser_class, renderer_class):
     # Phase 1: Import the document from XML, serialize it, and
-    # render it to AKN.
+    # render it.
     policy = mommy.make(Policy, omb_policy_id='M-16-19')
     call_command('import_xml_doc', str(EXAMPLE_DOCS_DIR / 'm_16_19_1.xml'),
                  'M-16-19')
     cursor = get_cursor_for_policy(policy)
 
     original_data = DocCursorSerializer(cursor).data
-    original_akn = AkomaNtosoRenderer().render(original_data)
+    original_rendered = renderer_class().render(original_data)
 
-    # Phase 2: Parse the AKN, deserialize it, and save it.
-    parsed_akn_data = AkomaNtosoParser().parse(BytesIO(original_akn))
-    serializer = DocCursorSerializer(cursor, data=parsed_akn_data)
+    # Phase 2: Parse the rendering, deserialize it, and save it.
+    parsed_data = parser_class().parse(BytesIO(original_rendered))
+    serializer = DocCursorSerializer(cursor, data=parsed_data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
-    # Phase 3: Re-serialize the document and render it to AKN.
+    # Phase 3: Re-serialize the document and render it.
     cursor = get_cursor_for_policy(policy)
     data = DocCursorSerializer(cursor).data
-    akn = AkomaNtosoRenderer().render(data)
+    rendered = renderer_class().render(data)
 
-    # Now ensure the AKN from phase 1 matches the AKN from
+    # Now ensure the rendering from phase 1 matches the one from
     # phase 3.
-    assert original_akn.decode('utf-8') == akn.decode('utf-8')
+    assert original_rendered.decode('utf-8') == rendered.decode('utf-8')

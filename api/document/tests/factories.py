@@ -43,3 +43,10 @@ def footnote(marker: int, content=List[PrimitiveDict],
         "content": content,
         "children": children or [],
     }
+
+
+def cite(inlines: List[PrimitiveDict]) -> PrimitiveDict:
+    return {
+        "content_type": "cite",
+        "inlines": inlines,
+    }
