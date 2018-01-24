@@ -26,21 +26,15 @@ describe('serializeDoc()', () => {
         apiFactory.node('sec', {
           children: [
             apiFactory.node('heading', {
-              content: [
-                apiFactory.content('__text__', { text: 'Some heading' }),
-              ],
+              content: [apiFactory.text('Some heading')],
             }),
             apiFactory.node('para', {
-              content: [
-                apiFactory.content('__text__', { text: 'First paragraph' }),
-              ],
+              content: [apiFactory.text('First paragraph')],
             }),
           ],
         }),
         apiFactory.node('para', {
-          content: [
-            apiFactory.content('__text__', { text: 'A later paragraph' }),
-          ],
+          content: [apiFactory.text('A later paragraph')],
         }),
       ],
     }));
@@ -55,7 +49,7 @@ describe('serializeDoc()', () => {
     expect(result).toEqual({
       node_type: 'heading',
       children: [],
-      content: [{ content_type: '__text__', inlines: [], text: 'Stuff stuff' }],
+      content: [apiFactory.text('Stuff stuff')],
     });
   });
 
@@ -98,18 +92,18 @@ describe('convertTexts()', () => {
     ]));
 
     expect(result).toEqual([
-      apiFactory.content('__text__', { text: 'Some ' }),
+      apiFactory.text('Some '),
       apiFactory.content('one', {
         outer: 'thing',
         inlines: [apiFactory.content('two', {
           inner: 'here',
           inlines: [apiFactory.content('three', {
             most: 'deep',
-            inlines: [apiFactory.content('__text__', { text: 'nested' })],
+            inlines: [apiFactory.text('nested')],
           })],
         })],
       }),
-      apiFactory.content('__text__', { text: ' content' }),
+      apiFactory.text(' content'),
     ]);
   });
 });

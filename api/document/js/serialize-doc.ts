@@ -32,6 +32,11 @@ export const apiFactory = {
       ...(overrides || {}),
     };
   },
+  text: value => ({
+    content_type: '__text__',
+    inlines: [],
+    text: value,
+  }),
 };
 
 
@@ -75,7 +80,7 @@ export default function serializeDoc(node: Node): ApiNode {
 // of nested annotations to wrap each chunk of text.
 export function nestMarks(text: string, marks: Mark[]): ApiContent {
   if (marks.length === 0) {
-    return apiFactory.content('__text__', { text });
+    return apiFactory.text(text);
   }
   const mark = marks[0];
   const converted = MARK_CONVERTERS[mark.type.name](mark);
