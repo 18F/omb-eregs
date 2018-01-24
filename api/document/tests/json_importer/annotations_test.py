@@ -4,7 +4,7 @@ import pytest
 
 from document.json_importer.annotations import derive_annotations
 from document.json_importer.importer import convert_node
-from document.models import ExternalLink, FootnoteCitation
+from document.models import Cite, ExternalLink, FootnoteCitation
 
 from .. import factories as f
 
@@ -97,3 +97,17 @@ def test_derive_annotations_raises_err_on_invalid_annotation():
     with pytest.raises(ValueError,
                        match="no annotator found for blarg"):
         derive_annotations(para)
+
+
+def test_derive_annotations_works_with_cite():
+    annos = derive_annotations(convert_node(f.para(content=[
+        f.text('Hello '),
+        f.cite([f.text('Federal STEM Education 5-Year Strategic Plan')])
+    ])))
+
+    assert len(annos) == 1
+    assert len(annos[Cite]) == 1
+    cite = annos[Cite][0]
+    assert cite.start == len('Hello ')
+    assert cite.end == cite.start + len(
+        'Federal STEM Education 5-Year Strategic Plan')
