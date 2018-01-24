@@ -2,9 +2,10 @@ import argparse
 import logging
 
 from django.core.management.base import BaseCommand
-from lxml import etree
 
-from document.xml_importer.importer import import_xml_doc
+from document.parsers import AkomaNtosoParser
+from document.serializers.doc_cursor import DocCursorSerializer
+from document.tree import DocCursor
 from reqs.models import Policy
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,14 @@ def fetch_policy(identifier: str):
         return Policy.objects.filter(pk=identifier).first()
     else:
         return Policy.objects.filter(omb_policy_id=identifier).first()
+
+
+def import_xml_doc(policy, xmlstream):
+    parsed_data = AkomaNtosoParser().parse(xmlstream)
+    cursor = DocCursor.new_tree('', policy=policy)
+    serializer = DocCursorSerializer(cursor, data=parsed_data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
 
 
 class Command(BaseCommand):
@@ -41,5 +50,4 @@ class Command(BaseCommand):
         if not policy:
             logger.warning('No such policy, %s', kwargs['POLICY'])
         else:
-            xml = etree.parse(kwargs['INPUT_FILE']).getroot()
-            import_xml_doc(policy, xml)
+            import_xml_doc(policy, kwargs['INPUT_FILE'])
