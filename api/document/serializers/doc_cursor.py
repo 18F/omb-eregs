@@ -131,12 +131,25 @@ class DocCursorSerializer(serializers.Serializer):
         )
         return MetaSerializer(meta, context={'parent_serializer': self}).data
 
-    def validate_footnotes(self, data: PrimitiveDict):
+    def validate_footnote_citations(self, data: PrimitiveDict,
+                                    footnote_emblems: Set[str]):
         citations = [
             util.get_content_text(f['inlines']).strip()
             for f in util.iter_inlines(data['content'])
             if f['content_type'] == 'footnote_citation'
         ]
+
+        unresolved_citations = [
+            c for c in citations
+            if c not in footnote_emblems
+        ]
+
+        for citation in unresolved_citations:
+            raise ValidationError(
+                f"Citation for '{citation}' has no matching footnote"
+            )
+
+    def validate_footnote_emblems(self, data: PrimitiveDict) -> Set[str]:
         footnote_emblems = [
             f['type_emblem'] for f in util.iter_children(data['children'])
             if f['node_type'] == 'footnote'
@@ -147,22 +160,15 @@ class DocCursorSerializer(serializers.Serializer):
                 f"Multiple footnotes exist with type emblem '{emblem}'"
             )
 
-        unresolved_citations = [
-            c for c in citations
-            if c not in set(footnote_emblems)
-        ]
-
-        for citation in unresolved_citations:
-            raise ValidationError(
-                f"Citation for '{citation}' has no matching footnote"
-            )
+        return set(footnote_emblems)
 
     def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
         data = super().to_internal_value(data)
         if data['node_type'] == 'footnote' and not data.get('type_emblem'):
             raise ValidationError('Footnotes must have type emblems')
         if self.is_root:
-            self.validate_footnotes(data)
+            footnote_emblems = self.validate_footnote_emblems(data)
+            self.validate_footnote_citations(data, footnote_emblems)
         return data
 
     def update(self, instance: DocCursor,
