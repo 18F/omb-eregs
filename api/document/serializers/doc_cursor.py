@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set, Tuple  # noqa
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -24,7 +24,7 @@ class ChildrenField(DocCursorField):
         ).data
 
     def validate_type_emblem_uniqueness(self, data: List[PrimitiveDict]):
-        seen = set()
+        seen: Set[Tuple[str, str]] = set()
         for child in data:
             if 'type_emblem' not in child:
                 continue
