@@ -3,8 +3,9 @@ import Policy from '../../util/policy';
 function policy(props = {}) {
   return new Policy({
     id: 1,
-    has_docnodes: false,
+    has_published_document: false,
     omb_policy_id: 'M-16-19',
+    slug: 'ew-a-slug',
     ...props,
   });
 }
@@ -18,24 +19,38 @@ describe('Policy', () => {
     expect(policy({ id: 4 }).id).toBe(4);
   });
 
-  describe('hasDocument()', () => {
+  describe('hasPublishedDocument', () => {
     it('returns false if the policy has no document', () => {
-      expect(policy({ has_docnodes: false }).hasDocument()).toBe(false);
+      const pol = policy({ has_published_document: false });
+      expect(pol.hasPublishedDocument).toBe(false);
     });
 
     it('returns true if the policy has a document', () => {
-      expect(policy({ has_docnodes: true }).hasDocument()).toBe(true);
+      const pol = policy({ has_published_document: true });
+      expect(pol.hasPublishedDocument).toBe(true);
     });
   });
 
   describe('getDocumentLinkProps()', () => {
     it('returns link props with OMB policy id', () => {
       expect(policy({
-        has_docnodes: true,
-        omb_policy_id: 'blarg',
+        has_published_document: true,
+        omb_policy_id: 'blarg', // preferred
+        slug: 'something-else',
       }).getDocumentLinkProps()).toEqual({
         route: 'document',
         params: { policyId: 'blarg' },
+      });
+    });
+
+    it('returns link props with a slug', () => {
+      expect(policy({
+        has_published_document: true,
+        omb_policy_id: '',
+        slug: 'some-slug-here',
+      }).getDocumentLinkProps()).toEqual({
+        route: 'document',
+        params: { policyId: 'some-slug-here' },
       });
     });
   });

@@ -4,7 +4,6 @@ from unittest.mock import Mock
 import pytest
 from model_mommy import mommy
 
-from document.models import DocNode
 from ombpdf.management.commands import scrape_memoranda
 from reqs.models import Policy, WorkflowPhases
 
@@ -94,9 +93,11 @@ def test_scrape_memoranda(monkeypatch):
         lambda p, _: not p.omb_policy_id.endswith('3')
 
     for i in range(1, 5):
-        policy = mommy.make(Policy, omb_policy_id=f'M-0{i}-0{i}')
-        if i == 1:     # Immitate a policy having "already" been processed
-            mommy.make(DocNode, policy=policy)
+        workflow_phase = WorkflowPhases.no_doc.name
+        if i == 1:  # Imitate a policy having "already" been processed
+            workflow_phase = WorkflowPhases.published.name
+        mommy.make(Policy, omb_policy_id=f'M-0{i}-0{i}',
+                   workflow_phase=workflow_phase)
 
     successes, failures = scrape_memoranda.scrape_memoranda()
     # M-01-01 has a docnode, so is ignored

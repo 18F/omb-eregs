@@ -64,9 +64,13 @@ def scrape_memoranda() -> Tuple[Set[MemoId], Set[MemoId]]:
     pdf listed on OMB's site."""
     successes, failures = set(), set()
     url_by_num = scrape_urls()
-    query = Policy.objects.annotate_with_has_docnodes() \
-        .filter(omb_policy_id__in=url_by_num.keys(),
-                has_docnodes=False)     # not replacing data
+    query = Policy.objects.filter(
+        omb_policy_id__in=url_by_num.keys(),
+        workflow_phase__in=(    # not replacing data
+            WorkflowPhases.no_doc.name,
+            WorkflowPhases.failed.name,
+        ),
+    )
     for policy in query:
         if parse_pdf(policy, url_by_num[policy.omb_policy_id]):
             successes.add(policy.omb_policy_id)

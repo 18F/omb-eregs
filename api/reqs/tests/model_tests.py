@@ -33,6 +33,19 @@ def test_original_url():
     assert policy.original_url == 'http://example.com/uploaded'
 
 
+@pytest.mark.parametrize('phase, has_published_document', (
+    (models.WorkflowPhases.edit, False),
+    (models.WorkflowPhases.cleanup, False),
+    (models.WorkflowPhases.failed, False),
+    (models.WorkflowPhases.no_doc, False),
+    (models.WorkflowPhases.published, True),
+    (models.WorkflowPhases.review, False),
+))
+def test_has_published_document(phase, has_published_document):
+    policy = models.Policy(workflow_phase=phase.name)
+    assert policy.has_published_document is has_published_document
+
+
 @pytest.mark.django_db
 def test_slug_is_created_from_title_on_save_if_slug_is_empty():
     policy = mommy.prepare(models.Policy, title="hello there", slug="")
