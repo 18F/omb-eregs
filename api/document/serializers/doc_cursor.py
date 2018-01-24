@@ -88,6 +88,7 @@ class DocCursorSerializer(serializers.Serializer):
     # required by our API; if not supplied, they will be auto-generated.
     type_emblem = serializers.CharField(
         max_length=DocNode._meta.get_field('type_emblem').max_length,
+        validators=DocNode._meta.get_field('type_emblem').validators,
         required=False,
     )
 

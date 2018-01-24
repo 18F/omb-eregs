@@ -300,3 +300,11 @@ def test_content_field_to_internal_value_works():
         'inlines': [],
         **text,
     }]
+
+
+def test_invalid_type_emblem_raises_validation_error():
+    serializer = doc_cursor.DocCursorSerializer(data={'type_emblem': '?#@$'})
+    assert not serializer.is_valid()
+    assert serializer.errors['type_emblem'] == [
+        'Only alphanumeric characters are allowed.'
+    ]
