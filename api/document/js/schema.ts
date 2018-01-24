@@ -1,4 +1,24 @@
-import { Schema } from 'prosemirror-model';
+import { NodeSpec, Schema } from 'prosemirror-model';
+
+const listSchemaNodes: { [name: string]: NodeSpec } = {
+  list: {
+    content: 'listitem+',
+    group: 'block',
+    toDOM: () => ['ol', { class: 'node-list' }, 0],
+  },
+  listitem: {
+    content: 'listitemMarker listitemBody',
+    toDOM: () => ['li', { class: 'node-list-item' }, 0],
+  },
+  listitemMarker: {
+    content: 'text+',
+    toDOM: () => ['span', { class: 'list-item-marker' }, 0],
+  },
+  listitemBody: {
+    content: 'block+',
+    toDOM: () => ['div', { class: 'list-item-text' }, 0],
+  },
+};
 
 const schema = new Schema({
   topNode: 'policy',
@@ -39,6 +59,7 @@ const schema = new Schema({
         return ['div', { class: 'unimplemented' }, nodeType];
       },
     },
+    ...listSchemaNodes,
   },
   marks: {
     unimplemented_mark: {
