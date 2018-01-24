@@ -5,9 +5,13 @@ from rest_framework import renderers
 
 from document.serializers.content import PlainTextSerializer
 
-# Properties of content nodes that should be converted to XML
+# Properties of content nodes that should *not* be converted to XML
 # attributes.
-CONTENT_ATTRIBS = ['href']
+NON_CONTENT_ATTRIBS = ['content_type', 'text']
+
+# Values of content nodes that are convertible to XML attributes.
+# They will be converted via `str()`.
+CONTENT_ATTRIB_TYPES = (str, int)
 
 
 def node_to_xml(serialized_node: Dict,
@@ -51,8 +55,9 @@ def add_content(serialized_content: List[Dict], parent: etree.Element) -> None:
         if content['content_type'] != PlainTextSerializer.CONTENT_TYPE:
             child = etree.SubElement(parent, content['content_type'])
             for key, value in content.items():
-                if key in CONTENT_ATTRIBS:
-                    child.attrib[key] = value
+                if (isinstance(value, CONTENT_ATTRIB_TYPES) and
+                        key not in NON_CONTENT_ATTRIBS):
+                    child.attrib[key] = str(value)
             add_content(content['inlines'], child)
             previous = child
         # parent.text vs previous.tail is a nuance of lxml
