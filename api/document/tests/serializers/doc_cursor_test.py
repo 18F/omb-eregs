@@ -2,6 +2,7 @@ from datetime import date
 
 import pytest
 from model_mommy import mommy
+from rest_framework.exceptions import ValidationError
 
 from document.models import DocNode
 from document.serializers import doc_cursor
@@ -294,9 +295,34 @@ def test_children_field_to_internal_value_works():
     assert doc_cursor.ChildrenField().to_internal_value([para]) == [para]
 
 
+def test_children_field_type_emblem_uniqueness_is_validated():
+    para = f.para([])
+
+    doc_cursor.ChildrenField().to_internal_value([
+        {'type_emblem': 'a', **para},
+        {'type_emblem': 'b', **para},
+    ])
+
+    err_msg = ("Multiple occurrences of 'para' with emblem 'a' "
+               "exist as siblings")
+    with pytest.raises(ValidationError, match=err_msg):
+        doc_cursor.ChildrenField().to_internal_value([
+            {'type_emblem': 'a', **para},
+            {'type_emblem': 'a', **para},
+        ])
+
+
 def test_content_field_to_internal_value_works():
     text = f.text('boop')
     assert doc_cursor.ContentField().to_internal_value([text]) == [{
         'inlines': [],
         **text,
     }]
+
+
+def test_invalid_type_emblem_raises_validation_error():
+    serializer = doc_cursor.DocCursorSerializer(data={'type_emblem': '?#@$'})
+    assert not serializer.is_valid()
+    assert serializer.errors['type_emblem'] == [
+        'Only alphanumeric characters are allowed.'
+    ]

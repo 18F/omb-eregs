@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Set, Tuple  # noqa
 
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from document.json_importer.importer import import_json_doc
 from document.models import DocNode
@@ -22,12 +23,27 @@ class ChildrenField(DocCursorField):
             context={**self.context, 'is_root': False},
         ).data
 
+    def validate_type_emblem_uniqueness(self, data: List[PrimitiveDict]):
+        seen: Set[Tuple[str, str]] = set()
+        for child in data:
+            if 'type_emblem' not in child:
+                continue
+            node, emb = child['node_type'], child['type_emblem']
+            if (node, emb) in seen:
+                raise ValidationError(
+                    f"Multiple occurrences of '{node}' with emblem "
+                    f"'{emb}' exist as siblings"
+                )
+            seen.add((node, emb))
+
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
         serializer = DocCursorSerializer(
             context={**self.context, 'is_root': False},
         )
-        return [serializer.to_internal_value(item) for item in data]
+        children = [serializer.to_internal_value(item) for item in data]
+        self.validate_type_emblem_uniqueness(children)
+        return children
 
 
 class ContentField(DocCursorField):
@@ -88,6 +104,7 @@ class DocCursorSerializer(serializers.Serializer):
     # required by our API; if not supplied, they will be auto-generated.
     type_emblem = serializers.CharField(
         max_length=DocNode._meta.get_field('type_emblem').max_length,
+        validators=DocNode._meta.get_field('type_emblem').validators,
         required=False,
     )
 

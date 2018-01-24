@@ -1,6 +1,7 @@
 import itertools
 from typing import Iterator, List
 
+from django.core.validators import RegexValidator
 from django.db import models
 
 
@@ -46,12 +47,18 @@ class DocNode(models.Model):
     '''
 
     policy = models.ForeignKey('reqs.Policy', on_delete=models.CASCADE)
-    # e.g. part_447__subpart_A__sec_1__para_b
+    # e.g. part_447__subpart_A__sec_1__para_b.
     identifier = models.CharField(max_length=1024)
     # e.g. para
     node_type = models.CharField(max_length=64)
     # e.g. b
-    type_emblem = models.CharField(max_length=16)
+    type_emblem = models.CharField(
+        max_length=16,
+        validators=[RegexValidator(
+            r'[A-Za-z0-9]+',
+            message="Only alphanumeric characters are allowed."
+        )]
+    )
     text = models.TextField(blank=True)
     # e.g. "(a)", "From:", "1.", "•"
     marker = models.CharField(max_length=64, blank=True)
