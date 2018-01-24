@@ -43,6 +43,8 @@ def convert_node(xml_el: etree.Element) -> PrimitiveDict:
     }
     ensure_at_most_one_child_has_tag(xml_el, 'content')
     ensure_at_most_one_child_has_tag(xml_el, 'num')
+    if 'emblem' in xml_el.attrib:
+        data['type_emblem'] = xml_el.attrib['emblem']
     for child in xml_el:
         if child.tag == 'content':
             data['content'] = convert_content(child)

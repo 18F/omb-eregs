@@ -33,6 +33,9 @@ def node_to_xml(serialized_node: Dict,
 def add_node_attrs(serialized_node: Dict, xml_el: etree.Element) -> None:
     """Set attributes corresponding to the serialized node's fields."""
     xml_el.set('id', serialized_node['identifier'])
+
+    if serialized_node.get('type_emblem'):
+        xml_el.set('emblem', serialized_node['type_emblem'])
     if serialized_node['marker']:
         num = etree.SubElement(xml_el, 'num')
         num.text = serialized_node['marker']
