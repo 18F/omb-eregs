@@ -51,7 +51,7 @@ function defaultNodeConverter(node): ApiNode {
     if (child.type === schema.nodes.inline) {
       content = convertTexts(child.content);
     } else {
-      children.push(convertNode(child));
+      children.push(serializeDoc(child));
     }
   });
   return apiFactory.node(
@@ -66,7 +66,7 @@ const MARK_CONVERTERS = {
 };
 
 
-export function convertNode(node: Node): ApiNode {
+export default function serializeDoc(node: Node): ApiNode {
   const converter = NODE_CONVERTERS[node.type.name] || defaultNodeConverter;
   return converter(node);
 }
@@ -89,9 +89,4 @@ export function convertTexts(textNodes: Fragment): ApiContent[] {
     result.push(nestMarks(textNode.text || '', textNode.marks));
   });
   return result;
-}
-
-export default function saveDoc(state) {
-  console.log(convertNode(state.doc));
-  return true;
 }

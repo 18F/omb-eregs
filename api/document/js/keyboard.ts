@@ -2,13 +2,14 @@ import { baseKeymap } from 'prosemirror-commands';
 import { undo, redo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 
-import saveDoc from './save-doc';
+import Api from './Api';
+import serializeDoc from './serialize-doc';
 
-const keyboard = keymap({
-  ...baseKeymap,
-  'Mod-z': undo,
-  'Shift-Mod-z': redo,
-  'Mod-s': saveDoc,
-});
-
-export default keyboard;
+export default function menu(api: Api) {
+  return keymap({
+    ...baseKeymap,
+    'Mod-z': undo,
+    'Shift-Mod-z': redo,
+    'Mod-s': async state => api.write(serializeDoc(state.doc)),
+  });
+}

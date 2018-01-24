@@ -1,29 +1,21 @@
 import { EditorView } from 'prosemirror-view';
 
-import { getEl, getElAttr } from './util';
+import Api from './Api';
 import createEditorState from './create-editor-state';
-import fetchDoc from './fetch-doc';
-
-// We need to load our CSS via require() rather than import;
-// using the latter raises errors about not being able to find
-// the module.
-//
-// I *suspect* it is because ts-loader (the TypeScript plugin for
-// webpack) probably loads import statements on its own,
-// without going through webpack, and it doesn't know what to
-// do with non-standard kinds of imports like CSS, so using require()
-// likely bypasses TypeScript and goes straight to webpack, which
-// deals with it correctly. I could be wrong, though. -AV
-declare function require(path: string): null;
-
-require('prosemirror-view/style/prosemirror.css');
-require('prosemirror-menu/style/menu.css');
+import { getEl, getElAttr } from './util';
 
 const EDITOR_SEL = '#editor';
+const DOC_URL_ATTR = 'data-document-url';
 
-window.addEventListener('load', async () => {
-  const doc = await fetchDoc(getElAttr(EDITOR_SEL, 'data-document-url'));
-  new EditorView(getEl(EDITOR_SEL), {
-    state: createEditorState(doc),
+window.addEventListener('load', () => {
+  const api = new Api({
+    contentType: 'application/json',
+    csrfToken: getElAttr('[name=csrfmiddlewaretoken]', 'value'),
+    url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
+  });
+
+  api.fetch().then((data) => {
+    const state = createEditorState(data, api);
+    new EditorView(getEl(EDITOR_SEL), { state });
   });
 });

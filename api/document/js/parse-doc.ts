@@ -4,7 +4,7 @@ import { Mark, Node } from 'prosemirror-model';
 
 import schema from './schema';
 
-export function convertNode(node) {
+export default function parseDoc(node): Node {
   const nodeType = node.node_type in NODE_TYPE_CONVERTERS ?
     node.node_type : 'unimplemented_node';
   return NODE_TYPE_CONVERTERS[nodeType](node);
@@ -37,13 +37,13 @@ const NODE_TYPE_CONVERTERS = {
   para(node) {
     const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
     const inlineContent = schema.nodes.inline.create({}, flatten(nested));
-    const childContent = (node.children || []).map(convertNode);
+    const childContent = (node.children || []).map(parseDoc);
     return schema.nodes.para.create({}, [inlineContent].concat(childContent));
   },
   policy: node =>
-    schema.nodes.policy.create({}, (node.children || []).map(convertNode)),
+    schema.nodes.policy.create({}, (node.children || []).map(parseDoc)),
   sec: node =>
-    schema.nodes.sec.create({}, (node.children || []).map(convertNode)),
+    schema.nodes.sec.create({}, (node.children || []).map(parseDoc)),
   unimplemented_node: node =>
     schema.nodes.unimplemented_node.create({ data: node }),
 };
@@ -52,7 +52,3 @@ const CONTENT_TYPE_CONVERTERS = {
   unimplemented_mark: content =>
     schema.marks.unimplemented_mark.create({ data: content }),
 };
-
-export default function fetchDoc(path: string) {
-  return axios.get(path).then(response => convertNode(response.data));
-}
