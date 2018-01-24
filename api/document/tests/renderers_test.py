@@ -108,13 +108,18 @@ def test_add_content_attrib():
     renderers.add_content(
         [{
             'content_type': 'stuff',
+            'text': 'zzz',
             'href': 'http://bop',
-            'inlines': [],
+            'k': 1,
+            'inlines': [{
+                'content_type': '__text__',
+                'text': 'zzz',
+            }],
         }],
         xml_el
     )
     assert etree.tostring(xml_el) == (
-        b'<content><stuff href="http://bop"/></content>')
+        b'<content><stuff href="http://bop" k="1">zzz</stuff></content>')
 
 
 def test_add_content_nested():
