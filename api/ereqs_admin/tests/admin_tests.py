@@ -95,7 +95,7 @@ def test_pdf_upload(admin_client):
     assert 'First Policy' in form_text
     assert not policy.document_source
     data = {
-        'policy_number': policy.policy_number,
+        'policy_number': '',
         'title': 'First Policy Edited',
         'slug': 'first-policy-edited',
         'uri': policy.uri,

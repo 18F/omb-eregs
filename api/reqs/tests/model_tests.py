@@ -17,11 +17,11 @@ def test_policy_title_with_number():
 
 def test_policy_str():
     """Should trim the policy title and add the policy number"""
-    policy = models.Policy(policy_number=5, title="Short", omb_policy_id="ID")
-    assert str(policy) == "(5) ID: Short"
+    policy = models.Policy(title="Short", omb_policy_id="ID")
+    assert str(policy) == "ID: Short"
 
     policy.title = "Long"*100
-    assert str(policy) == "(5) ID: {0}...".format("Long"*24)
+    assert str(policy) == "ID: {0}...".format("Long"*24)
 
 
 def test_original_url():

@@ -108,11 +108,11 @@ class Office(models.Model):
 class Policy(models.Model):
     class Meta:
         verbose_name_plural = ugettext_lazy('Policies')
-        ordering = ['policy_number']
+        ordering = ['policy_number', 'pk']
 
-    policy_number = models.IntegerField(unique=True)
+    policy_number = models.IntegerField(blank=True, null=True)
     title = models.CharField(max_length=1024)
-    uri = models.CharField(max_length=256)
+    uri = models.CharField(blank=True, max_length=256)
     omb_policy_id = models.CharField(max_length=64, blank=True)
     policy_type = models.CharField(
         max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
@@ -124,7 +124,7 @@ class Policy(models.Model):
     policy_status = models.CharField(max_length=256, blank=True)
     document_source = models.FileField(blank=True)
     public = models.BooleanField(default=True)
-    issuing_body = models.CharField(max_length=512)
+    issuing_body = models.CharField(blank=True, max_length=512)
     managing_offices = models.ManyToManyField(
         Office, blank=True, related_name='policies')
     workflow_phase = models.CharField(
@@ -156,7 +156,7 @@ class Policy(models.Model):
         text = self.title_with_number
         if len(text) > 100:
             text = text[:100] + '...'
-        return '({0}) {1}'.format(self.policy_number, text)
+        return text
 
     def save(self):
         if not self.slug:
