@@ -5,12 +5,14 @@
 @import '~prosemirror-menu/style/menu.css';
 
 @import '../shared-styles/base/colors';
+@import '../shared-styles/base/fonts';
 @import '../shared-styles/base/media-queries';
 @import '../shared-styles/base/spacing';
 @import '../shared-styles/base/type-size';
 @import '../shared-styles/base/util';
 @import '../shared-styles/module/heading';
 @import '../shared-styles/module/paragraph';
+@import './layout/typography';
 @import './module/editor';
 
 $nav-menu-active: false;

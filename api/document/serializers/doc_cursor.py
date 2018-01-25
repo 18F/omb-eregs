@@ -167,6 +167,9 @@ class DocCursorSerializer(serializers.Serializer):
             self.validate_footnote_citations(data, footnote_emblems)
         return data
 
+    def create(self, validated_data: PrimitiveDict) -> JSONAwareCursor:
+        return import_json_doc(self.context['policy'], validated_data)
+
     def update(self, instance: DocCursor,
                validated_data: PrimitiveDict) -> JSONAwareCursor:
         return import_json_doc(instance.policy, validated_data)

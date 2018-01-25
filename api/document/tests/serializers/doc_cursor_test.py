@@ -373,3 +373,17 @@ def test_invalid_type_emblem_raises_validation_error():
     assert serializer.errors['type_emblem'] == [
         'Only alphanumeric characters are allowed.'
     ]
+
+
+@pytest.mark.django_db
+def test_create_works():
+    policy = mommy.make(Policy)
+    serializer = doc_cursor.DocCursorSerializer(
+        data=f.para([f.text('hi')]),
+        context={'policy': policy},
+    )
+    serializer.is_valid(raise_exception=True)
+    cursor = serializer.save()
+
+    assert cursor.node_type == 'para'
+    assert cursor.text == 'hi'
