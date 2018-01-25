@@ -71,8 +71,7 @@ h4,
 
 h5,
 .h5 {
-  font-size: .875rem;
-  line-height: 1.312rem;
+  @include size-small();
 }
 
 h6,
