@@ -1,0 +1,32 @@
+
+#content  h1 {
+  font-weight: 500;
+  color: $color-black;
+  padding: $space-sm;
+  @include size-large();
+}
+
+.admin-interface {
+  .form-row label {
+    @include size-regular();
+    width: 100%;
+    background: none;
+    font-weight: 700;
+    color: $color-black;
+    padding-left: 0px;
+    padding-bottom: $space-xs;
+  }
+
+  .checkbox-row label {
+    width: auto;
+    padding-left: $space-sm;
+  }
+
+  .button,
+  input[type=submit],
+  input[type=button],
+  .submit-row input,
+  a.button {
+    padding: $space-xs $space;
+  }
+}

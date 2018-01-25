@@ -52,3 +52,19 @@ kbd {
 .menuitem-clickable {
   cursor: pointer;
 }
+
+.object-tools a {
+  border-radius: 3px;
+  background: $color-lt-gray;
+  color: $color-gray;
+  border: 1px solid $color-gray;
+  text-transform: none;
+}
+
+.admin-interface {
+
+  #changelist .paginator {
+    line-height: 30px;
+  }
+
+}

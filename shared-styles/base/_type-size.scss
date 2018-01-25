@@ -7,3 +7,8 @@
   font-size: .875rem;
   line-height: 1.312rem;
 }
+
+@mixin size-large() {
+  font-size: 1.5rem;
+  line-height: 1.875rem;
+}

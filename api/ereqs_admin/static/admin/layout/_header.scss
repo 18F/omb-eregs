@@ -1,0 +1,28 @@
+#header {
+  // Remove padding so our nav-menu can start at left:0
+  padding: 0;
+}
+
+.title-bar {
+  color: $color-white;
+  background: $color-gray;
+  margin-top: $banner-height;
+  padding: 0 $space;
+  width: 100%;
+
+  @if not($nav-menu-active) {
+    display: none;
+  }
+
+}
+
+// Add the padding back to *other* elements in the header
+#branding,
+#user-tools {
+  padding: $space-sm 40px;
+}
+
+.app-admin_interface,
+.admin-interface {
+  background: $color-very-lt-gray;
+}
