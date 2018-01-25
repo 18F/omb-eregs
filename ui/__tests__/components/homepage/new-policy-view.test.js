@@ -9,13 +9,11 @@ describe('<NewPolicyView />', () => {
     id: 42,
     title_with_number: 'Title with A Number',
     issuance: '1900-01-04',
-    issuing_body: 'Somebody',
   });
   const result = mount(<NewPolicyView policy={policy} />);
 
   it('includes expected fields', () => {
     expect(result.text()).toMatch(/Title with A Number/);
-    expect(result.text()).toMatch(/Somebody/);
     expect(result.text()).toMatch(/January 4, 1900/);
   });
   it('links to the right place', () => {

@@ -11,7 +11,7 @@ export default function NewPolicyView({ policy }) {
         { policy.titleWithNumber }
       </Link>
       <div className="h5">
-        { policy.issuingBody }, { policy.issuancePretty() }
+        { policy.issuancePretty() }
       </div>
     </li>
   );

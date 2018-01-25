@@ -34,7 +34,7 @@ export function policiesData({ query }) {
       endpoints.topics.withIds(query.requirements__all_agencies__id__in),
       endpoints.policies.withIds(query.id__in),
       endpoints.topics.withIds(query.requirements__topics__id__in),
-      endpoints.policies.fetch(Object.assign({ ordering: 'policy_number' }, query)),
+      endpoints.policies.fetch(query),
     ]);
     return {
       existingAgencies,
