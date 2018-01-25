@@ -3,5 +3,7 @@
 }
 
 .node-paragraph-text {
+  @include font-serif();
+
   margin: 0;
 }
