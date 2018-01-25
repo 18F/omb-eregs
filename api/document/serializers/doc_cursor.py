@@ -127,6 +127,9 @@ class DocCursorSerializer(serializers.Serializer):
         )
         return MetaSerializer(meta, context={'parent_serializer': self}).data
 
+    def create(self, validated_data: PrimitiveDict) -> JSONAwareCursor:
+        return import_json_doc(self.context['policy'], validated_data)
+
     def update(self, instance: DocCursor,
                validated_data: PrimitiveDict) -> JSONAwareCursor:
         return import_json_doc(instance.policy, validated_data)

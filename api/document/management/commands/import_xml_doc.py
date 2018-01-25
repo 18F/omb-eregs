@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 
 from document.parsers import AkomaNtosoParser
 from document.serializers.doc_cursor import DocCursorSerializer
-from document.tree import DocCursor
 from reqs.models import Policy
 
 logger = logging.getLogger(__name__)
@@ -20,8 +19,9 @@ def fetch_policy(identifier: str):
 
 def import_xml_doc(policy, xmlstream):
     parsed_data = AkomaNtosoParser().parse(xmlstream)
-    cursor = DocCursor.new_tree('', policy=policy)
-    serializer = DocCursorSerializer(cursor, data=parsed_data)
+    serializer = DocCursorSerializer(data=parsed_data, context={
+        'policy': policy
+    })
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
