@@ -295,6 +295,53 @@ def test_children_field_to_internal_value_works():
     assert doc_cursor.ChildrenField().to_internal_value([para]) == [para]
 
 
+def test_footnote_type_emblem_existence_is_validated():
+    serializer = doc_cursor.DocCursorSerializer()
+
+    footnote = f.footnote(1, [])
+
+    serializer.to_internal_value(footnote)
+
+    err_msg = "Footnotes must have type emblems"
+    with pytest.raises(ValidationError, match=err_msg):
+        del footnote['type_emblem']
+        serializer.to_internal_value(footnote)
+
+
+def test_footnote_type_emblem_uniqueness_is_validated():
+    serializer = doc_cursor.DocCursorSerializer()
+
+    serializer.to_internal_value(f.para([], children=[
+        f.footnote(1, []),
+        f.footnote(2, [])
+    ]))
+
+    err_msg = "Multiple footnotes exist with type emblem '1'"
+    with pytest.raises(ValidationError, match=err_msg):
+        serializer.to_internal_value(f.para([], children=[
+            f.para([], children=[f.footnote(1, [])]),
+            f.para([], children=[f.footnote(1, [])]),
+        ]))
+
+
+def test_footnote_citations_are_validated():
+    serializer = doc_cursor.DocCursorSerializer()
+
+    serializer.to_internal_value(f.para([
+        f.footnote_citation([f.text('1')]),
+    ], children=[
+        f.footnote(1, []),
+    ]))
+
+    err_msg = "Citation for '2' has no matching footnote"
+    with pytest.raises(ValidationError, match=err_msg):
+        serializer.to_internal_value(f.para([
+            f.footnote_citation([f.text('2')]),
+        ], children=[
+            f.footnote(1, []),
+        ]))
+
+
 def test_children_field_type_emblem_uniqueness_is_validated():
     para = f.para([])
 
