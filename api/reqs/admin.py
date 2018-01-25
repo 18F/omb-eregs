@@ -12,6 +12,8 @@ def is_extension_pdf(uploaded_file):
         raise ValidationError('The file must be a PDF.')
 
 
+# This form is temporarily no-longer used. We'll add it back with the pdf
+# upload workflow
 class PolicyForm(forms.ModelForm):
     document_source = forms.FileField(required=False,
                                       validators=[is_extension_pdf])
@@ -23,12 +25,18 @@ class PolicyForm(forms.ModelForm):
 
 @admin.register(Policy)
 class PolicyAdmin(EReqsVersionAdmin):
-    form = PolicyForm
-    filter_horizontal = ['managing_offices']
-    list_filter = ['policy_type', 'policy_status', 'public']
-    radio_fields = {'policy_type': admin.VERTICAL}
+    list_filter = ['public', 'workflow_phase']
     search_fields = ['title', 'omb_policy_id']
     prepopulated_fields = {"slug": ("title",)}
+    fields = [
+        'title',
+        'omb_policy_id',
+        'slug',
+        'issuance',
+        'sunset',
+        'public',
+        'workflow_phase',
+    ]
 
 
 @admin.register(Topic)
