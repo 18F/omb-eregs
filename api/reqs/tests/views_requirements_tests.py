@@ -56,24 +56,24 @@ def test_requirements_queryset_order():
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('params,req_ids,policy_numbers,result', (
+@pytest.mark.parametrize('params,req_ids,omb_policy_ids,result', (
     ('', (1, 2, 3), (10, 11, 12), ["1", "2", "3"]),
     ('ordering', (1, 2, 3), (10, 11, 12), ["1", "2", "3"]),
     ('ordering=', (1, 2, 3), (10, 11, 12), ["1", "2", "3"]),
     ('', (3, 2, 1), (10, 11, 12), ["1", "2", "3"]),
     ('ordering=-req_id', (2, 1, 3), (10, 11, 12), ["3", "2", "1"]),
-    ('ordering=policy__policy_number', (1, 2, 3), (20, 30, 10),
+    ('ordering=policy__omb_policy_id', (1, 2, 3), (20, 30, 10),
      ["3", "1", "2"]),
-    ('ordering=-policy__policy_number', (1, 2, 3), (20, 30, 10),
+    ('ordering=-policy__omb_policy_id', (1, 2, 3), (20, 30, 10),
      ["2", "1", "3"]),
 ), ids=repr)
-def test_requirements_ordered_by_key(params, req_ids, policy_numbers, result):
+def test_requirements_ordered_by_key(params, req_ids, omb_policy_ids, result):
     """
     We should be able to pass in arbitrary sort fields.
     """
     client = APIClient()
-    for req_id, policy_number in zip(req_ids, policy_numbers):
-        policy = mommy.make(Policy, policy_number=str(policy_number))
+    for req_id, omb_policy_id in zip(req_ids, omb_policy_ids):
+        policy = mommy.make(Policy, omb_policy_id=str(omb_policy_id))
         mommy.make(Requirement, req_id=str(req_id), policy=policy)
     path = "/requirements/?{0}".format(params)
     response = client.get(path)
@@ -84,17 +84,17 @@ def test_requirements_ordered_by_key(params, req_ids, policy_numbers, result):
 @pytest.mark.django_db
 @pytest.mark.parametrize('params,result', (
     ('req_id', ["1", "2", "3"]),
-    ('policy__policy_number', ["3", "1", "2"]),
-    ('policy__policy_number,-req_id', ["3", "2", "1"]),
-    ('policy__policy_number,verb', ["3", "2", "1"]),
-    ('policy__policy_number,req_id', ["3", "1", "2"]),
+    ('policy__omb_policy_id', ["3", "1", "2"]),
+    ('policy__omb_policy_id,-req_id', ["3", "2", "1"]),
+    ('policy__omb_policy_id,verb', ["3", "2", "1"]),
+    ('policy__omb_policy_id,req_id', ["3", "1", "2"]),
 ), ids=repr)
 def test_requirements_ordered_by_multiple_keys(params, result):
     """
     We should be able to pass in arbitrary sort fields.
     """
-    policy1 = mommy.make(Policy, policy_number="23")
-    policy2 = mommy.make(Policy, policy_number="17")
+    policy1 = mommy.make(Policy, omb_policy_id="23")
+    policy2 = mommy.make(Policy, omb_policy_id="17")
     mommy.make(Requirement, req_id=1, verb="zoot", policy=policy1)
     mommy.make(Requirement, req_id=2, verb="yo", policy=policy1)
     mommy.make(Requirement, req_id=3, verb="xi", policy=policy2)
@@ -120,7 +120,7 @@ def test_requirements_ordered_by_bad_key(params):
     """
     client = APIClient()
     for i in range(3):
-        policy = mommy.make(Policy, policy_number=str(10 - i))
+        policy = mommy.make(Policy, omb_policy_id=str(10 - i))
         mommy.make(Requirement, req_id=str(i), policy=policy)
     path = "/requirements/?ordering={0}".format(params)
     response = client.get(path)
