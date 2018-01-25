@@ -34,7 +34,7 @@ def footnote_citation(inlines: List[PrimitiveDict]) -> PrimitiveDict:
     }
 
 
-def footnote(marker: int, content=List[PrimitiveDict],
+def footnote(marker: int, content: List[PrimitiveDict],
              children: List[PrimitiveDict]=None) -> PrimitiveDict:
     return {
         "node_type": "footnote",
