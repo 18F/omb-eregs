@@ -1,4 +1,6 @@
-from typing import Iterator, List, Set, TypeVar  # noqa
+from typing import Iterator, List, Set, Type, TypeVar  # noqa
+
+from rest_framework.serializers import Field
 
 from document.tree import PrimitiveDict
 
@@ -43,3 +45,16 @@ def iter_inlines(inlines: List[PrimitiveDict]) -> Iterator[PrimitiveDict]:
     for inline in inlines:
         yield inline
         yield from iter_inlines(inline['inlines'])
+
+
+def list_to_internal_value(data: List[PrimitiveDict],
+                           field_class: Type[Field],
+                           *args, **kwargs) -> List[PrimitiveDict]:
+    # The only real reason this function exists is because
+    # the way DRF's `many=True` changes the type signatures of
+    # a serializer's methods is extremely hard/impossible to
+    # express as a type annotation. So this is really just a
+    # way to "twist mypy's arm" into annotating things the way we
+    # want.
+    serializer = field_class(*args, **{'many': True, **kwargs})
+    return serializer.to_internal_value(data)
