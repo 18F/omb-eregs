@@ -31,7 +31,7 @@ BILLION_LAUGHS_XML = """\
 
 
 def convert_xml_node(text: str) -> PrimitiveDict:
-    return parsers.convert_node(etree.fromstring(text))
+    return parsers.convert_node(etree.fromstring(text), sourcelines=False)
 
 
 def convert_content_node(text) -> List[PrimitiveDict]:
@@ -49,6 +49,7 @@ def test_parser_works():
         "node_type": "policy",
         "content": [],
         "children": [],
+        "_sourceline": 1,
     }
 
 
