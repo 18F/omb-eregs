@@ -1,6 +1,7 @@
 from typing import Iterator, List, Set, Type, TypeVar  # noqa
 
-from rest_framework.serializers import Field
+from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import Field, empty
 
 from document.tree import PrimitiveDict
 
@@ -58,3 +59,25 @@ def list_to_internal_value(data: List[PrimitiveDict],
     # want.
     serializer = field_class(*args, **{'many': True, **kwargs})
     return serializer.to_internal_value(data)
+
+
+class SourcelineErrorMixin:
+    '''
+    A mixin for DRF Serializers that adds metadata about the
+    source line number that validation errors originated
+    from, if possible.
+
+    In order for this to work, the data passed to the
+    Serializer must have source line number metadata.
+    '''
+
+    def run_validation(self, data=empty):
+        try:
+            return super().run_validation(data)  # type: ignore
+        except ValidationError as e:
+            if (isinstance(e.detail, dict) and
+                    '_sourceline' not in e.detail and
+                    isinstance(data, dict) and
+                    isinstance(data.get('_sourceline'), int)):
+                e.detail['_sourceline'] = data['_sourceline']
+            raise e

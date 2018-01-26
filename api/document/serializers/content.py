@@ -5,7 +5,8 @@ from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
-from document.serializers.util import list_to_internal_value
+from document.serializers.util import (SourcelineErrorMixin,
+                                       list_to_internal_value)
 from document.tree import DocCursor, PrimitiveDict
 from reqs.models import Requirement
 
@@ -167,7 +168,7 @@ class BaseAnnotationSerializer(serializers.Serializer):
         return result
 
 
-class NestedAnnotationSerializer(serializers.Serializer):
+class NestedAnnotationSerializer(SourcelineErrorMixin, serializers.Serializer):
     """Figures out which AnnotationSerializer to use when serializing
     content."""
     serializer_mapping: Dict[

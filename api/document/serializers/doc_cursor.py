@@ -63,7 +63,7 @@ class ContentField(DocCursorField):
         return util.list_to_internal_value(data, NestedAnnotationSerializer)
 
 
-class DocCursorSerializer(serializers.Serializer):
+class DocCursorSerializer(util.SourcelineErrorMixin, serializers.Serializer):
     """
     A Serializer for the DocCursor class.
 
