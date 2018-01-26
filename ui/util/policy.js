@@ -14,7 +14,6 @@ export default class Policy {
       initial.hasPublishedDocument || initial.has_published_document || false;
     this.id = initial.id || '';
     this.issuance = initial.issuance || '';
-    this.issuingBody = initial.issuingBody || initial.issuing_body || '';
     this.ombPolicyId = initial.ombPolicyId || initial.omb_policy_id || '';
     this.originalUrl = initial.originalUrl || initial.original_url || '';
     this.relevantReqs = initial.relevantReqs || initial.relevant_reqs || 0;

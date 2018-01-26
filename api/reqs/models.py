@@ -108,29 +108,31 @@ class Office(models.Model):
 class Policy(models.Model):
     class Meta:
         verbose_name_plural = ugettext_lazy('Policies')
-        ordering = ['policy_number']
+        ordering = ['policy_number', 'pk']
 
-    policy_number = models.IntegerField(unique=True)
     title = models.CharField(max_length=1024)
-    uri = models.CharField(max_length=256)
     omb_policy_id = models.CharField(max_length=64, blank=True)
-    policy_type = models.CharField(
-        max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
-        blank=True
-    )
     slug = models.SlugField(max_length=title.max_length)
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
-    policy_status = models.CharField(max_length=256, blank=True)
-    document_source = models.FileField(blank=True)
     public = models.BooleanField(default=True)
-    issuing_body = models.CharField(max_length=512)
-    managing_offices = models.ManyToManyField(
-        Office, blank=True, related_name='policies')
     workflow_phase = models.CharField(
         max_length=32, choices=[(e.name, e.value) for e in WorkflowPhases],
         default=WorkflowPhases.no_doc.name
     )
+
+    # Legacy data fields
+    policy_number = models.IntegerField(blank=True, null=True)
+    uri = models.CharField(blank=True, max_length=256)
+    policy_type = models.CharField(
+        max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
+        blank=True
+    )
+    policy_status = models.CharField(max_length=256, blank=True)
+    document_source = models.FileField(blank=True)
+    issuing_body = models.CharField(blank=True, max_length=512)
+    managing_offices = models.ManyToManyField(
+        Office, blank=True, related_name='policies')
 
     @property
     def title_with_number(self):
@@ -156,7 +158,7 @@ class Policy(models.Model):
         text = self.title_with_number
         if len(text) > 100:
             text = text[:100] + '...'
-        return '({0}) {1}'.format(self.policy_number, text)
+        return text
 
     def save(self):
         if not self.slug:

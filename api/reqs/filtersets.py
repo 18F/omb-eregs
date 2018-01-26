@@ -27,15 +27,10 @@ class PolicyFilter(django_filters.FilterSet):
         model = Policy
         fields = {
             'id': ('exact', 'in'),
-            'policy_number': ('exact', 'gt', 'gte', 'lt', 'lte', 'in',
-                              'range'),
             'title': ('exact', 'icontains'),
-            'uri': ('exact', 'icontains'),
             'omb_policy_id': ('exact', 'icontains'),
-            'policy_type': ('exact', 'in'),
             'issuance': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
                          'month', 'day'),
-            'issuing_body': ('exact', 'icontains'),
             'sunset': ('exact', 'gt', 'gte', 'lt', 'lte', 'range', 'year',
                        'month', 'day', 'isnull'),
             'workflow_phase': ('exact', 'in'),

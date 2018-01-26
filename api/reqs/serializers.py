@@ -32,22 +32,17 @@ class PolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = Policy
         fields = (
-            'document_source',
             'id',
             'issuance',
-            'issuing_body',
             'has_published_document',
             'omb_policy_id',
             'original_url',
-            'policy_number',
-            'policy_type',
             'relevant_reqs',
             'slug',
             'sunset',
             'title',
             'title_with_number',
             'total_reqs',
-            'uri',
             'workflow_phase',
         )
 

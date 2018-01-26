@@ -57,7 +57,6 @@ export default function Requirement({ requirement }) {
             name="Applies to"
             value={filterAppliesTo(requirement.impacted_entity)}
           />
-          <Metadata className="issuing-body" name="Issuing body" value={requirement.issuing_body} />
           <Metadata
             className="sunset-date"
             name="Sunset date"
