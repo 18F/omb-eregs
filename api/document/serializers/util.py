@@ -82,6 +82,7 @@ def add_sourceline_to_errors(data: Any):
     try:
         yield
     except ValidationError as e:
-        if not has_sourceline(e.detail) and has_sourceline(data):
+        if (isinstance(e.detail, dict) and not has_sourceline(e.detail)
+                and has_sourceline(data)):
             e.detail['_sourceline'] = data['_sourceline']
         raise e
