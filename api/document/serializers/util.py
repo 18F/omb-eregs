@@ -1,7 +1,8 @@
-from typing import Iterator, List, Set, Type, TypeVar  # noqa
+from contextlib import contextmanager
+from typing import Any, Iterator, List, Set, Type, TypeVar  # noqa
 
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import Field, empty
+from rest_framework.serializers import Field
 
 from document.tree import PrimitiveDict
 
@@ -61,23 +62,26 @@ def list_to_internal_value(data: List[PrimitiveDict],
     return serializer.to_internal_value(data)
 
 
-class SourcelineErrorMixin:
+def has_sourceline(data: Any):
+    if not isinstance(data, dict):
+        return False
+    return '_sourceline' in data
+
+
+@contextmanager
+def add_sourceline_to_errors(data: Any):
     '''
-    A mixin for DRF Serializers that adds metadata about the
+    A context manager for DRF Serializers that adds metadata about the
     source line number that validation errors originated
     from, if possible.
 
     In order for this to work, the data passed to the
-    Serializer must have source line number metadata.
+    context manager must have source line number metadata.
     '''
 
-    def run_validation(self, data=empty):
-        try:
-            return super().run_validation(data)  # type: ignore
-        except ValidationError as e:
-            if (isinstance(e.detail, dict) and
-                    '_sourceline' not in e.detail and
-                    isinstance(data, dict) and
-                    isinstance(data.get('_sourceline'), int)):
-                e.detail['_sourceline'] = data['_sourceline']
-            raise e
+    try:
+        yield
+    except ValidationError as e:
+        if not has_sourceline(e.detail) and has_sourceline(data):
+            e.detail['_sourceline'] = data['_sourceline']
+        raise e

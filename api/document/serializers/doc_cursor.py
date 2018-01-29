@@ -63,7 +63,7 @@ class ContentField(DocCursorField):
         return util.list_to_internal_value(data, NestedAnnotationSerializer)
 
 
-class DocCursorSerializer(util.SourcelineErrorMixin, serializers.Serializer):
+class DocCursorSerializer(serializers.Serializer):
     """
     A Serializer for the DocCursor class.
 
@@ -164,6 +164,10 @@ class DocCursorSerializer(util.SourcelineErrorMixin, serializers.Serializer):
             footnote_emblems = self.validate_footnote_emblems(data)
             self.validate_footnote_citations(data, footnote_emblems)
         return data
+
+    def run_validation(self, data=serializers.empty):
+        with util.add_sourceline_to_errors(data):
+            return super().run_validation(data)
 
     def create(self, validated_data: PrimitiveDict) -> JSONAwareCursor:
         return import_json_doc(self.context['policy'], validated_data)
