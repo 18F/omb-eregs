@@ -156,10 +156,10 @@ class DocCursorSerializer(serializers.Serializer):
 
         return set(footnote_emblems)
 
-    def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
-        data = super().to_internal_value(data)
+    def validate(self, data: PrimitiveDict) -> PrimitiveDict:
         if data['node_type'] == 'footnote' and not data.get('type_emblem'):
-            raise ValidationError('Footnotes must have type emblems')
+            msg = f"'{data['node_type']}' nodes must have type emblems."
+            raise ValidationError({'type_emblem': msg})
         if self.is_root:
             footnote_emblems = self.validate_footnote_emblems(data)
             self.validate_footnote_citations(data, footnote_emblems)
