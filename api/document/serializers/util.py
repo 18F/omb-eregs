@@ -48,10 +48,8 @@ def iter_inlines(inlines: List[PrimitiveDict]) -> Iterator[PrimitiveDict]:
         yield from iter_inlines(inline['inlines'])
 
 
-def has_sourceline(data: Any):
-    if not isinstance(data, dict):
-        return False
-    return '_sourceline' in data
+def has_sourceline(data: Any) -> bool:
+    return isinstance(data, dict) and '_sourceline' in data
 
 
 @contextmanager
