@@ -7,3 +7,26 @@
   border-radius: 0;
   cursor: pointer;
 }
+
+@mixin reset-list() {
+  list-style: none;
+  padding-left: 0;
+}
+
+@mixin clearfix() {
+  &::before,
+  &::after {
+    content: ' ';
+    display: table;
+  }
+
+  &::after {
+    clear: both;
+  }
+}
+
+@mixin col($col-count) {
+  box-sizing: border-box;
+  float: left;
+  width: calc(#{$col-count} / 12 * 100%);
+}

@@ -17,11 +17,11 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'shared-styles/base/spacing';
 @import 'shared-styles/base/type-size';
 @import 'shared-styles/base/util';
+@import 'shared-styles/layout/markers';
 @import 'base/base';
 
 @import 'layout/typography';
 @import 'layout/layout';
-@import 'layout/markers';
 @import 'layout/icons';
 
 @import 'module/header';
@@ -37,11 +37,11 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'module/policies';
 @import 'module/homepage';
 @import 'module/loading-indicator';
-@import 'module/listitem';
 @import 'module/tables';
 @import 'module/external-link';
 @import 'module/styleguide';
 @import 'shared-styles/module/heading';
+@import 'shared-styles/module/list';
 @import 'shared-styles/module/paragraph';
 
 @import 'state/print';
