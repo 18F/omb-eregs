@@ -1,5 +1,6 @@
 import importlib
 from collections import OrderedDict
+from typing import Callable, Dict
 
 ANNOTATORS = OrderedDict([
     ('page_numbers', 'ombpdf.pagenumbers.annotate_page_numbers'),
@@ -11,7 +12,7 @@ ANNOTATORS = OrderedDict([
     ('paragraphs', 'ombpdf.paragraphs.annotate_paragraphs'),
 ])
 
-_annotator_funcs = {}
+_annotator_funcs: Dict[str, Callable] = {}
 
 
 def _validate_name(name):
@@ -32,7 +33,7 @@ def get(name):
 class AnnotatorTracker:
     def __init__(self, doc):
         self._doc = doc
-        self._has_run = {}
+        self._has_run: Dict[str, bool] = {}
         for name in ANNOTATORS:
             self._has_run[name] = False
 

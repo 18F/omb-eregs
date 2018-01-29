@@ -1,7 +1,9 @@
 import re
-import weakref
+import typing  # noqa
 from collections import Counter, namedtuple
 from decimal import Decimal
+from typing import Any  # noqa
+from weakref import WeakKeyDictionary
 
 from pdfminer import layout
 
@@ -56,7 +58,7 @@ class FontName(str):
 class FontSize(namedtuple('FontSize', ['font', 'size'])):
     __slots__ = ()
 
-    __cache = weakref.WeakKeyDictionary()
+    __cache = WeakKeyDictionary()  # type: WeakKeyDictionary[Any, Any]
 
     def is_near(self, other, gap=1):
         if self.font != other.font:
@@ -64,7 +66,7 @@ class FontSize(namedtuple('FontSize', ['font', 'size'])):
         return util.is_near(self.size, other.size, gap=gap)
 
     @classmethod
-    def from_ltchar(cls, ltchar):
+    def from_ltchar(cls, ltchar) -> 'FontSize':
         if ltchar not in cls.__cache:
             # There can be *really* close font sizes, like
             # 16.163999999999987 vs. 16.164000000000044, so we're
@@ -76,7 +78,7 @@ class FontSize(namedtuple('FontSize', ['font', 'size'])):
 
 
 def get_font_size_stats(ltpages):
-    stats = Counter()
+    stats: typing.Counter[FontSize] = Counter()
 
     for item in util.iter_flattened_layout(ltpages, layout.LTChar):
         stats[FontSize.from_ltchar(item)] += 1
