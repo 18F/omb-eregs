@@ -5,6 +5,7 @@ from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
+from document.serializers.util import add_sourceline_to_errors
 from document.tree import DocCursor, PrimitiveDict
 from reqs.models import Requirement
 
@@ -206,6 +207,10 @@ class NestedAnnotationSerializer(serializers.Serializer):
             })
         serializer = self.content_type_mapping[content_type]()
         return serializer.to_internal_value(data)
+
+    def run_validation(self, data=serializers.empty):
+        with add_sourceline_to_errors(data):
+            return super().run_validation(data)
 
 
 @NestedAnnotationSerializer.register

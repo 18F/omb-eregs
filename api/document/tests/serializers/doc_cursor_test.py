@@ -401,3 +401,11 @@ def test_content_field_validation_error_detail_is_list():
     with pytest.raises(ValidationError) as excinfo:
         doc_cursor.ContentField().to_internal_value([{}])
     assert isinstance(excinfo.value.detail, list)
+
+
+def test_sourceline_is_added_to_doc_cursor_errors():
+    serializer = doc_cursor.DocCursorSerializer(data={
+        '_sourceline': 5
+    })
+    assert not serializer.is_valid()
+    assert serializer.errors['_sourceline'] == 5

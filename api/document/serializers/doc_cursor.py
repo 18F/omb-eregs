@@ -166,6 +166,10 @@ class DocCursorSerializer(serializers.Serializer):
             self.validate_footnote_citations(data, footnote_emblems)
         return data
 
+    def run_validation(self, data=serializers.empty):
+        with util.add_sourceline_to_errors(data):
+            return super().run_validation(data)
+
     def create(self, validated_data: PrimitiveDict) -> JSONAwareCursor:
         return import_json_doc(self.context['policy'], validated_data)
 

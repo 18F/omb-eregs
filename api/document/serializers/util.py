@@ -1,4 +1,7 @@
-from typing import Iterator, List, Set, Type, TypeVar  # noqa
+from contextlib import contextmanager
+from typing import Any, Iterator, List, Set, Type, TypeVar  # noqa
+
+from rest_framework.exceptions import ValidationError
 
 from document.tree import PrimitiveDict
 
@@ -43,3 +46,27 @@ def iter_inlines(inlines: List[PrimitiveDict]) -> Iterator[PrimitiveDict]:
     for inline in inlines:
         yield inline
         yield from iter_inlines(inline['inlines'])
+
+
+def has_sourceline(data: Any) -> bool:
+    return isinstance(data, dict) and '_sourceline' in data
+
+
+@contextmanager
+def add_sourceline_to_errors(data: Any):
+    '''
+    A context manager for DRF Serializers that adds metadata about the
+    source line number that validation errors originated
+    from, if possible.
+
+    In order for this to work, the data passed to the
+    context manager must have source line number metadata.
+    '''
+
+    try:
+        yield
+    except ValidationError as e:
+        if (isinstance(e.detail, dict) and not has_sourceline(e.detail)
+                and has_sourceline(data)):
+            e.detail['_sourceline'] = data['_sourceline']
+        raise e

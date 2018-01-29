@@ -255,3 +255,11 @@ def test_non_leaf_inlines_field_validation_error_detail_is_list():
         content.InlinesField(is_leaf_node=False)\
             .to_internal_value([{}])
     assert isinstance(excinfo.value.detail, list)
+
+
+def test_sourceline_is_added_to_nested_annotation_errors():
+    serializer = content.NestedAnnotationSerializer(data={
+        '_sourceline': 5
+    })
+    assert not serializer.is_valid()
+    assert serializer.errors['_sourceline'] == 5
