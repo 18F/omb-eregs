@@ -24,7 +24,8 @@ class ChildrenField(DocCursorField):
             context={**self.context, 'is_root': False},
         ).data
 
-    def validate_type_emblem_uniqueness(self, data: List[PrimitiveDict]):
+    def validate_type_emblem_uniqueness(self, data: List[PrimitiveDict]) \
+            -> List[PrimitiveDict]:
         node_embs = [
             (child['node_type'], child['type_emblem'])
             for child in data
@@ -35,16 +36,14 @@ class ChildrenField(DocCursorField):
                 f"Multiple occurrences of '{node}' with emblem "
                 f"'{emb}' exist as siblings"
             )
+        return data
 
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
-        children = util.list_to_internal_value(
-            data,
-            DocCursorSerializer,
-            context={**self.context, 'is_root': False}
-        )
-        self.validate_type_emblem_uniqueness(children)
-        return children
+        serializer = DocCursorSerializer(data=data, many=True, context={
+            **self.context, 'is_root': False})
+        serializer.is_valid(raise_exception=True)
+        return self.validate_type_emblem_uniqueness(serializer.validated_data)
 
 
 class ContentField(DocCursorField):
@@ -60,7 +59,9 @@ class ContentField(DocCursorField):
 
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
-        return util.list_to_internal_value(data, NestedAnnotationSerializer)
+        serializer = NestedAnnotationSerializer(data=data, many=True)
+        serializer.is_valid(raise_exception=True)
+        return serializer.validated_data
 
 
 class DocCursorSerializer(serializers.Serializer):
