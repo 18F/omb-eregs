@@ -302,10 +302,12 @@ def test_footnote_type_emblem_existence_is_validated():
 
     serializer.to_internal_value(footnote)
 
-    err_msg = "Footnotes must have type emblems"
-    with pytest.raises(ValidationError, match=err_msg):
+    with pytest.raises(ValidationError) as excinfo:
         del footnote['type_emblem']
         serializer.to_internal_value(footnote)
+    assert excinfo.value.detail == {
+        'type_emblem': "'footnote' nodes must have type emblems."
+    }
 
 
 def test_footnote_type_emblem_uniqueness_is_validated():
@@ -316,12 +318,14 @@ def test_footnote_type_emblem_uniqueness_is_validated():
         f.footnote(2, [])
     ]))
 
-    err_msg = "Multiple footnotes exist with type emblem '1'"
-    with pytest.raises(ValidationError, match=err_msg):
+    with pytest.raises(ValidationError) as excinfo:
         serializer.to_internal_value(f.para([], children=[
             f.para([], children=[f.footnote(1, [])]),
             f.para([], children=[f.footnote(1, [])]),
         ]))
+    assert excinfo.value.detail == {
+        'non_field_errors': "Multiple footnotes exist with type emblem '1'"
+    }
 
 
 def test_footnote_citations_are_validated():
@@ -333,13 +337,15 @@ def test_footnote_citations_are_validated():
         f.footnote(1, []),
     ]))
 
-    err_msg = "Citation for '2' has no matching footnote"
-    with pytest.raises(ValidationError, match=err_msg):
+    with pytest.raises(ValidationError) as excinfo:
         serializer.to_internal_value(f.para([
             f.footnote_citation([f.text('2')]),
         ], children=[
             f.footnote(1, []),
         ]))
+    assert excinfo.value.detail == {
+        'non_field_errors': "Citation for '2' has no matching footnote"
+    }
 
 
 def test_children_field_type_emblem_uniqueness_is_validated():

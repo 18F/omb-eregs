@@ -2,6 +2,7 @@ from typing import List, Set, Tuple, Iterator  # noqa
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.settings import api_settings
 
 from document.json_importer.importer import import_json_doc
 from document.models import DocNode
@@ -10,6 +11,11 @@ from document.serializers.content import (NestedAnnotationSerializer,
                                           nest_annotations)
 from document.serializers.meta import Meta, MetaSerializer
 from document.tree import DocCursor, JSONAwareCursor, PrimitiveDict
+
+
+class NonFieldError(ValidationError):
+    def __init__(self, msg: str) -> None:
+        super().__init__({api_settings.NON_FIELD_ERRORS_KEY: msg})
 
 
 class DocCursorField(serializers.Field):
@@ -141,7 +147,7 @@ class DocCursorSerializer(serializers.Serializer):
 
         for citation in citations:
             if citation not in footnote_emblems:
-                raise ValidationError(
+                raise NonFieldError(
                     f"Citation for '{citation}' has no matching footnote"
                 )
 
@@ -152,7 +158,7 @@ class DocCursorSerializer(serializers.Serializer):
         ]
 
         for emblem in util.iter_non_unique(footnote_emblems):
-            raise ValidationError(
+            raise NonFieldError(
                 f"Multiple footnotes exist with type emblem '{emblem}'"
             )
 
@@ -161,7 +167,8 @@ class DocCursorSerializer(serializers.Serializer):
     def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
         data = super().to_internal_value(data)
         if data['node_type'] == 'footnote' and not data.get('type_emblem'):
-            raise ValidationError('Footnotes must have type emblems')
+            msg = f"'{data['node_type']}' nodes must have type emblems."
+            raise ValidationError({'type_emblem': msg})
         if self.is_root:
             footnote_emblems = self.validate_footnote_emblems(data)
             self.validate_footnote_citations(data, footnote_emblems)
