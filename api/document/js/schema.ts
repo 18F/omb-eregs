@@ -32,6 +32,7 @@ const schema = new Schema({
     },
     heading: {
       content: 'text+',
+      group: 'block',
       attrs: {
         depth: {}, // will hold the header depth
       },
