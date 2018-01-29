@@ -1,6 +1,6 @@
 from typing import Iterator, List, Set, Type, TypeVar  # noqa
 
-from rest_framework.serializers import Field
+from rest_framework.serializers import Serializer
 
 from document.tree import PrimitiveDict
 
@@ -48,7 +48,7 @@ def iter_inlines(inlines: List[PrimitiveDict]) -> Iterator[PrimitiveDict]:
 
 
 def list_to_internal_value(data: List[PrimitiveDict],
-                           field_class: Type[Field],
+                           serializer_class: Type[Serializer],
                            *args, **kwargs) -> List[PrimitiveDict]:
     # The only real reason this function exists is because
     # the way DRF's `many=True` changes the type signatures of
@@ -56,5 +56,10 @@ def list_to_internal_value(data: List[PrimitiveDict],
     # express as a type annotation. So this is really just a
     # way to "twist mypy's arm" into annotating things the way we
     # want.
-    serializer = field_class(*args, **{'many': True, **kwargs})
-    return serializer.to_internal_value(data)
+    serializer = serializer_class(*args, **{
+        'many': True,
+        'data': data,
+        **kwargs
+    })
+    serializer.is_valid(raise_exception=True)
+    return serializer.validated_data
