@@ -1,5 +1,9 @@
+.node-list {
+  @include reset-list();
+}
+
 .node-list-item {
-  @extend .clearfix;
+  @include clearfix();
   margin-bottom: $space-xs;
 
   .list-item-marker {

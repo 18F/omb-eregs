@@ -26,21 +26,15 @@ describe('serializeDoc()', () => {
         apiFactory.node('sec', {
           children: [
             apiFactory.node('heading', {
-              content: [
-                apiFactory.content('__text__', { text: 'Some heading' }),
-              ],
+              content: [apiFactory.text('Some heading')],
             }),
             apiFactory.node('para', {
-              content: [
-                apiFactory.content('__text__', { text: 'First paragraph' }),
-              ],
+              content: [apiFactory.text('First paragraph')],
             }),
           ],
         }),
         apiFactory.node('para', {
-          content: [
-            apiFactory.content('__text__', { text: 'A later paragraph' }),
-          ],
+          content: [apiFactory.text('A later paragraph')],
         }),
       ],
     }));
@@ -55,7 +49,7 @@ describe('serializeDoc()', () => {
     expect(result).toEqual({
       node_type: 'heading',
       children: [],
-      content: [{ content_type: '__text__', inlines: [], text: 'Stuff stuff' }],
+      content: [apiFactory.text('Stuff stuff')],
     });
   });
 
@@ -65,6 +59,52 @@ describe('serializeDoc()', () => {
     });
     const result = serializeDoc(node);
     expect(result).toEqual({ some: 'random', attrs: 'here' });
+  });
+
+  it('converts list nodes', () => {
+    const node = schema.nodes.list.create({}, [
+      schema.nodes.listitem.create({}, [
+        schema.nodes.listitemMarker.create({}, schema.text('a)')),
+        schema.nodes.listitemBody.create({}, [
+          schema.nodes.para.create(
+            {}, schema.nodes.inline.create({}, schema.text('First p'))),
+          schema.nodes.para.create(
+            {}, schema.nodes.inline.create({}, schema.text('Second p')),
+          ),
+        ]),
+      ]),
+      schema.nodes.listitem.create({}, [
+        schema.nodes.listitemMarker.create({}, schema.text('2.')),
+        schema.nodes.listitemBody.create(
+          {},
+          schema.nodes.para.create(
+            {},
+            schema.nodes.inline.create({}, schema.text('Content')),
+          ),
+        ),
+      ]),
+    ]);
+
+    const result = serializeDoc(node);
+    expect(result).toEqual(apiFactory.node('list', {
+      children: [
+        apiFactory.node('listitem', {
+          marker: 'a)',
+          type_emblem: 'a',
+          children: [
+            apiFactory.node('para', { content: [apiFactory.text('First p')] }),
+            apiFactory.node('para', { content: [apiFactory.text('Second p')] }),
+          ],
+        }),
+        apiFactory.node('listitem', {
+          marker: '2.',
+          type_emblem: '2',
+          children: [
+            apiFactory.node('para', { content: [apiFactory.text('Content')] }),
+          ],
+        }),
+      ],
+    }));
   });
 });
 
@@ -98,18 +138,18 @@ describe('convertTexts()', () => {
     ]));
 
     expect(result).toEqual([
-      apiFactory.content('__text__', { text: 'Some ' }),
+      apiFactory.text('Some '),
       apiFactory.content('one', {
         outer: 'thing',
         inlines: [apiFactory.content('two', {
           inner: 'here',
           inlines: [apiFactory.content('three', {
             most: 'deep',
-            inlines: [apiFactory.content('__text__', { text: 'nested' })],
+            inlines: [apiFactory.text('nested')],
           })],
         })],
       }),
-      apiFactory.content('__text__', { text: ' content' }),
+      apiFactory.text(' content'),
     ]);
   });
 });

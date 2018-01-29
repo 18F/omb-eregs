@@ -5,8 +5,10 @@ import schema from './schema';
 interface ApiNode {
   children: ApiNode[];
   content: ApiContent[];
+  marker?: string;
   node_type: string;
-  // at some point, we'll need: marker, title, type_emblem
+  type_emblem?: string;
+  // at some point, we'll need: title
 }
 
 interface ApiContent {
@@ -32,6 +34,11 @@ export const apiFactory = {
       ...(overrides || {}),
     };
   },
+  text: value => ({
+    content_type: '__text__',
+    inlines: [],
+    text: value,
+  }),
 };
 
 
@@ -41,6 +48,22 @@ const NODE_CONVERTERS = {
     // Text isn't in an 'inline' block
     { content: convertTexts(node.content) },
   ),
+  listitem(node) {
+    // Note the existence of these two nodes is ensured by the schema
+    const markerNode = node.content.child(0);
+    const body = node.content.child(1);
+
+    const children: ApiNode[] = [];
+    body.forEach(child => children.push(serializeDoc(child)));
+    const marker = markerNode.textContent;
+    const typeEmblem = marker.replace(/[^a-zA-Z0-9]/, '');
+    return apiFactory.node(
+      node.type.name,
+      typeEmblem ?
+        { children, marker, type_emblem: typeEmblem } :
+        { children, marker },
+    );
+  },
   unimplemented_node: node => node.attrs.data,
 };
 
@@ -75,7 +98,7 @@ export default function serializeDoc(node: Node): ApiNode {
 // of nested annotations to wrap each chunk of text.
 export function nestMarks(text: string, marks: Mark[]): ApiContent {
   if (marks.length === 0) {
-    return apiFactory.content('__text__', { text });
+    return apiFactory.text(text);
   }
   const mark = marks[0];
   const converted = MARK_CONVERTERS[mark.type.name](mark);
