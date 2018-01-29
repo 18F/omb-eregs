@@ -175,17 +175,19 @@ def test_inline_requirement_with_link_integration():
 def test_error_raised_on_invalid_content_type():
     serializer = content.NestedAnnotationSerializer()
 
-    with pytest.raises(ValidationError,
-                       match="unknown content_type: blarg"):
+    with pytest.raises(ValidationError) as einfo:
         serializer.to_internal_value({'content_type': 'blarg'})
+    assert einfo.value.detail == {
+        'content_type': "'blarg' is an invalid content type."
+    }
 
 
 def test_error_raised_on_missing_content_type():
     serializer = content.NestedAnnotationSerializer()
 
-    with pytest.raises(ValidationError,
-                       match="missing content_type"):
+    with pytest.raises(ValidationError) as einfo:
         serializer.to_internal_value({'foo': 'bar'})
+    assert einfo.value.detail == {'content_type': 'This field is required.'}
 
 
 def test_text_deserialization_works():
