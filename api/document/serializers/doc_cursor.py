@@ -1,4 +1,4 @@
-from typing import List, Set, Tuple, Iterator  # noqa
+from typing import List, Set, Tuple, Type, Iterator  # noqa
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -38,10 +38,11 @@ class ChildrenField(DocCursorField):
 
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
-        serializer = DocCursorSerializer(
-            context={**self.context, 'is_root': False},
+        children = util.list_to_internal_value(
+            data,
+            DocCursorSerializer,
+            context={**self.context, 'is_root': False}
         )
-        children = [serializer.to_internal_value(item) for item in data]
         self.validate_type_emblem_uniqueness(children)
         return children
 
@@ -59,10 +60,7 @@ class ContentField(DocCursorField):
 
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
-        serializer = NestedAnnotationSerializer()
-        return [
-            serializer.to_internal_value(item) for item in data
-        ]
+        return util.list_to_internal_value(data, NestedAnnotationSerializer)
 
 
 class DocCursorSerializer(serializers.Serializer):
