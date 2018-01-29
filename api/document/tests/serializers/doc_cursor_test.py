@@ -389,3 +389,15 @@ def test_create_works():
 
     assert cursor.node_type == 'para'
     assert cursor.text == 'hi'
+
+
+def test_children_field_validation_error_detail_is_list():
+    with pytest.raises(ValidationError) as excinfo:
+        doc_cursor.ChildrenField().to_internal_value([{}])
+    assert isinstance(excinfo.value.detail, list)
+
+
+def test_content_field_validation_error_detail_is_list():
+    with pytest.raises(ValidationError) as excinfo:
+        doc_cursor.ContentField().to_internal_value([{}])
+    assert isinstance(excinfo.value.detail, list)

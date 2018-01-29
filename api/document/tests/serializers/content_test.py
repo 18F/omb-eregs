@@ -248,3 +248,10 @@ def test_unimplemented_content_type_or_annotation_class_raises_error():
 def test_nestable_annotation_repr_works():
     na = content.NestableAnnotation('my annotation', None)
     assert repr(na) == "NestableAnnotation('my annotation') []"
+
+
+def test_non_leaf_inlines_field_validation_error_detail_is_list():
+    with pytest.raises(ValidationError) as excinfo:
+        content.InlinesField(is_leaf_node=False)\
+            .to_internal_value([{}])
+    assert isinstance(excinfo.value.detail, list)

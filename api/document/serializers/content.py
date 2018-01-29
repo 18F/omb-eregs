@@ -5,6 +5,7 @@ from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
+from document.serializers.util import list_to_internal_value
 from document.tree import DocCursor, PrimitiveDict
 from reqs.models import Requirement
 
@@ -105,8 +106,7 @@ class InlinesField(NestableAnnotationField):
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
         if not self.is_leaf_node:
-            serializer = NestedAnnotationSerializer()
-            return [serializer.to_internal_value(d) for d in data]
+            return list_to_internal_value(data, NestedAnnotationSerializer)
         elif data:
             raise ValidationError('leaf nodes cannot contain nested content')
         return []
