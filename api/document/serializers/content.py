@@ -199,9 +199,11 @@ class NestedAnnotationSerializer(SourcelineErrorMixin, serializers.Serializer):
     def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
         content_type = data.get('content_type')
         if content_type is None:
-            raise ValidationError("missing content_type")
+            raise ValidationError({"content_type": "This field is required."})
         if content_type not in self.content_type_mapping:
-            raise ValidationError(f"unknown content_type: {content_type}")
+            raise ValidationError({
+                "content_type": f"'{content_type}' is an invalid content type."
+            })
         serializer = self.content_type_mapping[content_type]()
         return serializer.to_internal_value(data)
 
