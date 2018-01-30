@@ -58,23 +58,27 @@ class XMLErrorInfo {
   }
 }
 
-function isEmptyObject(obj: any) {
+function isEmptyObject(obj: any): boolean {
   return typeof obj === 'object' && obj !== null &&
     Object.keys(obj).length === 0;
+}
+
+function isDetailError(err: any): boolean {
+  return typeof err === 'object' &&
+    err !== null &&
+    Object.keys(err).length === 1 &&
+    typeof(err.detail) === 'string';
 }
 
 export function makeErrorFriendly(err: any): string {
   if (typeof err === 'string') {
     return err;
   }
-  if (typeof err === 'object' && err !== null) {
-    if (Object.keys(err).length === 1 &&
-        typeof(err.detail) === 'string') {
-      return err.detail;
-    }
-    if (XMLErrorInfo.isXMLError(err)) {
-      return (new XMLErrorInfo(err)).toString();
-    }
+  if (isDetailError(err)) {
+    return err.detail;
+  }
+  if (XMLErrorInfo.isXMLError(err)) {
+    return (new XMLErrorInfo(err)).toString();
   }
   return JSON.stringify(err, null, 2);
 }
