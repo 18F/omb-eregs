@@ -2,6 +2,9 @@
   text-align: left;
 }
 
-.admin-interface #changelist .paginator {
-  line-height: 30px;  // @todo: use variable
+.admin-interface .module h2,
+.admin-interface.dashboard .module caption,
+.admin-interface .module.filtered h2,
+.admin-interface .inline-group h2 {
+  padding: $space;
 }

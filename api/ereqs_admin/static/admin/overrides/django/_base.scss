@@ -54,3 +54,9 @@ a.button {
   border: 1px solid $color-gray;
 }
 
+.module h2,
+.module caption,
+.inline-group h2 {
+  @include size-large();
+  font-weight: 500;   // @todo: remove
+}

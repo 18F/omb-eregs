@@ -46,3 +46,10 @@ label {
 .aligned .vCheckboxLabel {
   padding-left: $space-sm;
 }
+
+.submit-row a.deletelink,
+.submit-row input {
+  height: auto;
+  line-height: $space-xl;
+  padding: 0 $space-sm;
+}
