@@ -1,6 +1,7 @@
 import logging
 from collections import Counter
 from decimal import Decimal
+from typing import Any, List  # noqa
 
 from pdfminer import layout
 
@@ -169,7 +170,7 @@ class OMBTextLine(list, AnnotatableMixin):
         """
 
         curr_style = None
-        chars = []
+        chars: List[Any] = []
         i = 0
 
         def make_item():

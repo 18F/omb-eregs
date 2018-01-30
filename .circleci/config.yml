@@ -63,7 +63,7 @@ jobs:
           name: API Mypy
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm mypy
+          command: docker-compose run --rm mypy .
       - run:
           name: API Bandit
           environment:

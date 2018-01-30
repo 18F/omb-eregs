@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from typing import Tuple  # noqa
 
 import dj_database_url
 from cfenv import AppEnv
@@ -35,7 +36,7 @@ ALLOWED_HOSTS = env.uris
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS: Tuple[str, ...] = (
     'document',
     'ombpdf',
     'reqs.apps.ReqsConfig',
@@ -61,7 +62,7 @@ INSTALLED_APPS = (
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
 
-MIDDLEWARE = (
+MIDDLEWARE: Tuple[str, ...] = (
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

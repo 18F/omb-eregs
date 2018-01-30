@@ -1,4 +1,5 @@
 import json
+from typing import Any, Dict  # noqa
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import FileResponse, Http404, HttpResponse
@@ -23,7 +24,7 @@ def get_pdfmap():
     return pdfmap
 
 
-_ltpages_cache = {}
+_ltpages_cache: Dict[Any, Any] = {}
 
 
 def to_doc(path):
