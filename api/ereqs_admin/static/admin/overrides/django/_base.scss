@@ -35,7 +35,6 @@ h1 {
   @include size-large();
 
   // extending
-  font-weight: 500;   // @todo: remove
   padding: $space-sm;
 }
 
@@ -58,5 +57,4 @@ a.button {
 .module caption,
 .inline-group h2 {
   @include size-large();
-  font-weight: 500;   // @todo: remove
 }
