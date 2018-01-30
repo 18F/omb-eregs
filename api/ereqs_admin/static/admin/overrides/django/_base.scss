@@ -1,0 +1,56 @@
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=number],
+textarea,
+select,
+.vTextField {
+  border-radius: 0;
+  border: 1px solid $color-gray;
+
+  // extension
+  @include size-regular();
+}
+
+td,
+th {
+  padding: $space;
+  @include size-regular();
+}
+
+thead th,
+tfoot td {
+  padding: $space;
+  @include size-regular();
+}
+
+#header {
+  // Remove padding so our nav-menu can start at left:0
+  padding: 0;
+}
+
+h1 {
+  color: $color-black;
+  @include size-large();
+
+  // extending
+  font-weight: 500;   // @todo: remove
+  padding: $space-sm;
+}
+
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button {
+  padding: $space-xs $space;
+}
+
+.object-tools a {
+  border-radius: 3px;
+
+  // extensions
+  border: 1px solid $color-gray;
+}
+

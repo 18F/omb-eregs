@@ -1,0 +1,48 @@
+.submit-row input.default {
+  text-transform: none;
+}
+
+.inline-group thead th {
+  padding: $space;
+}
+
+.form-row {
+  padding: $space $space-lg;
+  @include size-regular();
+}
+
+form .aligned input + p.help,
+form .aligned textarea + p.help,
+form .aligned select + p.help,
+form .aligned input + div.help,
+form .aligned textarea + div.help,
+form .aligned select + div.help {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.submit-row {
+  padding: 0;
+  background: none;
+}
+
+.aligned label + p,
+.aligned label + div.help,
+.aligned label + div.readonly {
+  margin-left: 0;
+}
+
+.aligned label {
+  width: 100%;
+  padding-left: 0;
+  padding-bottom: $space-xs;
+}
+
+label {
+  @include size-regular();
+  color: $color-black;
+}
+
+.aligned .vCheckboxLabel {
+  padding-left: $space-sm;
+}

@@ -1,22 +1,3 @@
-input[type=text],
-input[type=password],
-input[type=email],
-input[type=url],
-input[type=number],
-textarea,
-select,
-.vTextField {
-  border-radius: 0px;
-  border: 1px solid $color-gray;
-  @include size-regular();
-}
-
 .admin-interface .radiolist label {
-  @include size-regular();
-}
-
-.timezonewarning {
-  @include size-regular();
-  padding-top: $space-xs;
-  display: inline-block;
+  // @todo - this is overridden in document
 }

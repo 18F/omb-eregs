@@ -1,0 +1,7 @@
+.admin-interface .inline-group .tabular thead th:last-child:not([class]):not([style]) {
+  text-align: left;
+}
+
+.admin-interface #changelist .paginator {
+  line-height: 30px;  // @todo: use variable
+}

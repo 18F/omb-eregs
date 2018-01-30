@@ -17,6 +17,10 @@
 
 @import './base/normalize';
 @import './base/variables';
+@import './overrides/django/base';
+@import './overrides/django/forms';
+@import './overrides/django/widgets';
+@import './overrides/admin_interface/admin-interface-fix';
 @import './base/forms';
 
 @import './layout/header';

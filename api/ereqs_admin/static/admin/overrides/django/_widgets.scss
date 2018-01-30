@@ -1,0 +1,7 @@
+.timezonewarning {
+  @include size-regular();
+
+  // extension
+  padding-top: $space-xs;
+  display: inline-block;
+}
