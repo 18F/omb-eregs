@@ -1,4 +1,18 @@
-import { menuBar, undoItem, redoItem, MenuItem } from 'prosemirror-menu';
+import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
+
+import { addParagraph } from './commands';
+
+
+const newParagraph = new MenuItem({
+  css: 'cursor: pointer;',
+  title: 'Add paragraph',
+  run: addParagraph,
+  label: 'P',
+  // These defaults are needed due to a doc issue. See
+  // https://github.com/ProseMirror/prosemirror-menu/issues/15
+  class: '',
+  execEvent: 'mousedown',
+});
 
 const menu = menuBar({
   floating: true,
@@ -11,6 +25,7 @@ const menu = menuBar({
       // https://github.com/ProseMirror/prosemirror-menu/issues/12
       undoItem as any as MenuItem,
       redoItem as any as MenuItem,
+      newParagraph,
     ],
   ],
 });

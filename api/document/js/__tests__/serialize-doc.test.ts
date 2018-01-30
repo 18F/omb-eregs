@@ -1,23 +1,17 @@
 import { Fragment } from 'prosemirror-model';
 
 import serializeDoc, { apiFactory, convertTexts } from '../serialize-doc';
-import schema from '../schema';
+import schema, { factory } from '../schema';
 
 
 describe('serializeDoc()', () => {
   it('converts nested nodes', () => {
-    const node = schema.nodes.policy.create({}, [
-      schema.nodes.sec.create({}, [
-        schema.nodes.heading.create({ depth: 1 }, schema.text('Some heading')),
-        schema.nodes.para.create(
-          {},
-          schema.nodes.inline.create({}, schema.text('First paragraph')),
-        ),
+    const node = factory.policy([
+      factory.sec([
+        factory.heading('Some heading', 1),
+        factory.para('First paragraph'),
       ]),
-      schema.nodes.para.create(
-        {},
-        schema.nodes.inline.create({}, schema.text('A later paragraph')),
-      ),
+      factory.para('A later paragraph'),
     ]);
 
     const result = serializeDoc(node);
@@ -41,10 +35,7 @@ describe('serializeDoc()', () => {
   });
 
   it('converts headings', () => {
-    const node = schema.nodes.heading.create(
-      { depth: 2 }, // this will be ignored
-      schema.text('Stuff stuff'),
-    );
+    const node = factory.heading('Stuff stuff', 2); // depth is ignored
     const result = serializeDoc(node);
     expect(result).toEqual({
       node_type: 'heading',
@@ -54,35 +45,18 @@ describe('serializeDoc()', () => {
   });
 
   it('converts unimplemented nodes', () => {
-    const node = schema.nodes.unimplemented_node.create({
-      data: { some: 'random', attrs: 'here' },
-    });
+    const node = factory.unimplementedNode({ some: 'random', attrs: 'here' });
     const result = serializeDoc(node);
     expect(result).toEqual({ some: 'random', attrs: 'here' });
   });
 
   it('converts list nodes', () => {
-    const node = schema.nodes.list.create({}, [
-      schema.nodes.listitem.create({}, [
-        schema.nodes.listitemMarker.create({}, schema.text('a)')),
-        schema.nodes.listitemBody.create({}, [
-          schema.nodes.para.create(
-            {}, schema.nodes.inline.create({}, schema.text('First p'))),
-          schema.nodes.para.create(
-            {}, schema.nodes.inline.create({}, schema.text('Second p')),
-          ),
-        ]),
+    const node = factory.list([
+      factory.listitem('a)', [
+        factory.para('First p'),
+        factory.para('Second p'),
       ]),
-      schema.nodes.listitem.create({}, [
-        schema.nodes.listitemMarker.create({}, schema.text('2.')),
-        schema.nodes.listitemBody.create(
-          {},
-          schema.nodes.para.create(
-            {},
-            schema.nodes.inline.create({}, schema.text('Content')),
-          ),
-        ),
-      ]),
+      factory.listitem('2.', [factory.para('Content')]),
     ]);
 
     const result = serializeDoc(node);
@@ -124,15 +98,9 @@ describe('convertTexts()', () => {
     const result = convertTexts(Fragment.fromArray([
       schema.text('Some '),
       schema.text('nested', [
-        schema.marks.unimplemented_mark.create({
-          data: { content_type: 'one', outer: 'thing' },
-        }),
-        schema.marks.unimplemented_mark.create({
-          data: { content_type: 'two', inner: 'here' },
-        }),
-        schema.marks.unimplemented_mark.create({
-          data: { content_type: 'three', most: 'deep' },
-        }),
+        factory.unimplementedMark({ content_type: 'one', outer: 'thing' }),
+        factory.unimplementedMark({ content_type: 'two', inner: 'here' }),
+        factory.unimplementedMark({ content_type: 'three', most: 'deep' }),
       ]),
       schema.text(' content'),
     ]));
