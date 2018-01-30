@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Set  # noqa
 
 import reversion
 from django.apps import apps
@@ -40,7 +41,7 @@ def create_versions_after_migration(**kwargs):
     migrations = [migration
                   for migration, rollback in kwargs.get('plan', [])
                   if not rollback]
-    models = set()
+    models: Set[Any] = set()
     for migration in migrations:
         models.update(getattr(migration, 'REVISED_MODELS', []))
 

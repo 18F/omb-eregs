@@ -139,7 +139,7 @@ services:
     <<: *PYTHON
     environment:
       DEBUG: ${DEBUG:-true}
-    entrypoint: .docker/activate_then mypy @mypy-files.txt
+    entrypoint: .docker/activate_then mypy
 
   manage.py:
     <<: *DEV_API
