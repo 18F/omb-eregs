@@ -1,8 +1,3 @@
-// @todo: remove, not used
-.app-admin_interface .form-row {
-  background: $color-white;
-}
-
 .admin-interface {
   // @todo: find where this is used
   .module.wide h2 {
@@ -13,8 +8,6 @@
     @include size-large();
   }
   .submit-row input {
-    // @todo overridden in document.scss
-    // padding: $space-xs $space;
     // @todo unsure where 34 comes from
     height: 34px;
   }
