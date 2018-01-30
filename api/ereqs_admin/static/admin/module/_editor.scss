@@ -9,8 +9,12 @@
   div.unimplemented {
     padding: 2px 4px;
   }
+}
 
-  .editor-status-error {
+.editor-status {
+  white-space: pre-wrap;
+
+  &.editor-status-error {
     color: $color-red;
   }
 }

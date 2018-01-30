@@ -1,18 +1,19 @@
 import axios from 'axios';
 
 import { getEl } from './util';
+import { makeErrorFriendly } from './friendly-error';
 
 function setStatus(msg: string, className: 'editor-status-error'|'' = '') {
   const status = getEl('#status');
   status.textContent = msg;
-  status.className = className;
+  status.className = `editor-status ${className}`;
 }
 
 function setStatusError(e: Error) {
-  let errMsg = `An error occurred: ${e}`;
+  let errMsg = 'An error occurred.';
   const data = e['response'] && e['response']['data'];
   if (data) {
-    errMsg += '\n' + JSON.stringify(data, null, 2);
+    errMsg += '\n' + makeErrorFriendly(data);
   }
   setStatus(errMsg, 'editor-status-error');
 }

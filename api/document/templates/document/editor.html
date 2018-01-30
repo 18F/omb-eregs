@@ -12,7 +12,7 @@
   </head>
   <body>
     <h1>{{ title }}</h1>
-    <pre id="status"></pre>
+    <pre id="status" class="editor-status"></pre>
     <div class="editor-container" id="editor" data-document-url="{{ document_url }}"></div>
     {% csrf_token %}
     {% block instructions %}
