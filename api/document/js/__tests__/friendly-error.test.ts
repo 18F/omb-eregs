@@ -95,4 +95,67 @@ describe('makeErrorFriendly()', () => {
       `* href - This field is required.`,
     );
   });
+
+  it('provides details on multiple XML errors', () => {
+    /* tslint:disable */
+    const err = {
+      "children": [
+        {
+          "type_emblem": [
+            "Only alphanumeric characters are allowed."
+          ],
+          "_sourceline": "2"
+        },
+        {
+          "content": [
+            {
+              "href": [
+                "This field is required."
+              ],
+              "_sourceline": "4"
+            },
+            {}
+          ],
+          "_sourceline": "3"
+        }
+      ],
+      "_sourceline": "1"
+    };
+    /* tslint:enable */
+    expect(makeErrorFriendly(err)).toBe(
+      `In an element starting at line 2:\n` +
+      `* type_emblem - Only alphanumeric characters are allowed.\n` +
+      `In an element starting at line 4:\n` +
+      `* href - This field is required.`,
+    );
+  });
+
+  it('provides details on multiple errors in one field', () => {
+    const err = {
+      foo: ['bar', 'baz'],
+      _sourceline: 1,
+    };
+    expect(makeErrorFriendly(err)).toBe(
+      `In an element starting at line 1:\n` +
+      `* foo - bar\n` +
+      `* foo - baz`,
+    );
+  });
+
+  it('provides details on multiple errors at different depths', () => {
+    const err = {
+      foo: 'bar',
+      children: [{
+        _sourceline: 2,
+        baz: 'quux',
+      }],
+      _sourceline: 1,
+    };
+    expect(makeErrorFriendly(err)).toBe(
+      `In an element starting at line 1:\n` +
+      `* foo - bar\n` +
+      `  In an element starting at line 2:\n` +
+      `  * baz - quux`,
+    );
+  });
 });
