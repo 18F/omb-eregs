@@ -6,7 +6,7 @@ import { makeErrorFriendly } from './friendly-error';
 function setStatus(msg: string, className: 'editor-status-error'|'' = '') {
   const status = getEl('#status');
   status.textContent = msg;
-  status.className = className;
+  status.className = `editor-status ${className}`;
 }
 
 function setStatusError(e: Error) {
