@@ -1,6 +1,6 @@
 import { EditorState, TextSelection } from 'prosemirror-state';
 
-import { addParagraph } from '../commands';
+import { appendParagraphNear } from '../commands';
 import schema, { factory } from '../schema';
 
 function executeTransform(initialState: EditorState, transform): EditorState {
@@ -12,7 +12,7 @@ function executeTransform(initialState: EditorState, transform): EditorState {
 }
 
 
-describe('addParagraph()', () => {
+describe('appendParagraphNear()', () => {
   it('adds a paragraph after the current', () => {
     const doc = factory.policy([
       factory.para('aaa'),
@@ -22,7 +22,7 @@ describe('addParagraph()', () => {
     // Inside the 'bbb' paragraph
     const selection = new TextSelection(doc.resolve(11));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, addParagraph).doc;
+    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
 
     expect(modifiedDoc.content.childCount).toBe(4);
     const texts: string[] = [];
@@ -43,7 +43,7 @@ describe('addParagraph()', () => {
     // Inside the 'subpar' paragraph
     const selection = new TextSelection(doc.resolve(12));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, addParagraph).doc;
+    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
 
     expect(modifiedDoc.content.childCount).toBe(1);
     const parA = modifiedDoc.content.child(0);
@@ -61,7 +61,7 @@ describe('addParagraph()', () => {
     // Inside the 'aaa' paragraph
     const selection = new TextSelection(doc.resolve(4));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, addParagraph).doc;
+    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
 
     expect(modifiedDoc.content.childCount).toBe(2);
     expect(modifiedDoc.content.child(1).textContent).toBe(' ');
@@ -76,7 +76,7 @@ describe('addParagraph()', () => {
     // Inside the 'bbb' paragraph
     const selection = new TextSelection(doc.resolve(11));
     const state = EditorState.create({ doc, selection });
-    const modified = executeTransform(state, addParagraph);
+    const modified = executeTransform(state, appendParagraphNear);
 
     const resolvedPos = modified.selection.$anchor;
     expect(resolvedPos.depth).toBe(2);

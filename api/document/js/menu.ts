@@ -1,12 +1,12 @@
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
-import { addParagraph } from './commands';
+import { appendParagraphNear } from './commands';
 
 
 const newParagraph = new MenuItem({
   css: 'cursor: pointer;',
   title: 'Add paragraph',
-  run: addParagraph,
+  run: appendParagraphNear,
   label: 'P',
   // These defaults are needed due to a doc issue. See
   // https://github.com/ProseMirror/prosemirror-menu/issues/15
