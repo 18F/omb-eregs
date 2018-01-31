@@ -39,7 +39,7 @@ const schema = new Schema({
       toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
     },
     para: {
-      content: 'inline? block*',
+      content: 'inline block*',
       group: 'block',
       toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
