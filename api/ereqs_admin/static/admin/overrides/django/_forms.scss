@@ -1,67 +1,88 @@
+// e.g. "Save" at the bottom of a profile
 .submit-row input.default {
+  // Django up-cases this button
   text-transform: none;
 }
 
 .inline-group thead th {
+  // Django sets this padding to smaller values than we'd like
   padding: $space;
 }
 
 .form-row {
+  // Django sets a smaller padding and font-size than we want
   padding: $space $space-lg;
   @include size-regular();
 }
 
+// Help text adjacent to a form control
 form .aligned input + p.help,
 form .aligned textarea + p.help,
 form .aligned select + p.help,
 form .aligned input + div.help,
 form .aligned textarea + div.help,
 form .aligned select + div.help {
+  // We're stacking labels over inputs, so we _don't_ want these indented
   margin-left: 0;
   padding-left: 0;
 }
 
+// Other help text, e.g. after datetime fields
 form .aligned p.help,
 form .aligned div.help {
+  // Same issue around stacking labels
   margin-left: 0;
   padding-left: 0;
 }
 
+// Buttons at the bottom of a page
 .submit-row {
+  // Django gives this row a background and padding; we instead align
+  // everything to the edges
   padding: 0;
   background: none;
 }
 
+// More help text and inactive controls
 .aligned label + p,
 .aligned label + div.help,
 .aligned label + div.readonly {
+  // Same issue around stacking label
   margin-left: 0;
-  // extensions
+  // extension: Ensure they take up the whole line
   clear: both;
 }
 
+// We want our form labels to "stack" over the input elements. To do that,
+// we'll make sure the label takes up the whole line
 .aligned label {
+  // extensions
   width: 100%;
   padding-left: 0;
   padding-bottom: $space-xs;
 }
 
 label {
+  // Django sets these as gray and gives them a small font size
   @include size-regular();
   color: $color-black;
 }
 
 .aligned .vCheckboxLabel {
+  // Django gives these no left padding
   padding-left: $space-sm;
 }
 
 .submit-row a.deletelink,
 .submit-row input {
+  // Django gives these a fixed height; we'll style it to look closer to
+  // right-side "save" buttons
   height: auto;
   line-height: $space-xl;
   padding: 0 $space-sm;
 }
 
 .inline-related fieldset {
+  // Django's default of 100% doesn't play well with our normalized box model
   width: auto;
 }

@@ -1,7 +1,10 @@
 .admin-interface .inline-group .tabular thead th:last-child:not([class]):not([style]) {
+  // admin_interface incorrectly assumes the last column will be an "action",
+  // so it overrides Django to right-align that heading. This reverts
   text-align: left;
 }
 
+// e.g. the headings for sub-sections on a form
 .admin-interface .module h2,
 .admin-interface.dashboard .module caption,
 .admin-interface .module.filtered h2,
