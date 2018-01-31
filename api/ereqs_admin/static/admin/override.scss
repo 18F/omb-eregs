@@ -18,6 +18,7 @@
 
 @import './base/variables';
 @import './overrides/django/base';
+@import './overrides/django/changelists';
 @import './overrides/django/forms';
 @import './overrides/django/widgets';
 @import './overrides/admin_interface/admin-interface-fix';
