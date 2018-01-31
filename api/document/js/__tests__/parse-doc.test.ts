@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import parseDoc, { convertContent } from '../parse-doc';
 import { apiFactory } from '../serialize-doc';
+import schema from '../schema';
 
 jest.mock('axios');
 
@@ -19,8 +20,8 @@ describe('parseDoc()', () => {
 
     expect(result.type.name).toBe('policy');
     expect(result.content.childCount).toBe(2);
-    expect(result.content.child(0).type.name).toBe('unimplemented_node');
-    expect(result.content.child(1).type.name).toBe('unimplemented_node');
+    expect(result.content.child(0).type).toBe(schema.nodes.unimplementedNode);
+    expect(result.content.child(1).type).toBe(schema.nodes.unimplementedNode);
   });
 
   it('loads paragraph text', () => {
@@ -43,7 +44,7 @@ describe('parseDoc()', () => {
     expect(result.content.child(0).content.childCount).toBe(2);
     expect(result.content.child(0).content.child(0).text).toBe('Some text ');
     expect(result.content.child(0).content.child(1).text).toBe('here');
-    expect(result.content.child(1).type.name).toBe('unimplemented_node');
+    expect(result.content.child(1).type).toBe(schema.nodes.unimplementedNode);
   });
 
   it('figures out heading depth', () => {
@@ -101,7 +102,7 @@ describe('parseDoc()', () => {
     expect(body2.content.child(1).type.name).toBe('para');
   });
 
-  describe('unimplemented_node', () => {
+  describe('unimplementedNode', () => {
     it('saves original data', () => {
       const node = {
         node_type: 'something-unknown',
@@ -114,7 +115,7 @@ describe('parseDoc()', () => {
       };
 
       const result = parseDoc(node);
-      expect(result.type.name).toBe('unimplemented_node');
+      expect(result.type).toBe(schema.nodes.unimplementedNode);
       expect(result.attrs).toEqual({ data: node });
       expect(result.content.childCount).toBe(0);
     });
@@ -149,14 +150,14 @@ describe('convertContent()', () => {
 
     expect(text1.type.name).toBe('text');
     expect(text1.marks).toHaveLength(1);
-    expect(text1.marks[0].type.name).toBe('unimplemented_mark');
+    expect(text1.marks[0].type).toBe(schema.marks.unimplementedMark);
     expect(text1.marks[0].attrs.data.outer).toBe('props');
 
     expect(text2.type.name).toBe('text');
     expect(text2.marks).toHaveLength(2);
-    expect(text2.marks[0].type.name).toBe('unimplemented_mark');
+    expect(text2.marks[0].type).toBe(schema.marks.unimplementedMark);
     expect(text2.marks[0].attrs.data.outer).toBe('props');
-    expect(text2.marks[1].type.name).toBe('unimplemented_mark');
+    expect(text2.marks[1].type).toBe(schema.marks.unimplementedMark);
     expect(text2.marks[1].attrs.data.inner).toBe('stuff');
   });
 });
