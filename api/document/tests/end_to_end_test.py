@@ -29,7 +29,10 @@ def get_cursor_for_policy(policy: Policy) -> DocCursor:
 
 @pytest.mark.parametrize("parser_class,renderer_class", [
     (AkomaNtosoParser, AkomaNtosoRenderer),
-    (JSONParser, JSONRenderer),
+    pytest.param(JSONParser, JSONRenderer, marks=pytest.mark.skip(
+        reason=("Intermittent failure; see "
+                "https://github.com/18F/omb-eregs/issues/974")
+    )),
 ])
 @pytest.mark.django_db
 def test_end_to_end(parser_class, renderer_class):
