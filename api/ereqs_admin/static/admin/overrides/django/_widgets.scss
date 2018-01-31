@@ -1,6 +1,7 @@
 .timezonewarning {
-  // Django makes this text smaller
+  // Django makes this text smaller and a different color
   @include size-regular();
+  color: $color-gray;
 
   // extension
   padding-top: $space-xs;
