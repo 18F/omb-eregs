@@ -44,7 +44,7 @@ const schema = new Schema({
       toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
     sec: {
-      content: 'block+',
+      content: 'heading block+',
       group: 'block',
       toDOM: () => ['section', { class: 'node-section' }, 0],
     },
