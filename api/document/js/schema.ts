@@ -34,7 +34,7 @@ const schema = new Schema({
       content: 'text+',
       group: 'block',
       attrs: {
-        depth: {}, // will hold the header depth
+        depth: { default: 1 },
       },
       toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
     },
