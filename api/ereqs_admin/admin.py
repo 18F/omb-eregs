@@ -5,9 +5,8 @@ from django.contrib.auth.models import Group, User
 from django.utils.translation import gettext_lazy as _
 
 from ereqs_admin.forms import UserChangeForm, UserCreationForm
-from reqs.admin import (AgencyAdmin, AgencyGroupAdmin, OfficeAdmin,
-                        PolicyAdmin, RequirementAdmin, TopicAdmin)
-from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
+from reqs.admin import PolicyAdmin
+from reqs.models import Policy
 
 
 class EReqsAdminSite(AdminSite):
@@ -45,12 +44,7 @@ admin_site = EReqsAdminSite()
 
 admin_site.register(Group, GroupAdmin)
 
-admin_site.register(Agency, AgencyAdmin)
-admin_site.register(AgencyGroup, AgencyGroupAdmin)
-admin_site.register(Office, OfficeAdmin)
 admin_site.register(Policy, PolicyAdmin)
-admin_site.register(Requirement, RequirementAdmin)
-admin_site.register(Topic, TopicAdmin)
 
 if settings.MAX_URL:
     admin_site.register(User, PasswordlessUserAdmin)
