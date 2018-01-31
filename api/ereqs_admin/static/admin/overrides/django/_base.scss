@@ -17,6 +17,7 @@ td,
 th {
   padding: $space;
   @include size-regular();
+  @include font-san-serif();
 }
 
 thead th,
@@ -57,4 +58,18 @@ a.button {
 .module caption,
 .inline-group h2 {
   @include size-regular();
+}
+
+body {
+  @include font-san-serif();
+  @include size-regular();
+}
+
+input,
+textarea,
+select,
+.form-row p,
+form .button {
+  @include font-san-serif();
+  @include size-small();
 }
