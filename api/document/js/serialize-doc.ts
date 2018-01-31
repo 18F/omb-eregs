@@ -64,7 +64,7 @@ const NODE_CONVERTERS = {
         { children, marker },
     );
   },
-  unimplemented_node: node => node.attrs.data,
+  unimplementedNode: node => node.attrs.data,
 };
 
 function defaultNodeConverter(node): ApiNode {
@@ -84,7 +84,7 @@ function defaultNodeConverter(node): ApiNode {
 }
 
 const MARK_CONVERTERS = {
-  unimplemented_mark: node =>
+  unimplementedMark: node =>
     apiFactory.content(node.type.name, node.attrs.data),
 };
 

@@ -9,7 +9,7 @@ function setStatus(msg: string, className: 'editor-status-error'|'' = '') {
   status.className = `editor-status ${className}`;
 }
 
-function setStatusError(e: Error) {
+export function setStatusError(e: Error) {
   let errMsg = 'An error occurred.';
   const data = e['response'] && e['response']['data'];
   if (data) {
