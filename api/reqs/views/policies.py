@@ -62,8 +62,10 @@ def relevant_reqs_count(params):
     return Subquery(subquery, output_field=IntegerField())
 
 
-def policy_or_404(identifier):
-    queryset = Policy.objects.filter(public=True)
+def policy_or_404(identifier, only_public=True):
+    queryset = Policy.objects.all()
+    if only_public:
+        queryset = queryset.filter(public=True)
     policy = queryset.filter(omb_policy_id=identifier).first()
     if not policy and identifier.isdigit():
         policy = queryset.filter(pk=identifier).first()

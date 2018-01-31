@@ -142,6 +142,20 @@ def test_by_pretty_url(client):
 
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
+def test_nonpublic(client, admin_client):
+    policy = mommy.make(Policy, omb_policy_id='M-Something-18', public=False)
+    root = DocCursor.new_tree('root', '0', policy=policy)
+    root.nested_set_renumber()
+
+    result = client.get('/M-Something-18')
+    assert result.status_code == 404
+
+    result = admin_client.get('/M-Something-18')
+    assert result.status_code == 200
+
+
+@pytest.mark.django_db
+@pytest.mark.urls('document.urls')
 def test_query_count(client):
     policy = mommy.make(Policy, omb_policy_id='M-O-A-R')
     root = random_doc(20, save=True, policy=policy, text='placeholder')
@@ -198,5 +212,13 @@ def test_editor_checks_policy(admin_client, path_suffix):
     mommy.make(Policy, omb_policy_id='M-11-22')
     result = admin_client.get(f'/admin/document-editor/M-99-88{path_suffix}')
     assert result.status_code == 404
+    result = admin_client.get(f'/admin/document-editor/M-11-22{path_suffix}')
+    assert result.status_code == 200
+
+
+@pytest.mark.parametrize('path_suffix', ['', '/akn'])
+@pytest.mark.django_db
+def test_editor_policy_can_be_private(admin_client, path_suffix):
+    mommy.make(Policy, omb_policy_id='M-11-22', public=False)
     result = admin_client.get(f'/admin/document-editor/M-11-22{path_suffix}')
     assert result.status_code == 200
