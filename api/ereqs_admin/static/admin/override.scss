@@ -1,6 +1,7 @@
 @import '~codemirror/addon/dialog/dialog.css';
 @import '~codemirror/lib/codemirror.css';
 @import '~codemirror/theme/eclipse.css';
+@import '~normalize.css/normalize.css';
 @import '~prosemirror-view/style/prosemirror.css';
 @import '~prosemirror-menu/style/menu.css';
 
@@ -15,7 +16,6 @@
 @import '../shared-styles/module/list';
 @import '../shared-styles/module/paragraph';
 
-@import './base/normalize';
 @import './base/variables';
 @import './overrides/django/base';
 @import './overrides/django/forms';
