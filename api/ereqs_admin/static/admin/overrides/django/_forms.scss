@@ -21,6 +21,12 @@ form .aligned select + div.help {
   padding-left: 0;
 }
 
+form .aligned p.help,
+form .aligned div.help {
+  margin-left: 0;
+  padding-left: 0;
+}
+
 .submit-row {
   padding: 0;
   background: none;
@@ -30,6 +36,8 @@ form .aligned select + div.help {
 .aligned label + div.help,
 .aligned label + div.readonly {
   margin-left: 0;
+  // extensions
+  clear: both;
 }
 
 .aligned label {
@@ -52,4 +60,8 @@ label {
   height: auto;
   line-height: $space-xl;
   padding: 0 $space-sm;
+}
+
+.inline-related fieldset {
+  width: auto;
 }

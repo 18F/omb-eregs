@@ -56,5 +56,5 @@ a.button {
 .module h2,
 .module caption,
 .inline-group h2 {
-  @include size-large();
+  @include size-regular();
 }
