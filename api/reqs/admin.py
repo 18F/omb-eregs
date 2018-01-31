@@ -31,11 +31,9 @@ class PolicyAdmin(EReqsVersionAdmin):
     list_filter = ['public', 'workflow_phase']
     ordering = ['-issuance', '-pk']
     search_fields = ['title', 'omb_policy_id']
-    prepopulated_fields = {"slug": ("title",)}
     fields = [
         'title',
         'omb_policy_id',
-        'slug',
         'issuance',
         'sunset',
         'public',
