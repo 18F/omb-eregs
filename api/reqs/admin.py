@@ -25,6 +25,7 @@ class PolicyForm(forms.ModelForm):
 
 @admin.register(Policy)
 class PolicyAdmin(EReqsVersionAdmin):
+    actions = None
     list_filter = ['public', 'workflow_phase']
     search_fields = ['title', 'omb_policy_id']
     prepopulated_fields = {"slug": ("title",)}
