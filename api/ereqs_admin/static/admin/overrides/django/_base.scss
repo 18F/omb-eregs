@@ -38,7 +38,7 @@ tfoot td {
 h1 {
   // Override Django's title color and Normalize/Django's font sizes
   color: $color-black;
-  @include size-large();
+  @include size-xxlarge();
 
   // extending
   padding: $space-sm;
@@ -83,4 +83,9 @@ form .button {
   // Django also has specific fonts and sized for most inputs; reset them.
   @include font-san-serif();
   @include size-small();
+}
+
+#branding h1 {
+  // Django sets a font size for this specific element
+  @include size-large();
 }
