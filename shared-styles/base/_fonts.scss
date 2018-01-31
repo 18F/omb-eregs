@@ -5,6 +5,7 @@ $font-family-serif: "Georgia", serif;
 @mixin font-san-serif() {
   font-family: $font-family-sans;
   font-style: normal;
+  font-weight: 400;
 }
 
 @mixin font-san-serif-bold() {
@@ -20,6 +21,7 @@ $font-family-serif: "Georgia", serif;
 @mixin font-serif() {
   font-family: $font-family-serif;
   font-style: normal;
+  font-weight: 400;
 }
 
 @mixin font-serif-bold() {
