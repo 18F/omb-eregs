@@ -111,7 +111,12 @@ class Policy(models.Model):
         ordering = ['policy_number', 'pk']
 
     title = models.CharField(max_length=1024)
-    omb_policy_id = models.CharField(max_length=64, blank=True)
+    omb_policy_id = models.CharField(
+        'Policy number',
+        help_text='E.g. M-16-19',
+        max_length=64,
+        blank=True,
+    )
     slug = models.SlugField(max_length=title.max_length)
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
