@@ -14,7 +14,7 @@ const CACHE_CONFIG = {
 
 export class Endpoint {
   constructor(endpoint) {
-    let baseURL = process.env.INTERNAL_API_URL || process.env.API_URL;
+    const baseURL = process.env.INTERNAL_API_URL || process.env.API_URL;
     this.client = axios.create({ baseURL });
     this.endpoint = endpoint;
     this.cache = LRU(CACHE_CONFIG);
