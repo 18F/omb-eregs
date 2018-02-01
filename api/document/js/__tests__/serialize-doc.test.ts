@@ -18,6 +18,7 @@ describe('serializeDoc()', () => {
     expect(result).toEqual(apiFactory.node('policy', {
       children: [
         apiFactory.node('sec', {
+          title: 'Some heading',
           children: [
             apiFactory.node('heading', {
               content: [apiFactory.text('Some heading')],
@@ -42,6 +43,14 @@ describe('serializeDoc()', () => {
       children: [],
       content: [apiFactory.text('Stuff stuff')],
     });
+  });
+
+  it('converts heading text to section title', () => {
+    const node = factory.sec([
+      factory.heading('Stufff', 1),
+    ]);
+    const result = serializeDoc(node);
+    expect(result.title).toEqual('Stufff');
   });
 
   it('converts unimplemented nodes', () => {
