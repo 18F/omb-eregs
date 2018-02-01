@@ -80,7 +80,8 @@ services:
 
   dev: &DEV_UI
     <<: *PROD_UI
-    command: .docker/deps_ok_then .docker/watch-run.sh
+    entrypoint: .docker/deps_ok_then
+    command: .docker/watch-run.sh
     environment:
       PORT: 8002
       NODE_ENV: ${NODE_ENV:-development}
