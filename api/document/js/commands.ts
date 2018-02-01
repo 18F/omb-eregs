@@ -44,3 +44,10 @@ export function appendParagraphNear(state, dispatch) {
 export function makeSave(api: Api) {
   return async state => api.write(serializeDoc(state.doc));
 }
+
+export function makeSaveThenXml(api: Api) {
+  return async (state) => {
+    await api.write(serializeDoc(state.doc));
+    window.location.assign(`${window.location.href}/akn`);
+  };
+}

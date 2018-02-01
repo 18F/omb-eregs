@@ -1,30 +1,16 @@
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
 import Api from './Api';
-import { appendParagraphNear, makeSave } from './commands';
+import { appendParagraphNear, makeSave, makeSaveThenXml } from './commands';
 
-
-const newParagraph = new MenuItem({
-  class: 'menuitem-clickable',
-  title: 'Append paragraph',
-  run: appendParagraphNear,
-  label: 'P',
-  // These defaults are needed due to a doc issue. See
-  // https://github.com/ProseMirror/prosemirror-menu/issues/15
-  css: '',
-  execEvent: 'mousedown',
-});
-
-function makeSaveButton(api: Api) {
+function makeButton(content) {
   return new MenuItem({
     class: 'menuitem-clickable',
-    title: 'Save Document',
-    run: makeSave(api),
-    label: 'Save',
     // These defaults are needed due to a doc issue. See
     // https://github.com/ProseMirror/prosemirror-menu/issues/15
     css: '',
     execEvent: 'mousedown',
+    ...content,
   });
 }
 
@@ -40,8 +26,21 @@ export default function menu(api: Api) {
         // https://github.com/ProseMirror/prosemirror-menu/issues/12
         undoItem as any as MenuItem,
         redoItem as any as MenuItem,
-        newParagraph,
-        makeSaveButton(api),
+        makeButton({
+          label: 'P',
+          run: appendParagraphNear,
+          title: 'Append paragraph',
+        }),
+        makeButton({
+          label: 'Save',
+          run: makeSave(api),
+          title: 'Save document',
+        }),
+        makeButton({
+          label: 'Save then XML',
+          title: 'Save document then edit as XML',
+          run: makeSaveThenXml(api),
+        }),
       ],
     ],
   });

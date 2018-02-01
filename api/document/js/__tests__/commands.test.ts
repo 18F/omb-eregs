@@ -1,10 +1,11 @@
 jest.mock('../Api');
 jest.mock('../serialize-doc');
+window.location.assign = jest.fn();
 
 import { EditorState, TextSelection } from 'prosemirror-state';
 
 import Api from '../Api';
-import { appendParagraphNear, makeSave } from '../commands';
+import { appendParagraphNear, makeSave, makeSaveThenXml } from '../commands';
 import schema, { factory } from '../schema';
 import serializeDoc from '../serialize-doc';
 
@@ -101,5 +102,29 @@ describe('makeSave()', () => {
 
     expect(serializeDoc).toBeCalledWith('stuff');
     expect(api.write).toBeCalledWith({ serialized: 'content' });
+  });
+});
+
+describe('makeSaveThenXml()', () => {
+  it('calls the save function', async () => {
+    (serializeDoc as any).mockImplementationOnce(() => ({ serialized: 'content' }));
+
+    const api = new Api({ contentType: '', csrfToken: '', url: '' });
+    const save = makeSaveThenXml(api);
+    await save({ doc: 'stuff' });
+
+    expect(serializeDoc).toBeCalledWith('stuff');
+    expect(api.write).toBeCalledWith({ serialized: 'content' });
+  });
+
+  it('changes the window location', async () => {
+    (window.location.assign as any).mockClear();
+
+    const api = new Api({ contentType: '', csrfToken: '', url: '' });
+    const save = makeSaveThenXml(api);
+    await save({ doc: 'stuff' });
+
+    const param = (window.location.assign as any).mock.calls[0][0];
+    expect(param).toMatch(/akn$/);
   });
 });
