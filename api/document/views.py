@@ -23,10 +23,8 @@ class TreeView(GenericAPIView):
     queryset = DocNode.objects.none()   # Used to determine permissions
 
     def get_object(self, prefetch_related=True):
-        policy = policy_or_404(
-            self.kwargs['policy_id'],
-            only_public=not self.request.user.is_authenticated,
-        )
+        only_public = not self.request.user.is_authenticated
+        policy = policy_or_404(self.kwargs['policy_id'], only_public)
         # we'll pass this policy down when we serialize
         self.policy = policy
         query_args = {'policy_id': policy.pk}
