@@ -86,3 +86,9 @@ label {
   // Django's default of 100% doesn't play well with our normalized box model
   width: auto;
 }
+
+.vTextField {
+  // Django's default is smaller, assuming we're only taking up a portion of
+  // the line
+  width: 40rem;
+}
