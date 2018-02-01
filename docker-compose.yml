@@ -1,9 +1,9 @@
 version: '2.1'
 services:
   persistent_db:
-    extends:
-      file: docker-services.yml
-      service: persistent_db
+    image: postgres:9.4
+    volumes:
+      - database_data:/var/lib/postgresql/data
   minio:
     extends:
       file: docker-services.yml
@@ -12,6 +12,8 @@ services:
     extends:
       file: docker-services.yml
       service: dev-api
+    volumes:
+      - .:/usr/src/app:delegated
     depends_on:
       - persistent_db
       - minio
@@ -20,10 +22,14 @@ services:
     extends:
       file: docker-services.yml
       service: api-webpack
+    volumes:
+      - .:/usr/src/app:delegated
   dev:
     extends:
       file: docker-services.yml
       service: dev
+    volumes:
+      - .:/usr/src/app:delegated
     depends_on:
       - dev-api
 volumes:

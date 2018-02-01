@@ -1,13 +1,7 @@
 version: '2.1'
 services:
-  persistent_db:
-    image: postgres:9.4
-    volumes:
-      - database_data:/var/lib/postgresql/data
   python: &PYTHON     # This command is out of order to aid with config reuse
     image: python:3.6.2
-    volumes:
-      - .:/usr/src/app:delegated
     working_dir: /usr/src/app/api
     stdin_open: true
     tty: true
@@ -66,8 +60,6 @@ services:
 
   api-webpack: &API_WEBPACK
     image: node:6
-    volumes:
-      - .:/usr/src/app:delegated
     environment:
       USE_POLLING: ${USE_POLLING:-false}
     working_dir: /usr/src/app/api
@@ -76,8 +68,6 @@ services:
 
   prod: &PROD_UI
     image: node:6
-    volumes:
-      - .:/usr/src/app:delegated
     working_dir: /usr/src/app/ui
     command: .docker/deps_ok_then npm start
     environment:
