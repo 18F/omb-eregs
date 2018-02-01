@@ -15,11 +15,11 @@ services:
     depends_on:
       - persistent_db
       - minio
-      - api-webpack-watcher
-  api-webpack-watcher:
+      - api-webpack
+  api-webpack:
     extends:
       file: docker-services.yml
-      service: api-webpack-watcher
+      service: api-webpack
   dev:
     extends:
       file: docker-services.yml
