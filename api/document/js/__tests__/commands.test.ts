@@ -1,7 +1,12 @@
+jest.mock('../Api');
+jest.mock('../serialize-doc');
+
 import { EditorState, TextSelection } from 'prosemirror-state';
 
-import { appendParagraphNear } from '../commands';
+import Api from '../Api';
+import { appendParagraphNear, makeSave } from '../commands';
 import schema, { factory } from '../schema';
+import serializeDoc from '../serialize-doc';
 
 function executeTransform(initialState: EditorState, transform): EditorState {
   const dispatch = jest.fn();
@@ -83,5 +88,18 @@ describe('appendParagraphNear()', () => {
     expect(resolvedPos.parent.type).toBe(schema.nodes.inline);
     expect(resolvedPos.parent).toBe(
       modified.doc.content.child(2).content.child(0));
+  });
+});
+
+describe('makeSave()', () => {
+  it('calls the save function', async () => {
+    (serializeDoc as any).mockImplementationOnce(() => ({ serialized: 'content' }));
+
+    const api = new Api({ contentType: '', csrfToken: '', url: '' });
+    const save = makeSave(api);
+    await save({ doc: 'stuff' });
+
+    expect(serializeDoc).toBeCalledWith('stuff');
+    expect(api.write).toBeCalledWith({ serialized: 'content' });
   });
 });

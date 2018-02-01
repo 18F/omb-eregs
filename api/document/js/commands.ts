@@ -1,7 +1,9 @@
 import { Node } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
+import Api from './Api';
 import { factory } from './schema';
+import serializeDoc from './serialize-doc';
 
 function safeDocCheck(doc: Node) {
   try {
@@ -37,4 +39,8 @@ export function appendParagraphNear(state, dispatch) {
   }
 
   return true;
+}
+
+export function makeSave(api: Api) {
+  return async state => api.write(serializeDoc(state.doc));
 }
