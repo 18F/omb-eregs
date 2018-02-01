@@ -18,7 +18,7 @@ services:
     volumes:
       - database_data:/var/lib/postgresql/data
   python: &PYTHON     # This command is out of order to aid with config reuse
-    image: python:3.6.2
+    image: python:3.6.4
     volumes:
       - .:/usr/src/app:delegated
     working_dir: /usr/src/app/api
