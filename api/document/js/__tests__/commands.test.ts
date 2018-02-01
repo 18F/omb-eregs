@@ -94,7 +94,7 @@ describe('appendParagraphNear()', () => {
 
 describe('makeSave()', () => {
   it('calls the save function', async () => {
-    (serializeDoc as any).mockImplementationOnce(() => ({ serialized: 'content' }));
+    (serializeDoc as jest.Mock).mockImplementationOnce(() => ({ serialized: 'content' }));
 
     const api = new Api({ contentType: '', csrfToken: '', url: '' });
     const save = makeSave(api);
@@ -107,7 +107,7 @@ describe('makeSave()', () => {
 
 describe('makeSaveThenXml()', () => {
   it('calls the save function', async () => {
-    (serializeDoc as any).mockImplementationOnce(() => ({ serialized: 'content' }));
+    (serializeDoc as jest.Mock).mockImplementationOnce(() => ({ serialized: 'content' }));
 
     const api = new Api({ contentType: '', csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
@@ -118,13 +118,14 @@ describe('makeSaveThenXml()', () => {
   });
 
   it('changes the window location', async () => {
-    (window.location.assign as any).mockClear();
+    const locationAssign = window.location.assign as jest.Mock;
+    locationAssign.mockClear();
 
     const api = new Api({ contentType: '', csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
     await save({ doc: 'stuff' });
 
-    const param = (window.location.assign as any).mock.calls[0][0];
+    const param = locationAssign.mock.calls[0][0];
     expect(param).toMatch(/akn$/);
   });
 });
