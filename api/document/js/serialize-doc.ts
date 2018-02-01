@@ -8,7 +8,7 @@ interface ApiNode {
   marker?: string;
   node_type: string;
   type_emblem?: string;
-  // at some point, we'll need: title
+  title?: string;
 }
 
 interface ApiContent {
@@ -63,6 +63,14 @@ const NODE_CONVERTERS = {
         { children, marker, type_emblem: typeEmblem } :
         { children, marker },
     );
+  },
+  sec(node) {
+    const headerNode = node.content.child(0);
+    const title = headerNode.textContent;
+    const sec = defaultNodeConverter(node);
+    sec.title = title;
+
+    return sec;
   },
   unimplementedNode: node => node.attrs.data,
 };
