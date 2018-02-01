@@ -1,0 +1,181 @@
+version: '2.1'
+services:
+  persistent_db:
+    image: postgres:9.4
+    volumes:
+      - database_data:/var/lib/postgresql/data
+  python: &PYTHON     # This command is out of order to aid with config reuse
+    image: python:3.6.2
+    volumes:
+      - .:/usr/src/app:delegated
+    working_dir: /usr/src/app/api
+    stdin_open: true
+    tty: true
+  minio:
+    image: minio/minio
+    environment:
+        - MINIO_ACCESS_KEY=LOCAL_ID
+        - MINIO_SECRET_KEY=LOCAL_KEY
+    command: server --address ':9100' minio-test
+    ports:
+      - 9100:9100   # minio
+  prod-api: &PROD_API
+    <<: *PYTHON
+    command: .docker/activate_then .docker/wait_for_db_then ./run_api.sh
+    environment: &API_ENV
+      DATABASE_URL: postgres://postgres@persistent_db/postgres
+      PORT: 9001
+      DJANGO_SETTINGS_MODULE: omb_eregs.settings
+      TMPDIR: /tmp
+      USING_SSL: "False"
+      # Uncomment the following line for MAX logins
+      # MAX_URL: https://login.max.gov/cas/login
+      # The following settings are to maintain environment parity between the
+      # docker-compose configuration for local development and the cloud.gov
+      # staging and production configurations.
+      VCAP_APPLICATION: >
+        {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "prod-api", "dev-api", "proxy"]}
+      VCAP_SERVICES: >
+        {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}],
+         "s3": [{
+           "credentials": {
+             "access_key_id": "LOCAL_ID",
+             "bucket": "pdfs",
+             "region": "irrelevant fake region",
+             "endpoint": "http://minio:9100",
+             "secret_access_key": "LOCAL_KEY"
+           },
+           "label": "s3",
+           "name": "storage-s3"
+         }]
+        }
+
+  dev-api: &DEV_API
+    <<: *PROD_API
+    command: .docker/activate_then .docker/wait_for_webpack_then .docker/wait_for_db_then ./run_api.sh
+    environment:
+      <<: *API_ENV
+      PORT: 8001
+      DEBUG: ${DEBUG:-true}
+      USE_POLLING: ${USE_POLLING:-false}
+      # Uncomment the following line for MAX logins
+      # MAX_URL: https://login.test.max.gov/cas/login
+    ports:
+      - 8001:8001   # dev-api
+
+  api-webpack-watcher: &API_WEBPACK
+    image: node:6
+    volumes:
+      - .:/usr/src/app:delegated
+    environment:
+      USE_POLLING: ${USE_POLLING:-false}
+    working_dir: /usr/src/app/api
+    command: .docker/deps_ok_then node_modules/.bin/webpack --watch
+
+  prod: &PROD_UI
+    image: node:6
+    volumes:
+      - .:/usr/src/app:delegated
+    working_dir: /usr/src/app/ui
+    command: .docker/deps_ok_then npm start
+    environment:
+      PORT: 9002
+      NODE_ENV: ${NODE_ENV:-production}
+      API_URL: ${API_URL:-http://localhost:9001/}
+      VCAP_SERVICES: >
+        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
+        }}}]}
+
+  dev: &DEV_UI
+    <<: *PROD_UI
+    command: .docker/deps_ok_then .docker/watch-run.sh
+    environment:
+      PORT: 8002
+      NODE_ENV: ${NODE_ENV:-development}
+      API_URL: ${API_URL:-http://localhost:8001/}
+      USE_POLLING: ${USE_POLLING:-false}
+      VCAP_SERVICES: >
+        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
+        }}}]}
+    ports:
+      - 8002:8002
+
+  #---- Commands ----
+  bandit:
+    <<: *PYTHON
+    environment:
+      DEBUG: ${DEBUG:-true}
+    entrypoint: .docker/activate_then bandit
+
+  flake8:
+    <<: *PYTHON
+    environment:
+      DEBUG: ${DEBUG:-true}
+    entrypoint: .docker/activate_then flake8
+
+  mypy:
+    <<: *PYTHON
+    environment:
+      DEBUG: ${DEBUG:-true}
+    entrypoint: .docker/activate_then mypy
+
+  manage.py:
+    <<: *DEV_API
+    entrypoint: .docker/wait_for_db_then .docker/activate_then ./manage.py
+    command: ''
+
+  npm:
+    <<: *DEV_UI
+    entrypoint: .docker/deps_ok_then npm
+    command: ''
+    ports: []
+    depends_on: []
+
+  pip-compile:
+    <<: *PYTHON
+    environment:
+      DEBUG: ${DEBUG:-true}
+    entrypoint: .docker/activate_then pip-compile
+
+  psql:
+    image: postgres:9.4
+    entrypoint: 'psql -h persistent_db -U postgres'
+    depends_on: ['persistent_db']
+
+  ptw:
+    <<: *DEV_API
+    entrypoint: .docker/activate_then .docker/watch_tests.sh
+    command: ''
+    ports: []
+
+  py.test:
+    <<: *DEV_API
+    entrypoint: .docker/wait_for_db_then .docker/activate_then py.test
+    command: ''
+
+  webpack:
+    <<: *DEV_UI
+    entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
+    command: ''
+    ports: []
+    depends_on: []
+
+  api-npm:
+    <<: *API_WEBPACK
+    entrypoint: .docker/deps_ok_then npm
+    command: ''
+
+  api-webpack:
+    <<: *API_WEBPACK
+    entrypoint: .docker/deps_ok_then ./node_modules/.bin/webpack
+    command: ''
+
+  pybash:
+    <<: *DEV_API
+    entrypoint: .docker/wait_for_db_then .docker/activate_then bash
+    command: ''
+
+  nodebash:
+    <<: *DEV_UI
+    entrypoint: .docker/deps_ok_then .docker/modify_path_then bash
+    command: ''
