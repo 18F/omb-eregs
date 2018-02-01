@@ -32,3 +32,23 @@ kbd {
   padding: .1em .6em;
   text-shadow: 0 1px 0 $color-white;
 }
+
+.ProseMirror-menubar {
+  padding: $space-xs;
+  border-bottom-color: $color-black;
+}
+
+.ProseMirror-menuitem {
+  border: solid 1px $color-black;
+  color: $color-black;
+  margin-left: 0;
+  margin-right: $space-xs;
+  min-width: 1rem;
+  padding-left: $space-sm;
+  padding-right: $space-sm;
+  text-align: center;
+}
+
+.menuitem-clickable {
+  cursor: pointer;
+}

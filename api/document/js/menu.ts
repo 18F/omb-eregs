@@ -4,13 +4,13 @@ import { appendParagraphNear } from './commands';
 
 
 const newParagraph = new MenuItem({
-  css: 'cursor: pointer;',
-  title: 'Add paragraph',
+  class: 'menuitem-clickable',
+  title: 'Append paragraph',
   run: appendParagraphNear,
   label: 'P',
   // These defaults are needed due to a doc issue. See
   // https://github.com/ProseMirror/prosemirror-menu/issues/15
-  class: '',
+  css: '',
   execEvent: 'mousedown',
 });
 
