@@ -11,7 +11,7 @@ services:
   api:
     extends:
       file: docker-services.yml
-      service: dev-api
+      service: api
     volumes:
       - .:/usr/src/app:delegated
     depends_on:
@@ -21,13 +21,13 @@ services:
   api-ui:
     extends:
       file: docker-services.yml
-      service: api-webpack
+      service: api-ui
     volumes:
       - .:/usr/src/app:delegated
   ui:
     extends:
       file: docker-services.yml
-      service: dev
+      service: ui
     volumes:
       - .:/usr/src/app:delegated
     depends_on:
