@@ -24,10 +24,6 @@ services:
       TMPDIR: /tmp
       USING_SSL: "False"
 
-      # Uncomment one of the following lines for MAX logins
-      # MAX_URL: https://login.max.gov/cas/login
-      # MAX_URL: https://login.test.max.gov/cas/login
-
       # The following settings are to maintain environment parity between the
       # docker-compose configuration for local development and the cloud.gov
       # staging and production configurations.
