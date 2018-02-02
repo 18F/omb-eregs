@@ -2,37 +2,6 @@
 // ==========================================================================
 // typography.scss contains both global and application specific typography
 
-// Basic font mixins
-@mixin font-san-serif() {
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-style: normal;
-}
-
-@mixin font-san-serif-bold() {
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-weight: 800;
-}
-
-@mixin font-san-serif-light() {
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-weight: 300;
-}
-
-@mixin font-serif() {
-  font-family: "Georgia", serif;
-  font-style: normal;
-}
-
-@mixin font-serif-bold() {
-  font-family: "Georgia", serif;
-  font-weight: 800;
-}
-
-@mixin font-serif-light() {
-  font-family: "Georgia", serif;
-  font-weight: 300;
-}
-
 body {
   @include font-san-serif();
 }
@@ -78,60 +47,35 @@ h6,
 
 h1,
 .h1 {
-  font-size: 1.5rem;
-  line-height: 2rem;
+  @include size-xxlarge();
 }
 
 h2,
 .h2 {
-  font-size: 1.625rem;
-  line-height: 1.6875rem;
+  @include size-xlarge();
 }
 
 h3,
 .h3 {
-  font-size: 1.125rem;
-  line-height: 1.5rem;
+  @include size-large();
 }
 
 h4,
 .h4 {
-  font-size: 1rem;
-  line-height: 1.5rem;
+  @include size-regular();
 }
 
 h5,
 .h5 {
-  font-size: .875rem;
-  line-height: 1.312rem;
+  @include size-small();
 }
 
 h6,
 .h6 {
-  font-size: .75rem;
-  line-height: .875rem;
+  @include size-xsmall();
 }
 
 p {
   @include font-serif();
   @include size-regular();
-}
-
-@media #{$on-desktop} {
-  h1,
-  .h1 {
-    font-size: 2rem;
-    line-height: 2.5rem;
-  }
-
-  h2,
-  .h2 {
-    line-height: 2rem;
-  }
-
-  h3,
-  .h3 {
-    font-size: 1.625rem;
-    line-height: 1.6875rem;
-  }
 }

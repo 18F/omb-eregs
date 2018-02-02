@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from ereqs_admin.revision_admin import EReqsVersionAdmin
 from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
@@ -12,6 +14,8 @@ def is_extension_pdf(uploaded_file):
         raise ValidationError('The file must be a PDF.')
 
 
+# This form is temporarily no-longer used. We'll add it back with the pdf
+# upload workflow
 class PolicyForm(forms.ModelForm):
     document_source = forms.FileField(required=False,
                                       validators=[is_extension_pdf])
@@ -23,12 +27,29 @@ class PolicyForm(forms.ModelForm):
 
 @admin.register(Policy)
 class PolicyAdmin(EReqsVersionAdmin):
-    form = PolicyForm
-    filter_horizontal = ['managing_offices']
-    list_filter = ['policy_type', 'policy_status', 'public']
-    radio_fields = {'policy_type': admin.VERTICAL}
+    actions = None
+    list_display = ('workflow_phase', '__str__', 'issuance')
+    list_display_links = ('__str__',)
+    list_filter = ['public', 'workflow_phase']
+    ordering = ['-issuance', '-pk']
     search_fields = ['title', 'omb_policy_id']
-    prepopulated_fields = {"slug": ("title",)}
+    fields = [
+        'title',
+        'omb_policy_id',
+        'issuance',
+        'sunset',
+        'public',
+        'workflow_phase',
+    ]
+
+    def response_post_save_change(self, request, obj):
+        """Redirect to the document editor, if that's the button the user
+        clicked."""
+        if '_savethendoc' in request.POST:
+            policy_id = obj.omb_policy_id or obj.slug
+            return HttpResponseRedirect(
+                reverse('document_editor', kwargs={'policy_id': policy_id}))
+        return super().response_post_save_change(request, obj)
 
 
 @admin.register(Topic)

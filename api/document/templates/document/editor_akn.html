@@ -1,0 +1,32 @@
+{% extends 'document/editor.html' %}
+{% load static %}
+
+{% block instructions %}
+<h2>Help</h2>
+<dl>
+  <dt><kbd>Ctrl</kbd>+<kbd>S</kbd> or <kbd>⌘</kbd>+<kbd>S</kbd></dt>
+  <dd>Save document</dd>
+
+  <dt><kbd>Ctrl</kbd>+<kbd>F</kbd> or <kbd>⌘</kbd>+<kbd>F</kbd></dt>
+  <dd>Start searching</dd>
+
+  <dt><kbd>Ctrl</kbd>+<kbd>G</kbd> or <kbd>⌘</kbd>+<kbd>G</kbd></dt>
+  <dd>Find next</dd>
+
+  <dt><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>G</kbd> or
+    <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>G</kbd></dt>
+  <dd>Find previous</dd>
+
+  <dt><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>F</kbd> or
+    <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd></dt>
+  <dd>Replace</dd>
+
+  <dt><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>R</kbd> or
+    <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd></dt>
+  <dd>Replace all</dd>
+</dl>
+{% endblock %}
+
+{% block editor-js %}
+<script src="{% static 'bundles/js/document.akn.main.bundle.js' %}"></script>
+{% endblock %}

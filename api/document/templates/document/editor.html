@@ -1,27 +1,24 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <style>
-    #editor {
-      border: 1px solid black;
-    }
-
-    .ProseMirror .unimplemented {
-      font-family: monospace;
-      background: lightpink;
-    }
-
-    .ProseMirror div.unimplemented {
-      padding: 2px 4px;
-    }
-    </style>
-    <title>Document editor</title>
+    <link
+      href="{% static 'bundles/css/admin/override.css' %}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <title>{{ title }}</title>
   </head>
   <body>
-    <h1>Document editor</h1>
-    <div id="editor"></div>
-    {% load static %}
-    <script src="{% static 'bundles/js/document.main.bundle.js' %}"></script>
+    <h1>{{ title }}</h1>
+    <pre id="status" class="editor-status"></pre>
+    <div class="editor-container" id="editor" data-document-url="{{ document_url }}"></div>
+    {% csrf_token %}
+    {% block instructions %}
+    {% endblock %}
+    {% block editor-js %}
+      <script src="{% static 'bundles/js/document.main.bundle.js' %}"></script>
+    {% endblock %}
   </body>
 </html>

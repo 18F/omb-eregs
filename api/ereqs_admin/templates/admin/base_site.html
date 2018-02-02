@@ -1,7 +1,8 @@
 {% extends 'admin_interface:admin/base_site.html' %}
 {% load nav_menu static %}
 
-{% block extrastyle %}
+{# We don't override extrastyles because other pages will also override it #}
+{% block extrahead %}
   {{ block.super }}
   <link
     rel="stylesheet"

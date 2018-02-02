@@ -1,4 +1,4 @@
-from django.db.models import Count, IntegerField, OuterRef, Subquery
+from django.db.models import Count, IntegerField, OuterRef, Q, Subquery
 from django.http import Http404
 from rest_framework import viewsets
 
@@ -62,16 +62,20 @@ def relevant_reqs_count(params):
     return Subquery(subquery, output_field=IntegerField())
 
 
-def policy_or_404(identifier):
-    queryset = Policy.objects.filter(public=True)
-    policy = queryset.filter(omb_policy_id=identifier).first()
-    if not policy and identifier.isdigit():
-        policy = queryset.filter(pk=identifier).first()
-    if not policy:
-        policy = queryset.filter(slug=identifier).first()
-    if not policy:
-        raise Http404()
-    return policy
+def policy_or_404(identifier, only_public=True):
+    queryset = Policy.objects.all()
+    if only_public:
+        queryset = queryset.filter(public=True)
+
+    test = Q(omb_policy_id=identifier) | Q(slug=identifier)
+    if identifier.isdigit():
+        test = test | Q(pk=identifier)
+
+    policy = queryset.filter(test).first()
+    if policy:
+        return policy
+
+    raise Http404()
 
 
 class PolicyViewSet(viewsets.ModelViewSet):
@@ -82,7 +86,6 @@ class PolicyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset() \
-            .annotate_with_has_docnodes() \
             .annotate(total_reqs=relevant_reqs_count({}),
                       relevant_reqs=relevant_reqs_count(self.request.GET)) \
             .filter(public=True, relevant_reqs__gt=0)

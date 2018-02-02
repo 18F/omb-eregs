@@ -16,13 +16,15 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 
-from document.views import editor
+from document.views import editor, editor_akn
 from ereqs_admin.admin import admin_site
 from reqs.router import router
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^admin/document-editor/(?P<policy_id>[^/]+)$', editor),
+    url(r'^admin/document-editor/(?P<policy_id>[^/]+)$', editor,
+        name='document_editor'),
+    url(r'^admin/document-editor/(?P<policy_id>[^/]+)/akn$', editor_akn),
     url(r'^admin/', admin_site.urls),
     url(r'^document/', include('document.urls')),
 ]

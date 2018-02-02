@@ -31,7 +31,7 @@ def scrape_urls(base_url=BASE_URL) -> Dict[MemoId, Url]:
     for link in html.findall('.//li/a[@href]'):
         match = M_REGEX.match(link.text or '')
         if match and link.attrib['href'].endswith('.pdf'):
-            url_by_num[match.group('m_number')] = urljoin(
+            url_by_num[MemoId(match.group('m_number'))] = urljoin(
                 base_url, link.attrib['href'])
     return url_by_num
 
@@ -41,7 +41,10 @@ def parse_pdf(policy: Policy, url: Url) -> bool:
     successful."""
     try:
         pdf = download_with_progress(url)
-        pdf.name = basename(urlparse(url).path)     # this used by from_file
+
+        # This is used by from_file.
+        pdf.name = basename(urlparse(url).path)     # type: ignore
+
         doc = OMBDocument.from_file(pdf)
         cursor = to_db(doc, policy)
         with reversion.create_revision():
@@ -64,9 +67,13 @@ def scrape_memoranda() -> Tuple[Set[MemoId], Set[MemoId]]:
     pdf listed on OMB's site."""
     successes, failures = set(), set()
     url_by_num = scrape_urls()
-    query = Policy.objects.annotate_with_has_docnodes() \
-        .filter(omb_policy_id__in=url_by_num.keys(),
-                has_docnodes=False)     # not replacing data
+    query = Policy.objects.filter(
+        omb_policy_id__in=url_by_num.keys(),
+        workflow_phase__in=(    # not replacing data
+            WorkflowPhases.no_doc.name,
+            WorkflowPhases.failed.name,
+        ),
+    )
     for policy in query:
         if parse_pdf(policy, url_by_num[policy.omb_policy_id]):
             successes.add(policy.omb_policy_id)

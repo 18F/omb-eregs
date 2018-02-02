@@ -4,8 +4,6 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy
 
-from document.models import DocNode
-
 
 class Agency(models.Model):
     class Meta:
@@ -107,44 +105,39 @@ class Office(models.Model):
         return self.name
 
 
-class PolicyQueryset(models.QuerySet):
-    def annotate_with_has_docnodes(self):
-        """We frequently want to filter a Policy queryset by whether or not
-        the policies have associated DocNodes. This annotates a queryset with
-        that data."""
-
-        subquery = DocNode.objects.filter(policy=models.OuterRef('pk'))
-        return self.annotate(has_docnodes=models.Exists(subquery))
-
-
 class Policy(models.Model):
     class Meta:
         verbose_name_plural = ugettext_lazy('Policies')
-        ordering = ['policy_number']
+        ordering = ['policy_number', 'pk']
 
-    objects = PolicyQueryset.as_manager()
-
-    policy_number = models.IntegerField(unique=True)
     title = models.CharField(max_length=1024)
-    uri = models.CharField(max_length=256)
-    omb_policy_id = models.CharField(max_length=64, blank=True)
-    policy_type = models.CharField(
-        max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
-        blank=True
+    omb_policy_id = models.CharField(
+        'Policy number',
+        help_text='E.g. M-16-19',
+        max_length=64,
+        blank=True,
     )
     slug = models.SlugField(max_length=title.max_length)
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
-    policy_status = models.CharField(max_length=256, blank=True)
-    document_source = models.FileField(blank=True)
     public = models.BooleanField(default=True)
-    issuing_body = models.CharField(max_length=512)
-    managing_offices = models.ManyToManyField(
-        Office, blank=True, related_name='policies')
     workflow_phase = models.CharField(
         max_length=32, choices=[(e.name, e.value) for e in WorkflowPhases],
         default=WorkflowPhases.no_doc.name
     )
+
+    # Legacy data fields
+    policy_number = models.IntegerField(blank=True, null=True)
+    uri = models.CharField(blank=True, max_length=256)
+    policy_type = models.CharField(
+        max_length=32, choices=[(e.name, e.value) for e in PolicyTypes],
+        blank=True
+    )
+    policy_status = models.CharField(max_length=256, blank=True)
+    document_source = models.FileField(blank=True)
+    issuing_body = models.CharField(blank=True, max_length=512)
+    managing_offices = models.ManyToManyField(
+        Office, blank=True, related_name='policies')
 
     @property
     def title_with_number(self):
@@ -162,11 +155,15 @@ class Policy(models.Model):
     def requirements_with_topics(self):
         return self.requirements.prefetch_related('topics').distinct()
 
+    @property
+    def has_published_document(self):
+        return self.workflow_phase == WorkflowPhases.published.name
+
     def __str__(self):
         text = self.title_with_number
         if len(text) > 100:
             text = text[:100] + '...'
-        return '({0}) {1}'.format(self.policy_number, text)
+        return text
 
     def save(self):
         if not self.slug:

@@ -17,11 +17,11 @@ def test_policy_title_with_number():
 
 def test_policy_str():
     """Should trim the policy title and add the policy number"""
-    policy = models.Policy(policy_number=5, title="Short", omb_policy_id="ID")
-    assert str(policy) == "(5) ID: Short"
+    policy = models.Policy(title="Short", omb_policy_id="ID")
+    assert str(policy) == "ID: Short"
 
     policy.title = "Long"*100
-    assert str(policy) == "(5) ID: {0}...".format("Long"*24)
+    assert str(policy) == "ID: {0}...".format("Long"*24)
 
 
 def test_original_url():
@@ -31,6 +31,19 @@ def test_original_url():
 
     policy.document_source = Mock(url='http://example.com/uploaded')
     assert policy.original_url == 'http://example.com/uploaded'
+
+
+@pytest.mark.parametrize('phase, has_published_document', (
+    (models.WorkflowPhases.edit, False),
+    (models.WorkflowPhases.cleanup, False),
+    (models.WorkflowPhases.failed, False),
+    (models.WorkflowPhases.no_doc, False),
+    (models.WorkflowPhases.published, True),
+    (models.WorkflowPhases.review, False),
+))
+def test_has_published_document(phase, has_published_document):
+    policy = models.Policy(workflow_phase=phase.name)
+    assert policy.has_published_document is has_published_document
 
 
 @pytest.mark.django_db

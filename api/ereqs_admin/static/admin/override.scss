@@ -1,59 +1,30 @@
+@import '~codemirror/addon/dialog/dialog.css';
+@import '~codemirror/lib/codemirror.css';
+@import '~codemirror/theme/eclipse.css';
+@import '~normalize.css/normalize.css';
+@import '~prosemirror-view/style/prosemirror.css';
+@import '~prosemirror-menu/style/menu.css';
+
 @import '../shared-styles/base/colors';
+@import '../shared-styles/base/fonts';
 @import '../shared-styles/base/media-queries';
 @import '../shared-styles/base/spacing';
 @import '../shared-styles/base/type-size';
 @import '../shared-styles/base/util';
+@import '../shared-styles/layout/markers';
+@import '../shared-styles/module/heading';
+@import '../shared-styles/module/list';
+@import '../shared-styles/module/paragraph';
 
-$nav-menu-active: false;
+@import './base/variables';
+@import './overrides/django/base';
+@import './overrides/django/changelists';
+@import './overrides/django/forms';
+@import './overrides/django/widgets';
+@import './overrides/admin_interface/admin-interface-fix';
 
-$banner-height: 60px;
-$nav-menu-width: if($nav-menu-active, 200px, 0);
+@import './layout/header';
+@import './layout/navigation';
 
-#header {
-  // Remove padding so our nav-menu can start at left:0
-  padding: 0;
-}
+@import './module/editor';
 
-// Add the padding back to *other* elements in the header
-#branding,
-#user-tools {
-  padding: 10px 40px;
-}
-
-.breadcrumbs,
-.messagelist,
-#content {
-  margin-left: $nav-menu-width;
-
-  // we don't display the nav-menu when we're in a popup/ on the login screen
-  .popup &,
-  .login & {
-    margin-left: 0;
-  }
-}
-
-.title-bar {
-  color: $color-white;
-  background: $color-gray;
-  margin-top: $banner-height;
-  padding: 0 $space;
-  width: 100%;
-
-  @if not($nav-menu-active) {
-    display: none;
-  }
-
-}
-
-.nav-menu {
-  background: $color-black;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  width: $nav-menu-width;
-
-  @if not($nav-menu-active) {
-    display: none;
-  }
-}

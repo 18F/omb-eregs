@@ -11,6 +11,7 @@ module.exports = [
     devtool: 'inline-source-map',
     entry: {
       'document.main': './document/js/main.ts',
+      'document.akn.main': './document/js/akn/main.ts',
       'ombpdf.main': './ombpdf/js/main.ts',
       'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
     },

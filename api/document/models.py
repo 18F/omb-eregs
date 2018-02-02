@@ -1,7 +1,35 @@
 import itertools
 from typing import Iterator, List
 
+from django.core.validators import RegexValidator
 from django.db import models
+
+
+class DocNodeQuerySet(models.QuerySet):
+    def prefetch_annotations(self):
+        '''
+        To avoid the "n+1" query problem, we will optimize our querysets by
+        either joining 1-to-1 relations (via select_related) or ensuring a
+        single query for many-to-many relations (via prefetch_related).
+        '''
+
+        footnote_prefetch = models.Prefetch(
+            'footnotecitations',
+            queryset=FootnoteCitation.objects.select_related('footnote_node'),
+        )
+        requirement_prefetch = models.Prefetch(
+            'inlinerequirements',
+            queryset=InlineRequirement.objects.select_related('requirement'),
+        )
+        return self.\
+            prefetch_related(footnote_prefetch, 'cites', 'externallinks',
+                             requirement_prefetch)
+
+
+# Django's `PositiveIntegerField` is named in a very misleading way,
+# because it actually allows values of 0. For developers who aren't
+# aware of this oddity, we'll alias it to something more accurate.
+NonNegativeIntegerField = models.PositiveIntegerField
 
 
 class DocNode(models.Model):
@@ -19,12 +47,18 @@ class DocNode(models.Model):
     '''
 
     policy = models.ForeignKey('reqs.Policy', on_delete=models.CASCADE)
-    # e.g. part_447__subpart_A__sec_1__para_b
+    # e.g. part_447__subpart_A__sec_1__para_b.
     identifier = models.CharField(max_length=1024)
     # e.g. para
     node_type = models.CharField(max_length=64)
     # e.g. b
-    type_emblem = models.CharField(max_length=16)
+    type_emblem = models.CharField(
+        max_length=16,
+        validators=[RegexValidator(
+            r'[A-Za-z0-9]+',
+            message="Only alphanumeric characters are allowed."
+        )]
+    )
     text = models.TextField(blank=True)
     # e.g. "(a)", "From:", "1.", "•"
     marker = models.CharField(max_length=64, blank=True)
@@ -35,9 +69,11 @@ class DocNode(models.Model):
     # relational database as per the nested set model:
     #
     # https://en.wikipedia.org/wiki/Nested_set_model
-    left = models.PositiveIntegerField()
-    right = models.PositiveIntegerField()
-    depth = models.PositiveIntegerField()
+    left = NonNegativeIntegerField()
+    right = NonNegativeIntegerField()
+    depth = NonNegativeIntegerField()
+
+    objects = DocNodeQuerySet.as_manager()
 
     class Meta:
         unique_together = ('policy', 'identifier')
@@ -73,8 +109,8 @@ class Annotation(models.Model):
 
     doc_node = models.ForeignKey(
         DocNode, on_delete=models.CASCADE, related_name='%(class)ss')
-    start = models.PositiveIntegerField()    # inclusive; within doc_node.text
-    end = models.PositiveIntegerField()      # exclusive; within doc_node.text
+    start = NonNegativeIntegerField()  # inclusive; within doc_node.text
+    end = NonNegativeIntegerField()    # exclusive; within doc_node.text
 
     class Meta:
         abstract = True

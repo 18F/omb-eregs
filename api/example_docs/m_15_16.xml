@@ -1,18 +1,30 @@
-<policy emblem="1">
-  <preamble>
-    <published>July 9, 2015</published>
-    <policyNum>M-15-16</policyNum>
-    <policyTitle>
-      MEMORANDUM FOR HEADS OF EXECUTIVE DEPARTMENTS AND AGENCIES
+<policy id="policy_1" emblem="1">
+  <preamble id="policy_1__preamble_1" emblem="1">
+    <published id="policy_1__preamble_1__published_1" emblem="1">
+      <content>July 9, 2015</content>
+    </published>
+    <policyNum id="policy_1__preamble_1__policyNum_1" emblem="1">
+      <content>M-15-16</content>
+    </policyNum>
+    <policyTitle id="policy_1__preamble_1__policyTitle_1" emblem="1">
+      <content>MEMORANDUM FOR HEADS OF EXECUTIVE DEPARTMENTS AND AGENCIES</content>
     </policyTitle>
-    <from marker="FROM:">Shaun Donovan, Director, Office of Management and Budget</from>
-    <from marker="FROM:">Dr. John P. Holdren, Director, Office of Science and Technology Policy</from>
-    <subject marker="SUBJECT:">Multi-Agency Science and Technology Priorities for the FY 2017 Budget</subject>
+    <from id="policy_1__preamble_1__from_1" emblem="1">
+      <num>FROM:</num>
+      <content>Shaun Donovan, Director, Office of Management and Budget</content>
+    </from>
+    <from id="policy_1__preamble_1__from_2" emblem="2">
+      <num>FROM:</num>
+      <content>Dr. John P. Holdren, Director, Office of Science and Technology Policy</content>
+    </from>
+    <subject id="policy_1__preamble_1__subject_1" emblem="1">
+      <num>SUBJECT:</num>
+      <content>Multi-Agency Science and Technology Priorities for the FY 2017 Budget</content>
+    </subject>
   </preamble>
-  <sec>
-    <para>
-      <content>
-        Scientific discovery, technological breakthroughs, and innovation are
+  <sec id="policy_1__sec_1" emblem="1">
+    <para id="policy_1__sec_1__para_1" emblem="1">
+      <content>Scientific discovery, technological breakthroughs, and innovation are
         the primary engines for expanding the frontiers of human knowledge and
         are vital for responding to the challenges and opportunities ofthe
         2P1 century.  The Nation depends
@@ -20,12 +32,10 @@
         job creation, maintain a safe and sufficient food supply, improve the
         health of Americans, move toward a clean energy future, address global
         climate change, manage competing demands on environmental resources,
-        and ensure the Nation's security. 
-      </content>
+        and ensure the Nation's security.</content>
     </para>
-    <para>
-      <content>
-        Federal government funding for research and development (R&amp;D) is
+    <para id="policy_1__sec_1__para_2" emblem="2">
+      <content>Federal government funding for research and development (R&amp;D) is
         essential to address societal needs in areas in which the private
         sector does not have sufficient economic incentive to make the required
         investments. Key among these is basic research- the fundamental,
@@ -34,12 +44,10 @@
         research is not sufficient, however, Federal agencies should ensure
         that the results of that research are made available to other
         scientists, to the public, and to innovators who can translate them
-        into the businesses and products that will improve all of our lives. 
-      </content>
+        into the businesses and products that will improve all of our lives.</content>
     </para>
-    <para>
-      <content>
-        This memorandum outlines the Administration' s multi-agency science and
+    <para id="policy_1__sec_1__para_3" emblem="3">
+      <content>This memorandum outlines the Administration' s multi-agency science and
         technology priorities for formulating FY 2017 Budget submissions to the
         Office of Management and Budget (OMB).  The priorities covered in this
         memo require investments in R&amp;D; science, technology, engineering,
@@ -47,12 +55,10 @@
         technology transfer; R&amp;D infrastructure; and scientific-collection
         management.  The priorities in this memorandum build on priorities
         reflected in this Administration's past budgets and priorities
-        directives. 
-      </content>
+        directives.</content>
     </para>
-    <para>
-      <content>
-        Agencies should label the sections of their budget submissions that
+    <para id="policy_1__sec_1__para_4" emblem="4">
+      <content>Agencies should label the sections of their budget submissions that
         address priorities described below.  Agencies engaged in complementary
         activities should consult with each other during the budget planning
         process to  coordinate resources, maximize impact, and avoid
@@ -60,26 +66,25 @@
         discussions in their OMB budget submissions.  Agency proposals aligned
         with multi-agency R&amp;D priorities and demonstrating interagency
         coordination are more likely to be prioritized in FY 2017 Budget
-        deliberations. 
-      </content>
+        deliberations.</content>
     </para>
   </sec>
-  <sec>
-    <heading>Multi-agency R&amp;priorities</heading>
-    <para>
-      <content>
-        In the FY 2017 Budget, agencies should balance priorities to ensure
+  <sec id="policy_1__sec_2" emblem="2">
+    <heading id="policy_1__sec_2__heading_1" emblem="1">
+      <content>Multi-agency R&amp;priorities</content>
+    </heading>
+    <para id="policy_1__sec_2__para_1" emblem="1">
+      <content>In the FY 2017 Budget, agencies should balance priorities to ensure
         that resources are adequately allocated for agency-specific,
         mission-driven research, including fundamental research, while focusing
         resources, where appropriate, on the following multi-agency research
-        activities that cannot be addressed effectively by a single agency. 
-      </content>
+        activities that cannot be addressed effectively by a single agency.</content>
     </para>
-    <list>
-        <listitem emblem="1" marker="•">
-          <para>
-            <content>
-              <underline>Global climate change</underline>. Agencies should advance the goals and
+    <list id="policy_1__sec_2__list_1" emblem="1">
+      <listitem id="policy_1__sec_2__list_1__listitem_1" emblem="1">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_1__para_1" emblem="1">
+          <content>Global climate change. Agencies should advance the goals and
               objectives of the 2012-2021 U.S. Global Change Research Program
               (USGCRP) Strategic Plan, as well as the complementary science
               agenda that underpins the President's Climate Action Plan.
@@ -87,14 +92,13 @@
               and use of actionable data, information, and related tools needed
               to prepare for and reduce climate-related risks and should
               prioritize investments that support technical assistance for
-              community climate-preparedness efforts. 
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="2" marker="•">
-          <para>
-            <content>
-              <underline>Clean energy</underline>. The President has stated a
+              community climate-preparedness efforts.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_2" emblem="2">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_2__para_1" emblem="1">
+          <content>Clean energy. The President has stated a
               goal for the United States to lead the world in clean energy. His
               Climate Action Plan outlines several key objectives in this
               domain that should be given priority in the 2017 Budget,
@@ -112,15 +116,13 @@
               For example, agencies might consider technology development that
               leverages renewable energy to power water desalination or
               purification - reducing the GHG footprint of drinking water and
-              bolstering the resilience of communities in drought-prone areas.
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="3" marker="•">
-          <para>
-            <content>
-            <content>
-              <underline>Earth observations</underline>. Earth-observation data
+              bolstering the resilience of communities in drought-prone areas.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_3" emblem="3">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_3__para_1" emblem="1">
+          <content>Earth observations. Earth-observation data
               are instrumental to services that protect human life, property,
               the economy, and national security, and advance understanding the
               Earth as a system. Federal agencies should advance the goals of
@@ -133,16 +135,14 @@
               accurate and timely space weather information.  Agencies should
               prioritize investments in space weather science and preparedness
               according to the 2015 <cite>National Space Weather Strategy and
-              Action Plan</cite>.
-            </content>
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="4" marker="•">
-          <para>
-            <content>
-              <underline>Advanced manufacturing and industries ofthe
-              future</underline>. The Administration is committed to the
+              Action Plan</cite>.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_4" emblem="4">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_4__para_1" emblem="1">
+          <content>Advanced manufacturing and industries ofthe
+              future. The Administration is committed to the
               continued strengthening of America's manufacturing sector.
               Agencies should prioritize programs that advance the state of the
               art in manufacturing, as described in the National Strategic Plan
@@ -150,15 +150,14 @@
               investments in enablingtechnologies that benefit multiple sectors
               of the economy, such as nanotechnology, robotics, the Materials
               Genome Initiative, and cyber-physical systems and their
-              application to smart cities.
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="5" marker="•">
-          <para>
-            <content>
-              <underline>Innovation in life sciences, biology, and
-              neuroscience</underline>. Agencies should give priority to
+              application to smart cities.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_5" emblem="5">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_5__para_1" emblem="1">
+          <content>Innovation in life sciences, biology, and
+              neuroscience. Agencies should give priority to
               programs that support fundamental biological discovery research
               that could generate unexpected, high-impact scientific and
               technological advances in health, energy, and food security,
@@ -179,14 +178,13 @@
               medical care to the individual patient. Agencies should support
               investments on improving interoperability of health records,
               addressing privacy concerns, and launching research that will
-              enable discoveries derived from Big Data.     
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="6" marker="•">
-          <para>
-            <content>
-              <underline>National and homeland security</underline>. National
+              enable discoveries derived from Big Data.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_6" emblem="6">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_6__para_1" emblem="1">
+          <content>National and homeland security. National
               and Homeland Security and Intelligence mission agencies should
               invest in science and technology to meet the threats of the
               future and develop innovative new security capabilities. In order
@@ -199,14 +197,13 @@
               addressing the immediate risks to our national security posed by
               climate change, handling large data sets for national security
               mission requirements, advancing hypersonics, and developing
-              accelerated training techniques.            
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="7" marker="•">
-          <para>
-            <content>
-              <underline>Information technology and high-performance computing</underline>.
+              accelerated training techniques.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_7" emblem="7">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_7__para_1" emblem="1">
+          <content>Information technology and high-performance computing.
               Agencies should prioritize research guided by the
               <cite>Trustworthy Cyberspace: Strategic Plan for Cybersecurity
               R&amp;D Programs</cite> to develop technologies that can
@@ -219,14 +216,13 @@
               challenges and opportunities afforded by the expansion of Big
               Data to advance agency missions and further scientific discovery
               and innovation while providing appropriate privacy protections
-              for personal data. 
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="8" marker="•">
-          <para>
-            <content>
-              <underline>Ocean and Arctic issues</underline>.
+              for personal data.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_8" emblem="8">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_8__para_1" emblem="1">
+          <content>Ocean and Arctic issues.
               Member agencies of the National Ocean Council should give
               priority to investments in science and technology that supp01i
               the <cite>National Ocean Policy Implementation Plan</cite> and responsible
@@ -240,14 +236,13 @@
               Executive Steering Committee, which coordinates efforts on Arctic
               science, resource management, conservation, indigenous peoples,
               and international engagement through the 2015-17 U.S.
-              Chairmanship of the eight-nation Arctic Council.
-            </content>
-          </para>
-        </listitem>
-        <listitem emblem="9" marker="•">
-          <para>
-            <content>
-              <underline>R&amp;D for informed policy-making and management</underline>.
+              Chairmanship of the eight-nation Arctic Council.</content>
+        </para>
+      </listitem>
+      <listitem id="policy_1__sec_2__list_1__listitem_9" emblem="9">
+        <num>•</num>
+        <para id="policy_1__sec_2__list_1__listitem_9__para_1" emblem="1">
+          <content>R&amp;D for informed policy-making and management.
               A diverse range of agency missions (e.g.  natural resource
               management protecting health and the environment; global health
               security needs to prevent, detect, and respond to emerging
@@ -258,17 +253,17 @@
               mission-centered agencies and R&amp;D agencies should focus on
               creating userdriven information and tools that enable the
               translation of scientific observations to decisionmaking
-              frameworks. 
-            </content>
-          </para>
-        </listitem>
+              frameworks.</content>
+        </para>
+      </listitem>
     </list>
   </sec>
-  <sec>
-    <heading>R&amp;D Infrastructure</heading>
-    <para>
-      <content>
-        Agencies should support the R&amp;D infrastructure (e.g. facilities,
+  <sec id="policy_1__sec_3" emblem="3">
+    <heading id="policy_1__sec_3__heading_1" emblem="1">
+      <content>R&amp;D Infrastructure</content>
+    </heading>
+    <para id="policy_1__sec_3__para_1" emblem="1">
+      <content>Agencies should support the R&amp;D infrastructure (e.g. facilities,
         platform technologies, IT, digital tools) needed to ensure that U.S.
         science and engineering remain at the leading edge, and leverage
         resources from other agencies, state and local governments, the
@@ -278,15 +273,15 @@
         programs and operations of existing facilities. In addition, agencies
         should take steps to ensure that underused existing facilities are
         made available to additional users through transparent and
-        competitive methods. 
-      </content>
+        competitive methods.</content>
     </para>
   </sec>
-  <sec>
-    <heading>Other R&amp;D Program Guidance</heading>
-    <para>
-      <content>
-        Transforming research results and technologies to new products and
+  <sec id="policy_1__sec_4" emblem="4">
+    <heading id="policy_1__sec_4__heading_1" emblem="1">
+      <content>Other R&amp;D Program Guidance</content>
+    </heading>
+    <para id="policy_1__sec_4__para_1" emblem="1">
+      <content>Transforming research results and technologies to new products and
         services is a key step in realizing the economic and quality-of-life
         improvements the taxpayer expects from Federal investments in R&amp;D.
         Commercialization of Federal R&amp;D is therefore one of the core
@@ -295,12 +290,10 @@
         Cross-Agency Priority Goal, such as entrepreneurial personnel
         exchanges, commercialization training, and other programs that have the
         potential to accelerate and improve the transfer of new technologies
-        from the laboratory to the marketplace. 
-      </content>
+        from the laboratory to the marketplace.</content>
     </para>
-    <para>
-      <content>
-        In accordance with OMB Circular A-ll and the GPRA Modernization Act
+    <para id="policy_1__sec_4__para_2" emblem="2">
+      <content>In accordance with OMB Circular A-ll and the GPRA Modernization Act
         of2010, agencies should describe the targeted outcomes of R&amp;D programs
         using meaningful, measurable, and quantitative metrics where possible
         and describe how they plan to evaluate the success of those programs.
@@ -308,43 +301,35 @@
         activities and outcomes by linking management and financial information
         about R&amp;D in their DATA Act implementation plans. Agencies are
         encouraged to collaborate and identify best practices for linking
-        management information on R&amp;D with budget and financial data. 
-      </content>
+        management information on R&amp;D with budget and financial data.</content>
     </para>
-    <para>
-      <content>
-        Agencies are encouraged to use approaches to foster innovation such as
+    <para id="policy_1__sec_4__para_3" emblem="3">
+      <content>Agencies are encouraged to use approaches to foster innovation such as
         Grand Challenges, incentive prizes, citizen science, and collaboration
-        with members of the Maker Movement. 
-      </content>
+        with members of the Maker Movement.</content>
     </para>
-    <para>
-      <content>
-        Preserving and improving access to scientific collections, research
+    <para id="policy_1__sec_4__para_4" emblem="4">
+      <content>Preserving and improving access to scientific collections, research
         data, other results of Federally-funded research, open datasets, and
-        open educational resources should be a priority for agencies. 
-      </content>
+        open educational resources should be a priority for agencies.</content>
     </para>
-    <para>
-      <content>
-        Agencies should ensure that Small Business Innovation Research (SBIR)
+    <para id="policy_1__sec_4__para_5" emblem="5">
+      <content>Agencies should ensure that Small Business Innovation Research (SBIR)
         and Small Business Technology Transfer (STTR) awards and programs
-        contribute to the above multi-agency science and technology priorities. 
-      </content>
+        contribute to the above multi-agency science and technology priorities.</content>
     </para>
-    <para>
-      <content>
-        Following engagement with stakeholders, agencies should implement
+    <para id="policy_1__sec_4__para_6" emblem="6">
+      <content>Following engagement with stakeholders, agencies should implement
         policies and prioritize activities to improve the reproducibility of
-        research in the fields they support. 
-      </content>
+        research in the fields they support.</content>
     </para>
   </sec>
-  <sec>
-    <heading>STEM Education Guidance </heading>
-    <para>
-      <content>
-        Investments in STEM education should be guided by the priorities
+  <sec id="policy_1__sec_5" emblem="5">
+    <heading id="policy_1__sec_5__heading_1" emblem="1">
+      <content>STEM Education Guidance</content>
+    </heading>
+    <para id="policy_1__sec_5__para_1" emblem="1">
+      <content>Investments in STEM education should be guided by the priorities
         outlined in the <cite>Federal STEM Education 5-Year Strategic
         Plan</cite> developed by the Committee on STEM Education under the
         National Science and Technology Council, and should continue to pursue
@@ -358,10 +343,7 @@
         careers such as changes in STEM instruction; changing the image of STEM
         education and careers; and reducing explicit, implicit, and structural
         biases against girls, women, and members of underrepresented minority
-        groups. 
-      </content>
+        groups.</content>
     </para>
   </sec>
 </policy>
-
-

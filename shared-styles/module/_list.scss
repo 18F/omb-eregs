@@ -1,0 +1,24 @@
+.node-list {
+  @include reset-list();
+}
+
+.node-list-item {
+  @include clearfix();
+  margin-bottom: $space-xs;
+
+  .list-item-marker {
+    @include font-serif-bold();
+    @include paragraph-marker();
+    @include size-regular();
+  }
+
+  .list-item-text {
+    @include paragraph-with-marker();
+  }
+
+  .list-item-title {
+    @include font-serif-bold();
+    @include size-regular();
+    display: block;
+  }
+}

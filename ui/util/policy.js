@@ -10,28 +10,25 @@ const DATE_FORMAT = 'MMMM D, YYYY';
 
 export default class Policy {
   constructor(initial) {
-    this.hasDocnodes = initial.hasDocnodes || initial.has_docnodes || false;
+    this.hasPublishedDocument =
+      initial.hasPublishedDocument || initial.has_published_document || false;
     this.id = initial.id || '';
     this.issuance = initial.issuance || '';
-    this.issuingBody = initial.issuingBody || initial.issuing_body || '';
     this.ombPolicyId = initial.ombPolicyId || initial.omb_policy_id || '';
     this.originalUrl = initial.originalUrl || initial.original_url || '';
     this.relevantReqs = initial.relevantReqs || initial.relevant_reqs || 0;
+    this.slug = initial.slug || '';
     this.title = initial.title || '';
     this.titleWithNumber = initial.titleWithNumber || initial.title_with_number || '';
     this.totalReqs = initial.totalReqs || initial.total_reqs || 0;
     Object.freeze(this);
   }
 
-  hasDocument() {
-    return this.ombPolicyId && this.hasDocnodes;
-  }
-
   getDocumentLinkProps() {
     return {
       route: 'document',
       params: {
-        policyId: this.ombPolicyId,
+        policyId: this.ombPolicyId || this.slug,
       },
     };
   }

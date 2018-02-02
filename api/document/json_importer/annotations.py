@@ -1,7 +1,8 @@
 from collections import defaultdict
 from typing import Callable, DefaultDict, Dict, Iterator, List, Tuple, Type
 
-from document.models import Annotation, ExternalLink, FootnoteCitation
+from document.models import Annotation, Cite, ExternalLink, FootnoteCitation
+from document.serializers.util import get_content_length, get_content_text
 from document.tree import JSONAwareCursor, PrimitiveDict
 
 Annotator = Callable[
@@ -43,6 +44,14 @@ def external_link(cursor: JSONAwareCursor, content: PrimitiveDict,
     )
 
 
+@annotator
+def cite(cursor: JSONAwareCursor, content: PrimitiveDict,
+         start: int) -> Cite:
+    text = get_content_text(content['inlines'])
+    return Cite(doc_node=cursor.model, start=start,
+                end=start + len(text))
+
+
 AnnotationDict = DefaultDict[Type[Annotation], List[Annotation]]
 
 
@@ -72,23 +81,3 @@ def derive_annotations(cursor: JSONAwareCursor) -> AnnotationDict:
             annotations[cls].extend(annos)
 
     return annotations
-
-
-def get_content_length(content: List[PrimitiveDict]) -> int:
-    length = 0
-    for c in content:
-        if c['content_type'] == '__text__':
-            length += len(c['text'])
-        else:
-            length += get_content_length(c['inlines'])
-    return length
-
-
-def get_content_text(content: List[PrimitiveDict]):
-    chunks = []
-    for c in content:
-        if c['content_type'] == '__text__':
-            chunks.append(c['text'])
-        else:
-            chunks.append(get_content_text(c['inlines']))
-    return ''.join(chunks)

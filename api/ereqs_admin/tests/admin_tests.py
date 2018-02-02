@@ -85,6 +85,7 @@ def test_user_edit_max(admin_client):
     assert user.first_name == 'posttest'
 
 
+@pytest.mark.skip(reason="We've temporarily removed pdf upload")
 def test_pdf_upload(admin_client):
     policy = mommy.make(Policy, title='First Policy',
                         uri='http://example.com/oge-450-a.pdf')
@@ -95,7 +96,7 @@ def test_pdf_upload(admin_client):
     assert 'First Policy' in form_text
     assert not policy.document_source
     data = {
-        'policy_number': policy.policy_number,
+        'policy_number': '',
         'title': 'First Policy Edited',
         'slug': 'first-policy-edited',
         'uri': policy.uri,
@@ -127,6 +128,7 @@ def test_pdf_upload(admin_client):
         assert pdf.content == f.read()
 
 
+@pytest.mark.skip(reason="We've temporarily removed pdf upload")
 def test_not_pdf_upload(admin_client):
     policy = mommy.make(Policy, title='First Policy')
     policy_url = '/admin/reqs/policy/{0}/change/'.format(policy.id)

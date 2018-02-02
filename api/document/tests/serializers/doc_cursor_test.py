@@ -2,6 +2,7 @@ from datetime import date
 
 import pytest
 from model_mommy import mommy
+from rest_framework.exceptions import ValidationError
 
 from document.models import DocNode
 from document.serializers import doc_cursor
@@ -294,9 +295,117 @@ def test_children_field_to_internal_value_works():
     assert doc_cursor.ChildrenField().to_internal_value([para]) == [para]
 
 
+def test_footnote_type_emblem_existence_is_validated():
+    footnote = f.footnote(1, [])
+
+    doc_cursor.DocCursorSerializer(data=footnote)\
+        .is_valid(raise_exception=True)
+
+    del footnote['type_emblem']
+
+    s = doc_cursor.DocCursorSerializer(data=footnote)
+    assert not s.is_valid()
+    assert s.errors == {
+        'type_emblem': ["'footnote' nodes must have type emblems."]
+    }
+
+
+def test_footnote_type_emblem_uniqueness_is_validated():
+    doc_cursor.DocCursorSerializer(data=f.para([], children=[
+        f.footnote(1, []),
+        f.footnote(2, [])
+    ])).is_valid(raise_exception=True)
+
+    s = doc_cursor.DocCursorSerializer(data=f.para([], children=[
+        f.para([], children=[f.footnote(1, [])]),
+        f.para([], children=[f.footnote(1, [])]),
+    ]))
+    assert not s.is_valid()
+    assert s.errors == {
+        'non_field_errors': ["Multiple footnotes exist with type emblem '1'"]
+    }
+
+
+def test_footnote_citations_are_validated():
+    doc_cursor.DocCursorSerializer(data=f.para([
+        f.footnote_citation([f.text('1')]),
+    ], children=[
+        f.footnote(1, []),
+    ])).is_valid(raise_exception=True)
+
+    s = doc_cursor.DocCursorSerializer(data=f.para([
+        f.footnote_citation([f.text('2')]),
+    ], children=[
+        f.footnote(1, []),
+    ]))
+    assert not s.is_valid()
+    assert s.errors == {
+        'non_field_errors': ["Citation for '2' has no matching footnote"]
+    }
+
+
+def test_children_field_type_emblem_uniqueness_is_validated():
+    para = f.para([])
+
+    doc_cursor.ChildrenField().to_internal_value([
+        {'type_emblem': 'a', **para},
+        {'type_emblem': 'b', **para},
+    ])
+
+    err_msg = ("Multiple occurrences of 'para' with emblem 'a' "
+               "exist as siblings")
+    with pytest.raises(ValidationError, match=err_msg):
+        doc_cursor.ChildrenField().to_internal_value([
+            {'type_emblem': 'a', **para},
+            {'type_emblem': 'a', **para},
+        ])
+
+
 def test_content_field_to_internal_value_works():
     text = f.text('boop')
     assert doc_cursor.ContentField().to_internal_value([text]) == [{
         'inlines': [],
         **text,
     }]
+
+
+def test_invalid_type_emblem_raises_validation_error():
+    serializer = doc_cursor.DocCursorSerializer(data={'type_emblem': '?#@$'})
+    assert not serializer.is_valid()
+    assert serializer.errors['type_emblem'] == [
+        'Only alphanumeric characters are allowed.'
+    ]
+
+
+@pytest.mark.django_db
+def test_create_works():
+    policy = mommy.make(Policy)
+    serializer = doc_cursor.DocCursorSerializer(
+        data=f.para([f.text('hi')]),
+        context={'policy': policy},
+    )
+    serializer.is_valid(raise_exception=True)
+    cursor = serializer.save()
+
+    assert cursor.node_type == 'para'
+    assert cursor.text == 'hi'
+
+
+def test_children_field_validation_error_detail_is_list():
+    with pytest.raises(ValidationError) as excinfo:
+        doc_cursor.ChildrenField().to_internal_value([{}])
+    assert isinstance(excinfo.value.detail, list)
+
+
+def test_content_field_validation_error_detail_is_list():
+    with pytest.raises(ValidationError) as excinfo:
+        doc_cursor.ContentField().to_internal_value([{}])
+    assert isinstance(excinfo.value.detail, list)
+
+
+def test_sourceline_is_added_to_doc_cursor_errors():
+    serializer = doc_cursor.DocCursorSerializer(data={
+        '_sourceline': 5
+    })
+    assert not serializer.is_valid()
+    assert serializer.errors['_sourceline'] == 5

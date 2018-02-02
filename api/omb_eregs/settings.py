@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from typing import Tuple  # noqa
 
 import dj_database_url
 from cfenv import AppEnv
@@ -35,7 +36,7 @@ ALLOWED_HOSTS = env.uris
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS: Tuple[str, ...] = (
     'document',
     'ombpdf',
     'reqs.apps.ReqsConfig',
@@ -61,7 +62,7 @@ INSTALLED_APPS = (
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
 
-MIDDLEWARE = (
+MIDDLEWARE: Tuple[str, ...] = (
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -279,8 +280,3 @@ ADMIN_TITLE = 'OMB Policy Library Editor'
 # We only use accounts for admin access at the moment
 LOGIN_REDIRECT_URL = '/admin/'
 LOGIN_URL = '/admin/login/'
-
-if DEBUG and os.environ.get('USE_POLLING') == 'true':
-    import django.utils.autoreload
-
-    django.utils.autoreload.USE_INOTIFY = False

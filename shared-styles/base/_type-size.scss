@@ -1,4 +1,44 @@
+@mixin size-xsmall() {
+  font-size: .75rem;
+  line-height: .875rem;
+}
+
+@mixin size-small() {
+  font-size: .875rem;
+  line-height: 1.312rem;
+}
+
 @mixin size-regular() {
   font-size: 1rem;
   line-height: 1.6875rem;
+}
+
+@mixin size-large() {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+
+  @media #{$on-desktop} {
+    font-size: 1.625rem;
+    line-height: 1.6875rem;
+  }
+}
+
+@mixin size-xlarge() {
+  font-size: 1.3125rem;
+  line-height: 1.6875rem;
+
+  @media #{$on-desktop} {
+    font-size: 1.625rem;
+    line-height: 2rem;
+  }
+}
+
+@mixin size-xxlarge() {
+  font-size: 1.5rem;
+  line-height: 2rem;
+
+  @media #{$on-desktop} {
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
 }

@@ -1,35 +1,18 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 
-from document.models import DocNode, FootnoteCitation, InlineRequirement
+from document.models import DocNode
 from document.parsers import AkomaNtosoParser
 from document.renderers import AkomaNtosoRenderer, BrowsableAkomaNtosoRenderer
 from document.serializers.doc_cursor import DocCursorSerializer
 from document.tree import DocCursor
 from reqs.views.policies import policy_or_404
-
-
-def optimize(queryset):
-    """To avoid the "n+1" query problem, we will optimize our querysets by
-    either joining 1-to-1 relations (via select_related) or ensuring a single
-    query for many-to-many relations (via prefetch_related)."""
-    footnote_prefetch = Prefetch(
-        'footnotecitations',
-        queryset=FootnoteCitation.objects.select_related('footnote_node'),
-    )
-    requirement_prefetch = Prefetch(
-        'inlinerequirements',
-        queryset=InlineRequirement.objects.select_related('requirement'),
-    )
-    return queryset.\
-        prefetch_related(footnote_prefetch, 'cites', 'externallinks',
-                         requirement_prefetch)
 
 
 class TreeView(GenericAPIView):
@@ -39,8 +22,9 @@ class TreeView(GenericAPIView):
     parser_classes = (JSONParser, AkomaNtosoParser)
     queryset = DocNode.objects.none()   # Used to determine permissions
 
-    def get_object(self):
-        policy = policy_or_404(self.kwargs['policy_id'])
+    def get_object(self, prefetch_related=True):
+        only_public = not self.request.user.is_authenticated
+        policy = policy_or_404(self.kwargs['policy_id'], only_public)
         # we'll pass this policy down when we serialize
         self.policy = policy
         query_args = {'policy_id': policy.pk}
@@ -48,9 +32,14 @@ class TreeView(GenericAPIView):
             query_args['identifier'] = self.kwargs['identifier']
         else:
             query_args['depth'] = 0
-        root_doc = get_object_or_404(optimize(DocNode.objects), **query_args)
+        queryset = DocNode.objects
+        if prefetch_related:
+            queryset = queryset.prefetch_annotations()
+        root_doc = get_object_or_404(queryset, **query_args)
         root = DocCursor.load_from_model(root_doc, subtree=False)
-        root.add_models(optimize(root_doc.descendants()))
+        if prefetch_related:
+            root.add_models(root_doc.descendants().prefetch_annotations())
+        self.check_object_permissions(self.request, root)
         return root
 
     def get_serializer_context(self):
@@ -59,7 +48,7 @@ class TreeView(GenericAPIView):
         }
 
     def get(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance = self.get_object(prefetch_related=True)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
@@ -69,17 +58,34 @@ class TreeView(GenericAPIView):
                 'detail': 'Identifiers are unsupported on PUT requests.',
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        instance = self.get_object()
+        # We don't care about prefetching related data because we're
+        # about to delete all of it anyways.
+        instance = self.get_object(prefetch_related=False)
+
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def render_editor(request, policy_id, filename, title):
+    # Verify that the policy is valid; 404 when not. We don't actually load
+    # the document content as they'll be retrieved from the API
+    policy_or_404(policy_id, only_public=False)
+    return render(request, filename, {
+        'document_url': reverse('document', kwargs={'policy_id': policy_id}),
+        'title': title,
+    })
 
 
 @login_required
 def editor(request, policy_id):
-    # Verify that the policy is valid; 404 when not. We don't actually load
-    # the document content as they'll be retrieved from the API
-    policy_or_404(policy_id)
-    return render(request, 'document/editor.html')
+    return render_editor(request, policy_id, 'document/editor.html',
+                         'Document Editor')
+
+
+@login_required
+def editor_akn(request, policy_id):
+    return render_editor(request, policy_id, 'document/editor_akn.html',
+                         'Akoma Ntoso Editor')

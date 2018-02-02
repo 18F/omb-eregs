@@ -31,30 +31,37 @@ BILLION_LAUGHS_XML = """\
 
 
 def convert_xml_node(text: str) -> PrimitiveDict:
-    return parsers.convert_node(etree.fromstring(text))
+    return parsers.convert_node(etree.fromstring(text), sourcelines=False)
 
 
 def convert_content_node(text) -> List[PrimitiveDict]:
     return convert_xml_node(f'<a><content>{text}</content></a>')['content']
 
 
-def test_parser_works():
+def parse(xml: str) -> PrimitiveDict:
     parser = parsers.AkomaNtosoParser()
-    stream = BytesIO(b'<policy></policy>')
-    data = parser.parse(stream)
-    assert data == {
+    stream = BytesIO(xml.encode('utf-8'))
+    return parser.parse(stream)
+
+
+def test_parser_works():
+    assert parse('<policy></policy>') == {
         "node_type": "policy",
         "content": [],
         "children": [],
+        "_sourceline": 1,
     }
 
 
+def test_parser_raises_parse_error_on_bad_syntax():
+    with pytest.raises(ParseError, match="XML syntax error"):
+        parse('<a>')
+
+
 def test_parser_is_resilient_to_billion_laughs():
-    parser = parsers.AkomaNtosoParser()
-    stream = BytesIO(BILLION_LAUGHS_XML.encode('utf-8'))
-    with pytest.raises(etree.XMLSyntaxError,
+    with pytest.raises(ParseError,
                        match="Detected an entity reference loop"):
-        parser.parse(stream)
+        parse(BILLION_LAUGHS_XML)
 
 
 def test_num_is_converted():

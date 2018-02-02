@@ -1,9 +1,11 @@
+from typing import Any, Dict  # noqa
+
 import pytest
 
 from ombpdf import document, util
 from ombpdf.download_pdfs import download
 
-pages_cache = {}
+pages_cache: Dict[Any, Any] = {}
 
 
 def read_pages(relpath):

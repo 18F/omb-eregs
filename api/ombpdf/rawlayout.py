@@ -37,8 +37,8 @@ def to_html(doc):
                 cssname = f'line-{classname}'
                 line_classes.append(cssname)
                 legend.add((classname, cssname))
-            line_classes = ' '.join(line_classes)
-            chunks.append(f'<div class="{line_classes}" '
+            line_classes_str = ' '.join(line_classes)
+            chunks.append(f'<div class="{line_classes_str}" '
                           f'data-anno="{escape(str(line.annotation))}"'
                           f'data-lineno="{lineno}">\n')
             for char in line:

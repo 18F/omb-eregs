@@ -5,6 +5,7 @@ from rest_framework.serializers import ValidationError
 
 from document.models import (Annotation, Cite, ExternalLink, FootnoteCitation,
                              InlineRequirement, PlainText)
+from document.serializers.util import add_sourceline_to_errors
 from document.tree import DocCursor, PrimitiveDict
 from reqs.models import Requirement
 
@@ -105,8 +106,9 @@ class InlinesField(NestableAnnotationField):
     def to_internal_value(self,
                           data: List[PrimitiveDict]) -> List[PrimitiveDict]:
         if not self.is_leaf_node:
-            serializer = NestedAnnotationSerializer()
-            return [serializer.to_internal_value(d) for d in data]
+            serializer = NestedAnnotationSerializer(data=data, many=True)
+            serializer.is_valid(raise_exception=True)
+            return serializer.validated_data
         elif data:
             raise ValidationError('leaf nodes cannot contain nested content')
         return []
@@ -114,7 +116,7 @@ class InlinesField(NestableAnnotationField):
 
 class TextField(NestableAnnotationField):
     def __init__(self, is_leaf_node: bool) -> None:
-        super().__init__()
+        super().__init__(required=is_leaf_node)
         self.is_leaf_node = is_leaf_node
 
     @property
@@ -198,11 +200,17 @@ class NestedAnnotationSerializer(serializers.Serializer):
     def to_internal_value(self, data: PrimitiveDict) -> PrimitiveDict:
         content_type = data.get('content_type')
         if content_type is None:
-            raise ValidationError("missing content_type")
+            raise ValidationError({"content_type": "This field is required."})
         if content_type not in self.content_type_mapping:
-            raise ValidationError(f"unknown content_type: {content_type}")
+            raise ValidationError({
+                "content_type": f"'{content_type}' is an invalid content type."
+            })
         serializer = self.content_type_mapping[content_type]()
         return serializer.to_internal_value(data)
+
+    def run_validation(self, data=serializers.empty):
+        with add_sourceline_to_errors(data):
+            return super().run_validation(data)
 
 
 @NestedAnnotationSerializer.register

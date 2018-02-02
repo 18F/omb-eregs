@@ -175,17 +175,19 @@ def test_inline_requirement_with_link_integration():
 def test_error_raised_on_invalid_content_type():
     serializer = content.NestedAnnotationSerializer()
 
-    with pytest.raises(ValidationError,
-                       match="unknown content_type: blarg"):
+    with pytest.raises(ValidationError) as einfo:
         serializer.to_internal_value({'content_type': 'blarg'})
+    assert einfo.value.detail == {
+        'content_type': "'blarg' is an invalid content type."
+    }
 
 
 def test_error_raised_on_missing_content_type():
     serializer = content.NestedAnnotationSerializer()
 
-    with pytest.raises(ValidationError,
-                       match="missing content_type"):
+    with pytest.raises(ValidationError) as einfo:
         serializer.to_internal_value({'foo': 'bar'})
+    assert einfo.value.detail == {'content_type': 'This field is required.'}
 
 
 def test_text_deserialization_works():
@@ -205,6 +207,11 @@ def test_inlines_work_on_non_leaf_nodes():
 
 def test_no_error_raised_on_empty_inlines_in_leaf_nodes():
     assert content.InlinesField(is_leaf_node=True).to_internal_value([]) == []
+
+
+def test_text_required_is_set_properly():
+    assert content.TextField(is_leaf_node=True).required
+    assert not content.TextField(is_leaf_node=False).required
 
 
 def test_error_raised_on_inlines_in_leaf_nodes():
@@ -241,3 +248,18 @@ def test_unimplemented_content_type_or_annotation_class_raises_error():
 def test_nestable_annotation_repr_works():
     na = content.NestableAnnotation('my annotation', None)
     assert repr(na) == "NestableAnnotation('my annotation') []"
+
+
+def test_non_leaf_inlines_field_validation_error_detail_is_list():
+    with pytest.raises(ValidationError) as excinfo:
+        content.InlinesField(is_leaf_node=False)\
+            .to_internal_value([{}])
+    assert isinstance(excinfo.value.detail, list)
+
+
+def test_sourceline_is_added_to_nested_annotation_errors():
+    serializer = content.NestedAnnotationSerializer(data={
+        '_sourceline': 5
+    })
+    assert not serializer.is_valid()
+    assert serializer.errors['_sourceline'] == 5
