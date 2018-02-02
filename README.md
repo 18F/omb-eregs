@@ -61,15 +61,17 @@ We recommend using
 [Docker](https://www.docker.com/products/overview#install_the_platform), an
 open source container engine. If you haven't already please install Docker and
 [Docker-compose](https://docs.docker.com/compose/install/) (which is installed
-automatically with Docker on Windows and OS X).
+automatically with Docker on Windows and OS X). We'll also refer to several
+bash scripts for executing Docker-compose commands. If running Windows, you'll
+want to set up bash or run the wrapped commands directly.
 
 ### Admin/API
 
 Let's start by adding an admin user.
 
 ```bash
-docker-compose run --rm api ./manage.py migrate  # set up database
-docker-compose run --rm api ./manage.py createsuperuser
+bin/manage.py migrate # set up database
+bin/manage.py createsuperuser
 # [fill out information]
 docker-compose up
 # [Wait while it sets up]
@@ -106,13 +108,13 @@ Then run:
 
 ```bash
 # Build the UI styles
-docker-compose run --rm ui webpack
+bin/ui-npm run build-css
 # Build the UI app
-docker-compose run --rm ui run build
+bin/ui-npm run build
 # Build the API styles
-docker-compose run --rm api-ui webpack
+bin/api-npm run build
 # Collect all static files for the admin
-docker-compose run --rm api ./manage.py collectstatic
+bin/manage.py collectstatic
 docker-compose up
 ```
 
@@ -123,11 +125,11 @@ Then navigate to http://localhost:8002/.
 Let's also load example requirements, agencies, and a whole document:
 
 ```bash
-docker-compose run --rm api ./manage.py fetch_csv
-docker-compose run --rm api ./manage.py import_reqs data.csv
-docker-compose run --rm api ./manage.py sync_agencies
-docker-compose run --rm api ./manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
-docker-compose run --rm api ./manage.py import_xml_doc example_docs/m_15_16.xml M-15-16
+bin/manage.py fetch_csv
+bin/manage.py import_reqs data.csv
+bin/manage.py sync_agencies
+bin/manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
+bin/manage.py import_xml_doc example_docs/m_15_16.xml M-15-16
 ```
 
 This may emit some warnings for improper input. The next time you visit the
@@ -141,7 +143,7 @@ import into the policy library.
 To download some PDFs for development, you can run:
 
 ```bash
-docker-compose run --rm api ./manage.py download_pdfs
+bin/manage.py download_pdfs
 ```
 
 You can then access a variety of development and debugging-related
@@ -155,26 +157,24 @@ after running the commands; alternatively, you can run
 
 The following commands pertain to the API and/or its database:
 
-* `docker-compose run api bandit`
-* `docker-compose run api flake8`
-* `docker-compose run api ./manage.py`
-* `docker-compose run api mypy`
-* `docker-compose run api pip-compile`
-* `docker-compose run api .docker/watch_tests.sh`
-* `docker-compose run api pytest`
-* `docker-compose run persistent_db psql -h persistent_db -U postgres`
+* `bin/bandit`
+* `bin/flake8`
+* `bin/manage.py`
+* `bin/mypy`
+* `bin/pip-compile`
+* `bin/ptw`
+* `bin/py.test`
+* `bin/psql`
 
 The following commands pertain to the API UI, which is the user interface that
 staff and administrators use:
 
-* `docker-compose run api-ui npm`
-* `docker-compose run api-ui webpack`
+* `bin/api-npm`
 
 The following commands pertain to the UI, which is the user interface that
 the general public uses:
 
-* `docker-compose run ui npm`
-* `docker-compose run ui webpack`
+* `bin/ui-npm`
 
 ### Resolving common container issues
 
@@ -282,18 +282,17 @@ We have unit tests for the API/admin (Python) and for the React-based frontend
 
 For Python unit tests, run:
 ```sh
-docker-compose run --rm api flake8              # linting
-docker-compose run --rm api mypy .              # type checking
-docker-compose run --rm api py.test             # run tests once
-docker-compose run api .docker/watch_tests.sh   # watch command to run tests whenever
-                                                # a file changes
+bin/flake8              # linting
+bin/mypy .              # type checking
+bin/py.test             # run tests once
+bin/ptw                 # watch command to run tests whenever a file changes
 ```
 
 For JS unit tests, run:
 ```sh
-docker-compose run --rm ui npm run lint        # linting
-docker-compose run --rm ui npm test            # run tests once
-docker-compose run --rm ui npm run test:watch  # watch command to run tests whenever a file changes
+bin/ui-npm run lint        # linting
+bin/ui-npm test            # run tests once
+bin/ui-npm run test:watch  # watch command to run tests whenever a file changes
 ```
 
 In the above commands, you can replace `ui` with `api-ui` to run the tests for
@@ -324,7 +323,7 @@ line tool and an associated plugin:
 Then, make sure you've built the frontend:
 
 ```sh
-docker-compose run --rm ui webpack
+bin/ui-npm run build-css
 ```
 
 And deploy!
