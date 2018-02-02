@@ -8,7 +8,7 @@ services:
     extends:
       file: docker-services.yml
       service: minio
-  dev-api:
+  api:
     extends:
       file: docker-services.yml
       service: dev-api
@@ -17,20 +17,20 @@ services:
     depends_on:
       - persistent_db
       - minio
-      - api-webpack
-  api-webpack:
+      - api-ui
+  api-ui:
     extends:
       file: docker-services.yml
       service: api-webpack
     volumes:
       - .:/usr/src/app:delegated
-  dev:
+  ui:
     extends:
       file: docker-services.yml
       service: dev
     volumes:
       - .:/usr/src/app:delegated
     depends_on:
-      - dev-api
+      - api
 volumes:
   database_data:
