@@ -1,0 +1,91 @@
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=number],
+textarea,
+select,
+.vTextField {
+  // Remove Django's default rounded corners and swap border color
+  border-radius: 0;
+  border: 1px solid $color-gray;
+
+  // extension
+  @include size-regular();
+}
+
+td,
+th {
+  // Django shrinks the size of table headers and sets a different font face.
+  // Reset both here.
+  padding: $space;
+  @include size-regular();
+  @include font-san-serif();
+}
+
+thead th,
+tfoot td {
+  // Similar to td/th
+  padding: $space;
+  @include size-regular();
+}
+
+#header {
+  // Remove padding so our nav-menu can start at left:0
+  padding: 0;
+}
+
+h1 {
+  // Override Django's title color and Normalize/Django's font sizes
+  color: $color-black;
+  @include size-xxlarge();
+
+  // extending
+  padding: $space-sm;
+}
+
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button {
+  // Override Django's default padding to better approximate our UI
+  padding: $space-xs $space;
+}
+
+// These are the links at the top of the page, e.g. "Add Policy" and "History"
+.object-tools a {
+  // Django's default is more rounded that we'd like
+  border-radius: 3px;
+
+  // extensions
+  border: 1px solid $color-gray;
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+  // Override Django's custom font size
+  @include size-regular();
+}
+
+body {
+  // Override Django's default page font
+  @include font-san-serif();
+  @include size-regular();
+}
+
+input,
+textarea,
+select,
+.form-row p,
+form .button {
+  // Django also has specific fonts and sized for most inputs; reset them.
+  @include font-san-serif();
+  @include size-small();
+}
+
+#branding h1 {
+  // Django sets a font size for this specific element
+  @include size-large();
+}

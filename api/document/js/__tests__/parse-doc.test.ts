@@ -84,22 +84,14 @@ describe('parseDoc()', () => {
     expect(result.content.childCount).toBe(2);
     const lis = [result.content.child(0), result.content.child(1)];
     expect(lis.map(li => li.type.name)).toEqual(['listitem', 'listitem']);
-    expect(lis.map(li => li.content.childCount)).toEqual([2, 2]);
+    expect(lis.map(li => li.attrs.marker)).toEqual(['aaa', 'bbb']);
 
-    const markers = lis.map(li => li.content.child(0));
-    expect(markers.map(m => m.type.name)).toEqual(
-      ['listitemMarker', 'listitemMarker']);
-    expect(markers.map(m => m.textContent)).toEqual(['aaa', 'bbb']);
+    expect(lis[0].content.childCount).toBe(1);
+    expect(lis[0].content.child(0).type.name).toBe('para');
 
-    const [body1, body2] = lis.map(li => li.content.child(1));
-    expect(body1.type.name).toBe('listitemBody');
-    expect(body1.content.childCount).toBe(1);
-    expect(body1.content.child(0).type.name).toBe('para');
-
-    expect(body2.type.name).toBe('listitemBody');
-    expect(body2.content.childCount).toBe(2);
-    expect(body2.content.child(0).type.name).toBe('para');
-    expect(body2.content.child(1).type.name).toBe('para');
+    expect(lis[1].content.childCount).toBe(2);
+    expect(lis[1].content.child(0).type.name).toBe('para');
+    expect(lis[1].content.child(1).type.name).toBe('para');
   });
 
   describe('unimplementedNode', () => {

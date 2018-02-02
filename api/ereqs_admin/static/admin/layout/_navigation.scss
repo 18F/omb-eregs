@@ -1,0 +1,24 @@
+.breadcrumbs,
+ul.messagelist,
+#content {
+  margin-left: $nav-menu-width;
+
+  // we don't display the nav-menu when we're in a popup/ on the login screen
+  .popup &,
+  .login & {
+    margin-left: 0;
+  }
+}
+
+.nav-menu {
+  background: $color-black;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: $nav-menu-width;
+
+  @if not($nav-menu-active) {
+    display: none;
+  }
+}
