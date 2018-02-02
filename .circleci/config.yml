@@ -35,58 +35,58 @@ jobs:
       - run:
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm npm run lint
+          command: bin/ui-npm run lint
       - run:
           name: UI Tests
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm npm test
+          command: bin/ui-npm test
       - run:
           name: Build UI
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
           command: |
-            docker-compose run --rm webpack
+            bin/ui-npm run build-css
             docker cp holder:/usr/src/app/ui/static/styles.css ./ui/static/styles.css
             docker cp holder:/usr/src/app/ui/static/font/. ./ui/static/font
       - run:
           name: API Unit tests
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm py.test --cov --cov-report xml
+          command: bin/py.test --cov --cov-report xml
       - run:
           name: API Flake8
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm flake8
+          command: bin/flake8
       - run:
           name: API Mypy
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm mypy .
+          command: bin/mypy .
       - run:
           name: API Bandit
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm bandit -r ereqs_admin reqs omb_eregs -s B101   # skip asserts
+          command: bin/bandit -r ereqs_admin reqs omb_eregs
       - run:
           name: API TSlint
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm api-npm run lint
+          command: bin/api-npm run lint
       - run:
           name: API JS tests
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
-          command: docker-compose run --rm api-npm test
+          command: bin/api-npm test
       - run:
           name: API Build and Collect Static Files
           environment:
             COMPOSE_FILE: docker-compose-circle.yml
             DEBUG: "false"
           command: |
-            docker-compose run --rm api-webpack
-            docker-compose run --rm manage.py collectstatic --noinput
+            bin/api-npm run build
+            bin/manage.py collectstatic --noinput
             docker cp holder:/usr/src/app/api/collected-static/. ./api/collected-static
 
       - run:
@@ -126,7 +126,8 @@ jobs:
             else
               export API_URL=https://omb-eregs-api-demo.app.cloud.gov/
             fi
-            docker-compose run --rm npm run build
+            export INTERNAL_API_URL=${API_URL}
+            bin/ui-npm run build
             docker cp holder:/usr/src/app/ui/.next ui/.next
       - deploy:
           name: Deploy
