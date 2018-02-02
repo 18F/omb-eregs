@@ -13,7 +13,7 @@ services:
     ports:
       - 9100:9100
   api:
-    image: python:3.6.2
+    image: python:3.6.4
     working_dir: /usr/src/app/api
     stdin_open: true
     tty: true

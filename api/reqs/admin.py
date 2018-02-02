@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from ereqs_admin.revision_admin import EReqsVersionAdmin
 from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
@@ -39,6 +41,15 @@ class PolicyAdmin(EReqsVersionAdmin):
         'public',
         'workflow_phase',
     ]
+
+    def response_post_save_change(self, request, obj):
+        """Redirect to the document editor, if that's the button the user
+        clicked."""
+        if '_savethendoc' in request.POST:
+            policy_id = obj.omb_policy_id or obj.slug
+            return HttpResponseRedirect(
+                reverse('document_editor', kwargs={'policy_id': policy_id}))
+        return super().response_post_save_change(request, obj)
 
 
 @admin.register(Topic)

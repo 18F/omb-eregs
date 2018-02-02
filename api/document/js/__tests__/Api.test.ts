@@ -12,7 +12,7 @@ function mockSetStatus() {
   const textContent = jest.fn();
   const statusEl = {};
   Object.defineProperty(statusEl, 'textContent', { set: textContent });
-  (getEl as any).mockReturnValue(statusEl);
+  (getEl as jest.Mock).mockReturnValue(statusEl);
   return textContent;
 }
 

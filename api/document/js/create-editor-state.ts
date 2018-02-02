@@ -18,7 +18,7 @@ export default function createEditorState(data, api: Api): EditorState {
   return EditorState.create({
     doc,
     plugins: [
-      menu,
+      menu(api),
       keyboard(api),
       history(),
     ],
