@@ -49,13 +49,9 @@ const NODE_CONVERTERS = {
     { content: convertTexts(node.content) },
   ),
   listitem(node) {
-    // Note the existence of these two nodes is ensured by the schema
-    const markerNode = node.content.child(0);
-    const body = node.content.child(1);
-
     const children: ApiNode[] = [];
-    body.forEach(child => children.push(serializeDoc(child)));
-    const marker = markerNode.textContent;
+    node.content.forEach(child => children.push(serializeDoc(child)));
+    const marker = node.attrs.marker;
     const typeEmblem = marker.replace(/[^a-zA-Z0-9]/, '');
     return apiFactory.node(
       node.type.name,

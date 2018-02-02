@@ -7,16 +7,16 @@ const listSchemaNodes: { [name: string]: NodeSpec } = {
     toDOM: () => ['ol', { class: 'node-list' }, 0],
   },
   listitem: {
-    content: 'listitemMarker listitemBody',
-    toDOM: () => ['li', { class: 'node-list-item' }, 0],
-  },
-  listitemMarker: {
-    content: 'text+',
-    toDOM: () => ['span', { class: 'list-item-marker' }, 0],
-  },
-  listitemBody: {
+    attrs: {
+      marker: { default: '1.' },
+    },
     content: 'block+',
-    toDOM: () => ['div', { class: 'list-item-text' }, 0],
+    toDOM: node => [
+      'li',
+      { class: 'node-list-item' },
+      ['span', { class: 'list-item-marker' }, node.attrs.marker],
+      ['div', { class: 'list-item-text' }, 0],
+    ],
   },
 };
 
@@ -78,10 +78,7 @@ export const factory = {
   list: (children?: Node[]) =>
     schema.nodes.list.create({}, children || []),
   listitem: (marker: string, children?: Node[]) =>
-    schema.nodes.listitem.create({}, [
-      schema.nodes.listitemMarker.create({}, schema.text(marker)),
-      schema.nodes.listitemBody.create({}, children || []),
-    ]),
+    schema.nodes.listitem.create({ marker }, children || []),
   para: (textContent: string | Node[], children?: Node[]) =>
     schema.nodes.para.create({}, [schema.nodes.inline.create(
       {},
