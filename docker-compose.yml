@@ -5,13 +5,50 @@ services:
     volumes:
       - database_data:/var/lib/postgresql/data
   minio:
-    extends:
-      file: docker-services.yml
-      service: minio
+    image: minio/minio
+    environment:
+        - MINIO_ACCESS_KEY=LOCAL_ID
+        - MINIO_SECRET_KEY=LOCAL_KEY
+    command: server --address ':9100' minio-test
+    ports:
+      - 9100:9100
   api:
-    extends:
-      file: docker-services.yml
-      service: api
+    image: python:3.6.2
+    working_dir: /usr/src/app/api
+    stdin_open: true
+    tty: true
+    entrypoint: .docker/activate_then .docker/wait_for_webpack_then .docker/wait_for_db_then
+    command: ./run_api.sh
+    environment:
+      PORT: 8001
+      DEBUG: ${DEBUG:-true}
+      USE_POLLING: ${USE_POLLING:-false}
+      DATABASE_URL: postgres://postgres@persistent_db/postgres
+      DJANGO_SETTINGS_MODULE: omb_eregs.settings
+      TMPDIR: /tmp
+      USING_SSL: "False"
+
+      # The following settings are to maintain environment parity between the
+      # docker-compose configuration for local development and the cloud.gov
+      # staging and production configurations.
+      VCAP_APPLICATION: >
+        {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "api"]}
+      VCAP_SERVICES: >
+        {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}],
+         "s3": [{
+           "credentials": {
+             "access_key_id": "LOCAL_ID",
+             "bucket": "pdfs",
+             "region": "irrelevant fake region",
+             "endpoint": "http://minio:9100",
+             "secret_access_key": "LOCAL_KEY"
+           },
+           "label": "s3",
+           "name": "storage-s3"
+         }]
+        }
+    ports:
+      - 8001:8001
     volumes:
       - .:/usr/src/app:delegated
     depends_on:
@@ -19,15 +56,30 @@ services:
       - minio
       - api-ui
   api-ui:
-    extends:
-      file: docker-services.yml
-      service: api-ui
+    image: node:6
+    environment:
+      USE_POLLING: ${USE_POLLING:-false}
+    working_dir: /usr/src/app/api
+    entrypoint: .docker/deps_ok_then .docker/modify_path_then
+    command: webpack --watch
     volumes:
       - .:/usr/src/app:delegated
   ui:
-    extends:
-      file: docker-services.yml
-      service: ui
+    image: node:6
+    working_dir: /usr/src/app/ui
+    entrypoint: .docker/deps_ok_then .docker/modify_path_then
+    command: .docker/watch-run.sh
+    environment:
+      PORT: 8002
+      NODE_ENV: ${NODE_ENV:-development}
+      API_URL: ${API_URL:-http://localhost:8001/}
+      INTERNAL_API_URL: ${INTERNAL_API_URL:-http://api:8001/}
+      USE_POLLING: ${USE_POLLING:-false}
+      VCAP_SERVICES: >
+        {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
+        }}}]}
+    ports:
+      - 8002:8002
     volumes:
       - .:/usr/src/app:delegated
     depends_on:
