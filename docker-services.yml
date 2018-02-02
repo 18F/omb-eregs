@@ -80,12 +80,17 @@ services:
   # TODO: Migrate these somehow.
 
   psql:
+    # This seems like a decent replacement:
+    #
+    #     docker-compose run persistent_db psql -h persistent_db -U postgres
     image: postgres:9.4
     entrypoint: 'psql -h persistent_db -U postgres'
     depends_on: ['persistent_db']
 
   ptw:
-    # This should run on the api container.
+    # This can be replaced with:
+    #
+    #     docker-compose run api .docker/watch_tests.sh
     entrypoint: .docker/activate_then .docker/watch_tests.sh
     command: ''
     ports: []
