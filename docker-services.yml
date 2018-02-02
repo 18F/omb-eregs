@@ -80,7 +80,7 @@ services:
 
   dev: &DEV_UI
     <<: *PROD_UI
-    entrypoint: .docker/deps_ok_then
+    entrypoint: .docker/deps_ok_then .docker/modify_path_then
     command: .docker/watch-run.sh
     environment:
       PORT: 8002
