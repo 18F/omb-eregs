@@ -4,14 +4,16 @@ services:
     image: postgres:9.4
     volumes:
       - database_data:/var/lib/postgresql/data
-  minio:
-    image: minio/minio
-    environment:
-        - MINIO_ACCESS_KEY=LOCAL_ID
-        - MINIO_SECRET_KEY=LOCAL_KEY
-    command: server --address ':9100' minio-test
-    ports:
-      - 9100:9100
+  # We've temporarily removed pdf upload, so we don't need
+  # minio (a mock S3 server) for now.
+  # minio:
+  #   image: minio/minio
+  #   environment:
+  #       - MINIO_ACCESS_KEY=LOCAL_ID
+  #       - MINIO_SECRET_KEY=LOCAL_KEY
+  #   command: server --address ':9100' minio-test
+  #   ports:
+  #     - 9100:9100
   api:
     image: python:3.6.4
     working_dir: /usr/src/app/api
@@ -53,7 +55,7 @@ services:
       - .:/usr/src/app:delegated
     depends_on:
       - persistent_db
-      - minio
+      # - minio
       - api-ui
   api-ui:
     image: node:6

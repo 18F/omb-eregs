@@ -42,6 +42,7 @@ def test_import_from_policy_obama_whitehouse(monkeypatch):
     ])
 
 
+@pytest.mark.skip(reason="We've temporarily removed pdf upload")
 def test_import_from_policy_attached_file(monkeypatch):
     monkeypatch.setattr(import_pdfs_from_policies, 'best_url', Mock())
     monkeypatch.setattr(import_pdfs_from_policies, 'parse_pdf', Mock())
