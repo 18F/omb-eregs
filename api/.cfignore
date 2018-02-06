@@ -96,3 +96,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# These aren't used in production, since we build the assets in CI
+node_modules
+webpack-static

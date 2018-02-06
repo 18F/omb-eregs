@@ -1,143 +1,357 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
+# Reusable definitions
+generic: &GENERIC
+  docker:
+  - image: node:6
+viewer: &VIEWER
+  docker:
+  - image: node:6
+  working_directory: /app/ui
+api: &API
+  docker:
+    - image: python:3.6.4
+    - image: postgres:9.4
+  working_directory: /app/api
+  environment:
+    DEBUG: "True"
+    DATABASE_URL: postgres://postgres@localhost/postgres
+    VCAP_SERVICES: |
+      {"s3": [{
+         "credentials": {
+           "access_key_id": "LOCAL_ID",
+           "bucket": "pdfs",
+           "region": "irrelevant fake region",
+           "endpoint": "http://localhost:9100",
+           "secret_access_key": "LOCAL_KEY"
+         },
+         "label": "s3",
+         "name": "storage-s3"
+       }]
+      }
+admin-ui: &ADMIN_UI
+  docker:
+    - image: node:6
+  working_directory: /app/api
+
+# Main config
 version: 2
 jobs:
-  build:
-    docker:
-        - image: circleci/python:3.6.2
-
-    working_directory: ~/repo
-
+  get-code:
+    <<: *GENERIC
     steps:
-      - checkout
-      - setup_remote_docker
+    - checkout:
+        path: /app/
+    - persist_to_workspace:
+        root: /app/
+        paths: ['*']
+  prep-code-climate:
+    <<: *GENERIC
+    steps:
+    - run:
+        name: Fetch Code Climate Coverage reporter
+        command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > cc-test-reporter
+    - run: chmod a+x cc-test-reporter
+    - run: ./cc-test-reporter before-build
+    - persist_to_workspace:
+        root: ~/project
+        paths: ['cc-test-reporter']
 
-      - run:
-          name: Prep Code Climate Coverage reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod a+x ./cc-test-reporter
-            ./cc-test-reporter before-build
-      - run:
-          name: Setup "holder" container for file storage
-          command: |
-            docker create -v /usr/src/app -w /usr/src/app/ --name holder python:3.6.2 sleep 100d
-            docker cp . holder:/usr/src/app
-            docker start holder
-      - run:
-          name: Generate circle-specific docker configs
-          command: |
-            docker exec holder pip install pyyaml
-            docker exec holder python ./devops/transform_circle.py docker-compose.yml holder > docker-compose-circle.yml
+  viewer-deps:
+    <<: *VIEWER
+    steps:
+    - attach_workspace:
+        at: /app/
+    - restore_cache:
+        key: viewer-{{ checksum "package.json" }}-{{ checksum "npm-shrinkwrap.json" }}
+    - run:
+        name: Install Viewer Dependencies
+        command: .docker/deps_ok_then echo 'Success'
+    - save_cache:
+        key: viewer-{{ checksum "package.json" }}-{{ checksum "npm-shrinkwrap.json" }}
+        paths: ['node_modules']
+    - persist_to_workspace:
+        root: /app/
+        paths: ['ui/node_modules']
 
-      - run:
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/ui-npm run lint
-      - run:
-          name: UI Tests
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/ui-npm test
-      - run:
-          name: Build UI
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: |
-            bin/ui-npm run build-css
-            docker cp holder:/usr/src/app/ui/static/styles.css ./ui/static/styles.css
-            docker cp holder:/usr/src/app/ui/static/font/. ./ui/static/font
-      - run:
-          name: API Unit tests
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/py.test --cov --cov-report xml
-      - run:
-          name: API Flake8
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/flake8
-      - run:
-          name: API Mypy
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/mypy .
-      - run:
-          name: API Bandit
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/bandit -r ereqs_admin reqs omb_eregs
-      - run:
-          name: API TSlint
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/api-npm run lint
-      - run:
-          name: API JS tests
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: bin/api-npm test
-      - run:
-          name: API Build and Collect Static Files
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-            DEBUG: "false"
-          command: |
-            bin/api-npm run build
-            bin/manage.py collectstatic --noinput
-            docker cp holder:/usr/src/app/api/collected-static/. ./api/collected-static
+  viewer-lint:
+    <<: *VIEWER
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run: npm run lint
 
-      - run:
-          name: Submit Coverage
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-          command: |
-            docker cp holder:/usr/src/app/api/coverage.xml api/coverage.xml
-            # directory hopping so the file names match up
-            cd api
-            ../cc-test-reporter format-coverage \
-              --input-type coverage.py --output - \
-              | python ../devops/cc_add_prefix.py --prefix api/ \
-              > ../cc-coverage.python.json
+  viewer-tests:
+    <<: *VIEWER
+    steps:
+    - attach_workspace:
+        at: /app/
+    # CircleCI will tell Jest the wrong number of cores; run single-threaded
+    # to prevent memory issues
+    - run: npm run test -- --runInBand
+    - run:
+        name: Convert Coverage
+        command: |
+          ../cc-test-reporter format-coverage \
+            --prefix /usr/src/app/ui --input-type lcov --output - lcov.info \
+            | python ../devops/cc_add_prefix.py --prefix ui/ \
+            > ../cc-coverage.node.json
+    - persist_to_workspace:
+        root: /app/
+        paths: ['cc-coverage.node.json']
 
-            cd ../ui
-            docker cp holder:/usr/src/app/ui/coverage/lcov.info lcov.info
-            ../cc-test-reporter format-coverage \
-              --prefix /usr/src/app/ui --input-type lcov --output - lcov.info \
-              | python ../devops/cc_add_prefix.py --prefix ui/ \
-              > ../cc-coverage.node.json
+  viewer-build-demo: &VIEWER_BUILD
+    <<: *VIEWER
+    environment:
+      DEBUG: "false"
+      NODE_ENV: production
+      API_URL: https://omb-eregs-api-demo.app.cloud.gov/
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Build CSS
+        command: npm run build-css
+    - run:
+        name: Build Next App
+        command: INTERNAL_API_URL=${API_URL} npm run build
+    - persist_to_workspace:
+        root: /app/
+        paths:
+          - ui/static/styles.css
+          - ui/static/font
+          - ui/.next
 
-            cd ..
-            ./cc-test-reporter sum-coverage --output cc-coverage.json --parts 2 cc-coverage.*.json
-            # allow submission to fail; this occurs on re-builds
-            echo 4
-            ./cc-test-reporter upload-coverage --input cc-coverage.json || true
+  viewer-build-prod:
+    <<: *VIEWER_BUILD
+    environment:
+      DEBUG: "false"
+      NODE_ENV: production
+      API_URL: https://policy-api.cio.gov/
 
-      - run:
-          name: Build Next App
-          environment:
-            COMPOSE_FILE: docker-compose-circle.yml
-            NODE_ENV: production
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "release" ]; then
-              export API_URL=https://policy-api.cio.gov/
-            else
-              export API_URL=https://omb-eregs-api-demo.app.cloud.gov/
-            fi
-            export INTERNAL_API_URL=${API_URL}
-            bin/ui-npm run build
-            docker cp holder:/usr/src/app/ui/.next ui/.next
-      - deploy:
-          name: Deploy
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              export CF_USERNAME=$CF_USERNAME_DEV
-              export CF_PASSWORD=$CF_PASSWORD_DEV
-              ./devops/circle-deploy.sh dev
-            elif [ "${CIRCLE_BRANCH}" == "release" ]; then
-              export CF_USERNAME=$CF_USERNAME_PROD
-              export CF_PASSWORD=$CF_PASSWORD_PROD
-              ./devops/circle-deploy.sh prod
-            fi
+  api-deps:
+    <<: *API
+    steps:
+    - attach_workspace:
+        at: /app/
+    - restore_cache:
+        key: api-{{ checksum "requirements_dev.txt" }}
+    - run:
+        name: Install API Dependencies
+        command: .docker/activate_then echo 'Success'
+    - save_cache:
+        key: api-{{ checksum "requirements_dev.txt" }}
+        paths: ['.venv-dev']
+    - persist_to_workspace:
+        root: /app/
+        paths: ['api/.venv-dev']
+
+  api-lint:
+    <<: *API
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Flake8
+        command: .docker/activate_then flake8
+    - run:
+        name: MyPy
+        command: .docker/activate_then mypy .
+    - run:
+        name: Bandit
+        command: .docker/activate_then bandit -r ereqs_admin reqs omb_eregs -s B101
+
+  api-tests:
+    <<: *API
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Py.Test
+        command: .docker/activate_then py.test --cov --cov-report xml
+    - run:
+        name: Convert Coverage
+        command: |
+          ../cc-test-reporter format-coverage \
+            --input-type coverage.py --output - \
+            | python ../devops/cc_add_prefix.py --prefix api/ \
+            > ../cc-coverage.python.json
+    - persist_to_workspace:
+        root: /app/
+        paths: ['cc-coverage.python.json']
+
+  api-build:
+    <<: *API
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Collect all of the static files
+        command: .docker/activate_then python manage.py collectstatic --noinput
+    - persist_to_workspace:
+        root: /app/
+        paths: ['api/collected-static']
+
+  admin-ui-deps:
+    <<: *ADMIN_UI
+    steps:
+    - attach_workspace:
+        at: /app/
+    - restore_cache:
+        key: admin-ui-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+    - run:
+        name: Install API Dependencies
+        command: .docker/deps_ok_then echo 'Success'
+    - save_cache:
+        key: admin-ui-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+        paths: ['node_modules']
+    - persist_to_workspace:
+        root: /app/
+        paths: ['api/node_modules']
+
+  admin-ui-lint:
+    <<: *ADMIN_UI
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run: npm run lint
+
+  admin-ui-tests:
+    <<: *ADMIN_UI
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run: npm test
+
+  admin-ui-build:
+    <<: *ADMIN_UI
+    environment:
+      DEBUG: "false"
+      NODE_ENV: production
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Build CSS
+        command: npm run build
+    - run:
+        name: Build Editor
+        command: npm run build
+    - persist_to_workspace:
+        root: /app/
+        paths: ['api/webpack-static']
+
+  submit_coverage:
+    <<: *GENERIC
+    working_directory: /app
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Sum Coverage
+        command: ./cc-test-reporter sum-coverage --output cc-coverage.json --parts 2 cc-coverage.*.json
+    - run:
+        name: Submit Coverage
+        # Allow submission to fail; this occurs on re-builds
+        command: ./cc-test-reporter upload-coverage --input cc-coverage.json || true
+
+  deploy-demo:
+    <<: *GENERIC
+    working_directory: /app
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Deploy to Demo
+        command: CF_USERNAME=$CF_USERNAME_DEV CF_PASSWORD=$CF_PASSWORD_DEV ./devops/circle-deploy.sh dev
+
+  deploy-prod:
+    <<: *GENERIC
+    working_directory: /app
+    steps:
+    - attach_workspace:
+        at: /app/
+    - run:
+        name: Deploy to Production
+        command: CF_USERNAME=$CF_USERNAME_PROD CF_PASSWORD=$CF_PASSWORD_PROD ./devops/circle-deploy.sh prod
+
+workflows:
+  version: 2
+
+  all:
+    jobs:
+    - get-code
+    - prep-code-climate
+
+    - viewer-deps:
+        requires: ['get-code']
+    - api-deps:
+        requires: ['get-code']
+    - admin-ui-deps:
+        requires: ['get-code']
+
+    - viewer-lint:
+        requires: ['viewer-deps']
+    - viewer-tests:
+        requires:
+        - viewer-deps
+        - prep-code-climate
+    - api-lint:
+        requires: ['api-deps']
+    - api-tests:
+        requires:
+        - api-deps
+        - prep-code-climate
+    - admin-ui-lint:
+        requires: ['admin-ui-deps']
+    - admin-ui-tests:
+        requires:
+        - admin-ui-deps
+        - prep-code-climate
+
+    - viewer-build-demo:
+        requires: ['viewer-deps']
+        filters:
+          branches:
+            ignore: release
+    - viewer-build-prod:
+        requires: ['viewer-deps']
+        filters:
+          branches:
+            only: release
+    - admin-ui-build:
+        requires: ['admin-ui-deps']
+    - api-build:
+        requires: ['admin-ui-build']
+
+    - submit_coverage:
+        requires:
+        - viewer-tests
+        - api-tests
+
+    - deploy-demo:
+        requires:
+          - viewer-lint
+          - viewer-tests
+          - viewer-build-demo
+          - api-lint
+          - api-tests
+          - admin-ui-lint
+          - admin-ui-tests
+          - admin-ui-build
+          - api-build
+        filters:
+          branches:
+            only: master
+    - deploy-prod:
+        requires:
+          - viewer-lint
+          - viewer-tests
+          - viewer-build-prod
+          - api-lint
+          - api-tests
+          - admin-ui-lint
+          - admin-ui-tests
+          - admin-ui-build
+          - api-build
+        filters:
+          branches:
+            only: release
