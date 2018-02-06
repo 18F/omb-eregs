@@ -15,8 +15,7 @@ api: &API
     DEBUG: "True"
     DATABASE_URL: postgres://postgres@localhost/postgres
     VCAP_SERVICES: |
-      {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}],
-       "s3": [{
+      {"s3": [{
          "credentials": {
            "access_key_id": "LOCAL_ID",
            "bucket": "pdfs",
