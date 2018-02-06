@@ -86,7 +86,7 @@ jobs:
         at: /app/
     # CircleCI will tell Jest the wrong number of cores; run single-threaded
     # to prevent memory issues
-    - run: npm run test --runInBand
+    - run: npm run test -- --runInBand
     - run:
         name: Convert Coverage
         command: |
