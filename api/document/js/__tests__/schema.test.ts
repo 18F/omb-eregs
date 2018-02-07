@@ -2,6 +2,7 @@ import { deleteSelection } from 'prosemirror-commands';
 import { DOMSerializer } from 'prosemirror-model';
 import { EditorState, TextSelection } from 'prosemirror-state';
 
+import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 import schema, { factory } from '../schema';
 
 const serializer = DOMSerializer.fromSchema(schema);
@@ -40,7 +41,10 @@ describe('para', () => {
     ]);
     expect(doc.content.childCount).toBe(2);
     // Selected the "2"
-    const selection = new TextSelection(doc.resolve(7), doc.resolve(8));
+    const selection = new TextSelection(
+      pathToResolvedPos(doc, [new NthType(1, 'para'), 'inline']),
+      pathToResolvedPos(doc, [new NthType(1, 'para'), 'inline', 1]),
+    );
     const state = EditorState.create({ doc, selection });
     const dispatch = jest.fn();
 

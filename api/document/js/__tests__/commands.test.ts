@@ -8,6 +8,7 @@ import Api from '../Api';
 import { appendParagraphNear, makeSave, makeSaveThenXml } from '../commands';
 import schema, { factory } from '../schema';
 import serializeDoc from '../serialize-doc';
+import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 
 function executeTransform(initialState: EditorState, transform): EditorState {
   const dispatch = jest.fn();
@@ -25,8 +26,11 @@ describe('appendParagraphNear()', () => {
       factory.para('bbb'),
       factory.para('ccc'),
     ]);
-    // Inside the 'bbb' paragraph
-    const selection = new TextSelection(doc.resolve(11));
+    const selection = new TextSelection(pathToResolvedPos(
+      doc,
+      // Inside the 'bbb' paragraph
+      [new NthType(1, 'para'), 'inline', 'b'.length],
+    ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
 
@@ -46,8 +50,11 @@ describe('appendParagraphNear()', () => {
         factory.unimplementedNode({}),
       ]),
     ]);
-    // Inside the 'subpar' paragraph
-    const selection = new TextSelection(doc.resolve(12));
+    const selection = new TextSelection(pathToResolvedPos(
+      doc,
+      // Inside the 'subpar' paragraph
+      ['para', 'para', 'inline', 'sub'.length],
+    ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
 
@@ -64,8 +71,11 @@ describe('appendParagraphNear()', () => {
         factory.unimplementedNode({}),
       ]),
     ]);
-    // Inside the 'aaa' paragraph
-    const selection = new TextSelection(doc.resolve(4));
+    const selection = new TextSelection(pathToResolvedPos(
+      doc,
+      // Inside the 'aaa' paragraph
+      ['para', 'inline', 'a'.length],
+    ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
 
@@ -79,8 +89,11 @@ describe('appendParagraphNear()', () => {
       factory.para('bbb'),
       factory.para('ccc'),
     ]);
-    // Inside the 'bbb' paragraph
-    const selection = new TextSelection(doc.resolve(11));
+    const selection = new TextSelection(pathToResolvedPos(
+      doc,
+      // Inside the 'bbb' paragraph
+      [new NthType(1, 'para'), 'inline', 'b'.length],
+    ));
     const state = EditorState.create({ doc, selection });
     const modified = executeTransform(state, appendParagraphNear);
 
