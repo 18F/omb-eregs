@@ -5,7 +5,7 @@ window.location.assign = jest.fn();
 import { EditorState, TextSelection } from 'prosemirror-state';
 
 import Api from '../Api';
-import { appendParagraphNear, makeSave, makeSaveThenXml } from '../commands';
+import { appendNearBlock, appendParagraphNear, makeSave, makeSaveThenXml } from '../commands';
 import schema, { factory } from '../schema';
 import serializeDoc from '../serialize-doc';
 import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
@@ -19,8 +19,11 @@ function executeTransform(initialState: EditorState, transform): EditorState {
 }
 
 
-describe('appendParagraphNear()', () => {
-  it('adds a paragraph after the current', () => {
+describe('appendNearBlock()', () => {
+  const paraTransform = (state, dispatch) =>
+    appendNearBlock(state, dispatch, factory.para(' '), ['inline']);
+
+  it('adds a node after the current', () => {
     const doc = factory.policy([
       factory.para('aaa'),
       factory.para('bbb'),
@@ -32,7 +35,7 @@ describe('appendParagraphNear()', () => {
       [new NthType(1, 'para'), 'inline', 'b'.length],
     ));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
+    const modifiedDoc = executeTransform(state, paraTransform).doc;
 
     expect(modifiedDoc.content.childCount).toBe(4);
     const texts: string[] = [];
@@ -56,7 +59,7 @@ describe('appendParagraphNear()', () => {
       ['para', 'para', 'inline', 'sub'.length],
     ));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
+    const modifiedDoc = executeTransform(state, paraTransform).doc;
 
     expect(modifiedDoc.content.childCount).toBe(1);
     const parA = modifiedDoc.content.child(0);
@@ -77,31 +80,38 @@ describe('appendParagraphNear()', () => {
       ['para', 'inline', 'a'.length],
     ));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
+    const modifiedDoc = executeTransform(state, paraTransform).doc;
 
     expect(modifiedDoc.content.childCount).toBe(2);
     expect(modifiedDoc.content.child(1).textContent).toBe(' ');
   });
+});
+
+describe('appendParagraphNear()', () => {
+  const doc = factory.policy([factory.para('aaa')]);
+  const selection = new TextSelection(pathToResolvedPos(
+    doc,
+    ['para', 'inline', 'a'.length],
+  ));
+  const state = EditorState.create({ doc, selection });
+  const modified = executeTransform(state, appendParagraphNear);
+
+  it('adds a paragraph', () => {
+    expect(modified.doc.content.childCount).toBe(2);
+    const texts: string[] = [];
+    modified.doc.content.forEach((child) => {
+      expect(child.type).toBe(schema.nodes.para);
+      texts.push(child.textContent);
+    });
+    expect(texts).toEqual(['aaa', ' ']);
+  });
 
   it('puts the cursor in the right place', () => {
-    const doc = factory.policy([
-      factory.para('aaa'),
-      factory.para('bbb'),
-      factory.para('ccc'),
-    ]);
-    const selection = new TextSelection(pathToResolvedPos(
-      doc,
-      // Inside the 'bbb' paragraph
-      [new NthType(1, 'para'), 'inline', 'b'.length],
-    ));
-    const state = EditorState.create({ doc, selection });
-    const modified = executeTransform(state, appendParagraphNear);
-
     const resolvedPos = modified.selection.$anchor;
-    expect(resolvedPos.depth).toBe(2);
+    expect(resolvedPos.depth).toBe(2);  // 0: policy, 1: para, 2: inline
     expect(resolvedPos.parent.type).toBe(schema.nodes.inline);
     expect(resolvedPos.parent).toBe(
-      modified.doc.content.child(2).content.child(0));
+      modified.doc.content.child(1).content.child(0));
   });
 });
 
