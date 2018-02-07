@@ -1,7 +1,9 @@
+import { toggleMark } from 'prosemirror-commands';
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
 import Api from './Api';
 import { appendParagraphNear, makeSave, makeSaveThenXml } from './commands';
+import schema from './schema';
 
 function makeButton(content) {
   return new MenuItem({
@@ -31,6 +33,7 @@ export default function menu(api: Api) {
           run: appendParagraphNear,
           title: 'Append paragraph',
         }),
+        linkItem(schema.marks.external_link),
         makeButton({
           label: 'Save',
           run: makeSave(api),
@@ -44,4 +47,48 @@ export default function menu(api: Api) {
       ],
     ],
   });
+}
+
+function markActive(state, type) {
+  let {from, $from, to, empty} = state.selection
+  if (empty) return type.isInSet(state.storedMarks || $from.marks())
+  else return state.doc.rangeHasMark(from, to, type)
+}
+
+function linkItem(markType) {
+  return new MenuItem({
+    class: 'menuitem-clickable',
+    // These defaults are needed due to a doc issue. See
+    // https://github.com/ProseMirror/prosemirror-menu/issues/15
+    css: '',
+    execEvent: 'mousedown',
+    title: "Add or remove link",
+    label: 'A',
+    active(state) { return markActive(state, markType) },
+    enable(state) { return !state.selection.empty },
+    run(state, dispatch, view) {
+      if (markActive(state, markType)) {
+        toggleMark(markType)(state, dispatch)
+        return true
+      }
+      /*
+      openPrompt({
+        title: "Create a link",
+        fields: {
+          href: new TextField({
+            label: "Link target",
+            required: true
+          })
+        },
+        callback(attrs) {
+          toggleMark(markType, attrs)(view.state, view.dispatch)
+          view.focus()
+        }
+      })
+      */
+      toggleMark(schema.marks.external_link, { href: prompt("URL", "not this") })(view.state, view.dispatch);
+      view.focus();
+      return true;
+    }
+  })
 }

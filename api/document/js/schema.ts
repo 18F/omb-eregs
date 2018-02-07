@@ -65,25 +65,17 @@ const schema = new Schema({
   marks: {
     external_link: {
       attrs: {
-        data: {}, // will hold unrendered content
+        href: {},
       },
-        //toDOM: (data) => ['a', { class: `unimplemented external-link ${data.href}`, href: data.href }],
       toDOM(data) {
-          console.dir(data);
-          return ['a', { class: `unimplemented external-link ${data.attrs.data.href}`, href: data.attrs.data.href }];
+          return ['a', { class: `external-link`, href: data.attrs.href }];
       }
     },
     unimplementedMark: {
       attrs: {
         data: {}, // will hold unrendered content
       },
-        toDOM: (data) => ['span', { class: `unimplemented WTF3 ${data}` }],
-      /*
-      toDOM(node) {
-        const nodeType = node.attrs.data.node_type || '[no-node-type]';
-          return ['span', { class: `unimplemented WTF ${nodeType}` }, nodeType];
-      }
-      */
+        toDOM: (data) => ['span', { class: `unimplemented` }],
     },
   },
 });
@@ -104,8 +96,8 @@ export const factory = {
     schema.nodes.policy.create({}, children || []),
   sec: (children?: Node[]) =>
     schema.nodes.sec.create({}, children || []),
-  external_link: (original: any) =>
-    schema.marks.external_link.create({ data: original }),
+  external_link: (href: string) =>
+    schema.marks.external_link.create({ href }),
   unimplementedMark: (original: any) =>
     schema.marks.unimplementedMark.create({ data: original }),
   unimplementedNode: (original: any) =>

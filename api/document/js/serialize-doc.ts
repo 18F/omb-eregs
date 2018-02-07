@@ -88,8 +88,10 @@ function defaultNodeConverter(node): ApiNode {
 }
 
 const MARK_CONVERTERS = {
-  unimplementedMark: node =>
-    apiFactory.content(node.type.name, node.attrs.data),
+  unimplementedMark: mark =>
+    apiFactory.content(mark.type.name, mark.attrs.data),
+  external_link: mark =>
+  apiFactory.content(mark.type.name, { href: mark.attrs.href }),
 };
 
 

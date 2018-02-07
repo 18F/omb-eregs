@@ -30,7 +30,6 @@ export function convertContent(content, marks: Mark[]): Node[] {
 }
 
 const NODE_TYPE_CONVERTERS = {
-  external_link: node => factory.unimplementedNode(node),
   heading(node) {
     // Duplicates logic in `ui`
     const depth = node.identifier
@@ -53,5 +52,5 @@ const NODE_TYPE_CONVERTERS = {
 
 const CONTENT_TYPE_CONVERTERS = {
   unimplementedMark: content => factory.unimplementedMark(content),
-  external_link: content => factory.external_link(content),
+  external_link: content => factory.external_link(content.href),
 };
