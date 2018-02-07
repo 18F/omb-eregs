@@ -99,4 +99,5 @@ const NODE_TYPE_CONVERTERS: NodeConverterMap = {
 
 const CONTENT_TYPE_CONVERTERS = {
   unimplementedMark: content => factory.unimplementedMark(content),
+  external_link: content => factory.external_link(content.href),
 };
