@@ -2,6 +2,7 @@ import { Node } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
 import Api from './Api';
+import { deeperBullet } from './list-utils';
 import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import { factory } from './schema';
 import serializeDoc from './serialize-doc';
@@ -49,6 +50,13 @@ export function appendNearBlock(state, dispatch, element: Node, selectionPath: S
 export function appendParagraphNear(state, dispatch) {
   const element = factory.para(' ');
   return appendNearBlock(state, dispatch, element, ['inline']);
+}
+
+export function appendBulletListNear(state, dispatch) {
+  const element = factory.list([
+    factory.listitem(deeperBullet(state.selection.$head), [factory.para(' ')]),
+  ]);
+  return appendNearBlock(state, dispatch, element, ['listitem', 'para', 'inline']);
 }
 
 export function makeSave(api: Api) {

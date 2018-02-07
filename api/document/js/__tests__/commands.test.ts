@@ -5,7 +5,13 @@ window.location.assign = jest.fn();
 import { EditorState, TextSelection } from 'prosemirror-state';
 
 import Api from '../Api';
-import { appendNearBlock, appendParagraphNear, makeSave, makeSaveThenXml } from '../commands';
+import {
+  appendBulletListNear,
+  appendNearBlock,
+  appendParagraphNear,
+  makeSave,
+  makeSaveThenXml,
+} from '../commands';
 import schema, { factory } from '../schema';
 import serializeDoc from '../serialize-doc';
 import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
@@ -112,6 +118,41 @@ describe('appendParagraphNear()', () => {
     expect(resolvedPos.parent.type).toBe(schema.nodes.inline);
     expect(resolvedPos.parent).toBe(
       modified.doc.content.child(1).content.child(0));
+  });
+});
+
+describe('appendBulletListNear()', () => {
+  const doc = factory.policy([factory.para('aaa')]);
+  const selection = new TextSelection(pathToResolvedPos(
+    doc,
+    ['para', 'inline', 'a'.length],
+  ));
+  const state = EditorState.create({ doc, selection });
+  const modified = executeTransform(state, appendBulletListNear);
+
+  it('adds a list, listitem, and para', () => {
+    expect(modified.doc.content.childCount).toBe(2);
+
+    const list = modified.doc.content.child(1);
+    expect(list.type).toBe(schema.nodes.list);
+    expect(list.content.childCount).toBe(1);
+
+    const li = list.content.child(0);
+    expect(li.type).toBe(schema.nodes.listitem);
+    expect(li.content.childCount).toBe(1);
+
+    const para = li.content.child(0);
+    expect(para.type).toBe(schema.nodes.para);
+    expect(para.textContent).toBe(' ');
+  });
+
+  it('puts the cursor in the right place', () => {
+    const resolvedPos = modified.selection.$anchor;
+    // 0: policy, 1: list, 2: listitem, 3: para, 4: inline
+    expect(resolvedPos.depth).toBe(4);
+    expect(resolvedPos.parent.type).toBe(schema.nodes.inline);
+    expect(resolvedPos.parent).toBe(
+      modified.doc.content.child(1).content.child(0).content.child(0).content.child(0));
   });
 });
 
