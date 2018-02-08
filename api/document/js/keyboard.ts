@@ -1,4 +1,10 @@
-import { baseKeymap, chainCommands, deleteSelection, selectNodeBackward, selectNodeForward } from 'prosemirror-commands';
+import {
+  baseKeymap,
+  chainCommands,
+  deleteSelection,
+  selectNodeBackward,
+  selectNodeForward,
+} from 'prosemirror-commands';
 import { undo, redo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 
@@ -14,8 +20,10 @@ const del = chainCommands(deleteSelection, selectNodeForward);
 export default function menu(api: Api) {
   return keymap({
     ...baseKeymap,
+    // tslint:disable-next-line object-literal-key-quotes
     'Backspace': backspace,
     'Mod-Backspace': backspace,
+    // tslint:disable-next-line object-literal-key-quotes
     'Delete': del,
     'Mod-Delete': del,
     'Mod-z': undo,
