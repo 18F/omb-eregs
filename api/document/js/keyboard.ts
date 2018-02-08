@@ -4,6 +4,7 @@ import { keymap } from 'prosemirror-keymap';
 
 import Api from './Api';
 import { makeSave } from './commands';
+import schema from './schema';
 
 export default function menu(api: Api) {
   return keymap({
