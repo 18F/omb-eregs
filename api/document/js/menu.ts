@@ -50,9 +50,11 @@ export default function menu(api: Api) {
 }
 
 function markActive(state, type) {
-  let {from, $from, to, empty} = state.selection
-  if (empty) return type.isInSet(state.storedMarks || $from.marks())
-  else return state.doc.rangeHasMark(from, to, type)
+  const { from, $from, to, empty } = state.selection;
+  if (empty) {
+    return type.isInSet(state.storedMarks || $from.marks());
+  }
+  return state.doc.rangeHasMark(from, to, type);
 }
 
 function linkItem(markType) {
@@ -62,33 +64,21 @@ function linkItem(markType) {
     // https://github.com/ProseMirror/prosemirror-menu/issues/15
     css: '',
     execEvent: 'mousedown',
-    title: "Add or remove link",
+    title: 'Add or remove link',
     label: 'A',
-    active(state) { return markActive(state, markType) },
-    enable(state) { return !state.selection.empty },
+    active(state) { return markActive(state, markType); },
+    enable(state) { return !state.selection.empty; },
     run(state, dispatch, view) {
       if (markActive(state, markType)) {
-        toggleMark(markType)(state, dispatch)
-        return true
+        toggleMark(markType)(state, dispatch);
+        return true;
       }
-      /*
-      openPrompt({
-        title: "Create a link",
-        fields: {
-          href: new TextField({
-            label: "Link target",
-            required: true
-          })
-        },
-        callback(attrs) {
-          toggleMark(markType, attrs)(view.state, view.dispatch)
-          view.focus()
-        }
-      })
-      */
-      toggleMark(schema.marks.external_link, { href: prompt("URL", "not this") })(view.state, view.dispatch);
+      // We need a replacement for prompt here.
+      toggleMark(schema.marks.external_link, {
+        href: prompt('URL', 'not this'),
+      })(view.state, view.dispatch);
       view.focus();
       return true;
-    }
-  })
+    },
+  });
 }

@@ -68,14 +68,14 @@ const schema = new Schema({
         href: {},
       },
       toDOM(data) {
-          return ['a', { class: `external-link`, href: data.attrs.href }];
-      }
+        return ['a', { class: `external-link`, href: data.attrs.href }];
+      },
     },
     unimplementedMark: {
       attrs: {
         data: {}, // will hold unrendered content
       },
-        toDOM: (data) => ['span', { class: `unimplemented` }],
+      toDOM: data => ['span', { class: `unimplemented` }],
     },
   },
 });

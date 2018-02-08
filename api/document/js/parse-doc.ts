@@ -5,10 +5,6 @@ import { Mark, Node } from 'prosemirror-model';
 import schema, { factory } from './schema';
 
 export default function parseDoc(node): Node {
-  console.log(node.node_type);
-  if (node.node_type.indexOf('external') !== -1) {
-      console.log(node.node_type);
-  }
   const nodeType = node.node_type in NODE_TYPE_CONVERTERS ?
     node.node_type : 'unimplementedNode';
   return NODE_TYPE_CONVERTERS[nodeType](node);
@@ -19,7 +15,6 @@ export function convertContent(content, marks: Mark[]): Node[] {
     const text = (content.text || '').replace(/\s+/g, ' ');
     return [schema.text(text, marks)];
   }
-  console.log(content.content_type);
   const contentType = content.content_type in CONTENT_TYPE_CONVERTERS ?
     content.content_type : 'unimplementedMark';
   const mark = CONTENT_TYPE_CONVERTERS[contentType](content);
