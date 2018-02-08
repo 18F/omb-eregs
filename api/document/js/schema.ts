@@ -30,6 +30,17 @@ const schema = new Schema({
       content: 'text+',
       toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
     },
+    footnote: {
+      content: 'inline',
+      group: 'block',
+      attrs: {
+        emblem: {},
+      },
+      toDOM: node => ['div', {
+        class: 'footnote',
+        'data-emblem': node.attrs.emblem,
+      }, 0],
+    },
     heading: {
       content: 'text+',
       group: 'block',
@@ -63,6 +74,9 @@ const schema = new Schema({
     ...listSchemaNodes,
   },
   marks: {
+    footnoteCitation: {
+      toDOM: () => ['sup'],
+    },
     unimplementedMark: {
       attrs: {
         data: {}, // will hold unrendered content
@@ -73,6 +87,11 @@ const schema = new Schema({
 });
 
 export const factory = {
+  footnote: (emblem: number, textContent: string | Node[]) =>
+    schema.nodes.footnote.create({ emblem }, schema.nodes.inline.create(
+      {},
+      typeof textContent === 'string' ? schema.text(textContent) : textContent,
+    )),
   heading: (text: string, depth: number) =>
     schema.nodes.heading.create({ depth }, schema.text(text)),
   list: (children?: Node[]) =>
@@ -88,6 +107,8 @@ export const factory = {
     schema.nodes.policy.create({}, children || []),
   sec: (children?: Node[]) =>
     schema.nodes.sec.create({}, children || []),
+  footnoteCitation: () =>
+    schema.marks.footnoteCitation.create(),
   unimplementedMark: (original: any) =>
     schema.marks.unimplementedMark.create({ data: original }),
   unimplementedNode: (original: any) =>
