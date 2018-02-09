@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 
 from document.parsers import AkomaNtosoParser
 from document.serializers.doc_cursor import DocCursorSerializer
-from reqs.models import Policy
+from reqs.models import Policy, WorkflowPhases
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +18,8 @@ def fetch_policy(identifier: str):
 
 
 def import_xml_doc(policy, xmlstream):
+    policy.workflow_phase = WorkflowPhases.published.name
+    policy.save()
     parsed_data = AkomaNtosoParser().parse(xmlstream)
     serializer = DocCursorSerializer(data=parsed_data, context={
         'policy': policy
