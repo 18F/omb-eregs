@@ -20,10 +20,8 @@ const del = chainCommands(deleteSelection, selectNodeForward);
 export default function menu(api: JsonApi) {
   return keymap({
     ...baseKeymap,
-    // tslint:disable-next-line object-literal-key-quotes
     'Backspace': backspace,
     'Mod-Backspace': backspace,
-    // tslint:disable-next-line object-literal-key-quotes
     'Delete': del,
     'Mod-Delete': del,
     'Mod-z': undo,
