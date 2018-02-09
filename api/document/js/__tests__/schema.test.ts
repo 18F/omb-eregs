@@ -32,26 +32,3 @@ describe('heading', () => {
     });
   });
 });
-
-describe('para', () => {
-  it('can be deleted', () => {
-    const doc = factory.policy([
-      factory.para('1'),
-      factory.para('2'),
-    ]);
-    expect(doc.content.childCount).toBe(2);
-    // Selected the "2"
-    const selection = new TextSelection(
-      pathToResolvedPos(doc, [new NthType(1, 'para'), 'inline']),
-      pathToResolvedPos(doc, [new NthType(1, 'para'), 'inline', 1]),
-    );
-    const state = EditorState.create({ doc, selection });
-    const dispatch = jest.fn();
-
-    deleteSelection(state, dispatch);
-    const transaction = dispatch.mock.calls[0][0];
-    const modifiedDoc = state.apply(transaction).doc;
-
-    expect(modifiedDoc.content.childCount).toBe(1);
-  });
-});
