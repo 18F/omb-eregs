@@ -1,4 +1,4 @@
-import { deeperBullet } from '../list-utils';
+import { createMarkerTemplate, deeperBullet } from '../list-utils';
 import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 import { factory } from '../schema';
 
@@ -52,5 +52,35 @@ describe('deeperBullet()', () => {
       'inline',
     ]);
     expect(deeperBullet(pos)).toBe('●');
+  });
+});
+
+describe('createMarkerTemplate()', () => {
+  it('works with decimals', () => {
+    const tpl = createMarkerTemplate('1.');
+    expect(tpl(0)).toBe('1.');
+    expect(tpl(3)).toBe('4.');
+    expect(tpl(25)).toBe('26.');
+  });
+
+  it('works with parens', () => {
+    const tpl = createMarkerTemplate('(a)');
+    expect(tpl(0)).toBe('(a)');
+    expect(tpl(8)).toBe('(i)');
+    expect(tpl(99)).toBe('(vvvv)');
+  });
+
+  it('works when a known character is not present', () => {
+    const tpl = createMarkerTemplate('■');
+    expect(tpl(0)).toBe('■');
+    expect(tpl(7)).toBe('■');
+    expect(tpl(9999)).toBe('■');
+  });
+
+  it('selects the *last* match', () => {
+    const tpl = createMarkerTemplate('4.c.R.i');
+    expect(tpl(0)).toBe('4.c.R.i');
+    expect(tpl(7)).toBe('4.c.R.viii');
+    expect(tpl(100)).toBe('4.c.R.ci');
   });
 });

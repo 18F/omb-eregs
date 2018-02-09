@@ -1,4 +1,4 @@
-import { Node, NodeSpec, Schema } from 'prosemirror-model';
+import { Fragment, Node, NodeSpec, Schema } from 'prosemirror-model';
 
 const listSchemaNodes: { [name: string]: NodeSpec } = {
   list: {
@@ -75,18 +75,18 @@ const schema = new Schema({
 export const factory = {
   heading: (text: string, depth: number) =>
     schema.nodes.heading.create({ depth }, schema.text(text)),
-  list: (children?: Node[]) =>
+  list: (children?: Node[] | Fragment) =>
     schema.nodes.list.create({}, children || []),
-  listitem: (marker: string, children?: Node[]) =>
+  listitem: (marker: string, children?: Node[] | Fragment) =>
     schema.nodes.listitem.create({ marker }, children || []),
   para: (textContent: string | Node[], children?: Node[]) =>
     schema.nodes.para.create({}, [schema.nodes.inline.create(
       {},
       typeof textContent === 'string' ? schema.text(textContent) : textContent,
     )].concat(children || [])),
-  policy: (children?: Node[]) =>
+  policy: (children?: Node[] | Fragment) =>
     schema.nodes.policy.create({}, children || []),
-  sec: (children?: Node[]) =>
+  sec: (children?: Node[] | Fragment) =>
     schema.nodes.sec.create({}, children || []),
   unimplementedMark: (original: any) =>
     schema.marks.unimplementedMark.create({ data: original }),
