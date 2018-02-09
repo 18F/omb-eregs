@@ -75,6 +75,8 @@ const schema = new Schema({
   },
   marks: {
     footnoteCitation: {
+      inclusive: false,
+      excludes: '_',
       toDOM: () => ['sup'],
     },
     unimplementedMark: {
