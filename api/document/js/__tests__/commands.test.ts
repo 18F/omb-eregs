@@ -2,19 +2,22 @@ jest.mock('../Api');
 jest.mock('../serialize-doc');
 window.location.assign = jest.fn();
 
+import { Node } from 'prosemirror-model';
 import { EditorState, TextSelection } from 'prosemirror-state';
 
 import { JsonApi } from '../Api';
 import {
+  addListItem,
   appendBulletListNear,
   appendNearBlock,
   appendParagraphNear,
   makeSave,
   makeSaveThenXml,
 } from '../commands';
+import { collectMarkers } from '../list-utils';
 import schema, { factory } from '../schema';
 import serializeDoc from '../serialize-doc';
-import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
+import pathToResolvedPos, { NthType, SelectionPath } from '../path-to-resolved-pos';
 
 function executeTransform(initialState: EditorState, transform): EditorState {
   const dispatch = jest.fn();
@@ -191,5 +194,55 @@ describe('makeSaveThenXml()', () => {
 
     const param = locationAssign.mock.calls[0][0];
     expect(param).toMatch(/akn$/);
+  });
+});
+
+describe('addListItem()', () => {
+  const doc = factory.policy([
+    factory.para('intro'),
+    factory.list([
+      factory.listitem('a:', [factory.para('aaa')]),
+      factory.listitem('b:', [
+        factory.para('bbb first'),
+        factory.para('bbb second'),
+      ]),
+    ]),
+  ]);
+
+  function makeState(path: SelectionPath) {
+    const selection = new TextSelection(pathToResolvedPos(doc, path));
+    return EditorState.create({ doc, selection });
+  }
+
+  it('requires the cursor be in the right position', () => {
+    const inIntro = makeState(['para', 'inline', 'int'.length]);
+    const endIntro = makeState(['para', 'inline', 'intro'.length]);
+    const middleOfLi = makeState(['list', 'listitem', 'para', 'inline', 'a'.length]);
+    const endOfFirstPara = makeState(
+      ['list', new NthType(1, 'listitem'), 'para', 'inline', 'bbb first'.length]);
+    [inIntro, endIntro, middleOfLi, endOfFirstPara].forEach(state =>
+      expect(addListItem(state)).toBe(false));
+  });
+
+  it('adds a new li', () => {
+    const init = makeState(['list', 'listitem', 'para', 'inline', 'aaa'.length]);
+    expect(doc.content.child(1).content.childCount).toBe(2);
+    const result = executeTransform(init, addListItem);
+    const list = result.doc.content.child(1);
+    expect(list.content.childCount).toBe(3);
+    expect(list.content.child(1).textContent).toBe(' ');
+  });
+
+  it('puts the cursor in the li', () => {
+    const init = makeState(['list', 'listitem', 'para', 'inline', 'aaa'.length]);
+    const result = executeTransform(init, addListItem);
+    expect(result.selection.anchor).toBe(pathToResolvedPos(
+      result.doc,
+      ['list', new NthType(1, 'listitem'), 'para', 'inline'],
+    ).pos);
+    expect(result.selection.head).toBe(pathToResolvedPos(
+      result.doc,
+      ['list', new NthType(1, 'listitem'), 'para', 'inline', ' '.length],
+    ).pos);
   });
 });

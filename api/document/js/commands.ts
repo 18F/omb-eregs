@@ -1,10 +1,10 @@
-import { Node } from 'prosemirror-model';
+import { Node, ResolvedPos } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
 import { JsonApi } from './Api';
-import { deeperBullet } from './list-utils';
+import { deeperBullet, renumberList } from './list-utils';
 import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
-import { factory } from './schema';
+import schema, { factory } from './schema';
 import serializeDoc from './serialize-doc';
 import { walkUpUntil } from './util';
 
@@ -69,4 +69,47 @@ export function makeSaveThenXml(api: JsonApi) {
     await api.write(serializeDoc(state.doc));
     window.location.assign(`${window.location.href}/akn`);
   };
+}
+
+const inLi = (pos: ResolvedPos) => (
+  pos.depth >= 3
+  && pos.node(pos.depth).type === schema.nodes.inline
+  && pos.node(pos.depth - 1).type === schema.nodes.para
+  && pos.node(pos.depth - 2).type === schema.nodes.listitem
+  && pos.node(pos.depth - 3).type === schema.nodes.list
+);
+const atEndOfLi = (pos: ResolvedPos) => (
+  pos.depth >= 2
+  && pos.pos === pos.end(pos.depth)
+  && pos.pos === pos.end(pos.depth - 1) - 1
+  && pos.pos === pos.end(pos.depth - 2) - 2
+);
+
+export function addListItem(state, dispatch?) {
+  const pos = state.selection.$head;
+  if (!inLi(pos) || !atEndOfLi(pos)) {
+    return false;
+  }
+  if (!dispatch) {
+    return true;
+  }
+
+  const endOfLi: number = pos.end(pos.depth - 2);
+  const insertPos = endOfLi + 1;
+  // This marker will be replaced during the renumber step
+  const liToInsert = factory.listitem('', [factory.para(' ')]);
+  let tr = state.tr.insert(insertPos, liToInsert);
+  tr = renumberList(tr, insertPos);
+  const cursorStart = pathToResolvedPos(
+    tr.doc.resolve(insertPos + 1),
+    ['para', 'inline'],
+  ).pos;
+  tr = tr.setSelection(TextSelection.create(
+    tr.doc,
+    cursorStart,
+    cursorStart + 1, // select the space
+  ));
+  tr = tr.scrollIntoView();
+  dispatch(tr);
+  return true;
 }
