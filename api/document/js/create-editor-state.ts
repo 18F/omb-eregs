@@ -3,6 +3,7 @@ import { EditorState } from 'prosemirror-state';
 import { history } from 'prosemirror-history';
 
 import Api, { setStatusError } from './Api';
+import fixupDoc from './fixup-doc';
 import keyboard from './keyboard';
 import menu from './menu';
 import parseDoc from './parse-doc';
@@ -21,6 +22,7 @@ export default function createEditorState(data, api: Api): EditorState {
       menu(api),
       keyboard(api),
       history(),
+      fixupDoc,
     ],
   });
 }

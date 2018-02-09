@@ -2,7 +2,7 @@ import { Node, NodeSpec, Schema } from 'prosemirror-model';
 
 const listSchemaNodes: { [name: string]: NodeSpec } = {
   list: {
-    content: 'listitem+',
+    content: 'listitem*',
     group: 'block',
     toDOM: () => ['ol', { class: 'node-list' }, 0],
   },
@@ -10,7 +10,7 @@ const listSchemaNodes: { [name: string]: NodeSpec } = {
     attrs: {
       marker: { default: '1.' },
     },
-    content: 'block+',
+    content: 'block*',
     toDOM: node => [
       'li',
       { class: 'node-list-item' },
@@ -27,7 +27,7 @@ const schema = new Schema({
       content: 'block+',
     },
     inline: {
-      content: 'text+',
+      content: 'text*',
       toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
     },
     footnote: {
