@@ -77,7 +77,7 @@ const schema = new Schema({
     footnoteCitation: {
       inclusive: false,
       excludes: '_',
-      toDOM: () => ['sup'],
+      toDOM: () => ['sup', { class: 'footnote-citation' }],
     },
     unimplementedMark: {
       attrs: {
