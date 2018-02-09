@@ -34,6 +34,10 @@ export const apiFactory = {
       ...(overrides || {}),
     };
   },
+  footnoteCitation: () => ({
+    content_type: 'footnote_citation',
+    inlines: [],
+  }),
   text: value => ({
     content_type: '__text__',
     inlines: [],
@@ -43,6 +47,12 @@ export const apiFactory = {
 
 
 const NODE_CONVERTERS = {
+  footnote(node) {
+    const footnote = defaultNodeConverter(node);
+    footnote.type_emblem = footnote.marker = node.attrs.emblem;
+
+    return footnote;
+  },
   heading: node => apiFactory.node(
     node.type.name,
     // Text isn't in an 'inline' block
@@ -88,6 +98,8 @@ function defaultNodeConverter(node): ApiNode {
 }
 
 const MARK_CONVERTERS = {
+  footnoteCitation: node =>
+    apiFactory.footnoteCitation(),
   unimplementedMark: node =>
     apiFactory.content(node.type.name, node.attrs.data),
 };
