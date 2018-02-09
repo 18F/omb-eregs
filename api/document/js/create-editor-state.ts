@@ -7,6 +7,7 @@ import fixupDoc from './fixup-doc';
 import keyboard from './keyboard';
 import menu from './menu';
 import parseDoc from './parse-doc';
+import footnoteValidator from './footnote-validator';
 
 export default function createEditorState(data, api: Api): EditorState {
   const doc = parseDoc(data);
@@ -23,6 +24,7 @@ export default function createEditorState(data, api: Api): EditorState {
       keyboard(api),
       history(),
       fixupDoc,
+      footnoteValidator,
     ],
   });
 }
