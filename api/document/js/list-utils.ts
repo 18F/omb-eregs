@@ -1,4 +1,5 @@
 import { Node, ResolvedPos } from 'prosemirror-model';
+import { Transaction } from 'prosemirror-state';
 import * as repeatString from 'repeat-string';
 import * as romanize from 'romanize';
 
@@ -52,4 +53,31 @@ export function createMarkerTemplate(toImitate: string) {
     );
   }
   return (marker: number) => toImitate;
+}
+
+export function renumberList(transaction: Transaction, pos: number): Transaction {
+  const resolved = transaction.doc.resolve(pos);
+  const listDepth = walkUpUntil(resolved, node => node.type === schema.nodes.list);
+  if (listDepth >= 0) {
+    const list = resolved.node(listDepth);
+    const template = createMarkerTemplate(list.content.child(0).attrs.marker);
+    const newLis: Node[] = [];
+    list.content.forEach((li, _, idxInParent) =>
+      newLis.push(factory.listitem(template(idxInParent), li.content)));
+    const listSize = newLis.reduce((soFar, next) => soFar + next.nodeSize, 0);
+
+    return transaction.replaceWith(
+      resolved.start(listDepth),
+      resolved.start(listDepth) + listSize,
+      newLis,
+    );
+  }
+  return transaction;
+}
+
+// Helpful for testing. Assumes the first parameter is a list node
+export function collectMarkers(list: Node): string[] {
+  const result: string[] = [];
+  list.content.forEach(li => result.push(li.attrs.marker));
+  return result;
 }

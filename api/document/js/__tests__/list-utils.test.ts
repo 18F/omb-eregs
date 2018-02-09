@@ -1,4 +1,6 @@
-import { createMarkerTemplate, deeperBullet } from '../list-utils';
+import { EditorState } from 'prosemirror-state';
+
+import { collectMarkers, createMarkerTemplate, deeperBullet, renumberList } from '../list-utils';
 import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 import { factory } from '../schema';
 
@@ -82,5 +84,69 @@ describe('createMarkerTemplate()', () => {
     expect(tpl(0)).toBe('4.c.R.i');
     expect(tpl(7)).toBe('4.c.R.viii');
     expect(tpl(100)).toBe('4.c.R.ci');
+  });
+});
+
+describe('renumberList()', () => {
+  it('uses the first li as a template', () => {
+    const doc = factory.policy([
+      factory.list([
+        factory.listitem('>a<', []),
+        factory.listitem('(b)', []),
+        factory.listitem('4444', []),
+      ]),
+    ]);
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['list', 'listitem']).pos;
+    const resultTr = renumberList(initialState.tr, pos);
+    const result = initialState.apply(resultTr);
+    const list = result.doc.content.child(0);
+    const markers: string[] = [];
+    list.content.forEach(li => markers.push(li.attrs.marker));
+    expect(markers).toEqual(['>a<', '>b<', '>c<']);
+  });
+
+  it('keeps sub-content', () => {
+    const doc = factory.policy([
+      factory.list([
+        factory.listitem('>a<', [factory.para('stuff')]),
+        factory.listitem('(b)', [factory.para('more'), factory.para('stuff')]),
+      ]),
+    ]);
+    expect(doc.content.child(0).content.child(0).content.childCount).toBe(1);
+    expect(doc.content.child(0).content.child(1).content.childCount).toBe(2);
+    expect(doc.textContent).toBe('stuffmorestuff');
+
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['list', 'listitem']).pos;
+    const resultTr = renumberList(initialState.tr, pos);
+    const list = initialState.apply(resultTr).doc.content.child(0);
+
+    expect(list.content.child(0).content.childCount).toBe(1);
+    expect(list.content.child(1).content.childCount).toBe(2);
+    expect(list.textContent).toBe('stuffmorestuff');
+  });
+
+  it('only renumbers the immediate containing elt', () => {
+    const doc = factory.policy([
+      factory.list([
+        factory.listitem('a>>', []),
+        factory.listitem('x', [factory.list([
+          factory.listitem('1*', []),
+          factory.listitem('*b*', []),
+        ])]),
+      ]),
+    ]);
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(
+      doc,
+      ['list', new NthType(1, 'listitem'), 'list', 'listitem'],
+    ).pos;
+    const resultTr = renumberList(initialState.tr, pos);
+    const list = initialState.apply(resultTr).doc.content.child(0);
+    const subList = list.content.child(1).content.child(0);
+
+    expect(collectMarkers(list)).toEqual(['a>>', 'x']);
+    expect(collectMarkers(subList)).toEqual(['1*', '2*']);
   });
 });
