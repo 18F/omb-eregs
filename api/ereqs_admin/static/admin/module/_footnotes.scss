@@ -21,6 +21,6 @@
   color: $color-blue;
 }
 
-.footnote-citation:before {
+.footnote-citation::before {
   content: 'Footnote ';
 }
