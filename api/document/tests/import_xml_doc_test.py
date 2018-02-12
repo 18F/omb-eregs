@@ -6,7 +6,7 @@ from model_mommy import mommy
 from document.management.commands import import_xml_doc
 from document.models import DocNode
 from document.tree import DocCursor
-from reqs.models import Policy
+from reqs.models import Policy, WorkflowPhases
 
 
 @pytest.mark.django_db
@@ -23,7 +23,7 @@ def test_fetch_policy_number():
 
 @pytest.mark.django_db
 def test_import_xml_doc():
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, workflow_phase=WorkflowPhases.no_doc)
     for i in range(2):
         xml = BytesIO(f"""
         <aroot title="Root of Doc {i}\u2026">
@@ -46,3 +46,6 @@ def test_import_xml_doc():
         assert root['subchild_b'].title == ''
         assert root['subchild_2'].title == 'Second child'
         assert root['subchild_2']['subsubchild_1'].node_type == 'subsubchild'
+
+        policy.refresh_from_db()
+        assert policy.workflow_phase == WorkflowPhases.published.name
