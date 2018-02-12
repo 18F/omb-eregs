@@ -18,6 +18,7 @@
   &::after {
     content: ' ';
     display: table;
+    white-space: normal; // Account for ProseMirror failing to collapse these
   }
 
   &::after {
