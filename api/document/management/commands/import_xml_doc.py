@@ -2,6 +2,7 @@ import argparse
 import logging
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 from document.parsers import AkomaNtosoParser
 from document.serializers.doc_cursor import DocCursorSerializer
@@ -17,6 +18,7 @@ def fetch_policy(identifier: str):
         return Policy.objects.filter(omb_policy_id=identifier).first()
 
 
+@transaction.atomic
 def import_xml_doc(policy, xmlstream):
     policy.workflow_phase = WorkflowPhases.published.name
     policy.save()
