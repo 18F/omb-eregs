@@ -25,6 +25,10 @@ export function convertContent(content, marks: Mark[]): Node[] {
 }
 
 const NODE_TYPE_CONVERTERS = {
+  footnote(node) {
+    const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
+    return factory.footnote(node.type_emblem, flatten(nested));
+  },
   heading(node) {
     // Duplicates logic in `ui`
     const depth = node.identifier
@@ -46,5 +50,6 @@ const NODE_TYPE_CONVERTERS = {
 };
 
 const CONTENT_TYPE_CONVERTERS = {
+  footnote_citation: content => factory.footnoteCitation(),
   unimplementedMark: content => factory.unimplementedMark(content),
 };

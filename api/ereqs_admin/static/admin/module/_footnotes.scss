@@ -1,0 +1,26 @@
+// Note that ideally we should be leveraging common styling for footnotes
+// here, rather than forging our own from scratch.
+
+.footnote::before {
+  content: attr(data-emblem);
+  font-weight: bold;
+}
+
+.footnote {
+  border-top: 1px solid $color-blue;
+  border-bottom: 1px solid $color-blue;
+  padding: 1em;
+  margin: 1em 0;
+}
+
+.footnote-citation {
+  font-family: sans-serif;
+  border: 1px solid $color-lt-blue;
+  padding: 2px;
+  border-radius: 2px;
+  color: $color-blue;
+}
+
+.footnote-citation::before {
+  content: 'Footnote ';
+}
