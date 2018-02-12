@@ -8,7 +8,7 @@ import keyboard from './keyboard';
 import menu from './menu';
 import parseDoc from './parse-doc';
 
-export default function createEditorState(data, api: Api): EditorState {
+export default function createEditorState(data, api: Api<'json'>): EditorState {
   const doc = parseDoc(data);
   try {
     doc.check();

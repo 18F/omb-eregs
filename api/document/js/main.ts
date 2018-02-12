@@ -9,7 +9,7 @@ const DOC_URL_ATTR = 'data-document-url';
 
 window.addEventListener('load', () => {
   const api = new Api({
-    contentType: 'application/json',
+    contentType: 'json',
     csrfToken: getElAttr('[name=csrfmiddlewaretoken]', 'value'),
     url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
   });

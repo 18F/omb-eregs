@@ -15,7 +15,11 @@ describe('createEditorState()', () => {
       schema.nodes.heading.create({ depth: 1 }, factory.sec()),
     ]));
 
-    createEditorState('', new Api({ contentType: '', csrfToken: '', url: '' }));
+    createEditorState('', new Api({
+      contentType: 'json',
+      csrfToken: '',
+      url: '',
+    }));
 
     expect(setStatusError).toHaveBeenCalled();
   });

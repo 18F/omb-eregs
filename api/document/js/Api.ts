@@ -18,31 +18,60 @@ export function setStatusError(e: Error) {
   setStatus(errMsg, 'editor-status-error');
 }
 
-export default class Api {
+export interface ApiNode {
+  children: ApiNode[];
+  content: ApiContent[];
+  marker?: string;
+  node_type: string;
+  type_emblem?: string;
+  title?: string;
+  identifier?: string;
+  text?: string;
+}
+
+export interface ApiContent {
+  content_type: string;
+  inlines: ApiContent[];
+  text: string;
+}
+
+interface ApiTypeMap {
+  'json': ApiNode;
+  'akn+xml': string;
+}
+
+interface ApiOptions<T extends keyof ApiTypeMap> {
+  contentType: T;
+  csrfToken: string;
+  url: string;
+}
+
+export default class Api<T extends keyof ApiTypeMap> {
   url: string;
   contentType: string;
   csrfToken: string;
 
-  constructor({ contentType, csrfToken, url }) {
-    this.url = url;
-    this.contentType = contentType;
-    this.csrfToken = csrfToken;
+  constructor(options: ApiOptions<T>) {
+    this.url = options.url;
+    this.contentType = `application/${options.contentType}`;
+    this.csrfToken = options.csrfToken;
   }
 
-  async fetch() {
+  async fetch(): Promise<ApiTypeMap[T]> {
     try {
       setStatus('Loading document...');
       const response = await axios.get(this.url, { headers: {
         Accept: this.contentType,
       } });
       setStatus('Document loaded.');
-      return response.data;
+      return response.data as ApiTypeMap[T];
     } catch (e) {
       setStatusError(e);
+      throw e;
     }
   }
 
-  async write(data) {
+  async write(data: ApiTypeMap[T]): Promise<void> {
     try {
       setStatus('Saving...');
       await axios.put(this.url, data, { headers: {
@@ -52,6 +81,7 @@ export default class Api {
       setStatus(`Document saved at ${new Date()}.`);
     } catch (e) {
       setStatusError(e);
+      throw e;
     }
   }
 }

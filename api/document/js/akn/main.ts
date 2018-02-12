@@ -10,9 +10,8 @@ import { getEl, getElAttr } from '../util';
 
 const EDITOR_SEL = '#editor';
 const DOC_URL_ATTR = 'data-document-url';
-const AKN_CONTENT_TYPE = 'application/akn+xml';
 
-function createEditor(value: string, api: Api) {
+function createEditor(value: string, api: Api<'akn+xml'>) {
   const cm = CodeMirror(getEl(EDITOR_SEL), {
     value,
     lineNumbers: true,
@@ -25,7 +24,7 @@ function createEditor(value: string, api: Api) {
 
 window.addEventListener('load', () => {
   const api = new Api({
-    contentType: AKN_CONTENT_TYPE,
+    contentType: 'akn+xml',
     csrfToken: getElAttr('[name=csrfmiddlewaretoken]', 'value'),
     url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
   });

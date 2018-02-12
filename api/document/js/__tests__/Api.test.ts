@@ -17,7 +17,7 @@ function mockSetStatus() {
 }
 
 const api = new Api({
-  contentType: 'c-type',
+  contentType: 'akn+xml',
   csrfToken: 'some-token',
   url: 'http://example.com/path',
 });
@@ -26,7 +26,9 @@ describe('fetch()', () => {
   it('passes the correct args', () => {
     api.fetch();
     expect(axios.get).toHaveBeenCalledWith(
-      'http://example.com/path', { headers: { Accept: 'c-type' } });
+      'http://example.com/path', { headers: {
+        Accept: 'application/akn+xml',
+      } });
   });
 
   it('loads the data', async () => {
@@ -51,7 +53,7 @@ describe('fetch()', () => {
     error.response = { data: { oh: 'noes', and: 6 } };
     axios.get = jest.fn(() => { throw error; });
 
-    await api.fetch();
+    try { await api.fetch(); } catch (_) {}
 
     expect(textContent).toHaveBeenCalledTimes(2);
     const message = textContent.mock.calls[1][0];
@@ -66,7 +68,10 @@ describe('write()', () => {
     expect(axios.put).toHaveBeenCalledWith(
       'http://example.com/path',
       'some data here',
-      { headers: { 'Content-Type': 'c-type', 'X-CSRFToken': 'some-token' } },
+      { headers: {
+        'Content-Type': 'application/akn+xml',
+        'X-CSRFToken': 'some-token',
+      } },
     );
   });
 
@@ -85,7 +90,7 @@ describe('write()', () => {
     error.response = { data: { some: 'warning' } };
     axios.get = jest.fn(() => { throw error; });
 
-    await api.fetch();
+    try { await api.fetch(); } catch (_) {}
 
     expect(textContent).toHaveBeenCalledTimes(2);
     const message = textContent.mock.calls[1][0];

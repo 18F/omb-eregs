@@ -59,11 +59,11 @@ export function appendBulletListNear(state, dispatch) {
   return appendNearBlock(state, dispatch, element, ['listitem', 'para', 'inline']);
 }
 
-export function makeSave(api: Api) {
+export function makeSave(api: Api<'json'>) {
   return async state => api.write(serializeDoc(state.doc));
 }
 
-export function makeSaveThenXml(api: Api) {
+export function makeSaveThenXml(api: Api<'json'>) {
   return async (state) => {
     await api.write(serializeDoc(state.doc));
     window.location.assign(`${window.location.href}/akn`);

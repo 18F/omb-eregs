@@ -17,7 +17,7 @@ import schema from './schema';
 const backspace = chainCommands(deleteSelection, selectNodeBackward);
 const del = chainCommands(deleteSelection, selectNodeForward);
 
-export default function menu(api: Api) {
+export default function menu(api: Api<'json'>) {
   return keymap({
     ...baseKeymap,
     // tslint:disable-next-line object-literal-key-quotes

@@ -15,7 +15,7 @@ function makeButton(content) {
   });
 }
 
-export default function menu(api: Api) {
+export default function menu(api: Api<'json'>) {
   return menuBar({
     floating: true,
     content: [
