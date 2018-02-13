@@ -1,6 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 
 import { deleteEmpty } from '../fixup-doc';
+import { collectMarkers } from '../list-utils';
 import schema, { factory } from '../schema';
 
 describe('deleteEmpty()', () => {
@@ -33,6 +34,8 @@ describe('deleteEmpty()', () => {
 
     expect(modified.doc.content.child(0).childCount).toBe(2);
     expect(modified.doc.content.child(0).textContent).toBe('FirstThird');
+    // Also renumbers
+    expect(modified.doc.content.child(0).content.child(1).attrs.marker).toBe('2.');
   });
 
   it('deletes empty lists', () => {
