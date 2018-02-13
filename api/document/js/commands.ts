@@ -61,9 +61,11 @@ export function appendParagraphNear(state: EditorState, dispatch?: Dispatch) {
 }
 
 export function appendBulletListNear(state: EditorState, dispatch?: Dispatch) {
-  const element = factory.list([
-    factory.listitem(deeperBullet(state.selection.$head), [factory.para(' ')]),
-  ]);
+  const startMarker = deeperBullet(state.selection.$head);
+  const element = factory.list(
+    startMarker,
+    [factory.listitem(startMarker, [factory.para(' ')])],
+  );
   return appendNearBlock(element, ['listitem', 'para', 'inline'], state, dispatch);
 }
 

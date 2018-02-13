@@ -201,7 +201,7 @@ describe('makeSaveThenXml()', () => {
 describe('addListItem()', () => {
   const doc = factory.policy([
     factory.para('intro'),
-    factory.list([
+    factory.list('a:', [
       factory.listitem('a:', [factory.para('aaa')]),
       factory.listitem('b:', [
         factory.para('bbb first'),

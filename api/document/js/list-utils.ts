@@ -21,47 +21,16 @@ export function deeperBullet(pos: ResolvedPos): string {
   return defaultBullet;
 }
 
-function makeIntToLetter(initial: string) {
-  const offset = initial.charCodeAt(0);
-  const alphabetLen = 26;
-
-  return (idx: number) => {
-    const count = Math.floor(idx / alphabetLen) + 1;
-    const letter = String.fromCharCode(offset + idx % alphabetLen);
-    return repeatString(letter, count);
-  };
-}
-
-const firstToMapper = {
-  'a': makeIntToLetter('a'),
-  'A': makeIntToLetter('A'),
-  // our input will be zero indexed
-  '1': (idx: number) => `${idx + 1}`,
-  'i': (idx: number) => romanize(idx + 1).toLowerCase(),
-  'I': (idx: number) => romanize(idx + 1),
-};
-const lastMatch = new RegExp(/^.*([aA1iI])[^aA1iI]*$/, 'm');
-
-export function createMarkerTemplate(toImitate: string) {
-  const match = lastMatch.exec(toImitate);
-  if (match) {
-    const matchingChar = match[1];
-    const prefixEnds = toImitate.lastIndexOf(matchingChar);
-    return (idx: number) => (
-      toImitate.substr(0, prefixEnds)
-      + firstToMapper[matchingChar](idx)
-      + toImitate.substr(prefixEnds + 1)
-    );
-  }
-  return (marker: number) => toImitate;
-}
-
 export function renumberList(transaction: Transaction, pos: number): Transaction {
   const resolved = transaction.doc.resolve(pos);
   const listDepth = walkUpUntil(resolved, node => node.type === schema.nodes.list);
   if (listDepth >= 0) {
     const list = resolved.node(listDepth);
-    const template = createMarkerTemplate(list.content.child(0).attrs.marker);
+    const template = (idx: number) => [
+      list.attrs.markerPrefix,
+      list.attrs.numeralFn(idx),
+      list.attrs.markerSuffix,
+    ].join('');
     const newLis: Node[] = [];
     list.content.forEach((li, _, idxInParent) =>
       newLis.push(factory.listitem(template(idxInParent), li.content)));

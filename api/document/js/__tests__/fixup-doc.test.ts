@@ -20,7 +20,7 @@ describe('deleteEmpty()', () => {
 
   it('deletes empty listitems', () => {
     const doc = factory.policy([
-      factory.list([
+      factory.list('1.', [
         factory.listitem('1.', [factory.para('First')]),
         factory.listitem('2.', []),
         factory.listitem('3.', [factory.para('Third')]),
@@ -37,7 +37,7 @@ describe('deleteEmpty()', () => {
 
   it('deletes empty lists', () => {
     const doc = factory.policy([
-      factory.list([]),
+      factory.list('1.', []),
       factory.para('stuff'),
     ]);
     expect(doc.content.childCount).toBe(2);
@@ -51,7 +51,7 @@ describe('deleteEmpty()', () => {
   it('is recursive', () => {
     const doc = factory.policy([
       factory.para('Something'),
-      factory.list([
+      factory.list('1. ', [
         factory.listitem('1. ', []),
         factory.listitem('2', [
           schema.nodes.para.create({}, schema.nodes.inline.create()),

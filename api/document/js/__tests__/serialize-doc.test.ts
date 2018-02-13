@@ -60,7 +60,7 @@ describe('serializeDoc()', () => {
   });
 
   it('converts list nodes', () => {
-    const node = factory.list([
+    const node = factory.list('a)', [
       factory.listitem('a)', [
         factory.para('First p'),
         factory.para('Second p'),
