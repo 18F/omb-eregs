@@ -2,6 +2,7 @@ const path = require('path');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = [
   {
@@ -31,7 +32,12 @@ module.exports = [
         },
       ],
     },
-    plugins: [new ExtractTextPlugin('styles.css')],
+    plugins: [
+      new ExtractTextPlugin('styles.css'),
+      new CopyWebpackPlugin([
+          {from:'../ui/static/img/', to:'../img'}
+      ])
+    ],
   },
 ];
 
