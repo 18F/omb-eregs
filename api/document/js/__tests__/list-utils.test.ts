@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state';
 
-import { collectMarkers, deeperBullet, renumberList } from '../list-utils';
+import { collectMarkers, deeperBullet, deeperOrderedLi, renumberList } from '../list-utils';
 import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 import { factory } from '../schema';
 
@@ -54,6 +54,49 @@ describe('deeperBullet()', () => {
       'inline',
     ]);
     expect(deeperBullet(pos)).toBe('●');
+  });
+});
+
+describe('deeperOrderedLi()', () => {
+  it('matches the parent marker template', () => {
+    const doc = factory.policy([factory.list('_1_', [
+      factory.listitem('_1_', [factory.para(' ')]),
+    ])]);
+    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    expect(deeperOrderedLi(pos)).toBe('_a_');
+  });
+
+  describe('marker selection', () => {
+    const pairsToTest = [
+      { parentMarker: '1!', newMarker: 'a!' },
+      { parentMarker: '@a', newMarker: '@i' },
+      { parentMarker: '#i', newMarker: '#1' },
+      { parentMarker: 'A$', newMarker: 'I$' },
+      { parentMarker: '%I%', newMarker: '%1%' },
+    ];
+    pairsToTest.forEach(({ parentMarker, newMarker }) => {
+      it(`follows ${parentMarker} with ${newMarker}`, () => {
+        const doc = factory.policy([factory.list(parentMarker, [
+          factory.listitem(parentMarker, [factory.para(' ')]),
+        ])]);
+        const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+        expect(deeperOrderedLi(pos)).toBe(newMarker);
+      });
+    });
+  });
+
+  it('defaults when not in a list', () => {
+    const doc = factory.policy([factory.para(' ')]);
+    const pos = pathToResolvedPos(doc, ['para', 'inline']);
+    expect(deeperOrderedLi(pos)).toBe('1.');
+  });
+
+  it('defaults when in a bullet', () => {
+    const doc = factory.policy([factory.list('●', [
+      factory.listitem('●', [factory.para(' ')]),
+    ])]);
+    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    expect(deeperOrderedLi(pos)).toBe('1.');
   });
 });
 

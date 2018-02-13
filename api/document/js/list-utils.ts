@@ -11,6 +11,14 @@ const bulletFollows = {
   '●': '○',
   '○': '■',
 };
+const defaultOrdered = '1.';
+const orderedFollows = {
+  'a': 'i',
+  'A': 'I',
+  '1': 'a',
+  'i': '1',
+  'I': '1',
+};
 
 export function deeperBullet(pos: ResolvedPos): string {
   const liDepth = walkUpUntil(pos, node => node.type === schema.nodes.listitem);
@@ -19,6 +27,22 @@ export function deeperBullet(pos: ResolvedPos): string {
     return bulletFollows[parListItem.attrs.marker] || defaultBullet;
   }
   return defaultBullet;
+}
+
+export function deeperOrderedLi(pos: ResolvedPos): string {
+  const listDepth = walkUpUntil(pos, node => node.type === schema.nodes.list);
+  if (listDepth >= 0) {
+    const list = pos.node(listDepth);
+    const firstMarker = list.attrs.numeralFn(0);
+    if (firstMarker in orderedFollows) {
+      return [
+        list.attrs.markerPrefix,
+        orderedFollows[firstMarker],
+        list.attrs.markerSuffix,
+      ].join('');
+    }
+  }
+  return defaultOrdered;
 }
 
 export function renumberList(transaction: Transaction, pos: number): Transaction {
