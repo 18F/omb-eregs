@@ -1,5 +1,5 @@
 import { Node, ResolvedPos } from 'prosemirror-model';
-import { TextSelection } from 'prosemirror-state';
+import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { JsonApi } from './Api';
 import { deeperBullet, renumberList } from './list-utils';
@@ -7,6 +7,8 @@ import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import schema, { factory } from './schema';
 import serializeDoc from './serialize-doc';
 import { walkUpUntil } from './util';
+
+type Dispatch = (tr: Transaction) => void;
 
 function safeDocCheck(doc: Node) {
   try {
@@ -19,7 +21,12 @@ function safeDocCheck(doc: Node) {
 // Append the provided element at the closest valid point after the user's
 // cursor/"head" of the current selection. Then, move the cursor to select
 // that element.
-export function appendNearBlock(state, dispatch, element: Node, selectionPath: SelectionPath) {
+export function appendNearBlock(
+  element: Node,
+  selectionPath: SelectionPath,
+  state: EditorState,
+  dispatch?: Dispatch,
+) {
   // Checking whether or not this action is possible
   if (!dispatch) {
     return true;
@@ -48,16 +55,16 @@ export function appendNearBlock(state, dispatch, element: Node, selectionPath: S
   return true;
 }
 
-export function appendParagraphNear(state, dispatch) {
+export function appendParagraphNear(state: EditorState, dispatch?: Dispatch) {
   const element = factory.para(' ');
-  return appendNearBlock(state, dispatch, element, ['inline']);
+  return appendNearBlock(element, ['inline'], state, dispatch);
 }
 
-export function appendBulletListNear(state, dispatch) {
+export function appendBulletListNear(state: EditorState, dispatch?: Dispatch) {
   const element = factory.list([
     factory.listitem(deeperBullet(state.selection.$head), [factory.para(' ')]),
   ]);
-  return appendNearBlock(state, dispatch, element, ['listitem', 'para', 'inline']);
+  return appendNearBlock(element, ['listitem', 'para', 'inline'], state, dispatch);
 }
 
 export function makeSave(api: JsonApi) {
@@ -65,7 +72,7 @@ export function makeSave(api: JsonApi) {
 }
 
 export function makeSaveThenXml(api: JsonApi) {
-  return async (state) => {
+  return async (state: EditorState) => {
     await api.write(serializeDoc(state.doc));
     window.location.assign(`${window.location.href}/akn`);
   };
@@ -85,7 +92,7 @@ const atEndOfLi = (pos: ResolvedPos) => (
   && pos.pos === pos.end(pos.depth - 2) - 2
 );
 
-export function addListItem(state, dispatch?) {
+export function addListItem(state: EditorState, dispatch?: Dispatch) {
   const pos = state.selection.$head;
   if (!inLi(pos) || !atEndOfLi(pos)) {
     return false;

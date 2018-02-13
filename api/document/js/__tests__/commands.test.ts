@@ -30,7 +30,7 @@ function executeTransform(initialState: EditorState, transform): EditorState {
 
 describe('appendNearBlock()', () => {
   const paraTransform = (state, dispatch) =>
-    appendNearBlock(state, dispatch, factory.para(' '), ['inline']);
+    appendNearBlock(factory.para(' '), ['inline'], state, dispatch);
 
   it('adds a node after the current', () => {
     const doc = factory.policy([
@@ -178,9 +178,10 @@ describe('makeSaveThenXml()', () => {
 
     const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
-    await save({ doc: 'stuff' });
+    const doc = factory.policy();
+    await save(EditorState.create({ doc }));
 
-    expect(serializeDoc).toBeCalledWith('stuff');
+    expect(serializeDoc).toBeCalledWith(doc);
     expect(api.write).toBeCalledWith({ serialized: 'content' });
   });
 
@@ -190,7 +191,7 @@ describe('makeSaveThenXml()', () => {
 
     const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
-    await save({ doc: 'stuff' });
+    await save(EditorState.create({ doc: factory.policy() }));
 
     const param = locationAssign.mock.calls[0][0];
     expect(param).toMatch(/akn$/);
