@@ -5,13 +5,13 @@ import 'codemirror/addon/search/search.js';
 import 'codemirror/addon/search/searchcursor.js';
 import 'codemirror/addon/dialog/dialog.js';
 
-import Api from '../Api';
+import { AknXmlApi } from '../Api';
 import { getEl, getElAttr } from '../util';
 
 const EDITOR_SEL = '#editor';
 const DOC_URL_ATTR = 'data-document-url';
 
-function createEditor(value: string, api: Api<'akn+xml'>) {
+function createEditor(value: string, api: AknXmlApi) {
   const cm = CodeMirror(getEl(EDITOR_SEL), {
     value,
     lineNumbers: true,
@@ -23,8 +23,7 @@ function createEditor(value: string, api: Api<'akn+xml'>) {
 }
 
 window.addEventListener('load', () => {
-  const api = new Api({
-    contentType: 'akn+xml',
+  const api = new AknXmlApi({
     csrfToken: getElAttr('[name=csrfmiddlewaretoken]', 'value'),
     url: getElAttr(EDITOR_SEL, DOC_URL_ATTR),
   });

@@ -5,7 +5,7 @@ jest.mock('../util', () => ({
 
 import axios from 'axios';
 
-import Api from '../Api';
+import { Api } from '../Api';
 import { getEl } from '../util';
 
 function mockSetStatus() {
@@ -16,8 +16,8 @@ function mockSetStatus() {
   return textContent;
 }
 
-const api = new Api({
-  contentType: 'akn+xml',
+const api = new Api<string>({
+  contentType: 'c-type',
   csrfToken: 'some-token',
   url: 'http://example.com/path',
 });
@@ -26,9 +26,7 @@ describe('fetch()', () => {
   it('passes the correct args', () => {
     api.fetch();
     expect(axios.get).toHaveBeenCalledWith(
-      'http://example.com/path', { headers: {
-        Accept: 'application/akn+xml',
-      } });
+      'http://example.com/path', { headers: { Accept: 'c-type' } });
   });
 
   it('loads the data', async () => {
@@ -68,10 +66,7 @@ describe('write()', () => {
     expect(axios.put).toHaveBeenCalledWith(
       'http://example.com/path',
       'some data here',
-      { headers: {
-        'Content-Type': 'application/akn+xml',
-        'X-CSRFToken': 'some-token',
-      } },
+      { headers: { 'Content-Type': 'c-type', 'X-CSRFToken': 'some-token' } },
     );
   });
 

@@ -8,7 +8,7 @@ import {
 import { undo, redo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 
-import Api from './Api';
+import { JsonApi } from './Api';
 import { makeSave } from './commands';
 import schema from './schema';
 
@@ -17,7 +17,7 @@ import schema from './schema';
 const backspace = chainCommands(deleteSelection, selectNodeBackward);
 const del = chainCommands(deleteSelection, selectNodeForward);
 
-export default function menu(api: Api<'json'>) {
+export default function menu(api: JsonApi) {
   return keymap({
     ...baseKeymap,
     // tslint:disable-next-line object-literal-key-quotes

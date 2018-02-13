@@ -35,43 +35,32 @@ export interface ApiContent {
   text: string;
 }
 
-interface ApiTypeMap {
-  'json': ApiNode;
-  'akn+xml': string;
-}
-
-interface ApiOptions<T extends keyof ApiTypeMap> {
-  contentType: T;
-  csrfToken: string;
-  url: string;
-}
-
-export default class Api<T extends keyof ApiTypeMap> {
+export class Api<T> {
   url: string;
   contentType: string;
   csrfToken: string;
 
-  constructor(options: ApiOptions<T>) {
-    this.url = options.url;
-    this.contentType = `application/${options.contentType}`;
-    this.csrfToken = options.csrfToken;
+  constructor({ contentType, csrfToken, url }) {
+    this.url = url;
+    this.contentType = contentType;
+    this.csrfToken = csrfToken;
   }
 
-  async fetch(): Promise<ApiTypeMap[T]> {
+  async fetch(): Promise<T> {
     try {
       setStatus('Loading document...');
       const response = await axios.get(this.url, { headers: {
         Accept: this.contentType,
       } });
       setStatus('Document loaded.');
-      return response.data as ApiTypeMap[T];
+      return response.data as T;
     } catch (e) {
       setStatusError(e);
       throw e;
     }
   }
 
-  async write(data: ApiTypeMap[T]): Promise<void> {
+  async write(data: T): Promise<void> {
     try {
       setStatus('Saving...');
       await axios.put(this.url, data, { headers: {
@@ -83,5 +72,17 @@ export default class Api<T extends keyof ApiTypeMap> {
       setStatusError(e);
       throw e;
     }
+  }
+}
+
+export class JsonApi extends Api<ApiNode> {
+  constructor({ csrfToken, url }) {
+    super({ csrfToken, url, contentType: 'application/json' });
+  }  
+}
+
+export class AknXmlApi extends Api<string> {
+  constructor({ csrfToken, url }) {
+    super({ csrfToken, url, contentType: 'application/akn+xml' });
   }
 }

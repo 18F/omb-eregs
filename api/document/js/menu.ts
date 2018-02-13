@@ -1,6 +1,6 @@
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
-import Api from './Api';
+import { JsonApi } from './Api';
 import { appendBulletListNear, appendParagraphNear, makeSave, makeSaveThenXml } from './commands';
 import icons from './icons';
 
@@ -15,7 +15,7 @@ function makeButton(content) {
   });
 }
 
-export default function menu(api: Api<'json'>) {
+export default function menu(api: JsonApi) {
   return menuBar({
     floating: true,
     content: [

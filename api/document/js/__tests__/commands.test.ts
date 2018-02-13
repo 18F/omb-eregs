@@ -4,7 +4,7 @@ window.location.assign = jest.fn();
 
 import { EditorState, TextSelection } from 'prosemirror-state';
 
-import Api from '../Api';
+import { JsonApi } from '../Api';
 import {
   appendBulletListNear,
   appendNearBlock,
@@ -160,7 +160,7 @@ describe('makeSave()', () => {
   it('calls the save function', async () => {
     (serializeDoc as jest.Mock).mockImplementationOnce(() => ({ serialized: 'content' }));
 
-    const api = new Api({ contentType: 'json', csrfToken: '', url: '' });
+    const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSave(api);
     await save({ doc: 'stuff' });
 
@@ -173,7 +173,7 @@ describe('makeSaveThenXml()', () => {
   it('calls the save function', async () => {
     (serializeDoc as jest.Mock).mockImplementationOnce(() => ({ serialized: 'content' }));
 
-    const api = new Api({ contentType: 'json', csrfToken: '', url: '' });
+    const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
     await save({ doc: 'stuff' });
 
@@ -185,7 +185,7 @@ describe('makeSaveThenXml()', () => {
     const locationAssign = window.location.assign as jest.Mock;
     locationAssign.mockClear();
 
-    const api = new Api({ contentType: 'json', csrfToken: '', url: '' });
+    const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
     await save({ doc: 'stuff' });
 
