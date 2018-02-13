@@ -51,7 +51,7 @@ describe('fetch()', () => {
     error.response = { data: { oh: 'noes', and: 6 } };
     axios.get = jest.fn(() => { throw error; });
 
-    try { await api.fetch(); } catch (_) {}
+    await expect(api.fetch()).rejects.toBeInstanceOf(Error);
 
     expect(textContent).toHaveBeenCalledTimes(2);
     const message = textContent.mock.calls[1][0];
@@ -85,7 +85,7 @@ describe('write()', () => {
     error.response = { data: { some: 'warning' } };
     axios.get = jest.fn(() => { throw error; });
 
-    try { await api.fetch(); } catch (_) {}
+    await expect(api.fetch()).rejects.toBeInstanceOf(Error);
 
     expect(textContent).toHaveBeenCalledTimes(2);
     const message = textContent.mock.calls[1][0];
