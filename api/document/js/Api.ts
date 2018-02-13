@@ -18,7 +18,24 @@ export function setStatusError(e: Error) {
   setStatus(errMsg, 'editor-status-error');
 }
 
-export default class Api {
+export interface ApiNode {
+  children: ApiNode[];
+  content: ApiContent[];
+  marker?: string;
+  node_type: string;
+  type_emblem?: string;
+  title?: string;
+  identifier?: string;
+  text?: string;
+}
+
+export interface ApiContent {
+  content_type: string;
+  inlines: ApiContent[];
+  text: string;
+}
+
+export class Api<T> {
   url: string;
   contentType: string;
   csrfToken: string;
@@ -29,20 +46,21 @@ export default class Api {
     this.csrfToken = csrfToken;
   }
 
-  async fetch() {
+  async fetch(): Promise<T> {
     try {
       setStatus('Loading document...');
       const response = await axios.get(this.url, { headers: {
         Accept: this.contentType,
       } });
       setStatus('Document loaded.');
-      return response.data;
+      return response.data as T;
     } catch (e) {
       setStatusError(e);
+      throw e;
     }
   }
 
-  async write(data) {
+  async write(data: T): Promise<void> {
     try {
       setStatus('Saving...');
       await axios.put(this.url, data, { headers: {
@@ -52,6 +70,19 @@ export default class Api {
       setStatus(`Document saved at ${new Date()}.`);
     } catch (e) {
       setStatusError(e);
+      throw e;
     }
+  }
+}
+
+export class JsonApi extends Api<ApiNode> {
+  constructor({ csrfToken, url }) {
+    super({ csrfToken, url, contentType: 'application/json' });
+  }  
+}
+
+export class AknXmlApi extends Api<string> {
+  constructor({ csrfToken, url }) {
+    super({ csrfToken, url, contentType: 'application/akn+xml' });
   }
 }

@@ -5,7 +5,7 @@ jest.mock('../util', () => ({
 
 import axios from 'axios';
 
-import Api from '../Api';
+import { Api } from '../Api';
 import { getEl } from '../util';
 
 function mockSetStatus() {
@@ -16,7 +16,7 @@ function mockSetStatus() {
   return textContent;
 }
 
-const api = new Api({
+const api = new Api<string>({
   contentType: 'c-type',
   csrfToken: 'some-token',
   url: 'http://example.com/path',
@@ -51,7 +51,7 @@ describe('fetch()', () => {
     error.response = { data: { oh: 'noes', and: 6 } };
     axios.get = jest.fn(() => { throw error; });
 
-    await api.fetch();
+    await expect(api.fetch()).rejects.toBeInstanceOf(Error);
 
     expect(textContent).toHaveBeenCalledTimes(2);
     const message = textContent.mock.calls[1][0];
@@ -85,7 +85,7 @@ describe('write()', () => {
     error.response = { data: { some: 'warning' } };
     axios.get = jest.fn(() => { throw error; });
 
-    await api.fetch();
+    await expect(api.fetch()).rejects.toBeInstanceOf(Error);
 
     expect(textContent).toHaveBeenCalledTimes(2);
     const message = textContent.mock.calls[1][0];

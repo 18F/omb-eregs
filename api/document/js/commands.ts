@@ -1,7 +1,7 @@
 import { Node } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
-import Api from './Api';
+import { JsonApi } from './Api';
 import { deeperBullet } from './list-utils';
 import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import { factory } from './schema';
@@ -59,11 +59,11 @@ export function appendBulletListNear(state, dispatch) {
   return appendNearBlock(state, dispatch, element, ['listitem', 'para', 'inline']);
 }
 
-export function makeSave(api: Api) {
+export function makeSave(api: JsonApi) {
   return async state => api.write(serializeDoc(state.doc));
 }
 
-export function makeSaveThenXml(api: Api) {
+export function makeSaveThenXml(api: JsonApi) {
   return async (state) => {
     await api.write(serializeDoc(state.doc));
     window.location.assign(`${window.location.href}/akn`);
