@@ -1,0 +1,16 @@
+#!/bin/bash
+
+FIRST_RUN=true
+
+until (echo 2>/dev/null > /dev/tcp/persistent_db/5432)
+do
+  echo "Startup: Waiting for Postgres..."
+  if $FIRST_RUN; then
+    echo "\tTo track progress, run:"
+    echo "\tdocker-compose logs -f persistent_db"
+    FIRST_RUN=false
+  fi
+  sleep 1
+done
+
+exec "$@"
