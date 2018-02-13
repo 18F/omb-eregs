@@ -2,7 +2,7 @@
 title: OMB eRegs
 ---
 
-A tool to find, read, and maintain White House Office of Management and Budget (OMB) policy requirements.
+This is the style guide for OMG eRegs, a tool to find, read, and maintain White House Office of Management and Budget (OMB) policy requirements.
 
 ## CSS Framework
 
