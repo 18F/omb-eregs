@@ -1,21 +1,7 @@
 import { Fragment, Mark, Node } from 'prosemirror-model';
 
+import { ApiNode, ApiContent } from './Api';
 import schema from './schema';
-
-interface ApiNode {
-  children: ApiNode[];
-  content: ApiContent[];
-  marker?: string;
-  node_type: string;
-  type_emblem?: string;
-  title?: string;
-}
-
-interface ApiContent {
-  content_type: string;
-  inlines: ApiContent[];
-  text: string;
-}
 
 export const apiFactory = {
   node(nodeType, overrides): ApiNode {
@@ -41,8 +27,11 @@ export const apiFactory = {
   }),
 };
 
+type NodeConverterMap = {
+  [nodeName: string]: (node: Node) => ApiNode,
+};
 
-const NODE_CONVERTERS = {
+const NODE_CONVERTERS: NodeConverterMap = {
   heading: node => apiFactory.node(
     node.type.name,
     // Text isn't in an 'inline' block
@@ -71,7 +60,7 @@ const NODE_CONVERTERS = {
   unimplementedNode: node => node.attrs.data,
 };
 
-function defaultNodeConverter(node): ApiNode {
+function defaultNodeConverter(node: Node): ApiNode {
   const children: ApiNode[] = [];
   let content: ApiContent[] = [];
   node.content.forEach((child) => {
