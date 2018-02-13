@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = [
   {
     name: 'styles',
-    entry: path.join(__dirname, 'public', 'styles.scss'),
+    entry: path.join(__dirname, 'static/scss', 'styles.scss'),
     output: {
       path: path.join(__dirname, 'public/css'),
       filename: 'styles.css',
