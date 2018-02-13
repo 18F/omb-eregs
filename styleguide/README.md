@@ -12,6 +12,9 @@ All served assets are in the `public/` folder, where the compiled CSS file and i
 
 ### Running the style guide
 Compile SCSS:
+
 ```npm run build```
+
 Run local server:
+
 ```npm run start```
