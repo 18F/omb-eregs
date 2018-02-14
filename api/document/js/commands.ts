@@ -2,7 +2,7 @@ import { Node, ResolvedPos } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { JsonApi } from './Api';
-import { deeperBullet, renumberList } from './list-utils';
+import { deeperBullet, deeperOrderedLi, renumberList } from './list-utils';
 import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import schema, { factory } from './schema';
 import serializeDoc from './serialize-doc';
@@ -61,9 +61,20 @@ export function appendParagraphNear(state: EditorState, dispatch?: Dispatch) {
 }
 
 export function appendBulletListNear(state: EditorState, dispatch?: Dispatch) {
-  const element = factory.list([
-    factory.listitem(deeperBullet(state.selection.$head), [factory.para(' ')]),
-  ]);
+  const startMarker = deeperBullet(state.selection.$head);
+  const element = factory.list(
+    startMarker,
+    [factory.listitem(startMarker, [factory.para(' ')])],
+  );
+  return appendNearBlock(element, ['listitem', 'para', 'inline'], state, dispatch);
+}
+
+export function appendOrderedListNear(state: EditorState, dispatch?: Dispatch) {
+  const startMarker = deeperOrderedLi(state.selection.$head);
+  const element = factory.list(
+    startMarker,
+    [factory.listitem(startMarker, [factory.para(' ')])],
+  );
   return appendNearBlock(element, ['listitem', 'para', 'inline'], state, dispatch);
 }
 
