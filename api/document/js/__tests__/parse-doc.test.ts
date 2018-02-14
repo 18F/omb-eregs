@@ -48,6 +48,17 @@ describe('parseDoc()', () => {
     expect(result.content.child(1).type).toBe(schema.nodes.unimplementedNode);
   });
 
+  it('ignores footnote nodes', () => {
+    const node = {
+      node_type: 'policy',
+      content: [],
+      children: [{ node_type: 'footnote' }],
+    };
+
+    const result = parseDoc(node);
+    expect(result.childCount).toBe(0);
+  });
+
   it('figures out heading depth', () => {
     const node = {
       children: [{ node_type: 'ignored-child' }],
@@ -122,6 +133,26 @@ describe('convertContent()', () => {
     expect(result).toHaveLength(1);
     expect(result[0].type.name).toBe('text');
     expect(result[0].text).toBe('Stuff here!');
+  });
+
+  it('loads footnote citations', () => {
+    const content = apiFactory.content('footnote_citation', {
+      footnote_node: {
+        type_emblem: '5',
+        content: [
+          { content_type: '__text__', text: 'Some text ' },
+        ],
+      },
+    });
+
+    const result = convertContent(content, []);
+    expect(result).toHaveLength(1);
+    expect(result[0].type.name).toBe('inlineFootnote');
+    expect(result[0].attrs.emblem).toBe('5');
+    expect(result[0].content.toJSON()).toEqual([{
+      text: 'Some text ',
+      type: 'text',
+    }]);
   });
 
   it('deals with hierarchy', () => {
