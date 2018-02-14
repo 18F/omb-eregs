@@ -3,6 +3,7 @@ import { EditorView } from 'prosemirror-view';
 import { JsonApi } from './Api';
 import createEditorState from './create-editor-state';
 import { getEl, getElAttr } from './util';
+import * as footnoteMunging from './footnote-munging';
 
 const EDITOR_SEL = '#editor';
 const DOC_URL_ATTR = 'data-document-url';
@@ -14,7 +15,8 @@ window.addEventListener('load', () => {
   });
 
   api.fetch().then((data) => {
-    const state = createEditorState(data, api);
+    const mungedData = footnoteMunging.mungeApiNode(data);
+    const state = createEditorState(mungedData, api);
     new EditorView(getEl(EDITOR_SEL), { state });
   });
 });

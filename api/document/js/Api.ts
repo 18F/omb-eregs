@@ -33,6 +33,7 @@ export interface ApiContent {
   content_type: string;
   inlines: ApiContent[];
   text: string;
+  footnote_number?: string;
 }
 
 export class Api<T> {
