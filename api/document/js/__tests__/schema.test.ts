@@ -21,6 +21,14 @@ describe('unimplementedNode', () => {
   });
 });
 
+describe('inlineFootnote', () => {
+  it('is cool', () => {
+    const node = schema.nodes.inlineFootnote.create({ emblem: 'boop' }, []);
+    const result = serializer.serializeNode(node);
+    expect(result.attributes.getNamedItem('data-emblem').value).toBe('boop');
+  });
+});
+
 describe('heading', () => {
   [2, 3, 4, 5].forEach((depth) => {
     const hTag = `H${depth}`;
