@@ -19,7 +19,7 @@ function mungeContent(content: ApiContent,
       ...content,
       inlines,
       footnote_number: footnoteNum,
-      content_type: 'munged_footnote',
+      content_type: 'inline_footnote',
     };
   }
 
@@ -56,6 +56,50 @@ export function munge(node: ApiNode): ApiNode {
   return inlineFootnotes(withoutFootnotes, footnotes);
 }
 
+interface Uninlined {
+  content: ApiContent[];
+  footnotes: ApiNode[];
+}
+
+function combineUninlineds(uninlineds: Uninlined[]): Uninlined {
+  return uninlineds.reduce(
+    (acc, u) => ({
+      content: acc.content.concat(u.content),
+      footnotes: acc.footnotes.concat(u.footnotes),
+    }),
+    { content: [], footnotes: [] },
+  );
+}
+
+function uninlineFootnotes(content: ApiContent): Uninlined {
+  if (content.content_type === 'inline_footnote') {
+    const footnoteNum = content.footnote_number;
+    if (!footnoteNum) {
+      throw new Error('inline footnotes must have footnote numbers!');
+    }
+    const citation: ApiContent = {
+      content_type: 'footnote_citation',
+      inlines: [],
+      text: footnoteNum,
+    };
+    const footnote: ApiNode = {
+      node_type: 'footnote',
+      type_emblem: footnoteNum,
+      marker: footnoteNum,
+      children: [],
+      content: content.inlines,
+    };
+    return {
+      content: [citation],
+      footnotes: [footnote],
+    };
+  }
+  return combineUninlineds(content.inlines.map(uninlineFootnotes));
+}
+
 export function unmunge(node: ApiNode): ApiNode {
-  throw new Error('Implement footnoteMunging.unmunge()!');
+  const uninlined = combineUninlineds(node.content.map(uninlineFootnotes));
+  const children = uninlined.footnotes.concat(node.children.map(unmunge));
+
+  return { ...node, children, content: uninlined.content };
 }
