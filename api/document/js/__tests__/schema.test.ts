@@ -2,7 +2,8 @@ import { deleteSelection } from 'prosemirror-commands';
 import { DOMSerializer } from 'prosemirror-model';
 import { EditorState, TextSelection } from 'prosemirror-state';
 
-import schema, { factory } from '../schema';
+import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
+import schema, { factory, listAttrs } from '../schema';
 
 const serializer = DOMSerializer.fromSchema(schema);
 
@@ -32,22 +33,42 @@ describe('heading', () => {
   });
 });
 
-describe('para', () => {
-  it('can be deleted', () => {
-    const doc = factory.policy([
-      factory.para('1'),
-      factory.para('2'),
-    ]);
-    expect(doc.content.childCount).toBe(2);
-    // Selected the "2"
-    const selection = new TextSelection(doc.resolve(7), doc.resolve(8));
-    const state = EditorState.create({ doc, selection });
-    const dispatch = jest.fn();
+describe('listAttrs()', () => {
+  it('works with decimals', () => {
+    const { markerPrefix, markerSuffix, numeralFn } = listAttrs('1.');
+    expect(markerPrefix).toBe('');
+    expect(markerSuffix).toBe('.');
+    expect(numeralFn(0)).toBe('1');
+    expect(numeralFn(3)).toBe('4');
+    expect(numeralFn(25)).toBe('26');
+  });
 
-    deleteSelection(state, dispatch);
-    const transaction = dispatch.mock.calls[0][0];
-    const modifiedDoc = state.apply(transaction).doc;
+  it('works with parens', () => {
+    const { markerPrefix, markerSuffix, numeralFn } = listAttrs('(a)');
+    expect(markerPrefix).toBe('(');
+    expect(markerSuffix).toBe(')');
+    expect(numeralFn(0)).toBe('a');
+    expect(numeralFn(8)).toBe('i');
+    expect(numeralFn(25)).toBe('z');
+    expect(numeralFn(26)).toBe('aa');
+    expect(numeralFn(99)).toBe('vvvv');
+  });
 
-    expect(modifiedDoc.content.childCount).toBe(1);
+  it('works when a known character is not present', () => {
+    const { markerPrefix, markerSuffix, numeralFn } = listAttrs('■');
+    expect(markerPrefix).toBe('■');
+    expect(markerSuffix).toBe('');
+    expect(numeralFn(0)).toBe('');
+    expect(numeralFn(7)).toBe('');
+    expect(numeralFn(9999)).toBe('');
+  });
+
+  it('selects the *last* match', () => {
+    const { markerPrefix, markerSuffix, numeralFn } = listAttrs('4.c.R.i');
+    expect(markerPrefix).toBe('4.c.R.');
+    expect(markerSuffix).toBe('');
+    expect(numeralFn(0)).toBe('i');
+    expect(numeralFn(7)).toBe('viii');
+    expect(numeralFn(100)).toBe('ci');
   });
 });

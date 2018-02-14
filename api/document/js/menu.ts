@@ -2,7 +2,15 @@ import { toggleMark } from 'prosemirror-commands';
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
 import Api from './Api';
-import { appendParagraphNear, makeSave, makeSaveThenXml } from './commands';
+import { JsonApi } from './Api';
+import {
+  appendBulletListNear,
+  appendOrderedListNear,
+  appendParagraphNear,
+  makeSave,
+  makeSaveThenXml,
+} from './commands';
+import icons from './icons';
 import schema from './schema';
 
 function makeButton(content) {
@@ -16,7 +24,7 @@ function makeButton(content) {
   });
 }
 
-export default function menu(api: Api) {
+export default function menu(api: JsonApi) {
   return menuBar({
     floating: true,
     content: [
@@ -34,6 +42,16 @@ export default function menu(api: Api) {
           title: 'Append paragraph',
         }),
         linkItem(schema.marks.external_link),
+        makeButton({
+          icon: icons.newBulletList,
+          run: appendBulletListNear,
+          title: 'Append bullet list',
+        }),
+        makeButton({
+          icon: icons.newOrderedList,
+          run: appendOrderedListNear,
+          title: 'Append ordered list',
+        }),
         makeButton({
           label: 'Save',
           run: makeSave(api),
