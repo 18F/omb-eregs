@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { ApiContent } from '../Api';
 import parseDoc, { convertContent } from '../parse-doc';
 import { apiFactory } from '../serialize-doc';
 import schema from '../schema';
@@ -117,7 +118,7 @@ describe('parseDoc()', () => {
 describe('convertContent()', () => {
   it('bottoms out at a list of texts', () => {
     const content = { content_type: '__text__', text: 'Stuff here!' };
-    const result = convertContent(content, []);
+    const result = convertContent(content as ApiContent, []);
     expect(result).toHaveLength(1);
     expect(result[0].type.name).toBe('text');
     expect(result[0].text).toBe('Stuff here!');
@@ -136,7 +137,7 @@ describe('convertContent()', () => {
         },
       ],
     };
-    const result = convertContent(content, []);
+    const result = convertContent(content as any as ApiContent, []);
     expect(result).toHaveLength(2);
     const [text1, text2] = result;
 

@@ -26,8 +26,12 @@ const schema = new Schema({
     policy: {
       content: 'block+',
     },
-    paraText: {
-      content: 'inline*',
+    inline: {
+      // The group name 'inliney' is just used because 'inline' is
+      // already taken, and renaming the existing 'inline' would
+      // require lots of code changes, so for now we're just calling
+      // the group 'inliney'.
+      content: 'inliney*',
       toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
     },
     inlineFootnote: {
@@ -35,7 +39,7 @@ const schema = new Schema({
         emblem: {},
       },
       content: 'text*',
-      group: 'inline',
+      group: 'inliney',
       inline: true,
       toDOM: node => ['span', {
         class: 'inline-footnote',
@@ -51,7 +55,7 @@ const schema = new Schema({
       toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
     },
     para: {
-      content: 'paraText block*',
+      content: 'inline block*',
       group: 'block',
       toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
@@ -61,7 +65,7 @@ const schema = new Schema({
       toDOM: () => ['section', { class: 'node-section' }, 0],
     },
     text: {
-      group: 'inline',
+      group: 'inliney',
     },
     unimplementedNode: {
       group: 'block',
@@ -94,7 +98,7 @@ export const factory = {
   listitem: (marker: string, children?: Node[]) =>
     schema.nodes.listitem.create({ marker }, children || []),
   para: (textContent: string | Node[], children?: Node[]) =>
-    schema.nodes.para.create({}, [schema.nodes.paraText.create(
+    schema.nodes.para.create({}, [schema.nodes.inline.create(
       {},
       typeof textContent === 'string' ? schema.text(textContent) : textContent,
     )].concat(children || [])),

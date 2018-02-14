@@ -79,9 +79,7 @@ function defaultNodeConverter(node: Node): ApiNode {
   const children: ApiNode[] = [];
   let content: ApiContent[] = [];
   node.content.forEach((child) => {
-    // Instead of converting the type directly to paraText, we might
-    // instead want to check to see if its group is 'inline'.
-    if (child.type === schema.nodes.paraText) {
+    if (child.type === schema.nodes.inline) {
       content = convertTexts(child.content);
       children.push.apply(children, extractFootnotes(content));
     } else {
