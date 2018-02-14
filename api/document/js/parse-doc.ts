@@ -2,6 +2,7 @@ import axios from 'axios';
 import { flatten } from 'lodash/array';
 import { Mark, Node } from 'prosemirror-model';
 
+import { ApiNode, ApiContent } from './Api';
 import schema, { factory } from './schema';
 
 export default function parseDoc(node): Node {
@@ -24,8 +25,16 @@ export function convertContent(content, marks: Mark[]): Node[] {
   return flatten(nestedChildNodes);
 }
 
-const NODE_TYPE_CONVERTERS = {
+
+type NodeConverterMap = {
+  [nodeName: string]: (node: ApiNode) => Node,
+};
+
+const NODE_TYPE_CONVERTERS: NodeConverterMap = {
   heading(node) {
+    if (!node.identifier)
+      throw new Error('Assertion failure, node needs identifier');
+
     // Duplicates logic in `ui`
     const depth = node.identifier
       .split('_')
@@ -35,7 +44,11 @@ const NODE_TYPE_CONVERTERS = {
     return factory.heading(text, depth);
   },
   list: node => factory.list((node.children || []).map(parseDoc)),
-  listitem: node => factory.listitem(node.marker, (node.children || []).map(parseDoc)),
+  listitem(node) {
+    if (!node.marker)
+      throw new Error('Assertion failure, list items must have markers');
+    return factory.listitem(node.marker, (node.children || []).map(parseDoc));
+  },
   para(node) {
     const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
     return factory.para(flatten(nested), (node.children || []).map(parseDoc));

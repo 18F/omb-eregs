@@ -1,7 +1,9 @@
 import { Node } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
-import Api from './Api';
+import { JsonApi } from './Api';
+import { deeperBullet } from './list-utils';
+import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import { factory } from './schema';
 import serializeDoc from './serialize-doc';
 
@@ -13,9 +15,10 @@ function safeDocCheck(doc: Node) {
   }
 }
 
-// Appends a mostly-empty `para` in the closest valid point after the user's
-// cursor/head of the current selection.
-export function appendParagraphNear(state, dispatch) {
+// Append the provided element at the closest valid point after the user's
+// cursor/"head" of the current selection. Then, move the cursor to an
+// appropriate position within the newly added element.
+export function appendNearBlock(state, dispatch, element: Node, selectionPath: SelectionPath) {
   // Checking whether or not this action is possible
   if (!dispatch) {
     return true;
@@ -28,9 +31,12 @@ export function appendParagraphNear(state, dispatch) {
     const node = pos.node(depth);
     if (node.type.spec.group === 'block') {
       const insertPos = pos.after(depth);
-      let tr = state.tr.insert(insertPos, factory.para(' '));
-      // + 2 to get us inside the inline
-      tr = tr.setSelection(TextSelection.create(tr.doc, insertPos + 2));
+      let tr = state.tr.insert(insertPos, element);
+      tr = tr.setSelection(TextSelection.create(
+        tr.doc,
+        // +1 to get us inside the element
+        pathToResolvedPos(tr.doc.resolve(insertPos + 1), selectionPath).pos,
+      ));
       dispatch(tr.scrollIntoView());
       safeDocCheck(tr.doc);
       return true;
@@ -41,11 +47,23 @@ export function appendParagraphNear(state, dispatch) {
   return true;
 }
 
-export function makeSave(api: Api) {
+export function appendParagraphNear(state, dispatch) {
+  const element = factory.para(' ');
+  return appendNearBlock(state, dispatch, element, ['inline']);
+}
+
+export function appendBulletListNear(state, dispatch) {
+  const element = factory.list([
+    factory.listitem(deeperBullet(state.selection.$head), [factory.para(' ')]),
+  ]);
+  return appendNearBlock(state, dispatch, element, ['listitem', 'para', 'inline']);
+}
+
+export function makeSave(api: JsonApi) {
   return async state => api.write(serializeDoc(state.doc));
 }
 
-export function makeSaveThenXml(api: Api) {
+export function makeSaveThenXml(api: JsonApi) {
   return async (state) => {
     await api.write(serializeDoc(state.doc));
     window.location.assign(`${window.location.href}/akn`);

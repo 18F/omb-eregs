@@ -2,6 +2,7 @@ import { deleteSelection } from 'prosemirror-commands';
 import { DOMSerializer } from 'prosemirror-model';
 import { EditorState, TextSelection } from 'prosemirror-state';
 
+import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 import schema, { factory } from '../schema';
 
 const serializer = DOMSerializer.fromSchema(schema);
@@ -29,25 +30,5 @@ describe('heading', () => {
       const result = serializer.serializeNode(node);
       expect(result.nodeName).toBe(hTag);
     });
-  });
-});
-
-describe('para', () => {
-  it('can be deleted', () => {
-    const doc = factory.policy([
-      factory.para('1'),
-      factory.para('2'),
-    ]);
-    expect(doc.content.childCount).toBe(2);
-    // Selected the "2"
-    const selection = new TextSelection(doc.resolve(7), doc.resolve(8));
-    const state = EditorState.create({ doc, selection });
-    const dispatch = jest.fn();
-
-    deleteSelection(state, dispatch);
-    const transaction = dispatch.mock.calls[0][0];
-    const modifiedDoc = state.apply(transaction).doc;
-
-    expect(modifiedDoc.content.childCount).toBe(1);
   });
 });

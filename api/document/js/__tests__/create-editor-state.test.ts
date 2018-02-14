@@ -1,7 +1,7 @@
 jest.mock('../Api');
 jest.mock('../parse-doc');
 
-import Api, { setStatusError } from '../Api';
+import { JsonApi, setStatusError } from '../Api';
 import createEditorState from '../create-editor-state';
 import parseDoc from '../parse-doc';
 import schema, { factory } from '../schema';
@@ -15,7 +15,10 @@ describe('createEditorState()', () => {
       schema.nodes.heading.create({ depth: 1 }, factory.sec()),
     ]));
 
-    createEditorState('', new Api({ contentType: '', csrfToken: '', url: '' }));
+    createEditorState('', new JsonApi({
+      csrfToken: '',
+      url: '',
+    }));
 
     expect(setStatusError).toHaveBeenCalled();
   });
