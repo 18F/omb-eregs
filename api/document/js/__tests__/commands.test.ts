@@ -237,13 +237,10 @@ describe('addListItem()', () => {
   it('puts the cursor in the li', () => {
     const init = makeState(['list', 'listitem', 'para', 'inline', 'aaa'.length]);
     const result = executeTransform(init, addListItem);
-    expect(result.selection.anchor).toBe(pathToResolvedPos(
-      result.doc,
-      ['list', new NthType(1, 'listitem'), 'para', 'inline'],
-    ).pos);
-    expect(result.selection.head).toBe(pathToResolvedPos(
-      result.doc,
-      ['list', new NthType(1, 'listitem'), 'para', 'inline', ' '.length],
-    ).pos);
+    const inlinePath = ['list', new NthType(1, 'listitem'), 'para', 'inline'];
+    expect(result.selection.anchor).toBe(
+      pathToResolvedPos(result.doc, inlinePath).pos);
+    expect(result.selection.head).toBe(
+      pathToResolvedPos(result.doc, [...inlinePath, ' '.length]).pos);
   });
 });

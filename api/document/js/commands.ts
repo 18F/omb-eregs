@@ -85,12 +85,16 @@ const inLi = (pos: ResolvedPos) => (
   && pos.node(pos.depth - 2).type === schema.nodes.listitem
   && pos.node(pos.depth - 3).type === schema.nodes.list
 );
-const atEndOfLi = (pos: ResolvedPos) => (
-  pos.depth >= 2
-  && pos.pos === pos.end(pos.depth)
-  && pos.pos === pos.end(pos.depth - 1) - 1
-  && pos.pos === pos.end(pos.depth - 2) - 2
-);
+function atEndOfLi(pos: ResolvedPos) {
+  if (pos.depth < 2) return false;
+  const endOfInline = pos.end(pos.depth);
+  const endOfPara = pos.end(pos.depth - 1);
+  const endOfListItem = pos.end(pos.depth - 2);
+  const inlineAtEndOfPara = endOfInline + 1 === endOfPara;
+  const paraAtEndOfLi = endOfPara + 1 === endOfListItem;
+
+  return pos.pos === endOfInline && inlineAtEndOfPara && paraAtEndOfLi;
+}
 
 export function addListItem(state: EditorState, dispatch?: Dispatch) {
   const pos = state.selection.$head;
@@ -101,7 +105,7 @@ export function addListItem(state: EditorState, dispatch?: Dispatch) {
     return true;
   }
 
-  const endOfLi: number = pos.end(pos.depth - 2);
+  const endOfLi: number = pos.end(pos.depth - 2); // inline < para < li
   const insertPos = endOfLi + 1;
   // This marker will be replaced during the renumber step
   const liToInsert = factory.listitem('', [factory.para(' ')]);

@@ -23,10 +23,11 @@ export function deeperBullet(pos: ResolvedPos): string {
 
 function makeIntToLetter(initial: string) {
   const offset = initial.charCodeAt(0);
+  const alphabetLen = 26;
 
   return (idx: number) => {
-    const count = Math.floor(idx / 26) + 1;
-    const letter = String.fromCharCode(offset + idx % 26);
+    const count = Math.floor(idx / alphabetLen) + 1;
+    const letter = String.fromCharCode(offset + idx % alphabetLen);
     return repeatString(letter, count);
   };
 }

@@ -69,6 +69,8 @@ describe('createMarkerTemplate()', () => {
     const tpl = createMarkerTemplate('(a)');
     expect(tpl(0)).toBe('(a)');
     expect(tpl(8)).toBe('(i)');
+    expect(tpl(25)).toBe('(z)');
+    expect(tpl(26)).toBe('(aa)');
     expect(tpl(99)).toBe('(vvvv)');
   });
 
