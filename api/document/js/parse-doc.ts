@@ -68,7 +68,16 @@ const NODE_TYPE_CONVERTERS: NodeConverterMap = {
     const text = (node.text || '').replace(/\s+/g, ' ');
     return factory.heading(text, depth);
   },
-  list: node => factory.list(mapChildren(node)),
+  list(node) {
+    let startMarker = '●';
+    if (node.children.length) {
+      startMarker = node.children[0].marker || startMarker;
+    }
+    return factory.list(
+      startMarker,
+      mapChildren(node),
+    );
+  },
   listitem(node) {
     if (!node.marker)
       throw new Error('Assertion failure, list items must have markers');

@@ -1,6 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 
 import { deleteEmpty } from '../fixup-doc';
+import { collectMarkers } from '../list-utils';
 import schema, { factory } from '../schema';
 
 describe('deleteEmpty()', () => {
@@ -20,7 +21,7 @@ describe('deleteEmpty()', () => {
 
   it('deletes empty listitems', () => {
     const doc = factory.policy([
-      factory.list([
+      factory.list('1.', [
         factory.listitem('1.', [factory.para('First')]),
         factory.listitem('2.', []),
         factory.listitem('3.', [factory.para('Third')]),
@@ -33,11 +34,13 @@ describe('deleteEmpty()', () => {
 
     expect(modified.doc.content.child(0).childCount).toBe(2);
     expect(modified.doc.content.child(0).textContent).toBe('FirstThird');
+    // Also renumbers
+    expect(modified.doc.content.child(0).content.child(1).attrs.marker).toBe('2.');
   });
 
   it('deletes empty lists', () => {
     const doc = factory.policy([
-      factory.list([]),
+      factory.list('1.', []),
       factory.para('stuff'),
     ]);
     expect(doc.content.childCount).toBe(2);
@@ -51,7 +54,7 @@ describe('deleteEmpty()', () => {
   it('is recursive', () => {
     const doc = factory.policy([
       factory.para('Something'),
-      factory.list([
+      factory.list('1. ', [
         factory.listitem('1. ', []),
         factory.listitem('2', [
           schema.nodes.para.create({}, schema.nodes.inline.create()),

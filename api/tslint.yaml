@@ -7,3 +7,5 @@ rules:
   # Deprecated in favor of no-this-assignment
   no-var-self: false
   no-this-assignment: true
+  # Removing this as we don't want to have to mix str and literal keys
+  object-literal-key-quotes: false
