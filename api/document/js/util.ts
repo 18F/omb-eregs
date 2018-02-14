@@ -1,3 +1,5 @@
+import { Node, ResolvedPos } from 'prosemirror-model';
+
 export function getEl(selector: string): HTMLElement {
   const el = document.querySelector(selector);
   if (!el || !(el instanceof HTMLElement))
@@ -13,4 +15,16 @@ export function getElAttr(selector: string, attr: string): string {
   }
 
   return value;
+}
+
+export function walkUpUntil(pos: ResolvedPos, predicate: (node: Node) => boolean) {
+  let depth = pos.depth;
+  while (depth >= 0) {
+    const node = pos.node(depth);
+    if (predicate(node)) {
+      break;
+    }
+    depth -= 1;
+  }
+  return depth;
 }
