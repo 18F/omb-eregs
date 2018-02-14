@@ -21,4 +21,3 @@ cf scale -i 1 api   # ensure we have 512M free
 cf zero-downtime-push api -f "$MANIFEST"
 cf scale -i 1 ui
 cf zero-downtime-push ui -f "$MANIFEST"
-cf zero-downtime-push redeployer -f "$MANIFEST"
