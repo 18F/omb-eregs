@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { getEl } from './util';
 import { makeErrorFriendly } from './friendly-error';
+import * as footnoteMunging from './footnote-munging';
 
 function setStatus(msg: string, className: 'editor-status-error'|'' = '') {
   const status = getEl('#status');
@@ -80,6 +81,15 @@ export class JsonApi extends Api<ApiNode> {
   constructor({ csrfToken, url }) {
     super({ csrfToken, url, contentType: 'application/json' });
   }  
+
+  async fetch(): Promise<ApiNode> {
+    const result = await Api.prototype.fetch.call(this);
+    return footnoteMunging.munge(result);
+  }
+
+  async write(data: ApiNode): Promise<void> {
+    await Api.prototype.write.call(this, footnoteMunging.unmunge(data));
+  }
 }
 
 export class AknXmlApi extends Api<string> {

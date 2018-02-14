@@ -6,8 +6,8 @@ interface FootnoteMap {
   [typeEmblem: string]: ApiNode;
 }
 
-function mungeApiContent(content: ApiContent,
-                         footnotes: FootnoteMap): ApiContent {
+function mungeContent(content: ApiContent,
+                      footnotes: FootnoteMap): ApiContent {
   if (content.content_type === 'footnote_citation') {
     const footnoteNum = content.text;
     const footnote = footnotes[footnoteNum];
@@ -24,7 +24,7 @@ function mungeApiContent(content: ApiContent,
   }
 
   const inlines = content.inlines.map(content =>
-    mungeApiContent(content, footnotes));
+    mungeContent(content, footnotes));
   return { ...content, inlines };
 }
 
@@ -44,18 +44,18 @@ function removeFootnotes(node: ApiNode, footnotes: FootnoteMap): ApiNode {
 
 function inlineFootnotes(node: ApiNode, footnotes: FootnoteMap): ApiNode {
   const content = node.content.map(content =>
-    mungeApiContent(content, footnotes));
+    mungeContent(content, footnotes));
   const children = node.children.map(child =>
     inlineFootnotes(child, footnotes));
   return { ...node, children, content };
 }
 
-export function mungeApiNode(node: ApiNode): ApiNode {
+export function munge(node: ApiNode): ApiNode {
   const footnotes: FootnoteMap = {};
   const withoutFootnotes = removeFootnotes(node, footnotes);
   return inlineFootnotes(withoutFootnotes, footnotes);
 }
 
-export function mungeNode(node: Node): Node {
-  throw new Error('Implement this!');
+export function unmunge(node: ApiNode): ApiNode {
+  throw new Error('Implement footnoteMunging.unmunge()!');
 }
