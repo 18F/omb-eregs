@@ -25,25 +25,31 @@ describe('deeperBullet()', () => {
   ]);
 
   it('defaults when not in a list', () => {
-    const pos = pathToResolvedPos(doc, ['para', 'inline']);
+    const pos = pathToResolvedPos(doc, 'para', 'inline');
     expect(deeperBullet(pos)).toBe('●');
   });
 
   it('selects the second level marker', () => {
-    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    const pos = pathToResolvedPos(doc, 'list', 'listitem', 'para', 'inline');
     expect(deeperBullet(pos)).toBe('○');
   });
 
   it('selects the third level marker', () => {
     const pos = pathToResolvedPos(
       doc,
-      ['list', new NthType(1, 'listitem'), 'list', 'listitem', 'para', 'inline'],
+      'list',
+      new NthType(1, 'listitem'),
+      'list',
+      'listitem',
+      'para',
+      'inline',
     );
     expect(deeperBullet(pos)).toBe('■');
   });
 
   it('restarts after three levels', () => {
-    const pos = pathToResolvedPos(doc, [
+    const pos = pathToResolvedPos(
+      doc,
       'list',
       new NthType(1, 'listitem'),
       'list',
@@ -52,7 +58,7 @@ describe('deeperBullet()', () => {
       'listitem',
       'para',
       'inline',
-    ]);
+    );
     expect(deeperBullet(pos)).toBe('●');
   });
 });
@@ -62,7 +68,7 @@ describe('deeperOrderedLi()', () => {
     const doc = factory.policy([factory.list('_1_', [
       factory.listitem('_1_', [factory.para(' ')]),
     ])]);
-    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    const pos = pathToResolvedPos(doc, 'list', 'listitem', 'para', 'inline');
     expect(deeperOrderedLi(pos)).toBe('_a_');
   });
 
@@ -79,7 +85,7 @@ describe('deeperOrderedLi()', () => {
         const doc = factory.policy([factory.list(parentMarker, [
           factory.listitem(parentMarker, [factory.para(' ')]),
         ])]);
-        const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+        const pos = pathToResolvedPos(doc, 'list', 'listitem', 'para', 'inline');
         expect(deeperOrderedLi(pos)).toBe(newMarker);
       });
     });
@@ -87,7 +93,7 @@ describe('deeperOrderedLi()', () => {
 
   it('defaults when not in a list', () => {
     const doc = factory.policy([factory.para(' ')]);
-    const pos = pathToResolvedPos(doc, ['para', 'inline']);
+    const pos = pathToResolvedPos(doc, 'para', 'inline');
     expect(deeperOrderedLi(pos)).toBe('1.');
   });
 
@@ -95,7 +101,7 @@ describe('deeperOrderedLi()', () => {
     const doc = factory.policy([factory.list('●', [
       factory.listitem('●', [factory.para(' ')]),
     ])]);
-    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    const pos = pathToResolvedPos(doc, 'list', 'listitem', 'para', 'inline');
     expect(deeperOrderedLi(pos)).toBe('1.');
   });
 });
@@ -110,7 +116,7 @@ describe('renumberList()', () => {
       ]),
     ]);
     const initialState = EditorState.create({ doc });
-    const pos = pathToResolvedPos(doc, ['list', 'listitem']).pos;
+    const pos = pathToResolvedPos(doc, 'list', 'listitem').pos;
     const resultTr = renumberList(initialState.tr, pos);
     const result = initialState.apply(resultTr);
     const list = result.doc.content.child(0);
@@ -131,7 +137,7 @@ describe('renumberList()', () => {
     expect(doc.textContent).toBe('stuffmorestuff');
 
     const initialState = EditorState.create({ doc });
-    const pos = pathToResolvedPos(doc, ['list', 'listitem']).pos;
+    const pos = pathToResolvedPos(doc, 'list', 'listitem').pos;
     const resultTr = renumberList(initialState.tr, pos);
     const list = initialState.apply(resultTr).doc.content.child(0);
 
@@ -153,7 +159,10 @@ describe('renumberList()', () => {
     const initialState = EditorState.create({ doc });
     const pos = pathToResolvedPos(
       doc,
-      ['list', new NthType(1, 'listitem'), 'list', 'listitem'],
+      'list',
+      new NthType(1, 'listitem'),
+      'list',
+      'listitem',
     ).pos;
     const resultTr = renumberList(initialState.tr, pos);
     const list = initialState.apply(resultTr).doc.content.child(0);

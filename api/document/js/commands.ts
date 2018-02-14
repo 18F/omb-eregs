@@ -3,7 +3,7 @@ import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { JsonApi } from './Api';
 import { deeperBullet, deeperOrderedLi, renumberList } from './list-utils';
-import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
+import pathToResolvedPos, { Selector } from './path-to-resolved-pos';
 import schema, { factory } from './schema';
 import serializeDoc from './serialize-doc';
 import { walkUpUntil } from './util';
@@ -23,7 +23,7 @@ function safeDocCheck(doc: Node) {
 // that element.
 export function appendNearBlock(
   element: Node,
-  selectionPath: SelectionPath,
+  selectionPath: Selector[],
   state: EditorState,
   dispatch?: Dispatch,
 ) {
@@ -40,7 +40,7 @@ export function appendNearBlock(
     let tr = state.tr.insert(insertPos, element);
     const eltStart = pathToResolvedPos(
       tr.doc.resolve(insertPos + 1),
-      selectionPath,
+      ...selectionPath,
     );
     const eltEnd = eltStart.pos + eltStart.parent.nodeSize - 1; // inclusive
     tr = tr.setSelection(TextSelection.create(
@@ -124,7 +124,8 @@ export function addListItem(state: EditorState, dispatch?: Dispatch) {
   tr = renumberList(tr, insertPos);
   const cursorStart = pathToResolvedPos(
     tr.doc.resolve(insertPos + 1),
-    ['para', 'inline'],
+    'para',
+    'inline',
   ).pos;
   tr = tr.setSelection(TextSelection.create(
     tr.doc,
