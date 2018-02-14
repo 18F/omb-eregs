@@ -2,7 +2,6 @@ import { deleteSelection } from 'prosemirror-commands';
 import { DOMSerializer } from 'prosemirror-model';
 import { EditorState, TextSelection } from 'prosemirror-state';
 
-import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 import schema, { factory, listAttrs } from '../schema';
 
 const serializer = DOMSerializer.fromSchema(schema);

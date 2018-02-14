@@ -17,7 +17,7 @@ import {
 import { collectMarkers } from '../list-utils';
 import schema, { factory } from '../schema';
 import serializeDoc from '../serialize-doc';
-import pathToResolvedPos, { NthType, SelectionPath } from '../path-to-resolved-pos';
+import pathToResolvedPos, { NthType, Selector } from '../path-to-resolved-pos';
 
 function executeTransform(initialState: EditorState, transform): EditorState {
   const dispatch = jest.fn();
@@ -41,7 +41,9 @@ describe('appendNearBlock()', () => {
     const selection = new TextSelection(pathToResolvedPos(
       doc,
       // Inside the 'bbb' paragraph
-      [new NthType(1, 'para'), 'inline', 'b'.length],
+      new NthType(1, 'para'),
+      'inline',
+      'b'.length,
     ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, paraTransform).doc;
@@ -65,7 +67,10 @@ describe('appendNearBlock()', () => {
     const selection = new TextSelection(pathToResolvedPos(
       doc,
       // Inside the 'subpar' paragraph
-      ['para', 'para', 'inline', 'sub'.length],
+      'para',
+      'para',
+      'inline',
+      'sub'.length,
     ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, paraTransform).doc;
@@ -86,7 +91,9 @@ describe('appendNearBlock()', () => {
     const selection = new TextSelection(pathToResolvedPos(
       doc,
       // Inside the 'aaa' paragraph
-      ['para', 'inline', 'a'.length],
+      'para',
+      'inline',
+      'a'.length,
     ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, paraTransform).doc;
@@ -100,7 +107,9 @@ describe('appendParagraphNear()', () => {
   const doc = factory.policy([factory.para('aaa')]);
   const selection = new TextSelection(pathToResolvedPos(
     doc,
-    ['para', 'inline', 'a'.length],
+    'para',
+    'inline',
+    'a'.length,
   ));
   const state = EditorState.create({ doc, selection });
   const modified = executeTransform(state, appendParagraphNear);
@@ -128,7 +137,9 @@ describe('appendBulletListNear()', () => {
   const doc = factory.policy([factory.para('aaa')]);
   const selection = new TextSelection(pathToResolvedPos(
     doc,
-    ['para', 'inline', 'a'.length],
+    'para',
+    'inline',
+    'a'.length,
   ));
   const state = EditorState.create({ doc, selection });
   const modified = executeTransform(state, appendBulletListNear);
@@ -210,23 +221,23 @@ describe('addListItem()', () => {
     ]),
   ]);
 
-  function makeState(path: SelectionPath) {
-    const selection = new TextSelection(pathToResolvedPos(doc, path));
+  function makeState(...path: Selector[]) {
+    const selection = new TextSelection(pathToResolvedPos(doc, ...path));
     return EditorState.create({ doc, selection });
   }
 
   it('requires the cursor be in the right position', () => {
-    const inIntro = makeState(['para', 'inline', 'int'.length]);
-    const endIntro = makeState(['para', 'inline', 'intro'.length]);
-    const middleOfLi = makeState(['list', 'listitem', 'para', 'inline', 'a'.length]);
+    const inIntro = makeState('para', 'inline', 'int'.length);
+    const endIntro = makeState('para', 'inline', 'intro'.length);
+    const middleOfLi = makeState('list', 'listitem', 'para', 'inline', 'a'.length);
     const endOfFirstPara = makeState(
-      ['list', new NthType(1, 'listitem'), 'para', 'inline', 'bbb first'.length]);
+      'list', new NthType(1, 'listitem'), 'para', 'inline', 'bbb first'.length);
     [inIntro, endIntro, middleOfLi, endOfFirstPara].forEach(state =>
       expect(addListItem(state)).toBe(false));
   });
 
   it('adds a new li', () => {
-    const init = makeState(['list', 'listitem', 'para', 'inline', 'aaa'.length]);
+    const init = makeState('list', 'listitem', 'para', 'inline', 'aaa'.length);
     expect(doc.content.child(1).content.childCount).toBe(2);
     const result = executeTransform(init, addListItem);
     const list = result.doc.content.child(1);
@@ -235,12 +246,12 @@ describe('addListItem()', () => {
   });
 
   it('puts the cursor in the li', () => {
-    const init = makeState(['list', 'listitem', 'para', 'inline', 'aaa'.length]);
+    const init = makeState('list', 'listitem', 'para', 'inline', 'aaa'.length);
     const result = executeTransform(init, addListItem);
     const inlinePath = ['list', new NthType(1, 'listitem'), 'para', 'inline'];
     expect(result.selection.anchor).toBe(
-      pathToResolvedPos(result.doc, inlinePath).pos);
+      pathToResolvedPos(result.doc, ...inlinePath).pos);
     expect(result.selection.head).toBe(
-      pathToResolvedPos(result.doc, [...inlinePath, ' '.length]).pos);
+      pathToResolvedPos(result.doc, ...inlinePath, ' '.length).pos);
   });
 });
