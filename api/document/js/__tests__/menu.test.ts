@@ -4,8 +4,6 @@ import schema, { factory } from '../schema';
 import { EditorState } from 'prosemirror-state';
 import menu from '../menu';
 import { Api, JsonApi } from '../Api';
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
 
 describe('menu functions', () => {
   it('has the expected buttons', () => {
