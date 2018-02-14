@@ -26,9 +26,21 @@ const schema = new Schema({
     policy: {
       content: 'block+',
     },
-    inline: {
-      content: 'text*',
+    paraText: {
+      content: 'inline*',
       toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
+    },
+    inlineFootnote: {
+      attrs: {
+        emblem: {},
+      },
+      content: 'text*',
+      group: 'inline',
+      inline: true,
+      toDOM: node => ['span', {
+        class: 'inline-footnote',
+        'data-emblem': node.attrs.emblem,
+      }, 0],
     },
     heading: {
       content: 'text+',
@@ -39,7 +51,7 @@ const schema = new Schema({
       toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
     },
     para: {
-      content: 'inline block*',
+      content: 'paraText block*',
       group: 'block',
       toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
@@ -48,7 +60,9 @@ const schema = new Schema({
       group: 'block',
       toDOM: () => ['section', { class: 'node-section' }, 0],
     },
-    text: {},
+    text: {
+      group: 'inline',
+    },
     unimplementedNode: {
       group: 'block',
       atom: true,
@@ -80,7 +94,7 @@ export const factory = {
   listitem: (marker: string, children?: Node[]) =>
     schema.nodes.listitem.create({ marker }, children || []),
   para: (textContent: string | Node[], children?: Node[]) =>
-    schema.nodes.para.create({}, [schema.nodes.inline.create(
+    schema.nodes.para.create({}, [schema.nodes.paraText.create(
       {},
       typeof textContent === 'string' ? schema.text(textContent) : textContent,
     )].concat(children || [])),

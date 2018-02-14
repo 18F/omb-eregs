@@ -6,6 +6,16 @@
     background: lightpink;
   }
 
+  .inline-footnote {
+    color: $color-blue;
+  }
+
+  .inline-footnote:before {
+    content: 'Footnote ' attr(data-emblem) ': ';
+    padding-left: 0.5em;
+    font-weight: bold;
+  }
+
   div.unimplemented {
     padding: 2px 4px;
   }
