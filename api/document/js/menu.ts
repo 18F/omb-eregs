@@ -1,7 +1,6 @@
 import { toggleMark } from 'prosemirror-commands';
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
-import Api from './Api';
 import { JsonApi } from './Api';
 import {
   appendBulletListNear,
