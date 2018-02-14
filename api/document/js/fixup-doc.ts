@@ -8,7 +8,7 @@ const shouldDeleteChecks = {
   list: (node: Node) => node.content.childCount === 0,
   listitem: (node: Node) => node.content.childCount === 0,
   para: (node: Node) => (
-    node.content.childCount === 1 // Just the inline
+    node.content.childCount === 1 // Just the paraText
     && node.textContent === ''
   ),
 };

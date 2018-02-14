@@ -34,7 +34,7 @@ type NodeConverterMap = {
 const NODE_CONVERTERS: NodeConverterMap = {
   heading: node => apiFactory.node(
     node.type.name,
-    // Text isn't in an 'inline' block
+    // Text isn't in an 'paraText' block
     { content: convertTexts(node.content) },
   ),
   listitem(node) {
@@ -79,7 +79,7 @@ function defaultNodeConverter(node: Node): ApiNode {
   const children: ApiNode[] = [];
   let content: ApiContent[] = [];
   node.content.forEach((child) => {
-    if (child.type === schema.nodes.inline) {
+    if (child.type === schema.nodes.paraText) {
       content = convertTexts(child.content);
       children.push.apply(children, extractFootnotes(content));
     } else {

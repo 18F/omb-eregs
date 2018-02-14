@@ -41,7 +41,7 @@ describe('parseDoc()', () => {
     const result = parseDoc(node);
     expect(result.type.name).toBe('para');
     expect(result.content.childCount).toBe(2);
-    expect(result.content.child(0).type.name).toBe('inline');
+    expect(result.content.child(0).type.name).toBe('paraText');
     expect(result.content.child(0).content.childCount).toBe(2);
     expect(result.content.child(0).content.child(0).text).toBe('Some text ');
     expect(result.content.child(0).content.child(1).text).toBe('here');

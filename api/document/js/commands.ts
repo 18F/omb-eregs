@@ -57,7 +57,7 @@ export function appendNearBlock(
 
 export function appendParagraphNear(state: EditorState, dispatch?: Dispatch) {
   const element = factory.para(' ');
-  return appendNearBlock(element, ['inline'], state, dispatch);
+  return appendNearBlock(element, ['paraText'], state, dispatch);
 }
 
 export function appendBulletListNear(state: EditorState, dispatch?: Dispatch) {
@@ -66,7 +66,7 @@ export function appendBulletListNear(state: EditorState, dispatch?: Dispatch) {
     startMarker,
     [factory.listitem(startMarker, [factory.para(' ')])],
   );
-  return appendNearBlock(element, ['listitem', 'para', 'inline'], state, dispatch);
+  return appendNearBlock(element, ['listitem', 'para', 'paraText'], state, dispatch);
 }
 
 export function appendOrderedListNear(state: EditorState, dispatch?: Dispatch) {
@@ -75,7 +75,7 @@ export function appendOrderedListNear(state: EditorState, dispatch?: Dispatch) {
     startMarker,
     [factory.listitem(startMarker, [factory.para(' ')])],
   );
-  return appendNearBlock(element, ['listitem', 'para', 'inline'], state, dispatch);
+  return appendNearBlock(element, ['listitem', 'para', 'paraText'], state, dispatch);
 }
 
 export function makeSave(api: JsonApi) {
@@ -91,20 +91,20 @@ export function makeSaveThenXml(api: JsonApi) {
 
 const inLi = (pos: ResolvedPos) => (
   pos.depth >= 3
-  && pos.node(pos.depth).type === schema.nodes.inline
+  && pos.node(pos.depth).type === schema.nodes.paraText
   && pos.node(pos.depth - 1).type === schema.nodes.para
   && pos.node(pos.depth - 2).type === schema.nodes.listitem
   && pos.node(pos.depth - 3).type === schema.nodes.list
 );
 function atEndOfLi(pos: ResolvedPos) {
   if (pos.depth < 2) return false;
-  const endOfInline = pos.end(pos.depth);
+  const endOfparaText = pos.end(pos.depth);
   const endOfPara = pos.end(pos.depth - 1);
   const endOfListItem = pos.end(pos.depth - 2);
-  const inlineAtEndOfPara = endOfInline + 1 === endOfPara;
+  const paraTextAtEndOfPara = endOfparaText + 1 === endOfPara;
   const paraAtEndOfLi = endOfPara + 1 === endOfListItem;
 
-  return pos.pos === endOfInline && inlineAtEndOfPara && paraAtEndOfLi;
+  return pos.pos === endOfparaText && paraTextAtEndOfPara && paraAtEndOfLi;
 }
 
 export function addListItem(state: EditorState, dispatch?: Dispatch) {
@@ -116,7 +116,7 @@ export function addListItem(state: EditorState, dispatch?: Dispatch) {
     return true;
   }
 
-  const endOfLi: number = pos.end(pos.depth - 2); // inline < para < li
+  const endOfLi: number = pos.end(pos.depth - 2); // paraText < para < li
   const insertPos = endOfLi + 1;
   // This marker will be replaced during the renumber step
   const liToInsert = factory.listitem('', [factory.para(' ')]);
@@ -124,7 +124,7 @@ export function addListItem(state: EditorState, dispatch?: Dispatch) {
   tr = renumberList(tr, insertPos);
   const cursorStart = pathToResolvedPos(
     tr.doc.resolve(insertPos + 1),
-    ['para', 'inline'],
+    ['para', 'paraText'],
   ).pos;
   tr = tr.setSelection(TextSelection.create(
     tr.doc,
