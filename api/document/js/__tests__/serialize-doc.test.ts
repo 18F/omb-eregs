@@ -57,7 +57,7 @@ describe('serializeDoc()', () => {
     const node = schema.nodes.para.create({}, [
       schema.nodes.paraText.create({}, [
         schema.text('hello'),
-        schema.nodes.inlineFootnote.create({ emblem: '2' }, [
+        factory.inlineFootnote('2', [
           schema.text('\u200bi am a footnote'),
         ]),
       ]),

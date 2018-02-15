@@ -22,8 +22,8 @@ describe('unimplementedNode', () => {
 });
 
 describe('inlineFootnote', () => {
-  it('is cool', () => {
-    const node = schema.nodes.inlineFootnote.create({ emblem: 'boop' }, []);
+  it('serializes to include a data-emblem attr', () => {
+    const node = factory.inlineFootnote('boop', []);
     const result = serializer.serializeNode(node);
     expect(result.attributes.getNamedItem('data-emblem').value).toBe('boop');
   });
