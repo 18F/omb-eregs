@@ -150,7 +150,7 @@ describe('convertContent()', () => {
     expect(result[0].type.name).toBe('inlineFootnote');
     expect(result[0].attrs.emblem).toBe('5');
     expect(result[0].content.toJSON()).toEqual([{
-      text: 'Some text ',
+      text: '\u200bSome text ',
       type: 'text',
     }]);
   });

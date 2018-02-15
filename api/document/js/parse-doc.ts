@@ -23,7 +23,9 @@ function convertFootnoteCitation(content: ApiContent): Node {
   }
   const nested: Node[][] = (footnote.content || [])
     .map(c => convertContent(c, []));
-  return schema.nodes.inlineFootnote.create({ emblem }, flatten(nested));
+  return schema.nodes.inlineFootnote.create({ emblem }, [
+    schema.text('\u200b'),
+  ].concat(flatten(nested)));
 }
 
 export function convertContent(content: ApiContent, marks: Mark[]): Node[] {
