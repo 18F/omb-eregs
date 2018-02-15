@@ -33,6 +33,7 @@ export interface ApiContent {
   content_type: string;
   inlines: ApiContent[];
   text: string;
+  footnote_node?: ApiNode;
 }
 
 export class Api<T> {

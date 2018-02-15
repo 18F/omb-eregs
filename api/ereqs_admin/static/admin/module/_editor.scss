@@ -6,6 +6,17 @@
     background: lightpink;
   }
 
+  .inline-footnote {
+    color: $color-pink;
+    @include font-san-serif;
+  }
+
+  .inline-footnote::before {
+    content: 'Footnote ' attr(data-emblem) ': ';
+    padding-left: 0.5em;
+    @include font-san-serif-bold;
+  }
+
   div.unimplemented {
     padding: 2px 4px;
   }

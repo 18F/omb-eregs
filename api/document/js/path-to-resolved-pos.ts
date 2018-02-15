@@ -9,6 +9,9 @@ export class NthType {
   constructor(nth: number, nodeType: string | NodeType) {
     this.nth = nth;
     this.nodeType = nodeType instanceof NodeType ? nodeType : schema.nodes[nodeType];
+    if (!this.nodeType) {
+      throw new Error(`"${nodeType}" is not a valid node in the schema`);
+    }
   }
 }
 
