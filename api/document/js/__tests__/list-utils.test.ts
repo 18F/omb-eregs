@@ -25,19 +25,19 @@ describe('deeperBullet()', () => {
   ]);
 
   it('defaults when not in a list', () => {
-    const pos = pathToResolvedPos(doc, ['para', 'inline']);
+    const pos = pathToResolvedPos(doc, ['para', 'paraText']);
     expect(deeperBullet(pos)).toBe('●');
   });
 
   it('selects the second level marker', () => {
-    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'paraText']);
     expect(deeperBullet(pos)).toBe('○');
   });
 
   it('selects the third level marker', () => {
     const pos = pathToResolvedPos(
       doc,
-      ['list', new NthType(1, 'listitem'), 'list', 'listitem', 'para', 'inline'],
+      ['list', new NthType(1, 'listitem'), 'list', 'listitem', 'para', 'paraText'],
     );
     expect(deeperBullet(pos)).toBe('■');
   });
@@ -51,7 +51,7 @@ describe('deeperBullet()', () => {
       'list',
       'listitem',
       'para',
-      'inline',
+      'paraText',
     ]);
     expect(deeperBullet(pos)).toBe('●');
   });
@@ -62,7 +62,7 @@ describe('deeperOrderedLi()', () => {
     const doc = factory.policy([factory.list('_1_', [
       factory.listitem('_1_', [factory.para(' ')]),
     ])]);
-    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'paraText']);
     expect(deeperOrderedLi(pos)).toBe('_a_');
   });
 
@@ -79,7 +79,7 @@ describe('deeperOrderedLi()', () => {
         const doc = factory.policy([factory.list(parentMarker, [
           factory.listitem(parentMarker, [factory.para(' ')]),
         ])]);
-        const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+        const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'paraText']);
         expect(deeperOrderedLi(pos)).toBe(newMarker);
       });
     });
@@ -87,7 +87,7 @@ describe('deeperOrderedLi()', () => {
 
   it('defaults when not in a list', () => {
     const doc = factory.policy([factory.para(' ')]);
-    const pos = pathToResolvedPos(doc, ['para', 'inline']);
+    const pos = pathToResolvedPos(doc, ['para', 'paraText']);
     expect(deeperOrderedLi(pos)).toBe('1.');
   });
 
@@ -95,7 +95,7 @@ describe('deeperOrderedLi()', () => {
     const doc = factory.policy([factory.list('●', [
       factory.listitem('●', [factory.para(' ')]),
     ])]);
-    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'inline']);
+    const pos = pathToResolvedPos(doc, ['list', 'listitem', 'para', 'paraText']);
     expect(deeperOrderedLi(pos)).toBe('1.');
   });
 });

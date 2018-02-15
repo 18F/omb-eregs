@@ -30,7 +30,7 @@ function executeTransform(initialState: EditorState, transform): EditorState {
 
 describe('appendNearBlock()', () => {
   const paraTransform = (state, dispatch) =>
-    appendNearBlock(factory.para(' '), ['inline'], state, dispatch);
+    appendNearBlock(factory.para(' '), ['paraText'], state, dispatch);
 
   it('adds a node after the current', () => {
     const doc = factory.policy([
@@ -41,7 +41,7 @@ describe('appendNearBlock()', () => {
     const selection = new TextSelection(pathToResolvedPos(
       doc,
       // Inside the 'bbb' paragraph
-      [new NthType(1, 'para'), 'inline', 'b'.length],
+      [new NthType(1, 'para'), 'paraText', 'b'.length],
     ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, paraTransform).doc;
@@ -65,14 +65,14 @@ describe('appendNearBlock()', () => {
     const selection = new TextSelection(pathToResolvedPos(
       doc,
       // Inside the 'subpar' paragraph
-      ['para', 'para', 'inline', 'sub'.length],
+      ['para', 'para', 'paraText', 'sub'.length],
     ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, paraTransform).doc;
 
     expect(modifiedDoc.content.childCount).toBe(1);
     const parA = modifiedDoc.content.child(0);
-    expect(parA.content.childCount).toBe(4); // inline + 3 children
+    expect(parA.content.childCount).toBe(4); // paraText + 3 children
     expect(parA.content.child(2).textContent).toBe(' ');
   });
 
@@ -86,7 +86,7 @@ describe('appendNearBlock()', () => {
     const selection = new TextSelection(pathToResolvedPos(
       doc,
       // Inside the 'aaa' paragraph
-      ['para', 'inline', 'a'.length],
+      ['para', 'paraText', 'a'.length],
     ));
     const state = EditorState.create({ doc, selection });
     const modifiedDoc = executeTransform(state, paraTransform).doc;
@@ -100,7 +100,7 @@ describe('appendParagraphNear()', () => {
   const doc = factory.policy([factory.para('aaa')]);
   const selection = new TextSelection(pathToResolvedPos(
     doc,
-    ['para', 'inline', 'a'.length],
+    ['para', 'paraText', 'a'.length],
   ));
   const state = EditorState.create({ doc, selection });
   const modified = executeTransform(state, appendParagraphNear);
@@ -117,8 +117,8 @@ describe('appendParagraphNear()', () => {
 
   it('puts the cursor in the right place', () => {
     const resolvedPos = modified.selection.$anchor;
-    expect(resolvedPos.depth).toBe(2);  // 0: policy, 1: para, 2: inline
-    expect(resolvedPos.parent.type).toBe(schema.nodes.inline);
+    expect(resolvedPos.depth).toBe(2);  // 0: policy, 1: para, 2: paraText
+    expect(resolvedPos.parent.type).toBe(schema.nodes.paraText);
     expect(resolvedPos.parent).toBe(
       modified.doc.content.child(1).content.child(0));
   });
@@ -128,7 +128,7 @@ describe('appendBulletListNear()', () => {
   const doc = factory.policy([factory.para('aaa')]);
   const selection = new TextSelection(pathToResolvedPos(
     doc,
-    ['para', 'inline', 'a'.length],
+    ['para', 'paraText', 'a'.length],
   ));
   const state = EditorState.create({ doc, selection });
   const modified = executeTransform(state, appendBulletListNear);
@@ -151,9 +151,9 @@ describe('appendBulletListNear()', () => {
 
   it('puts the cursor in the right place', () => {
     const resolvedPos = modified.selection.$anchor;
-    // 0: policy, 1: list, 2: listitem, 3: para, 4: inline
+    // 0: policy, 1: list, 2: listitem, 3: para, 4: paraText
     expect(resolvedPos.depth).toBe(4);
-    expect(resolvedPos.parent.type).toBe(schema.nodes.inline);
+    expect(resolvedPos.parent.type).toBe(schema.nodes.paraText);
     expect(resolvedPos.parent).toBe(
       modified.doc.content.child(1).content.child(0).content.child(0).content.child(0));
   });
@@ -216,17 +216,17 @@ describe('addListItem()', () => {
   }
 
   it('requires the cursor be in the right position', () => {
-    const inIntro = makeState(['para', 'inline', 'int'.length]);
-    const endIntro = makeState(['para', 'inline', 'intro'.length]);
-    const middleOfLi = makeState(['list', 'listitem', 'para', 'inline', 'a'.length]);
+    const inIntro = makeState(['para', 'paraText', 'int'.length]);
+    const endIntro = makeState(['para', 'paraText', 'intro'.length]);
+    const middleOfLi = makeState(['list', 'listitem', 'para', 'paraText', 'a'.length]);
     const endOfFirstPara = makeState(
-      ['list', new NthType(1, 'listitem'), 'para', 'inline', 'bbb first'.length]);
+      ['list', new NthType(1, 'listitem'), 'para', 'paraText', 'bbb first'.length]);
     [inIntro, endIntro, middleOfLi, endOfFirstPara].forEach(state =>
       expect(addListItem(state)).toBe(false));
   });
 
   it('adds a new li', () => {
-    const init = makeState(['list', 'listitem', 'para', 'inline', 'aaa'.length]);
+    const init = makeState(['list', 'listitem', 'para', 'paraText', 'aaa'.length]);
     expect(doc.content.child(1).content.childCount).toBe(2);
     const result = executeTransform(init, addListItem);
     const list = result.doc.content.child(1);
@@ -235,12 +235,12 @@ describe('addListItem()', () => {
   });
 
   it('puts the cursor in the li', () => {
-    const init = makeState(['list', 'listitem', 'para', 'inline', 'aaa'.length]);
+    const init = makeState(['list', 'listitem', 'para', 'paraText', 'aaa'.length]);
     const result = executeTransform(init, addListItem);
-    const inlinePath = ['list', new NthType(1, 'listitem'), 'para', 'inline'];
+    const paraTextPath = ['list', new NthType(1, 'listitem'), 'para', 'paraText'];
     expect(result.selection.anchor).toBe(
-      pathToResolvedPos(result.doc, inlinePath).pos);
+      pathToResolvedPos(result.doc, paraTextPath).pos);
     expect(result.selection.head).toBe(
-      pathToResolvedPos(result.doc, [...inlinePath, ' '.length]).pos);
+      pathToResolvedPos(result.doc, [...paraTextPath, ' '.length]).pos);
   });
 });

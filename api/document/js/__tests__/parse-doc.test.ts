@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { ApiContent } from '../Api';
 import parseDoc, { convertContent } from '../parse-doc';
 import { apiFactory } from '../serialize-doc';
 import schema from '../schema';
@@ -40,11 +41,33 @@ describe('parseDoc()', () => {
     const result = parseDoc(node);
     expect(result.type.name).toBe('para');
     expect(result.content.childCount).toBe(2);
-    expect(result.content.child(0).type.name).toBe('inline');
+    expect(result.content.child(0).type.name).toBe('paraText');
     expect(result.content.child(0).content.childCount).toBe(2);
     expect(result.content.child(0).content.child(0).text).toBe('Some text ');
     expect(result.content.child(0).content.child(1).text).toBe('here');
     expect(result.content.child(1).type).toBe(schema.nodes.unimplementedNode);
+  });
+
+  it('does not ignore footnote nodes in policy nodes', () => {
+    const node = {
+      node_type: 'policy',
+      content: [],
+      children: [{ node_type: 'footnote' }],
+    };
+
+    const result = parseDoc(node);
+    expect(result.childCount).toBe(1);
+  });
+
+  it('ignores all footnote nodes not in policy nodes', () => {
+    const node = {
+      node_type: 'sec',
+      content: [],
+      children: [{ node_type: 'footnote' }],
+    };
+
+    const result = parseDoc(node);
+    expect(result.childCount).toBe(0);
   });
 
   it('figures out heading depth', () => {
@@ -197,10 +220,30 @@ describe('parseDoc()', () => {
 describe('convertContent()', () => {
   it('bottoms out at a list of texts', () => {
     const content = { content_type: '__text__', text: 'Stuff here!' };
-    const result = convertContent(content, []);
+    const result = convertContent(content as ApiContent, []);
     expect(result).toHaveLength(1);
     expect(result[0].type.name).toBe('text');
     expect(result[0].text).toBe('Stuff here!');
+  });
+
+  it('loads footnote citations', () => {
+    const content = apiFactory.content('footnote_citation', {
+      footnote_node: {
+        type_emblem: '5',
+        content: [
+          { content_type: '__text__', text: 'Some text ' },
+        ],
+      },
+    });
+
+    const result = convertContent(content, []);
+    expect(result).toHaveLength(1);
+    expect(result[0].type.name).toBe('inlineFootnote');
+    expect(result[0].attrs.emblem).toBe('5');
+    expect(result[0].content.toJSON()).toEqual([{
+      text: 'Some text ',
+      type: 'text',
+    }]);
   });
 
   it('deals with hierarchy', () => {
@@ -216,7 +259,7 @@ describe('convertContent()', () => {
         },
       ],
     };
-    const result = convertContent(content, []);
+    const result = convertContent(content as any as ApiContent, []);
     expect(result).toHaveLength(2);
     const [text1, text2] = result;
 

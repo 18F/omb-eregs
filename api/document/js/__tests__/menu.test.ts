@@ -5,7 +5,7 @@ import { EditorState } from 'prosemirror-state';
 import menu from '../menu';
 import { Api, JsonApi } from '../Api';
 
-describe('menu functions', () => {
+describe('menu', () => {
   it('has the expected buttons', () => {
     const api = new JsonApi({ csrfToken: '', url: 'http://example.org/' });
     const state = EditorState.create({ schema });

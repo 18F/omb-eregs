@@ -34,9 +34,21 @@ const schema = new Schema({
     policy: {
       content: 'block+',
     },
-    inline: {
-      content: 'text*',
+    paraText: {
+      content: 'inline*',
       toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
+    },
+    inlineFootnote: {
+      attrs: {
+        emblem: { default: '1' },
+      },
+      content: 'text*',
+      group: 'inline',
+      inline: true,
+      toDOM: node => ['span', {
+        class: 'inline-footnote',
+        'data-emblem': node.attrs.emblem,
+      }, 0],
     },
     heading: {
       content: 'text+',
@@ -47,7 +59,7 @@ const schema = new Schema({
       toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
     },
     para: {
-      content: 'inline block*',
+      content: 'paraText block*',
       group: 'block',
       toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
@@ -56,7 +68,9 @@ const schema = new Schema({
       group: 'block',
       toDOM: () => ['section', { class: 'node-section' }, 0],
     },
-    text: {},
+    text: {
+      group: 'inline',
+    },
     unimplementedNode: {
       group: 'block',
       atom: true,
@@ -130,12 +144,14 @@ export function listAttrs(toImitate: string) {
 export const factory = {
   heading: (text: string, depth: number) =>
     schema.nodes.heading.create({ depth }, schema.text(text)),
+  inlineFootnote: (emblem: string, children: Node[] | Fragment) =>
+    schema.nodes.inlineFootnote.create({ emblem }, children),
   list: (startMarker: string, children?: Node[] | Fragment) =>
     schema.nodes.list.create(listAttrs(startMarker), children || []),
   listitem: (marker: string, children?: Node[] | Fragment) =>
     schema.nodes.listitem.create({ marker }, children || []),
   para: (textContent: string | Node[], children?: Node[]) =>
-    schema.nodes.para.create({}, [schema.nodes.inline.create(
+    schema.nodes.para.create({}, [schema.nodes.paraText.create(
       {},
       typeof textContent === 'string' ? schema.text(textContent) : textContent,
     )].concat(children || [])),
