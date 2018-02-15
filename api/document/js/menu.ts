@@ -1,7 +1,13 @@
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
 import { JsonApi } from './Api';
-import { appendBulletListNear, appendParagraphNear, makeSave, makeSaveThenXml } from './commands';
+import {
+  appendBulletListNear,
+  appendOrderedListNear,
+  appendParagraphNear,
+  makeSave,
+  makeSaveThenXml,
+} from './commands';
 import icons from './icons';
 
 function makeButton(content) {
@@ -36,6 +42,11 @@ export default function menu(api: JsonApi) {
           icon: icons.newBulletList,
           run: appendBulletListNear,
           title: 'Append bullet list',
+        }),
+        makeButton({
+          icon: icons.newOrderedList,
+          run: appendOrderedListNear,
+          title: 'Append ordered list',
         }),
         makeButton({
           label: 'Save',

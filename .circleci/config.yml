@@ -276,7 +276,7 @@ jobs:
 workflows:
   version: 2
 
-  all:
+  all: &ALL_WORKFLOW
     jobs:
     - get-code
     - prep-code-climate
@@ -355,3 +355,21 @@ workflows:
         filters:
           branches:
             only: release
+
+  redeploy-demo:
+    <<: *ALL_WORKFLOW
+    triggers:
+    - schedule:
+        cron: "0 17 * * *"  # Roughly noon ET
+        filters:
+          branches:
+            only: ['master']
+
+  redeploy-prod:
+    <<: *ALL_WORKFLOW
+    triggers:
+    - schedule:
+        cron: "0 18 * * *"  # Roughly 1pm ET
+        filters:
+          branches:
+            only: ['release']

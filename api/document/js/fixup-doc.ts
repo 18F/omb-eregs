@@ -1,6 +1,7 @@
 import { Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 
+import { renumberList } from './list-utils';
 import schema from './schema';
 
 const shouldDeleteChecks = {
@@ -20,6 +21,9 @@ export function deleteEmpty(transaction: Transaction) {
     const shouldDeleteCheck = shouldDeleteChecks[node.type.name];
     if (shouldDeleteCheck && shouldDeleteCheck(node)) {
       newTransaction = transaction.delete(pos, pos + node.nodeSize);
+      if (node.type === schema.nodes.listitem) {
+        newTransaction = renumberList(newTransaction, pos);
+      }
       return false;
     }
     return true;
