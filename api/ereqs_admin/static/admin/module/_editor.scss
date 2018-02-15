@@ -12,8 +12,7 @@
   }
 
   .inline-footnote::before {
-    content: 'Footnote ' attr(data-emblem) ': ';
-    padding-left: 0.5em;
+    content: ' Footnote ' attr(data-emblem) ': ';
     @include font-san-serif-bold;
   }
 
