@@ -58,7 +58,7 @@ describe('serializeDoc()', () => {
       schema.nodes.paraText.create({}, [
         schema.text('hello'),
         schema.nodes.inlineFootnote.create({ emblem: '2' }, [
-          schema.text('i am a footnote'),
+          schema.text('\u200bi am a footnote'),
         ]),
       ]),
     ]);

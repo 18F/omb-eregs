@@ -3,7 +3,7 @@ import { flatten } from 'lodash/array';
 import { Mark, Node } from 'prosemirror-model';
 
 import { ApiNode, ApiContent } from './Api';
-import schema, { factory } from './schema';
+import schema, { factory, BEGIN_FOOTNOTE } from './schema';
 
 export default function parseDoc(node): Node {
   const nodeType = node.node_type in NODE_TYPE_CONVERTERS ?
@@ -24,7 +24,7 @@ function convertFootnoteCitation(content: ApiContent): Node {
   const nested: Node[][] = (footnote.content || [])
     .map(c => convertContent(c, []));
   return schema.nodes.inlineFootnote.create({ emblem }, [
-    schema.text('\u200b'),
+    schema.text(BEGIN_FOOTNOTE),
   ].concat(flatten(nested)));
 }
 
