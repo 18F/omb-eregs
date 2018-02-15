@@ -67,6 +67,7 @@ function extractFootnotes(content: ApiContent[]): ApiNode[] {
   content.forEach((c) => {
     if (c.footnote_node) {
       footnotes.push(c.footnote_node);
+      delete c.footnote_node;
     } else {
       footnotes.push.apply(footnotes, extractFootnotes(c.inlines));
     }
