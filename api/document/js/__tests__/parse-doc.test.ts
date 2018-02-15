@@ -48,9 +48,20 @@ describe('parseDoc()', () => {
     expect(result.content.child(1).type).toBe(schema.nodes.unimplementedNode);
   });
 
-  it('ignores footnote nodes', () => {
+  it('does not ignore footnote nodes in policy nodes', () => {
     const node = {
       node_type: 'policy',
+      content: [],
+      children: [{ node_type: 'footnote' }],
+    };
+
+    const result = parseDoc(node);
+    expect(result.childCount).toBe(1);
+  });
+
+  it('ignores all footnote nodes not in policy nodes', () => {
+    const node = {
+      node_type: 'sec',
       content: [],
       children: [{ node_type: 'footnote' }],
     };

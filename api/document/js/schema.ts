@@ -40,7 +40,7 @@ const schema = new Schema({
     },
     inlineFootnote: {
       attrs: {
-        emblem: {},
+        emblem: { default: '1' },
       },
       content: 'text*',
       group: 'inline',
@@ -136,6 +136,8 @@ export function listAttrs(toImitate: string) {
 export const factory = {
   heading: (text: string, depth: number) =>
     schema.nodes.heading.create({ depth }, schema.text(text)),
+  inlineFootnote: (emblem: string, children: Node[] | Fragment) =>
+    schema.nodes.inlineFootnote.create({ emblem }, children),
   list: (startMarker: string, children?: Node[] | Fragment) =>
     schema.nodes.list.create(listAttrs(startMarker), children || []),
   listitem: (marker: string, children?: Node[] | Fragment) =>

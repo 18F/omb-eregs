@@ -23,7 +23,7 @@ function convertFootnoteCitation(content: ApiContent): Node {
   }
   const nested: Node[][] = (footnote.content || [])
     .map(c => convertContent(c, []));
-  return schema.nodes.inlineFootnote.create({ emblem }, flatten(nested));
+  return factory.inlineFootnote(emblem, flatten(nested));
 }
 
 export function convertContent(content: ApiContent, marks: Mark[]): Node[] {
@@ -87,7 +87,12 @@ const NODE_TYPE_CONVERTERS: NodeConverterMap = {
     const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
     return factory.para(flatten(nested), mapChildren(node));
   },
-  policy: node => factory.policy(mapChildren(node)),
+  // Note that we are not calling `mapChildren` here, as that function skips
+  // footnotes. The PDF parser adds uncited footnotes as the direct children
+  // of policy, so we want to keep them there to avoid data loss for now.
+  //
+  // For more details, see: https://github.com/18F/omb-eregs/issues/1028
+  policy: node => factory.policy((node.children || []).map(parseDoc)),
   sec: node => factory.sec(mapChildren(node)),
   unimplementedNode: node => factory.unimplementedNode(node),
 };
