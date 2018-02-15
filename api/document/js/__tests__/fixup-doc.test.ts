@@ -8,7 +8,7 @@ describe('deleteEmpty()', () => {
   it('deletes empty paragraphs', () => {
     const doc = factory.policy([
       factory.para('first'),
-      schema.nodes.para.create({}, schema.nodes.inline.create()),
+      schema.nodes.para.create({}, schema.nodes.paraText.create()),
     ]);
     expect(doc.childCount).toBe(2);
     const state = EditorState.create({ doc });
@@ -57,7 +57,7 @@ describe('deleteEmpty()', () => {
       factory.list('1. ', [
         factory.listitem('1. ', []),
         factory.listitem('2', [
-          schema.nodes.para.create({}, schema.nodes.inline.create()),
+          schema.nodes.para.create({}, schema.nodes.paraText.create()),
         ]),
       ]),
       factory.para('tail'),

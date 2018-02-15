@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`serializeDoc() converts footnotes 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [],
+      "content": Array [
+        Object {
+          "content_type": "__text__",
+          "inlines": Array [],
+          "text": "i am a footnote",
+        },
+      ],
+      "marker": "2",
+      "node_type": "footnote",
+      "type_emblem": "2",
+    },
+  ],
+  "content": Array [
+    Object {
+      "content_type": "__text__",
+      "inlines": Array [],
+      "text": "hello",
+    },
+    Object {
+      "content_type": "footnote_citation",
+      "inlines": Array [
+        Object {
+          "content_type": "__text__",
+          "inlines": Array [],
+          "text": "2",
+        },
+      ],
+      "text": "",
+    },
+  ],
+  "node_type": "para",
+}
+`;
