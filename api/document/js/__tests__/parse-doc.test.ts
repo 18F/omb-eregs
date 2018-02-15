@@ -94,6 +94,86 @@ describe('parseDoc()', () => {
     expect(lis[1].content.child(1).type.name).toBe('para');
   });
 
+  it('loads links', () => {
+    const inn = {
+      content_type: 'para',
+      outer: 'props',
+      inlines: [
+        { content_type: '__text__', text: 'Initial ' },
+        {
+          content_type: 'external_link',
+          href: 'http://example.org',
+          inner: 'stuff',
+          inlines: [{ content_type: '__text__', text: 'content.' }],
+        },
+      ],
+    };
+    const node = {
+      node_type: 'para',
+      content: [inn],
+      children: [],
+    };
+
+    const result = parseDoc(node);
+    //console.log(result);
+    //console.log(result.content);
+    //console.log(result.content.content[0].content.content[0].marks);
+    //console.log(result.content.content[0].content.content[1].marks);
+    //console.log(result.content.content[0].content);
+    //console.log(result);
+    expect(result.type.name).toBe('para');
+    console.log(result.content.size);
+    //console.log(result.content.toString());
+    //console.log(result.content.content[0].nodeSize);
+    //console.log(result.content.content[0]);
+    const testnode = {
+      node_type: 'para',
+      content: [{
+        content_type: 'whatever',
+        text: 'foo',
+        //children: [],
+        inlines: [
+          { content_type: 'external_link', href: 'http://example.org/', text: 'WTF' },
+        ]
+
+      }]
+    };
+
+    const testresult = parseDoc(testnode);
+    console.log(testresult.content);
+    console.log(testresult.content.toString());
+    console.log(testresult.content.content[0].content.toString());
+
+    /*
+    console.log(result.content.content);
+    result.content.forEach((item) => {
+      //console.log(item.content);
+    });
+    //console.log(result.content);
+    */
+    const inner = {
+      content_type: 'doesnt-exist',
+      outer: 'props',
+      inlines: [
+        { content_type: '__text__', text: 'Initial ' },
+        {
+          content_type: 'external_link',
+          href: 'http://example.org',
+          inner: 'stuff',
+          inlines: [{ content_type: '__text__', text: 'content.' }],
+        },
+      ],
+    };
+    //const res = convertContent(whatev, []);
+    //console.log(res[0]);
+    //console.log(res[0].marks[0]);
+    //console.log(res[1].marks[0]);
+    //console.log(res[1].marks[1]);
+
+
+
+  });
+
   describe('unimplementedNode', () => {
     it('saves original data', () => {
       const node = {

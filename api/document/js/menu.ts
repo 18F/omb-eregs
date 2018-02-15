@@ -1,7 +1,6 @@
 import { toggleMark } from 'prosemirror-commands';
 import { menuBar, undoItem, redoItem, MenuItem, MenuItemSpec } from 'prosemirror-menu';
 
-import Api from './Api';
 import { JsonApi } from './Api';
 import {
   appendBulletListNear,
@@ -34,14 +33,14 @@ export default function menu(api: JsonApi) {
         // prosemirror-menu. For more details, see:
         //
         // https://github.com/ProseMirror/prosemirror-menu/issues/12
-        undoItem as any as MenuItem,
-        redoItem as any as MenuItem,
+        undoItem as any as MenuItem, // title: 'Undo last change'
+        redoItem as any as MenuItem, // title: 'Redo last undone change'
         makeButton({
           label: 'P',
           run: appendParagraphNear,
           title: 'Append paragraph',
         }),
-        linkItem(schema.marks.external_link),
+        linkItem(schema.marks.external_link), // title: 'Add or remove link'
         makeButton({
           icon: icons.newBulletList,
           run: appendBulletListNear,
@@ -59,8 +58,8 @@ export default function menu(api: JsonApi) {
         }),
         makeButton({
           label: 'Save then XML',
-          title: 'Save document then edit as XML',
           run: makeSaveThenXml(api),
+          title: 'Save document then edit as XML',
         }),
       ],
     ],
