@@ -108,20 +108,23 @@ function atEndOfLi(pos: ResolvedPos) {
 }
 
 export function addListItem(state: EditorState, dispatch?: Dispatch) {
-  const pos = state.selection.$head;
-  if (!inLi(pos) || !atEndOfLi(pos)) {
+  const resolved = state.selection.$head;
+  if (!inLi(resolved) || !atEndOfLi(resolved)) {
     return false;
   }
   if (!dispatch) {
     return true;
   }
 
-  const endOfLi: number = pos.end(pos.depth - 2); // paraText < para < li
-  const insertPos = endOfLi + 1;
+  // paraText < para < listitem < list
+  const liDepth = resolved.depth - 2;
+  const listDepth = liDepth - 1;
+  const startOfList = resolved.start(listDepth);
+  const insertPos = resolved.after(liDepth);
   // This marker will be replaced during the renumber step
   const liToInsert = factory.listitem('', [factory.para(' ')]);
   let tr = state.tr.insert(insertPos, liToInsert);
-  tr = renumberList(tr, insertPos);
+  tr = renumberList(tr, startOfList);
   const cursorStart = pathToResolvedPos(
     tr.doc.resolve(insertPos + 1),
     ['para', 'paraText'],

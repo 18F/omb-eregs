@@ -101,7 +101,7 @@ describe('deeperOrderedLi()', () => {
 });
 
 describe('renumberList()', () => {
-  it('uses the first li as a template', () => {
+  it('uses the list attrs as a template', () => {
     const doc = factory.policy([
       factory.list('>a<', [
         factory.listitem('>a<', []),
@@ -110,7 +110,7 @@ describe('renumberList()', () => {
       ]),
     ]);
     const initialState = EditorState.create({ doc });
-    const pos = pathToResolvedPos(doc, ['list', 'listitem']).pos;
+    const pos = pathToResolvedPos(doc, ['list']).pos;
     const resultTr = renumberList(initialState.tr, pos);
     const result = initialState.apply(resultTr);
     const list = result.doc.content.child(0);
@@ -131,7 +131,7 @@ describe('renumberList()', () => {
     expect(doc.textContent).toBe('stuffmorestuff');
 
     const initialState = EditorState.create({ doc });
-    const pos = pathToResolvedPos(doc, ['list', 'listitem']).pos;
+    const pos = pathToResolvedPos(doc, ['list']).pos;
     const resultTr = renumberList(initialState.tr, pos);
     const list = initialState.apply(resultTr).doc.content.child(0);
 
@@ -153,7 +153,7 @@ describe('renumberList()', () => {
     const initialState = EditorState.create({ doc });
     const pos = pathToResolvedPos(
       doc,
-      ['list', new NthType(1, 'listitem'), 'list', 'listitem'],
+      ['list', new NthType(1, 'listitem'), 'list'],
     ).pos;
     const resultTr = renumberList(initialState.tr, pos);
     const list = initialState.apply(resultTr).doc.content.child(0);
