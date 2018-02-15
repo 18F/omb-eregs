@@ -1,16 +1,22 @@
 import { EditorState } from 'prosemirror-state';
 
-import { collectMarkers, deeperBullet, deeperOrderedLi, renumberList } from '../list-utils';
+import {
+  collectMarkers,
+  deeperBullet,
+  deeperOrderedLi,
+  renumberList,
+  renumberSublists,
+} from '../list-utils';
 import pathToResolvedPos, { NthType } from '../path-to-resolved-pos';
 import { factory } from '../schema';
 
 describe('deeperBullet()', () => {
   const doc = factory.policy([
-    factory.list(' ', [
+    factory.list('●', [
       factory.listitem('●', [factory.para('First')]),
       factory.listitem('●', [
         factory.para('Second'),
-        factory.list(' ', [
+        factory.list('○', [
           factory.listitem('○', [
             factory.list('■', [
               factory.listitem('■', [factory.para('Deepest')]),
@@ -161,5 +167,92 @@ describe('renumberList()', () => {
 
     expect(collectMarkers(list)).toEqual(['a>>', 'x']);
     expect(collectMarkers(subList)).toEqual(['1*', '2*']);
+  });
+});
+
+describe('renumberSublists()', () => {
+  it('uses the current list attrs as a template for children', () => {
+    const doc = factory.policy([
+      factory.list('>1<', [
+        factory.listitem('>1<', [
+          factory.para('intro text'),
+          factory.list('(i)', [
+            factory.listitem('(i)', [factory.para('eye')]),
+            factory.listitem('(ii)', [factory.para('eye eye')]),
+          ]),
+        ]),
+      ]),
+    ]);
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['list']).pos;
+    const resultTr = renumberSublists(initialState.tr, pos);
+    const result = initialState.apply(resultTr);
+    const sublist = pathToResolvedPos(
+      result.doc,
+      ['list', 'listitem', 'list'],
+    ).parent;
+    expect(collectMarkers(sublist)).toEqual(['>a<', '>b<']);
+    expect(sublist.content.child(0).textContent).toBe('eye');
+    expect(sublist.content.child(1).textContent).toBe('eye eye');
+  });
+
+  it('works with bullets', () => {
+    const doc = factory.policy([
+      factory.list('●', [
+        factory.listitem('●', [
+          factory.list('>', [
+            factory.listitem('>', []),
+            factory.listitem('>', []),
+          ]),
+        ]),
+      ]),
+    ]);
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['list']).pos;
+    const resultTr = renumberSublists(initialState.tr, pos);
+    const result = initialState.apply(resultTr);
+    const sublist = pathToResolvedPos(
+      result.doc,
+      ['list', 'listitem', 'list'],
+    ).parent;
+    expect(collectMarkers(sublist)).toEqual(['○', '○']);
+  });
+
+  it('is recursive', () => {
+    const doc = factory.policy([
+      factory.list('1>', [
+        factory.listitem('1>', [factory.list('A)', [
+          factory.listitem('A)', [factory.list('_I_', [
+            factory.listitem('_I_', []),
+            factory.listitem('_II_', []),
+          ])]),
+          factory.listitem('B)', [factory.list('?', [
+            factory.listitem('?', []),
+            factory.listitem('?', []),
+          ])]),
+        ])]),
+      ]),
+    ]);
+
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['list']).pos;
+    const resultTr = renumberSublists(initialState.tr, pos);
+    const result = initialState.apply(resultTr);
+    const sublist = pathToResolvedPos(
+      result.doc,
+      ['list', 'listitem', 'list'],
+    ).parent;
+    const subsublist1 = pathToResolvedPos(
+      result.doc,
+      ['list', 'listitem', 'list', 'listitem', 'list'],
+    ).parent;
+    const subsublist2 = pathToResolvedPos(
+      result.doc,
+      ['list', 'listitem', 'list', new NthType(1, 'listitem'), 'list'],
+    ).parent;
+
+    expect(collectMarkers(sublist)).toEqual(['a>', 'b>']);
+    expect(collectMarkers(subsublist1)).toEqual(['i>', 'ii>']);
+    expect(collectMarkers(subsublist2)).toEqual(['i>', 'ii>']);
   });
 });

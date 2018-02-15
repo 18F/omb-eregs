@@ -21,10 +21,10 @@ const orderedFollows = {
 };
 
 export function deeperBullet(pos: ResolvedPos): string {
-  const liDepth = walkUpUntil(pos, node => node.type === schema.nodes.listitem);
-  if (liDepth >= 0) {
-    const parListItem = pos.node(liDepth);
-    return bulletFollows[parListItem.attrs.marker] || defaultBullet;
+  const listDepth = walkUpUntil(pos, node => node.type === schema.nodes.list);
+  if (listDepth >= 0) {
+    const list = pos.node(listDepth);
+    return bulletFollows[list.attrs.markerPrefix] || defaultBullet;
   }
   return defaultBullet;
 }
@@ -77,6 +77,43 @@ export function renumberList(transaction: Transaction, pos: number): Transaction
     originalSelection.anchor,
     originalSelection.head,
   ));
+  return result;
+}
+
+// Given a pos at the beginning of a list, ensure all of the _sublists_ have
+// matching numbers. This will recursively destroy previous list markers
+export function renumberSublists(transaction: Transaction, pos: number): Transaction {
+  let result = transaction;
+  let offset = pos;
+  const originalSelection = transaction.selection;
+  const resolved = result.doc.resolve(pos);
+  const list = resolved.parent;
+  const deeperMarker = list.attrs.numeralFn(0) ?
+    deeperOrderedLi(resolved) :
+    deeperBullet(resolved);
+  list.content.forEach((li) => {
+    offset += 1;  // Add one for entering the list item
+    li.content.forEach((liChild) => {
+      if (liChild.type === schema.nodes.list) {
+        result = result.replaceWith(
+          offset,
+          offset + liChild.nodeSize,
+          factory.list(deeperMarker, liChild.content),
+        );
+        const startOfSublist = offset + 1;
+        result = renumberList(result, startOfSublist);
+        result = renumberSublists(result, startOfSublist);
+        // reset the cursor position(s)
+        result = result.setSelection(TextSelection.create(
+          result.doc,
+          originalSelection.anchor,
+          originalSelection.head,
+        ));
+      }
+      offset += liChild.nodeSize;
+    });
+    offset += 1; // Add one for exiting the list item
+  });
   return result;
 }
 
