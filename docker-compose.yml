@@ -86,5 +86,14 @@ services:
       - .:/usr/src/app:delegated
     depends_on:
       - api
+  styleguide:
+    image: node:6
+    working_dir: /usr/src/app/styleguide
+    entrypoint: .docker/deps_ok_then .docker/modify_path_then
+    command: .docker/build_run_styleguide
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app:delegated
 volumes:
   database_data:
