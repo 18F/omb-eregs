@@ -21,11 +21,13 @@ describe('menu', () => {
       'Undo last change',
       'Redo last undone change',
       'Append paragraph',
+      'Add or remove link',
       'Append bullet list',
       'Append ordered list',
       'Save document',
       'Save document then edit as XML',
     ];
+    expect(menuItemTitles.length).toEqual(expectedItemTitles.length);
     expectedItemTitles.forEach((title) => {
       expect(menuItemTitles.includes(title));
     });

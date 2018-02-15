@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ApiContent } from '../Api';
+import { ApiContent, ApiNode } from '../Api';
 import parseDoc, { convertContent } from '../parse-doc';
 import { apiFactory } from '../serialize-doc';
 import schema from '../schema';
@@ -115,6 +115,51 @@ describe('parseDoc()', () => {
     expect(lis[1].content.childCount).toBe(2);
     expect(lis[1].content.child(0).type.name).toBe('para');
     expect(lis[1].content.child(1).type.name).toBe('para');
+  });
+
+  it('loads links', () => {
+    const node: ApiNode = {
+      node_type: 'para',
+      content: [
+        {
+          content_type: '__text__',
+          text: 'Initial ',
+          inlines: [],
+        },
+        {
+          content_type: 'external_link',
+          href: 'http://example.org',
+          text: 'content.',
+          inlines: [{ content_type: '__text__', text: 'content.', inlines: [] }],
+        },
+
+      ],
+      children: [],
+    };
+
+    const result = parseDoc(node); // The top-level node.
+    expect(result.type.name).toBe('para'); 
+    expect(result.content.size).toEqual('Initial content.'.length + 2); // Node boundaries add two.
+    expect(result.childCount).toEqual(1); // One inner node.
+
+    const paraText = result.child(0); // The inner paraText node.
+    expect(paraText.content.size).toEqual('Initial content.'.length);
+    expect(paraText.type.name).toEqual('paraText');
+    expect(paraText.childCount).toEqual(2); // The two inline children of the inner node.
+
+    const plainText = paraText.child(0); // The first inline child, plain text.
+    expect(plainText.type.name).toEqual('text');
+    expect(plainText.text).toEqual('Initial ');
+
+    const externalLink = paraText.child(1); // The second inline child, containing the link.
+    expect(externalLink.type.name).toEqual('text');
+    expect(externalLink.text).toEqual('content.');
+    expect(externalLink.marks.length).toEqual(1); // Just one link.
+
+    const mark = externalLink.marks[0]; // The link markup.
+    expect(mark.type.name).toEqual('external_link');
+    expect(mark.attrs.href).toEqual('http://example.org');
+
   });
 
   describe('unimplementedNode', () => {
