@@ -2,7 +2,7 @@ import { Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 
 import { renumberList } from './list-utils';
-import schema from './schema';
+import schema, { BEGIN_FOOTNOTE } from './schema';
 
 const shouldDeleteChecks = {
   list: (node: Node) => node.content.childCount === 0,
@@ -10,6 +10,9 @@ const shouldDeleteChecks = {
   para: (node: Node) => (
     node.content.childCount === 1 // Just the paraText
     && node.textContent === ''
+  ),
+  inlineFootnote: (node: Node) => (
+    node.textContent[0] !== BEGIN_FOOTNOTE
   ),
 };
 
