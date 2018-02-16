@@ -24,6 +24,16 @@ function safeDocCheck(doc: Node) {
   }
 }
 
+// Set the cursor to highlight the full ProseMirror node (likely a text
+// element)
+function selectNode(transaction: Transaction, resolved: ResolvedPos): Transaction {
+  return transaction.setSelection(TextSelection.create(
+    transaction.doc,
+    resolved.start(resolved.depth),
+    resolved.end(resolved.depth),
+  ));
+}
+
 // Append the provided element at the closest valid point after the user's
 // cursor/"head" of the current selection. Then, move the cursor to select
 // that element.
@@ -48,12 +58,7 @@ export function appendNearBlock(
       tr.doc.resolve(insertPos + 1),
       selectionPath,
     );
-    const eltEnd = eltStart.pos + eltStart.parent.nodeSize - 1; // inclusive
-    tr = tr.setSelection(TextSelection.create(
-      tr.doc,
-      eltStart.pos,
-      eltEnd,
-    ));
+    tr = selectNode(tr, eltStart);
     dispatch(tr.scrollIntoView());
     safeDocCheck(tr.doc);
   }
@@ -164,14 +169,9 @@ export function addListItem(state: EditorState, dispatch?: Dispatch) {
   const liToInsert = factory.listitem('', [factory.para(' ')]);
   let tr = state.tr.insert(insertPos, liToInsert);
   tr = renumberList(tr, startOfList);
-  const cursorStart = pathToResolvedPos(
+  tr = selectNode(tr, pathToResolvedPos(
     tr.doc.resolve(insertPos + 1),
     ['para', 'paraText'],
-  ).pos;
-  tr = tr.setSelection(TextSelection.create(
-    tr.doc,
-    cursorStart,
-    cursorStart + 1, // select the space
   ));
   tr = tr.scrollIntoView();
   dispatch(tr);

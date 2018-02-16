@@ -45,6 +45,17 @@ export function deeperOrderedLi(pos: ResolvedPos): string {
   return defaultOrdered;
 }
 
+// After modifying the document, our original selection is no longer valid.
+// However, it's very possible that those absolute positions are still
+// accurate. This creates a new transaction that copies them from an original
+function resetCursorPosition(transaction: Transaction, original: TextSelection): Transaction {
+  return transaction.setSelection(TextSelection.create(
+    transaction.doc,
+    original.anchor,
+    original.head,
+  ));
+}
+
 // Given a pos at the beginning of a list, renumber all of its lis to match
 // the template provided by the list.
 export function renumberList(transaction: Transaction, pos: number): Transaction {
@@ -71,13 +82,7 @@ export function renumberList(transaction: Transaction, pos: number): Transaction
     replaceStart + resolved.parent.content.size,
     newLis,
   );
-  // reset the cursor position(s)
-  result = result.setSelection(TextSelection.create(
-    result.doc,
-    originalSelection.anchor,
-    originalSelection.head,
-  ));
-  return result;
+  return resetCursorPosition(result, originalSelection);
 }
 
 // Given a pos at the beginning of a list, ensure all of the _sublists_ have
@@ -95,25 +100,33 @@ export function renumberSublists(transaction: Transaction, pos: number): Transac
     offset += 1;  // Add one for entering the list item
     li.content.forEach((liChild) => {
       if (liChild.type === schema.nodes.list) {
-        result = result.replaceWith(
-          offset,
-          offset + liChild.nodeSize,
-          factory.list(deeperMarker, liChild.content),
-        );
-        const startOfSublist = offset + 1;
-        result = renumberList(result, startOfSublist);
-        result = renumberSublists(result, startOfSublist);
-        // reset the cursor position(s)
-        result = result.setSelection(TextSelection.create(
-          result.doc,
-          originalSelection.anchor,
-          originalSelection.head,
-        ));
+        result = renumberSublist(result, liChild, offset, deeperMarker);
+        result = resetCursorPosition(result, originalSelection);
       }
       offset += liChild.nodeSize;
     });
     offset += 1; // Add one for exiting the list item
   });
+  return result;
+}
+
+// Inner-most collection of transactions for renumbering a sublist. Assumes
+// offset points directly before sublist
+function renumberSublist(
+  transaction: Transaction,
+  sublist: Node,
+  offset: number,
+  marker: string,
+): Transaction {
+  let result = transaction;
+  result = result.replaceWith(
+    offset,
+    offset + sublist.nodeSize,
+    factory.list(marker, sublist.content),
+  );
+  const startOfSublist = offset + 1;
+  result = renumberList(result, startOfSublist);
+  result = renumberSublists(result, startOfSublist);
   return result;
 }
 
