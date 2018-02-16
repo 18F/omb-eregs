@@ -69,7 +69,7 @@ function insertTextAfterFootnote(text: string, state: EditorState,
                                  pos: ResolvedPos): Transaction {
   const depth = getEnclosingFootnoteDepth(pos);
   const parent = pos.node(depth - 1);
-  const end = pos.end(depth - 1);
+  const end = pos.end(depth) + 1;
   let tr = state.tr.insertText(text, end);
   tr = tr.setSelection(TextSelection.create(tr.doc, end + text.length));
   safeDocCheck(tr.doc);
