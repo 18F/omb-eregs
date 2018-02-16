@@ -1,8 +1,14 @@
 import { Node, ResolvedPos } from 'prosemirror-model';
+import { liftListItem, sinkListItem } from 'prosemirror-schema-list';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { JsonApi } from './Api';
-import { deeperBullet, deeperOrderedLi, renumberList } from './list-utils';
+import {
+  deeperBullet,
+  deeperOrderedLi,
+  renumberList,
+  renumberSublists,
+} from './list-utils';
 import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import schema, { factory } from './schema';
 import serializeDoc from './serialize-doc';
@@ -76,6 +82,39 @@ export function appendOrderedListNear(state: EditorState, dispatch?: Dispatch) {
     [factory.listitem(startMarker, [factory.para(' ')])],
   );
   return appendNearBlock(element, ['listitem', 'para', 'paraText'], state, dispatch);
+}
+
+// In many cases, we haven't implemented features for acting over spans of
+// text (when selection's anchor and head are different). This function
+// replaces the provided EditorState with one that's restricted to a single
+// cursor.
+export function restrictToCursor(state: EditorState): EditorState {
+  const transaction = state.tr.setSelection(TextSelection.create(
+    state.doc,
+    state.selection.anchor,
+  ));
+  return state.apply(transaction);
+}
+
+export function indentLi(state: EditorState, dispatch?: Dispatch) {
+  const restrictedState = restrictToCursor(state);
+  const upstreamFn = sinkListItem(schema.nodes.listitem);
+  if (!dispatch) return upstreamFn(restrictedState, dispatch);
+
+  const resolved = restrictedState.selection.$anchor;
+  const listDepth = walkUpUntil(resolved, n => n.type === schema.nodes.list);
+  const startOfList = resolved.start(listDepth);
+
+  // We want to inject some actions after the (upstream) sinkListItem call; to
+  // do that, we'll wrap the Dispatch we give it
+  const wrappedDispatch: Dispatch = (tr: Transaction) => {
+    let result = tr;
+    result = renumberList(result, startOfList);
+    result = renumberSublists(result, startOfList);
+    dispatch(result);
+    return;
+  };
+  return upstreamFn(restrictedState, wrappedDispatch);
 }
 
 export function makeSave(api: JsonApi) {

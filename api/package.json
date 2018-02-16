@@ -41,6 +41,7 @@
     "prosemirror-history": "^1.0.0",
     "prosemirror-keymap": "^1.0.0",
     "prosemirror-menu": "^1.0.0",
+    "prosemirror-schema-list": "^1.0.0",
     "prosemirror-state": "^1.0.0",
     "prosemirror-view": "^1.0.5",
     "repeat-string": "^1.6.1",
