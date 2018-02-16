@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ApiContent } from '../Api';
+import { ApiContent, ApiNode } from '../Api';
 import parseDoc, { convertContent } from '../parse-doc';
 import { apiFactory } from '../serialize-doc';
 import schema from '../schema';
@@ -118,82 +118,47 @@ describe('parseDoc()', () => {
   });
 
   it('loads links', () => {
-    const inn = {
-      content_type: 'para',
-      outer: 'props',
-      inlines: [
-        { content_type: '__text__', text: 'Initial ' },
+    const node: ApiNode = {
+      node_type: 'para',
+      content: [
+        {
+          content_type: '__text__',
+          text: 'Initial ',
+          inlines: []
+        },
         {
           content_type: 'external_link',
           href: 'http://example.org',
-          inner: 'stuff',
-          inlines: [{ content_type: '__text__', text: 'content.' }],
+          text: 'content.',
+          inlines: [{ content_type: '__text__', text: 'content.', inlines: [] }],
         },
+
       ],
-    };
-    const node = {
-      node_type: 'para',
-      content: [inn],
       children: [],
     };
 
-    const result = parseDoc(node);
-    //console.log(result);
-    //console.log(result.content);
-    //console.log(result.content.content[0].content.content[0].marks);
-    //console.log(result.content.content[0].content.content[1].marks);
-    //console.log(result.content.content[0].content);
-    //console.log(result);
-    expect(result.type.name).toBe('para');
-    console.log(result.content.size);
-    //console.log(result.content.toString());
-    //console.log(result.content.content[0].nodeSize);
-    //console.log(result.content.content[0]);
-    const testnode = {
-      node_type: 'para',
-      content: [{
-        content_type: 'whatever',
-        text: 'foo',
-        //children: [],
-        inlines: [
-          { content_type: 'external_link', href: 'http://example.org/', text: 'WTF' },
-        ]
+    const result = parseDoc(node); // The top-level node.
+    expect(result.type.name).toBe('para'); 
+    expect(result.content.size).toEqual('Initial content.'.length + 2); // Node boundaries add two.
+    expect(result.childCount).toEqual(1); // One inner node.
 
-      }]
-    };
+    const paraText = result.child(0); // The inner paraText node.
+    expect(paraText.content.size).toEqual('Initial content.'.length);
+    expect(paraText.type.name).toEqual('paraText');
+    expect(paraText.childCount).toEqual(2); // The two inline children of the inner node.
 
-    const testresult = parseDoc(testnode);
-    console.log(testresult.content);
-    console.log(testresult.content.toString());
-    console.log(testresult.content.content[0].content.toString());
+    const plainText = paraText.child(0); // The first inline child, plain text.
+    expect(plainText.type.name).toEqual('text');
+    expect(plainText.text).toEqual('Initial ');
 
-    /*
-    console.log(result.content.content);
-    result.content.forEach((item) => {
-      //console.log(item.content);
-    });
-    //console.log(result.content);
-    */
-    const inner = {
-      content_type: 'doesnt-exist',
-      outer: 'props',
-      inlines: [
-        { content_type: '__text__', text: 'Initial ' },
-        {
-          content_type: 'external_link',
-          href: 'http://example.org',
-          inner: 'stuff',
-          inlines: [{ content_type: '__text__', text: 'content.' }],
-        },
-      ],
-    };
-    //const res = convertContent(whatev, []);
-    //console.log(res[0]);
-    //console.log(res[0].marks[0]);
-    //console.log(res[1].marks[0]);
-    //console.log(res[1].marks[1]);
+    const externalLink = paraText.child(1); // The second inline child, containing the link.
+    expect(externalLink.type.name).toEqual('text');
+    expect(externalLink.text).toEqual('content.');
+    expect(externalLink.marks.length).toEqual(1); // Just one link.
 
-
+    const mark = externalLink.marks[0]; // The link markup.
+    expect(mark.type.name).toEqual('external_link');
+    expect(mark.attrs.href).toEqual('http://example.org');
 
   });
 
