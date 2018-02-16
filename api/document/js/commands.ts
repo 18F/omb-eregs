@@ -7,6 +7,11 @@ import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import schema, { factory, BEGIN_FOOTNOTE } from './schema';
 import serializeDoc from './serialize-doc';
 import { walkUpUntil } from './util';
+import {
+  getEnclosingFootnoteDepth,
+  insertTextAfterFootnote,
+  createFootnoteNear,
+} from './footnote-utils';
 import { Editor } from 'codemirror';
 
 type Dispatch = (tr: Transaction) => void;
@@ -17,6 +22,23 @@ function safeDocCheck(doc: Node) {
   } catch (e) {
     console.error('Doc no longer valid', e);
   }
+}
+
+export function isFootnoteActive(state: EditorState): boolean {
+  return getEnclosingFootnoteDepth(state.selection.$head) >= 0;
+}
+
+export function toggleOrCreateFootnote(state: EditorState, dispatch: Dispatch) {
+  const pos = state.selection.$head;
+  const footnoteDepth = getEnclosingFootnoteDepth(pos);
+  let tr;
+  if (footnoteDepth >= 0) {
+    tr = insertTextAfterFootnote(' ', state, pos);
+  } else {
+    tr = createFootnoteNear(state, pos);
+  }
+  safeDocCheck(tr.doc);
+  dispatch(tr);
 }
 
 // Append the provided element at the closest valid point after the user's
@@ -59,94 +81,6 @@ export function appendNearBlock(
 export function appendParagraphNear(state: EditorState, dispatch?: Dispatch) {
   const element = factory.para(' ');
   return appendNearBlock(element, ['paraText'], state, dispatch);
-}
-
-function getEnclosingFootnoteDepth(pos: ResolvedPos): number {
-  return walkUpUntil(pos, node => node.type === schema.nodes.inlineFootnote);
-}
-
-function insertTextAfterFootnote(text: string, state: EditorState,
-                                 pos: ResolvedPos): Transaction {
-  const depth = getEnclosingFootnoteDepth(pos);
-  const parent = pos.node(depth - 1);
-  const end = pos.end(depth) + 1;
-  let tr = state.tr.insertText(text, end);
-  tr = tr.setSelection(TextSelection.create(tr.doc, end + text.length));
-  safeDocCheck(tr.doc);
-  return tr.scrollIntoView();
-}
-
-function incrementFootnotesAfterPos(state: EditorState, pos: number): {
-  tr: Transaction,
-  absentEmblem: string,
-} {
-  let tr = state.tr;
-  let latestEmblem = '0';
-  let absentEmblem: string | undefined;
-
-  // Note that this does NOT currently do anything with footnotes
-  // contained in unimplementedNodes, which is bad, because it
-  // generally means we won't be able to save the document after
-  // this transaction is dispatched.
-
-  state.doc.descendants((node, nodePos, parent) => {
-    if (node.type === schema.nodes.inlineFootnote) {
-      if (nodePos > pos) {
-        if (!absentEmblem) {
-          absentEmblem = node.attrs.emblem;
-        }
-        tr = tr.setNodeMarkup(nodePos, undefined, {
-          ...node.attrs,
-          emblem: (parseInt(node.attrs.emblem, 10) + 1).toString(),
-        });
-      } else {
-        latestEmblem = node.attrs.emblem;
-      }
-      return false;
-    }
-    return true;
-  });
-
-  if (!absentEmblem) {
-    absentEmblem = (parseInt(latestEmblem, 10) + 1).toString();
-  }
-
-  return { tr, absentEmblem };
-}
-
-function createFootnoteNear(
-  state: EditorState,
-  pos: ResolvedPos,
-): Transaction {
-  const result = incrementFootnotesAfterPos(state, state.selection.$head.pos);
-
-  const footnote = factory.inlineFootnote(result.absentEmblem, [
-    schema.text(BEGIN_FOOTNOTE),
-  ]);
-
-  // Note that we do NOT yet consider the case where the given position isn't
-  // hospitable to footnotes. We should find a nearby position that is.
-
-  const tr = result.tr.insert(pos.pos, footnote);
-
-  safeDocCheck(tr.doc);
-
-  return tr;
-}
-
-export function isFootnoteActive(state: EditorState): boolean {
-  const tr = incrementFootnotesAfterPos(state, state.selection.$head.pos);
-  return getEnclosingFootnoteDepth(state.selection.$head) >= 0;
-}
-
-export function toggleOrCreateFootnote(state: EditorState, dispatch: Dispatch) {
-  const pos = state.selection.$head;
-  const footnoteDepth = getEnclosingFootnoteDepth(pos);
-  if (footnoteDepth >= 0) {
-    dispatch(insertTextAfterFootnote(' ', state, pos));
-    return;
-  }
-  dispatch(createFootnoteNear(state, pos));
 }
 
 export function appendBulletListNear(state: EditorState, dispatch?: Dispatch) {
