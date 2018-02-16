@@ -2,7 +2,7 @@
 
 if [ ! -x node_modules/.bin/deps-ok ]; then
   echo "Installing deps-ok"
-  npm install --quiet deps-ok
+  npm install --save-dev --quiet deps-ok
 fi
 
 ./node_modules/.bin/deps-ok &> /dev/null
