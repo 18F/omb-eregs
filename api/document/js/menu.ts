@@ -7,6 +7,8 @@ import {
   appendParagraphNear,
   makeSave,
   makeSaveThenXml,
+  toggleOrCreateFootnote,
+  isFootnoteActive,
 } from './commands';
 import icons from './icons';
 
@@ -37,6 +39,12 @@ export default function menu(api: JsonApi) {
           label: 'P',
           run: appendParagraphNear,
           title: 'Append paragraph',
+        }),
+        makeButton({
+          label: 'F',
+          run: toggleOrCreateFootnote,
+          active: isFootnoteActive,
+          title: 'Toggle/create footnote',
         }),
         makeButton({
           icon: icons.newBulletList,

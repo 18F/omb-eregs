@@ -7,6 +7,7 @@ import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import schema, { factory } from './schema';
 import serializeDoc from './serialize-doc';
 import { walkUpUntil } from './util';
+import { Editor } from 'codemirror';
 
 type Dispatch = (tr: Transaction) => void;
 
@@ -58,6 +59,40 @@ export function appendNearBlock(
 export function appendParagraphNear(state: EditorState, dispatch?: Dispatch) {
   const element = factory.para(' ');
   return appendNearBlock(element, ['paraText'], state, dispatch);
+}
+
+function getEnclosingFootnoteDepth(pos: ResolvedPos): number {
+  return walkUpUntil(pos, node => node.type === schema.nodes.inlineFootnote);
+}
+
+function insertTextAfterFootnote(text: string, state: EditorState,
+                                 pos: ResolvedPos): Transaction {
+  const depth = getEnclosingFootnoteDepth(pos);
+  const parent = pos.node(depth - 1);
+  const end = pos.end(depth - 1);
+  let tr = state.tr.insertText(text, end);
+  tr = tr.setSelection(TextSelection.create(tr.doc, end + text.length));
+  safeDocCheck(tr.doc);
+  return tr.scrollIntoView();
+}
+
+function createFootnoteNear(state: EditorState,
+                            pos: ResolvedPos): Transaction {
+  throw new Error('Implement createFootnoteNear()!');
+}
+
+export function isFootnoteActive(state: EditorState): boolean {
+  return getEnclosingFootnoteDepth(state.selection.$head) >= 0;
+}
+
+export function toggleOrCreateFootnote(state: EditorState, dispatch: Dispatch) {
+  const pos = state.selection.$head;
+  const footnoteDepth = getEnclosingFootnoteDepth(pos);
+  if (footnoteDepth >= 0) {
+    dispatch(insertTextAfterFootnote(' ', state, pos));
+    return;
+  }
+  dispatch(createFootnoteNear(state, pos));
 }
 
 export function appendBulletListNear(state: EditorState, dispatch?: Dispatch) {
