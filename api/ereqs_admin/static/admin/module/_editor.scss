@@ -61,8 +61,8 @@ kbd {
 
 // This styling is temporary, just to make the active state more visible.
 .ProseMirror-menu-active {
-  background: black;
-  color: white;
+  background: $color-black;
+  color: $color-white;
 }
 
 .menuitem-clickable {
