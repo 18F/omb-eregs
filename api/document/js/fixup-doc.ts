@@ -16,6 +16,25 @@ const shouldDeleteChecks = {
   ),
 };
 
+function decrementFootnotesAfterPos(origTr: Transaction, pos: number): Transaction {
+  let tr = origTr;
+
+  origTr.doc.descendants((node, nodePos, parent) => {
+    if (node.type === schema.nodes.inlineFootnote) {
+      if (nodePos > pos) {
+        tr = tr.setNodeMarkup(nodePos, undefined, {
+          ...node.attrs,
+          emblem: (parseInt(node.attrs.emblem, 10) - 1).toString(),
+        });
+      }
+      return false;
+    }
+    return true;
+  });
+
+  return tr;
+}
+
 export function deleteEmpty(transaction: Transaction) {
   let newTransaction;
   transaction.doc.descendants((node, pos) => {
@@ -26,6 +45,8 @@ export function deleteEmpty(transaction: Transaction) {
       newTransaction = transaction.delete(pos, pos + node.nodeSize);
       if (node.type === schema.nodes.listitem) {
         newTransaction = renumberList(newTransaction, pos);
+      } else if (node.type === schema.nodes.inlineFootnote) {
+        newTransaction = decrementFootnotesAfterPos(newTransaction, pos);
       }
       return false;
     }
