@@ -124,7 +124,7 @@ describe('parseDoc()', () => {
         {
           content_type: '__text__',
           text: 'Initial ',
-          inlines: []
+          inlines: [],
         },
         {
           content_type: 'external_link',
