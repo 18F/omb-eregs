@@ -59,6 +59,12 @@ kbd {
   text-align: center;
 }
 
+// This styling is temporary, just to make the active state more visible.
+.ProseMirror-menu-active {
+  background: black;
+  color: white;
+}
+
 .menuitem-clickable {
   cursor: pointer;
 }
