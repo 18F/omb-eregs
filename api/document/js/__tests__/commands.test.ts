@@ -2,12 +2,22 @@ jest.mock('../Api');
 jest.mock('../serialize-doc');
 window.location.assign = jest.fn();
 
+import { Node } from 'prosemirror-model';
 import { EditorState, TextSelection } from 'prosemirror-state';
 
-import Api from '../Api';
-import { appendParagraphNear, makeSave, makeSaveThenXml } from '../commands';
+import { JsonApi } from '../Api';
+import {
+  addListItem,
+  appendBulletListNear,
+  appendNearBlock,
+  appendParagraphNear,
+  makeSave,
+  makeSaveThenXml,
+} from '../commands';
+import { collectMarkers } from '../list-utils';
 import schema, { factory } from '../schema';
 import serializeDoc from '../serialize-doc';
+import pathToResolvedPos, { NthType, SelectionPath } from '../path-to-resolved-pos';
 
 function executeTransform(initialState: EditorState, transform): EditorState {
   const dispatch = jest.fn();
@@ -18,17 +28,23 @@ function executeTransform(initialState: EditorState, transform): EditorState {
 }
 
 
-describe('appendParagraphNear()', () => {
-  it('adds a paragraph after the current', () => {
+describe('appendNearBlock()', () => {
+  const paraTransform = (state, dispatch) =>
+    appendNearBlock(factory.para(' '), ['paraText'], state, dispatch);
+
+  it('adds a node after the current', () => {
     const doc = factory.policy([
       factory.para('aaa'),
       factory.para('bbb'),
       factory.para('ccc'),
     ]);
-    // Inside the 'bbb' paragraph
-    const selection = new TextSelection(doc.resolve(11));
+    const selection = new TextSelection(pathToResolvedPos(
+      doc,
+      // Inside the 'bbb' paragraph
+      [new NthType(1, 'para'), 'paraText', 'b'.length],
+    ));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
+    const modifiedDoc = executeTransform(state, paraTransform).doc;
 
     expect(modifiedDoc.content.childCount).toBe(4);
     const texts: string[] = [];
@@ -46,14 +62,17 @@ describe('appendParagraphNear()', () => {
         factory.unimplementedNode({}),
       ]),
     ]);
-    // Inside the 'subpar' paragraph
-    const selection = new TextSelection(doc.resolve(12));
+    const selection = new TextSelection(pathToResolvedPos(
+      doc,
+      // Inside the 'subpar' paragraph
+      ['para', 'para', 'paraText', 'sub'.length],
+    ));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
+    const modifiedDoc = executeTransform(state, paraTransform).doc;
 
     expect(modifiedDoc.content.childCount).toBe(1);
     const parA = modifiedDoc.content.child(0);
-    expect(parA.content.childCount).toBe(4); // inline + 3 children
+    expect(parA.content.childCount).toBe(4); // paraText + 3 children
     expect(parA.content.child(2).textContent).toBe(' ');
   });
 
@@ -64,31 +83,79 @@ describe('appendParagraphNear()', () => {
         factory.unimplementedNode({}),
       ]),
     ]);
-    // Inside the 'aaa' paragraph
-    const selection = new TextSelection(doc.resolve(4));
+    const selection = new TextSelection(pathToResolvedPos(
+      doc,
+      // Inside the 'aaa' paragraph
+      ['para', 'paraText', 'a'.length],
+    ));
     const state = EditorState.create({ doc, selection });
-    const modifiedDoc = executeTransform(state, appendParagraphNear).doc;
+    const modifiedDoc = executeTransform(state, paraTransform).doc;
 
     expect(modifiedDoc.content.childCount).toBe(2);
     expect(modifiedDoc.content.child(1).textContent).toBe(' ');
   });
+});
+
+describe('appendParagraphNear()', () => {
+  const doc = factory.policy([factory.para('aaa')]);
+  const selection = new TextSelection(pathToResolvedPos(
+    doc,
+    ['para', 'paraText', 'a'.length],
+  ));
+  const state = EditorState.create({ doc, selection });
+  const modified = executeTransform(state, appendParagraphNear);
+
+  it('adds a paragraph', () => {
+    expect(modified.doc.content.childCount).toBe(2);
+    const texts: string[] = [];
+    modified.doc.content.forEach((child) => {
+      expect(child.type).toBe(schema.nodes.para);
+      texts.push(child.textContent);
+    });
+    expect(texts).toEqual(['aaa', ' ']);
+  });
 
   it('puts the cursor in the right place', () => {
-    const doc = factory.policy([
-      factory.para('aaa'),
-      factory.para('bbb'),
-      factory.para('ccc'),
-    ]);
-    // Inside the 'bbb' paragraph
-    const selection = new TextSelection(doc.resolve(11));
-    const state = EditorState.create({ doc, selection });
-    const modified = executeTransform(state, appendParagraphNear);
-
     const resolvedPos = modified.selection.$anchor;
-    expect(resolvedPos.depth).toBe(2);
-    expect(resolvedPos.parent.type).toBe(schema.nodes.inline);
+    expect(resolvedPos.depth).toBe(2);  // 0: policy, 1: para, 2: paraText
+    expect(resolvedPos.parent.type).toBe(schema.nodes.paraText);
     expect(resolvedPos.parent).toBe(
-      modified.doc.content.child(2).content.child(0));
+      modified.doc.content.child(1).content.child(0));
+  });
+});
+
+describe('appendBulletListNear()', () => {
+  const doc = factory.policy([factory.para('aaa')]);
+  const selection = new TextSelection(pathToResolvedPos(
+    doc,
+    ['para', 'paraText', 'a'.length],
+  ));
+  const state = EditorState.create({ doc, selection });
+  const modified = executeTransform(state, appendBulletListNear);
+
+  it('adds a list, listitem, and para', () => {
+    expect(modified.doc.content.childCount).toBe(2);
+
+    const list = modified.doc.content.child(1);
+    expect(list.type).toBe(schema.nodes.list);
+    expect(list.content.childCount).toBe(1);
+
+    const li = list.content.child(0);
+    expect(li.type).toBe(schema.nodes.listitem);
+    expect(li.content.childCount).toBe(1);
+
+    const para = li.content.child(0);
+    expect(para.type).toBe(schema.nodes.para);
+    expect(para.textContent).toBe(' ');
+  });
+
+  it('puts the cursor in the right place', () => {
+    const resolvedPos = modified.selection.$anchor;
+    // 0: policy, 1: list, 2: listitem, 3: para, 4: paraText
+    expect(resolvedPos.depth).toBe(4);
+    expect(resolvedPos.parent.type).toBe(schema.nodes.paraText);
+    expect(resolvedPos.parent).toBe(
+      modified.doc.content.child(1).content.child(0).content.child(0).content.child(0));
   });
 });
 
@@ -96,7 +163,7 @@ describe('makeSave()', () => {
   it('calls the save function', async () => {
     (serializeDoc as jest.Mock).mockImplementationOnce(() => ({ serialized: 'content' }));
 
-    const api = new Api({ contentType: '', csrfToken: '', url: '' });
+    const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSave(api);
     await save({ doc: 'stuff' });
 
@@ -109,11 +176,12 @@ describe('makeSaveThenXml()', () => {
   it('calls the save function', async () => {
     (serializeDoc as jest.Mock).mockImplementationOnce(() => ({ serialized: 'content' }));
 
-    const api = new Api({ contentType: '', csrfToken: '', url: '' });
+    const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
-    await save({ doc: 'stuff' });
+    const doc = factory.policy();
+    await save(EditorState.create({ doc }));
 
-    expect(serializeDoc).toBeCalledWith('stuff');
+    expect(serializeDoc).toBeCalledWith(doc);
     expect(api.write).toBeCalledWith({ serialized: 'content' });
   });
 
@@ -121,11 +189,58 @@ describe('makeSaveThenXml()', () => {
     const locationAssign = window.location.assign as jest.Mock;
     locationAssign.mockClear();
 
-    const api = new Api({ contentType: '', csrfToken: '', url: '' });
+    const api = new JsonApi({ csrfToken: '', url: '' });
     const save = makeSaveThenXml(api);
-    await save({ doc: 'stuff' });
+    await save(EditorState.create({ doc: factory.policy() }));
 
     const param = locationAssign.mock.calls[0][0];
     expect(param).toMatch(/akn$/);
+  });
+});
+
+describe('addListItem()', () => {
+  const doc = factory.policy([
+    factory.para('intro'),
+    factory.list('a:', [
+      factory.listitem('a:', [factory.para('aaa')]),
+      factory.listitem('b:', [
+        factory.para('bbb first'),
+        factory.para('bbb second'),
+      ]),
+    ]),
+  ]);
+
+  function makeState(path: SelectionPath) {
+    const selection = new TextSelection(pathToResolvedPos(doc, path));
+    return EditorState.create({ doc, selection });
+  }
+
+  it('requires the cursor be in the right position', () => {
+    const inIntro = makeState(['para', 'paraText', 'int'.length]);
+    const endIntro = makeState(['para', 'paraText', 'intro'.length]);
+    const middleOfLi = makeState(['list', 'listitem', 'para', 'paraText', 'a'.length]);
+    const endOfFirstPara = makeState(
+      ['list', new NthType(1, 'listitem'), 'para', 'paraText', 'bbb first'.length]);
+    [inIntro, endIntro, middleOfLi, endOfFirstPara].forEach(state =>
+      expect(addListItem(state)).toBe(false));
+  });
+
+  it('adds a new li', () => {
+    const init = makeState(['list', 'listitem', 'para', 'paraText', 'aaa'.length]);
+    expect(doc.content.child(1).content.childCount).toBe(2);
+    const result = executeTransform(init, addListItem);
+    const list = result.doc.content.child(1);
+    expect(list.content.childCount).toBe(3);
+    expect(list.content.child(1).textContent).toBe(' ');
+  });
+
+  it('puts the cursor in the li', () => {
+    const init = makeState(['list', 'listitem', 'para', 'paraText', 'aaa'.length]);
+    const result = executeTransform(init, addListItem);
+    const paraTextPath = ['list', new NthType(1, 'listitem'), 'para', 'paraText'];
+    expect(result.selection.anchor).toBe(
+      pathToResolvedPos(result.doc, paraTextPath).pos);
+    expect(result.selection.head).toBe(
+      pathToResolvedPos(result.doc, [...paraTextPath, ' '.length]).pos);
   });
 });

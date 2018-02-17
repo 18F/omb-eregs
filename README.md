@@ -61,17 +61,19 @@ We recommend using
 [Docker](https://www.docker.com/products/overview#install_the_platform), an
 open source container engine. If you haven't already please install Docker and
 [Docker-compose](https://docs.docker.com/compose/install/) (which is installed
-automatically with Docker on Windows and OS X).
+automatically with Docker on Windows and OS X). We'll also refer to several
+bash scripts for executing Docker-compose commands. If running Windows, you'll
+want to set up bash or run the wrapped commands directly.
 
 ### Admin/API
 
 Let's start by adding an admin user.
 
 ```bash
-docker-compose run --rm manage.py migrate  # set up database
-docker-compose run --rm manage.py createsuperuser
+bin/manage.py migrate # set up database
+bin/manage.py createsuperuser
 # [fill out information]
-docker-compose up dev-api
+docker-compose up
 # [Wait while it sets up]
 # Starting development server at http://0.0.0.0:8001/
 # Quit the server with CONTROL-C.
@@ -81,42 +83,53 @@ Then navigate to http://localhost:8001/admin/ and log in.
 
 ### UI
 
-We can also start the UI server (which runs NodeJS) via:
+If you haven't already done so, run:
 
 ```bash
-docker-compose up dev
+docker-compose up
 # Ctrl-c to kill
 ```
 
-Then navigate to http://localhost:8002/
+Then navigate to http://localhost:8002/.
 
-This runs in development mode (including automatic JS recompilation). To run
-in prod mode, run
+This runs in development mode (including automatic JS recompilation).
+
+### Running in production mode.
+
+To run in prod mode, first run:
+
+```bash
+cp .env.sample .env
+```
+
+Then edit `.env` and uncomment all lines related to production mode.
+
+Then run:
 
 ```bash
 # Build the UI styles
-docker-compose run --rm webpack
+bin/ui-npm run build-css
 # Build the UI app
-NODE_ENV=production docker-compose run --rm npm run build
+bin/ui-npm run build
 # Build the API styles
-docker-compose run --rm api-webpack
+bin/api-npm run build
 # Collect all static files for the admin
-DEBUG=false docker-compose run --rm manage.py collectstatic
-docker-compose up prod
+bin/manage.py collectstatic
+docker-compose up
 ```
 
-Then navigate to http://localhost:9002/ (prod and dev run on separate ports).
+Then navigate to http://localhost:8002/.
 
 ### Data
 
 Let's also load example requirements, agencies, and a whole document:
 
 ```bash
-docker-compose run --rm manage.py fetch_csv
-docker-compose run --rm manage.py import_reqs data.csv
-docker-compose run --rm manage.py sync_agencies
-docker-compose run --rm manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
-docker-compose run --rm manage.py import_xml_doc example_docs/m_15_16.xml M-15-16
+bin/manage.py fetch_csv
+bin/manage.py import_reqs data.csv
+bin/manage.py sync_agencies
+bin/manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
+bin/manage.py import_xml_doc example_docs/m_15_16.xml M-15-16
 ```
 
 This may emit some warnings for improper input. The next time you visit the
@@ -130,7 +143,7 @@ import into the policy library.
 To download some PDFs for development, you can run:
 
 ```bash
-docker-compose run --rm manage.py download_pdfs
+bin/manage.py download_pdfs
 ```
 
 You can then access a variety of development and debugging-related
@@ -138,33 +151,30 @@ views for the PDFs at http://localhost:8001/pdf/.
 
 ### Docker-compose commands
 
-There are two types of entry points:
+**Note:** You can add `--rm` to the following commands to delete the images
+after running the commands; alternatively, you can run
+`docker system prune` at regular intervals to do the same thing.
 
-1. Services which will run until you press `ctrl-c`. These are activated via
-  `docker-compose up`
-  * `prod-api` - Build the admin/API app and run it in "production" mode on
-    port 9001
-  * `dev-api` - Build the admin/API app and run it in "development" mode on
-    port 8001
-  * `dev` - Build and run the UI and API app in "development" mode (port 8002
-    for UI, 8001 for API).
-  * `prod` - Run the UI and API apps in "production" mode (port 9002 for UI,
-    9001 for API). Note that this requires the JS be compiled already.
-1. One-use commands which run until complete. These are ran via
-  `docker-compose run --rm` (the `--rm` just deletes the images after running;
-  it's not strictly required)
-  * `api-npm`
-  * `api-webpack`
-  * `bandit`
-  * `flake8`
-  * `manage.py`
-  * `mypy`
-  * `npm`
-  * `pip-compile`
-  * `psql`
-  * `ptw`
-  * `py.test`
-  * `webpack`
+The following commands pertain to the API and/or its database:
+
+* `bin/bandit`
+* `bin/flake8`
+* `bin/manage.py`
+* `bin/mypy`
+* `bin/pip-compile`
+* `bin/ptw`
+* `bin/py.test`
+* `bin/psql`
+
+The following commands pertain to the API UI, which is the user interface that
+staff and administrators use:
+
+* `bin/api-npm`
+
+The following commands pertain to the UI, which is the user interface that
+the general public uses:
+
+* `bin/ui-npm`
 
 ### Resolving common container issues
 
@@ -176,7 +186,7 @@ try bouncing the system:
 
 ```sh
 docker-compose down
-docker-compose up dev
+docker-compose up
 ```
 
 #### Bundles aren't being rebuilt when I change them
@@ -206,16 +216,13 @@ docker-compose -p integration_tests down -v
 ### Running w/ Credentials
 
 Generally, we don't need to set up local development with authentication
-credentials. To exercise that workflow, however, you can edit the
-docker-compose.yml file. Hop to the `dev` or `prod` key (whichever environment
-you plan to run) and inside the `VCAP_SERVICES` key, you'll see an empty JS
-object next to `UI_BASIC_AUTH`. Insert your username and password to this
-object (keyed by username) to test out authentication.
+credentials. To exercise that workflow, however, you can create a
+`docker-compose.override.yml` file. Populate it with the following:
 
-For example (skipping all irrelevant keys)
 ```yml
+version: '2.1'
 services:
-  dev:
+  api:
     environment:
       VCAP_SERVICES: >
         {"config": [{"name": "config", "credentials": {"UI_BASIC_AUTH": {
@@ -228,15 +235,9 @@ services:
 
 In production, we always run with [MAX](https://max.gov/) authentication, but
 for local development, we've opted for Django's password-based authentication.
-If you would prefer to test MAX authentication, uncomment the appropriate
-environment variable in docker-compose.yml:
-
-```yml
-services:
-  dev-api:
-    environment:
-      MAX_URL: https://example.com/etc
-```
+If you would prefer to test MAX authentication, set the `MAX_URL` environment
+variable in your `.env` file; you can see `.env.sample` for some
+example values.
 
 ### Data Migrations
 
@@ -281,18 +282,21 @@ We have unit tests for the API/admin (Python) and for the React-based frontend
 
 For Python unit tests, run:
 ```sh
-docker-compose run --rm flake8  # linting
-docker-compose run --rm mypy .  # type checking
-docker-compose run --rm py.test # run tests once
-docker-compose run --rm ptw     # watch command to run tests whenever a file changes
+bin/flake8              # linting
+bin/mypy .              # type checking
+bin/py.test             # run tests once
+bin/ptw                 # watch command to run tests whenever a file changes
 ```
 
 For JS unit tests, run:
 ```sh
-docker-compose run --rm npm run lint        # linting
-docker-compose run --rm npm test            # run tests once
-docker-compose run --rm npm run test:watch  # watch command to run tests whenever a file changes
+bin/ui-npm run lint        # linting
+bin/ui-npm test            # run tests once
+bin/ui-npm run test:watch  # watch command to run tests whenever a file changes
 ```
+
+In the above commands, you can replace `ui` with `api-ui` to run the tests for
+the API UI.
 
 We also have a suite of integration tests, which are relatively complicated to
 set up, so we've wrapped them in a script:
@@ -319,7 +323,7 @@ line tool and an associated plugin:
 Then, make sure you've built the frontend:
 
 ```sh
-docker-compose run --rm webpack
+bin/ui-npm run build-css
 ```
 
 And deploy!

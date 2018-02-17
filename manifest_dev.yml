@@ -32,19 +32,3 @@ applications:
     env:
       API_URL: https://omb-eregs-api-demo.app.cloud.gov/
       NEW_RELIC_APP_NAME: OMB Demo UI
-  - name: redeployer
-    buildpack: python_buildpack
-    no-route: true
-    memory: 32M
-    instances: 1
-    health-check-type: process
-    # Note, time on server is UTC
-    command: python redeploy.py 04:45
-    path: redeployer
-    services:
-      - redeployer-creds  # API_TOKEN
-    env:
-      CIRCLE_BRANCH: master
-      CIRCLE_ORGNAME: 18F
-      CIRCLE_REPONAME: omb-eregs
-      CIRCLE_VCS: github

@@ -1,21 +1,7 @@
 import { Fragment, Mark, Node } from 'prosemirror-model';
 
+import { ApiNode, ApiContent } from './Api';
 import schema from './schema';
-
-interface ApiNode {
-  children: ApiNode[];
-  content: ApiContent[];
-  marker?: string;
-  node_type: string;
-  type_emblem?: string;
-  title?: string;
-}
-
-interface ApiContent {
-  content_type: string;
-  inlines: ApiContent[];
-  text: string;
-}
 
 export const apiFactory = {
   node(nodeType, overrides): ApiNode {
@@ -41,11 +27,14 @@ export const apiFactory = {
   }),
 };
 
+type NodeConverterMap = {
+  [nodeName: string]: (node: Node) => ApiNode,
+};
 
-const NODE_CONVERTERS = {
+const NODE_CONVERTERS: NodeConverterMap = {
   heading: node => apiFactory.node(
     node.type.name,
-    // Text isn't in an 'inline' block
+    // Text isn't in an 'paraText' block
     { content: convertTexts(node.content) },
   ),
   listitem(node) {
@@ -71,12 +60,29 @@ const NODE_CONVERTERS = {
   unimplementedNode: node => node.attrs.data,
 };
 
-function defaultNodeConverter(node): ApiNode {
+// It would be nice if this could just be done on the server-side.
+function extractFootnotes(content: ApiContent[]): ApiNode[] {
+  const footnotes: ApiNode[] = [];
+
+  content.forEach((c) => {
+    if (c.footnote_node) {
+      footnotes.push(c.footnote_node);
+      delete c.footnote_node;
+    } else {
+      footnotes.push.apply(footnotes, extractFootnotes(c.inlines));
+    }
+  });
+
+  return footnotes;
+}
+
+function defaultNodeConverter(node: Node): ApiNode {
   const children: ApiNode[] = [];
   let content: ApiContent[] = [];
   node.content.forEach((child) => {
-    if (child.type === schema.nodes.inline) {
+    if (child.type === schema.nodes.paraText) {
       content = convertTexts(child.content);
+      children.push.apply(children, extractFootnotes(content));
     } else {
       children.push(serializeDoc(child));
     }
@@ -110,10 +116,26 @@ export function nestMarks(text: string, marks: Mark[]): ApiContent {
   return converted;
 }
 
+function convertInlineFootnote(node: Node): ApiContent {
+  const emblem = node.attrs.emblem;
+  return apiFactory.content('footnote_citation', {
+    inlines: [apiFactory.text(emblem)],
+    footnote_node: apiFactory.node('footnote', {
+      type_emblem: emblem,
+      marker: emblem,
+      content: convertTexts(node.content),
+    }),
+  });
+}
+
 export function convertTexts(textNodes: Fragment): ApiContent[] {
-  const result: any[] = [];
+  const result: ApiContent[] = [];
   textNodes.forEach((textNode) => {
-    result.push(nestMarks(textNode.text || '', textNode.marks));
+    if (textNode.type === schema.nodes.inlineFootnote) {
+      result.push(convertInlineFootnote(textNode));
+    } else {
+      result.push(nestMarks(textNode.text || '', textNode.marks));
+    }
   });
   return result;
 }

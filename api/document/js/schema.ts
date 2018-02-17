@@ -1,8 +1,16 @@
-import { Node, NodeSpec, Schema } from 'prosemirror-model';
+import * as repeatString from 'repeat-string';
+import * as romanize from 'romanize';
+
+import { Fragment, Node, NodeSpec, Schema } from 'prosemirror-model';
 
 const listSchemaNodes: { [name: string]: NodeSpec } = {
   list: {
-    content: 'listitem+',
+    attrs: {
+      markerPrefix: { default: '●' },
+      markerSuffix: { default: '' },
+      numeralFn: { default: (idx: number) => '' },
+    },
+    content: 'listitem*',
     group: 'block',
     toDOM: () => ['ol', { class: 'node-list' }, 0],
   },
@@ -10,7 +18,7 @@ const listSchemaNodes: { [name: string]: NodeSpec } = {
     attrs: {
       marker: { default: '1.' },
     },
-    content: 'block+',
+    content: 'block*',
     toDOM: node => [
       'li',
       { class: 'node-list-item' },
@@ -26,9 +34,21 @@ const schema = new Schema({
     policy: {
       content: 'block+',
     },
-    inline: {
-      content: 'text+',
+    paraText: {
+      content: 'inline*',
       toDOM: () => ['p', { class: 'node-paragraph-text' }, 0],
+    },
+    inlineFootnote: {
+      attrs: {
+        emblem: { default: '1' },
+      },
+      content: 'text*',
+      group: 'inline',
+      inline: true,
+      toDOM: node => ['span', {
+        class: 'inline-footnote',
+        'data-emblem': node.attrs.emblem,
+      }, 0],
     },
     heading: {
       content: 'text+',
@@ -39,7 +59,7 @@ const schema = new Schema({
       toDOM: node => [`h${node.attrs.depth}`, { class: 'node-heading' }, 0],
     },
     para: {
-      content: 'inline block*',
+      content: 'paraText block*',
       group: 'block',
       toDOM: () => ['div', { class: 'node-paragraph' }, 0],
     },
@@ -48,7 +68,9 @@ const schema = new Schema({
       group: 'block',
       toDOM: () => ['section', { class: 'node-section' }, 0],
     },
-    text: {},
+    text: {
+      group: 'inline',
+    },
     unimplementedNode: {
       group: 'block',
       atom: true,
@@ -72,21 +94,62 @@ const schema = new Schema({
   },
 });
 
+function makeIntToLetter(initial: string) {
+  const offset = initial.charCodeAt(0);
+  const alphabetLen = 26;
+
+  return (idx: number) => {
+    const count = Math.floor(idx / alphabetLen) + 1;
+    const letter = String.fromCharCode(offset + idx % alphabetLen);
+    return repeatString(letter, count);
+  };
+}
+
+const firstToMapper = {
+  'a': makeIntToLetter('a'),
+  'A': makeIntToLetter('A'),
+  // our input will be zero indexed
+  '1': (idx: number) => `${idx + 1}`,
+  'i': (idx: number) => romanize(idx + 1).toLowerCase(),
+  'I': (idx: number) => romanize(idx + 1),
+};
+const lastMatch = new RegExp(/^.*([aA1iI])[^aA1iI]*$/, 'm');
+
+export function listAttrs(toImitate: string) {
+  const match = lastMatch.exec(toImitate);
+  if (match) {
+    const matchingChar = match[1];
+    const prefixEnds = toImitate.lastIndexOf(matchingChar);
+    return {
+      markerPrefix: toImitate.substr(0, prefixEnds),
+      markerSuffix: toImitate.substr(prefixEnds + 1),
+      numeralFn: firstToMapper[matchingChar],
+    };
+  }
+  return {
+    markerPrefix: toImitate,
+    markerSuffix: '',
+    numeralFn: (idx: number) => '',
+  };
+}
+
 export const factory = {
   heading: (text: string, depth: number) =>
     schema.nodes.heading.create({ depth }, schema.text(text)),
-  list: (children?: Node[]) =>
-    schema.nodes.list.create({}, children || []),
-  listitem: (marker: string, children?: Node[]) =>
+  inlineFootnote: (emblem: string, children: Node[] | Fragment) =>
+    schema.nodes.inlineFootnote.create({ emblem }, children),
+  list: (startMarker: string, children?: Node[] | Fragment) =>
+    schema.nodes.list.create(listAttrs(startMarker), children || []),
+  listitem: (marker: string, children?: Node[] | Fragment) =>
     schema.nodes.listitem.create({ marker }, children || []),
   para: (textContent: string | Node[], children?: Node[]) =>
-    schema.nodes.para.create({}, [schema.nodes.inline.create(
+    schema.nodes.para.create({}, [schema.nodes.paraText.create(
       {},
       typeof textContent === 'string' ? schema.text(textContent) : textContent,
     )].concat(children || [])),
-  policy: (children?: Node[]) =>
+  policy: (children?: Node[] | Fragment) =>
     schema.nodes.policy.create({}, children || []),
-  sec: (children?: Node[]) =>
+  sec: (children?: Node[] | Fragment) =>
     schema.nodes.sec.create({}, children || []),
   unimplementedMark: (original: any) =>
     schema.marks.unimplementedMark.create({ data: original }),

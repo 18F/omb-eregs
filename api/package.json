@@ -7,6 +7,7 @@
     "test": "tests"
   },
   "scripts": {
+    "build": "webpack",
     "lint": "tslint 'document/**/*.ts'",
     "test": "NODE_ENV=test jest --coverage",
     "test:watch": "NODE_ENV=test jest --watch"
@@ -42,6 +43,8 @@
     "prosemirror-menu": "^1.0.0",
     "prosemirror-state": "^1.0.0",
     "prosemirror-view": "^1.0.5",
+    "repeat-string": "^1.6.1",
+    "romanize": "^1.1.1",
     "style-loader": "0.19.1",
     "ts-loader": "^3.2.0",
     "typescript": "^2.6.2",

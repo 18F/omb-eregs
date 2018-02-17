@@ -53,6 +53,20 @@ describe('serializeDoc()', () => {
     expect(result.title).toEqual('Stufff');
   });
 
+  it('converts footnotes', () => {
+    const node = schema.nodes.para.create({}, [
+      schema.nodes.paraText.create({}, [
+        schema.text('hello'),
+        factory.inlineFootnote('2', [
+          schema.text('i am a footnote'),
+        ]),
+      ]),
+    ]);
+
+    const result = serializeDoc(node);
+    expect(result).toMatchSnapshot();
+  });
+
   it('converts unimplemented nodes', () => {
     const node = factory.unimplementedNode({ some: 'random', attrs: 'here' });
     const result = serializeDoc(node);
@@ -60,7 +74,7 @@ describe('serializeDoc()', () => {
   });
 
   it('converts list nodes', () => {
-    const node = factory.list([
+    const node = factory.list('a)', [
       factory.listitem('a)', [
         factory.para('First p'),
         factory.para('Second p'),

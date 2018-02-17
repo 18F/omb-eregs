@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+# this doesn't check for "start" in $@, which _does_ need deps
+docker-compose run\
+  --rm\
+  --no-deps\
+  ui npm "$@"

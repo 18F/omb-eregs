@@ -34,19 +34,3 @@ applications:
     env:
       API_URL: https://policy-api.cio.gov/
       NEW_RELIC_APP_NAME: OMB Prod UI
-  - name: redeployer
-    buildpack: python_buildpack
-    no-route: true
-    memory: 32M
-    instances: 1
-    health-check-type: process
-    # Note, time on server is UTC
-    command: python redeploy.py 03:45
-    path: redeployer
-    services:
-      - redeployer-creds  # API_TOKEN
-    env:
-      CIRCLE_BRANCH: release
-      CIRCLE_ORGNAME: 18F
-      CIRCLE_REPONAME: omb-eregs
-      CIRCLE_VCS: github
