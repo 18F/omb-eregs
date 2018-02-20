@@ -320,7 +320,9 @@ workflows:
     - admin-ui-build:
         requires: ['admin-ui-deps']
     - api-build:
-        requires: ['admin-ui-build']
+        requires:
+          - api-deps
+          - admin-ui-build
 
     - submit_coverage:
         requires:
