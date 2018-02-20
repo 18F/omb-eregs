@@ -24,7 +24,7 @@ applications:
     instances: 3
     memory: 128M
     path: ui
-    command: npm start
+    command: ls node_modules && npm start
     routes:
       - route: omb-eregs-demo.app.cloud.gov
     services:

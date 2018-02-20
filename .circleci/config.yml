@@ -340,7 +340,7 @@ workflows:
           - api-build
         filters:
           branches:
-            only: master
+            only: node8-fix
     - deploy-prod:
         requires:
           - viewer-lint
