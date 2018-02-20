@@ -2,13 +2,13 @@
 
 if [ ! -x node_modules/.bin/deps-ok ]; then
   echo "Installing deps-ok"
-  npm install --save-dev --quiet deps-ok
+  npm install --save-dev deps-ok
 fi
 
 ./node_modules/.bin/deps-ok &> /dev/null
 if [ $? -ne 0 ]; then
   echo "Installing Node dependencies"
-  npm install --quiet
+  npm install
 fi
 
 exec "$@"
