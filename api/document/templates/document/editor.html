@@ -1,24 +1,12 @@
+{% extends "admin/base_site.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <link
-      href="{% static 'bundles/css/admin/override.css' %}"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <title>{{ title }}</title>
-  </head>
-  <body>
-    <h1>{{ title }}</h1>
-    <pre id="status" class="editor-status"></pre>
-    <div class="editor-container" id="editor" data-document-url="{{ document_url }}"></div>
-    {% csrf_token %}
-    {% block instructions %}
-    {% endblock %}
-    {% block editor-js %}
-      <script src="{% static 'bundles/js/document.main.bundle.js' %}"></script>
-    {% endblock %}
-  </body>
-</html>
+
+{% block content %}
+  <pre id="status" class="editor-status"></pre>
+  <div class="editor-container" id="editor" data-document-url="{{ document_url }}"></div>
+  {% csrf_token %}
+  {% block instructions %}{% endblock %}
+  {% block editor-js %}
+    <script src="{% static 'bundles/js/document.main.bundle.js' %}"></script>
+  {% endblock %}
+{% endblock %}
