@@ -14,6 +14,8 @@ export function setStatusError(e: Error) {
   const data = e['response'] && e['response']['data'];
   if (data) {
     errMsg += '\n' + makeErrorFriendly(data);
+  } else {
+    console.error(e);
   }
   setStatus(errMsg, 'editor-status-error');
 }
