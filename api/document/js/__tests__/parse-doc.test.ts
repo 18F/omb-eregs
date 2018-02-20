@@ -132,7 +132,11 @@ describe('parseDoc()', () => {
       const result = parseDoc(node);
       expect(result.type).toBe(schema.nodes.unimplementedNode);
       expect(result.attrs).toEqual({ data: node });
-      expect(result.content.childCount).toBe(0);
+      expect(result.content.childCount).toBe(4);
+      expect(result.content.child(0).type).toBe(schema.nodes.unimplementedNodeText);
+      [1, 2, 3].forEach((i) => {
+        expect(result.content.child(i).type).toBe(schema.nodes.unimplementedNode);
+      });
     });
   });
 });

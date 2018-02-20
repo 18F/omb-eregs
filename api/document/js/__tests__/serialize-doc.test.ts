@@ -70,7 +70,7 @@ describe('serializeDoc()', () => {
   it('converts unimplemented nodes', () => {
     const node = factory.unimplementedNode({ some: 'random', attrs: 'here' });
     const result = serializeDoc(node);
-    expect(result).toEqual({ some: 'random', attrs: 'here' });
+    expect(result).toEqual({ some: 'random', attrs: 'here', children: [], content: [] });
   });
 
   it('converts list nodes', () => {
