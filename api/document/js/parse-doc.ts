@@ -96,7 +96,10 @@ const NODE_TYPE_CONVERTERS: NodeConverterMap = {
   // For more details, see: https://github.com/18F/omb-eregs/issues/1028
   policy: node => factory.policy((node.children || []).map(parseDoc)),
   sec: node => factory.sec(mapChildren(node)),
-  unimplementedNode: node => factory.unimplementedNode(node),
+  unimplementedNode(node) {
+    const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
+    return factory.unimplementedNode(node, flatten(nested), mapChildren(node));
+  },
 };
 
 const CONTENT_TYPE_CONVERTERS = {

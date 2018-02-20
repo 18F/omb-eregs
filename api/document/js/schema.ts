@@ -76,7 +76,11 @@ const schema = new Schema({
     text: {
       group: 'inline',
     },
+    unimplementedNodeText: {
+      content: 'inline*',
+    },
     unimplementedNode: {
+      content: 'unimplementedNodeText block*',
       group: 'block',
       atom: true,
       attrs: {
@@ -158,8 +162,11 @@ export const factory = {
     schema.nodes.sec.create({}, children || []),
   unimplementedMark: (original: any) =>
     schema.marks.unimplementedMark.create({ data: original }),
-  unimplementedNode: (original: any) =>
-    schema.nodes.unimplementedNode.create({ data: original }),
+  unimplementedNode: (original: any, textContent?: Node[], children?: Node[]) => {
+    return schema.nodes.unimplementedNode.create({ data: original }, [
+      schema.nodes.unimplementedNodeText.create({}, textContent || []),
+    ].concat(children || []));
+  },
 };
 
 export default schema;

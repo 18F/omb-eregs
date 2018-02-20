@@ -57,7 +57,14 @@ const NODE_CONVERTERS: NodeConverterMap = {
 
     return sec;
   },
-  unimplementedNode: node => node.attrs.data,
+  unimplementedNode(node) {
+    const { children, content } = defaultNodeConverter(node);
+    return {
+      ...node.attrs.data,
+      children,
+      content,
+    };
+  },
 };
 
 // It would be nice if this could just be done on the server-side.
@@ -80,7 +87,8 @@ function defaultNodeConverter(node: Node): ApiNode {
   const children: ApiNode[] = [];
   let content: ApiContent[] = [];
   node.content.forEach((child) => {
-    if (child.type === schema.nodes.paraText) {
+    if (child.type === schema.nodes.paraText ||
+        child.type === schema.nodes.unimplementedNodeText) {
       content = convertTexts(child.content);
       children.push.apply(children, extractFootnotes(content));
     } else {
