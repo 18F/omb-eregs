@@ -2,5 +2,5 @@
 
 set -e
 
-webpack --watch &
-fractal start --sync
+node node_modules/webpack/bin/webpack.js --watch &
+./node_modules/@frctl/fractal/bin/fractal start --sync
