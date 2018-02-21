@@ -54,6 +54,7 @@
     "buffer-equal-constant-time": "^1.0.1",
     "cfenv": "^1.0.4",
     "express": "^4.15.4",
+    "glob": "^7.1.2",
     "helmet": "^3.8.1",
     "http-status": "^1.0.1",
     "jump.js": "^1.0.2",
