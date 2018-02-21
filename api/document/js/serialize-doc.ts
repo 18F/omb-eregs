@@ -1,7 +1,7 @@
 import { Fragment, Mark, Node } from 'prosemirror-model';
 
 import { ApiNode, ApiContent } from './Api';
-import schema from './schema';
+import schema, { BEGIN_FOOTNOTE } from './schema';
 
 export const apiFactory = {
   node(nodeType, overrides): ApiNode {
@@ -57,7 +57,14 @@ const NODE_CONVERTERS: NodeConverterMap = {
 
     return sec;
   },
-  unimplementedNode: node => node.attrs.data,
+  unimplementedNode(node) {
+    const { children, content } = defaultNodeConverter(node);
+    return {
+      ...node.attrs.data,
+      children,
+      content,
+    };
+  },
 };
 
 // It would be nice if this could just be done on the server-side.
@@ -80,7 +87,8 @@ function defaultNodeConverter(node: Node): ApiNode {
   const children: ApiNode[] = [];
   let content: ApiContent[] = [];
   node.content.forEach((child) => {
-    if (child.type === schema.nodes.paraText) {
+    if (child.type === schema.nodes.paraText ||
+        child.type === schema.nodes.unimplementedNodeText) {
       content = convertTexts(child.content);
       children.push.apply(children, extractFootnotes(content));
     } else {
@@ -118,12 +126,22 @@ export function nestMarks(text: string, marks: Mark[]): ApiContent {
 
 function convertInlineFootnote(node: Node): ApiContent {
   const emblem = node.attrs.emblem;
+  const content = convertTexts(node.content);
+
+  const firstContent = content[0];
+  if (!(firstContent && firstContent.content_type === '__text__' &&
+        firstContent.text[0] === BEGIN_FOOTNOTE)) {
+    throw new Error('Assertion failure, footnote must ' +
+                    'start with BEGIN_FOOTNOTE');
+  }
+  firstContent.text = firstContent.text.slice(1);
+
   return apiFactory.content('footnote_citation', {
     inlines: [apiFactory.text(emblem)],
     footnote_node: apiFactory.node('footnote', {
+      content,
       type_emblem: emblem,
       marker: emblem,
-      content: convertTexts(node.content),
     }),
   });
 }

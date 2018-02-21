@@ -2,7 +2,8 @@ import { Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 
 import { renumberList } from './list-utils';
-import schema from './schema';
+import { decrementFootnotesAfterPos } from './footnote-utils';
+import schema, { BEGIN_FOOTNOTE } from './schema';
 
 const shouldDeleteChecks = {
   list: (node: Node) => node.content.childCount === 0,
@@ -10,6 +11,9 @@ const shouldDeleteChecks = {
   para: (node: Node) => (
     node.content.childCount === 1 // Just the paraText
     && node.textContent === ''
+  ),
+  inlineFootnote: (node: Node) => (
+    node.textContent[0] !== BEGIN_FOOTNOTE
   ),
 };
 
@@ -23,6 +27,8 @@ export function deleteEmpty(transaction: Transaction) {
       newTransaction = transaction.delete(pos, pos + node.nodeSize);
       if (node.type === schema.nodes.listitem) {
         newTransaction = renumberList(newTransaction, pos);
+      } else if (node.type === schema.nodes.inlineFootnote) {
+        newTransaction = decrementFootnotesAfterPos(newTransaction, pos);
       }
       return false;
     }

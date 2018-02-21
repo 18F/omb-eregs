@@ -58,7 +58,7 @@ describe('serializeDoc()', () => {
       schema.nodes.paraText.create({}, [
         schema.text('hello'),
         factory.inlineFootnote('2', [
-          schema.text('i am a footnote'),
+          schema.text('\u200bi am a footnote'),
         ]),
       ]),
     ]);
@@ -70,7 +70,7 @@ describe('serializeDoc()', () => {
   it('converts unimplemented nodes', () => {
     const node = factory.unimplementedNode({ some: 'random', attrs: 'here' });
     const result = serializeDoc(node);
-    expect(result).toEqual({ some: 'random', attrs: 'here' });
+    expect(result).toEqual({ some: 'random', attrs: 'here', children: [], content: [] });
   });
 
   it('converts list nodes', () => {

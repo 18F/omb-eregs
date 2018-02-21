@@ -3,7 +3,7 @@ import { flatten } from 'lodash/array';
 import { Mark, Node } from 'prosemirror-model';
 
 import { ApiNode, ApiContent } from './Api';
-import schema, { factory } from './schema';
+import schema, { factory, BEGIN_FOOTNOTE } from './schema';
 
 export default function parseDoc(node): Node {
   const nodeType = node.node_type in NODE_TYPE_CONVERTERS ?
@@ -23,7 +23,9 @@ function convertFootnoteCitation(content: ApiContent): Node {
   }
   const nested: Node[][] = (footnote.content || [])
     .map(c => convertContent(c, []));
-  return factory.inlineFootnote(emblem, flatten(nested));
+  return factory.inlineFootnote(emblem, [
+    schema.text(BEGIN_FOOTNOTE),
+  ].concat(flatten(nested)));
 }
 
 export function convertContent(content: ApiContent, marks: Mark[]): Node[] {
@@ -96,7 +98,10 @@ const NODE_TYPE_CONVERTERS: NodeConverterMap = {
   // For more details, see: https://github.com/18F/omb-eregs/issues/1028
   policy: node => factory.policy((node.children || []).map(parseDoc)),
   sec: node => factory.sec(mapChildren(node)),
-  unimplementedNode: node => factory.unimplementedNode(node),
+  unimplementedNode(node) {
+    const nested: Node[][] = (node.content || []).map(c => convertContent(c, []));
+    return factory.unimplementedNode(node, flatten(nested), mapChildren(node));
+  },
 };
 
 const CONTENT_TYPE_CONVERTERS = {

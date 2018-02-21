@@ -3,6 +3,11 @@ import * as romanize from 'romanize';
 
 import { Fragment, Node, NodeSpec, Schema } from 'prosemirror-model';
 
+// We use a zero-width space to begin footnotes, which allows
+// editors to position the cursor at the beginning of a footnote,
+// before its first character.
+export const BEGIN_FOOTNOTE = '\u200b';
+
 const listSchemaNodes: { [name: string]: NodeSpec } = {
   list: {
     attrs: {
@@ -71,7 +76,11 @@ const schema = new Schema({
     text: {
       group: 'inline',
     },
+    unimplementedNodeText: {
+      content: 'inline*',
+    },
     unimplementedNode: {
+      content: 'unimplementedNodeText block*',
       group: 'block',
       atom: true,
       attrs: {
@@ -153,8 +162,11 @@ export const factory = {
     schema.nodes.sec.create({}, children || []),
   unimplementedMark: (original: any) =>
     schema.marks.unimplementedMark.create({ data: original }),
-  unimplementedNode: (original: any) =>
-    schema.nodes.unimplementedNode.create({ data: original }),
+  unimplementedNode: (original: any, textContent?: Node[], children?: Node[]) => {
+    return schema.nodes.unimplementedNode.create({ data: original }, [
+      schema.nodes.unimplementedNodeText.create({}, textContent || []),
+    ].concat(children || []));
+  },
 };
 
 export default schema;

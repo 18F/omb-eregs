@@ -4,9 +4,15 @@ import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { JsonApi } from './Api';
 import { deeperBullet, deeperOrderedLi, renumberList } from './list-utils';
 import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
-import schema, { factory } from './schema';
+import schema, { factory, BEGIN_FOOTNOTE } from './schema';
 import serializeDoc from './serialize-doc';
 import { walkUpUntil } from './util';
+import {
+  getEnclosingFootnoteDepth,
+  insertTextAfterFootnote,
+  createFootnoteNear,
+} from './footnote-utils';
+import { Editor } from 'codemirror';
 
 type Dispatch = (tr: Transaction) => void;
 
@@ -16,6 +22,23 @@ function safeDocCheck(doc: Node) {
   } catch (e) {
     console.error('Doc no longer valid', e);
   }
+}
+
+export function isFootnoteActive(state: EditorState): boolean {
+  return getEnclosingFootnoteDepth(state.selection.$head) >= 0;
+}
+
+export function toggleOrCreateFootnote(state: EditorState, dispatch: Dispatch) {
+  const pos = state.selection.$head;
+  const footnoteDepth = getEnclosingFootnoteDepth(pos);
+  let tr;
+  if (footnoteDepth >= 0) {
+    tr = insertTextAfterFootnote(' ', state, pos);
+  } else {
+    tr = createFootnoteNear(state, pos);
+  }
+  safeDocCheck(tr.doc);
+  dispatch(tr);
 }
 
 // Append the provided element at the closest valid point after the user's
