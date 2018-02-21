@@ -91,6 +91,8 @@ services:
     working_dir: /usr/src/app/styleguide
     entrypoint: .docker/deps_ok_then .docker/modify_path_then
     command: .docker/build_run_styleguide
+    environment:
+      USE_POLLING: ${USE_POLLING:-false}
     ports:
       - 3000:3000
     volumes:
