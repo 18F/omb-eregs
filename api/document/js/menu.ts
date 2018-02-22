@@ -74,6 +74,20 @@ function markActive(state, type) {
   return state.doc.rangeHasMark(from, to, type);
 }
 
+function externalLink(state, dispatch, view, markType) {
+  // This function might belong in ./commands
+  if (markActive(state, markType)) {
+    toggleMark(markType)(state, dispatch);
+    return true;
+  }
+  // We need a replacement for prompt here.
+  toggleMark(schema.marks.external_link, {
+    href: prompt('URL', 'URL: '),
+  })(view.state, view.dispatch);
+  view.focus();
+  return true;
+}
+
 function linkItem(markType) {
   return new MenuItem({
     class: 'menuitem-clickable',
@@ -85,17 +99,6 @@ function linkItem(markType) {
     label: 'A',
     active(state) { return markActive(state, markType); },
     enable(state) { return !state.selection.empty; },
-    run(state, dispatch, view) {
-      if (markActive(state, markType)) {
-        toggleMark(markType)(state, dispatch);
-        return true;
-      }
-      // We need a replacement for prompt here.
-      toggleMark(schema.marks.external_link, {
-        href: prompt('URL', 'not this'),
-      })(view.state, view.dispatch);
-      view.focus();
-      return true;
-    },
+    run(state, dispatch, view) { return externalLink(state, dispatch, view, markType); },
   });
 }

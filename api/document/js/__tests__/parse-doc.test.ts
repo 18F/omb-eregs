@@ -118,6 +118,9 @@ describe('parseDoc()', () => {
   });
 
   it('loads links', () => {
+    // This checks link parsing but doesn't check any of the interaction
+    // involved, such as making sure a prompt actually pops up in response
+    // to a button click.
     const node: ApiNode = {
       node_type: 'para',
       content: [
