@@ -58,7 +58,7 @@ services:
       # - minio
       - api-ui
   api-ui:
-    image: node:6
+    image: node:8
     environment:
       USE_POLLING: ${USE_POLLING:-false}
     working_dir: /usr/src/app/api
@@ -67,7 +67,7 @@ services:
     volumes:
       - .:/usr/src/app:delegated
   ui:
-    image: node:6
+    image: node:8
     working_dir: /usr/src/app/ui
     entrypoint: .docker/deps_ok_then .docker/modify_path_then
     command: .docker/watch-run.sh
@@ -87,10 +87,12 @@ services:
     depends_on:
       - api
   styleguide:
-    image: node:6
+    image: node:8
     working_dir: /usr/src/app/styleguide
     entrypoint: .docker/deps_ok_then .docker/modify_path_then
     command: .docker/build_run_styleguide
+    environment:
+      USE_POLLING: ${USE_POLLING:-false}
     ports:
       - 3000:3000
     volumes:
