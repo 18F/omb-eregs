@@ -6,8 +6,10 @@ import {
   appendBulletListNear,
   appendOrderedListNear,
   appendParagraphNear,
+  indentLi,
   makeSave,
   makeSaveThenXml,
+  outdentLi,
 } from './commands';
 import icons from './icons';
 import schema from './schema';
@@ -50,6 +52,18 @@ export default function menu(api: JsonApi) {
           icon: icons.newOrderedList,
           run: appendOrderedListNear,
           title: 'Append ordered list',
+        }),
+        makeButton({
+          enable: outdentLi,
+          icon: icons.outdentList,
+          run: outdentLi,
+          title: 'Outdent list',
+        }),
+        makeButton({
+          enable: indentLi,
+          icon: icons.indentList,
+          run: indentLi,
+          title: 'Indent list',
         }),
         makeButton({
           label: 'Save',
