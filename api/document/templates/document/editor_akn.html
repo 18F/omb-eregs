@@ -25,6 +25,203 @@
     <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>F</kbd></dt>
   <dd>Replace all</dd>
 </dl>
+
+<h2>XML Tags</h2>
+<p>See the
+  <a href="https://github.com/18F/omb-eregs/blob/master/api/example_docs/m_16_19_1.xml"
+   >M-16-19 XML</a> for a complete example.
+</p>
+
+<h3>Block Tags</h3>
+<p>Block tags define the structure of the document. Several assume text in a
+child <tt>content</tt> tag (see also, "Inline Tags"), and some assume a
+<tt>num</tt> tag indicating the paragraph/footnote marker (following Akoma
+Ntoso conventions). The block tags generally all have the same set of
+(optional) attributes:
+</p>
+<dl>
+  <dt>id</dt>
+  <dd>Unique identifier of the node. Automatically computed; can be ignored
+  when editing docs</dd>
+
+  <dt>emblem</dt>
+  <dd>Semantic identifier of this node. For example, if a list item begins
+  with "b.", we would give an emblem of "b"</dd>
+
+  <dt>title</dt>
+  <dd>Used to determine the table of contents for nested sections</dd>
+</dl>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Tag</th>
+      <th>Description</th>
+      <th>Expects <tt>content</tt></th>
+      <th>Expects <tt>num</tt></th>
+      <th>Attribute notes</th>
+      <th>Child notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>policy</td>
+      <td>The root XML node. Should only appear once in a doc.</th>
+      <td>No</td>
+      <td>No</td>
+      <td>-</td>
+      <td>Children should generally be a <tt>preamble</tt> followed by
+        <tt>sec</tt>s or <tt>sec</tt> contents if no headings are
+        present.</td>
+    </tr>
+    <tr>
+      <td>preamble</td>
+      <td>Container which holds metadata about the policy. When displaying the
+        document, this data is referenced, but not directly displayed.</td>
+      <td>No</td>
+      <td>No</td>
+      <td>-</td>
+      <td>Children should be of types <tt>published</tt>, <tt>policyNum</tt>,
+        <tt>policyTitle</tt>, <tt>from</tt>, and <tt>subject</tt>.</td>
+    </tr>
+    <tr>
+      <td>published</td>
+      <td>Text version of publication date.</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>-</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>policyNum</td>
+      <td>Text version of the policy number (e.g. "M-16-19").</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>-</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>from</td>
+      <td>Text version of the "from" field from the policy preamble.</td>
+      <td>Yes</td>
+      <td>Text label, e.g. "From:"</td>
+      <td>-</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>subject</td>
+      <td>Text version of the "subject" field from the policy preamble.</td>
+      <td>Yes</td>
+      <td>Text label, e.g. "Subject:"</td>
+      <td>-</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>sec</td>
+      <td>A section within the document. Can be nested and is closely related
+        to headings.</td>
+      <td>No</td>
+      <td>No</td>
+      <td><tt>title</tt> is used to determine Table of Contents</td>
+      <td>First child should be a <tt>heading</tt>, followed by a sequence of
+        <tt>para</tt>, <tt>list</tt>, <tt>table</tt>, etc. or other
+        <tt>sec</tt>.</td>
+    </tr>
+    <tr>
+      <td>heading</td>
+      <td>Wraps the text of a document header. This is <em>not</em> used when
+        determining section titles; see the <tt>title</tt> attribute of
+        <tt>sec</tt>.</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>-</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>para</td>
+      <td>A paragraph of text. May contain sub-paragraphs and other block
+        elements (it is <em>not</em> a simple HTML &lt;p&gt;)</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>-</td>
+      <td>Children might include <tt>footnote</tt>s, <tt>list</tt>s, etc. or
+        other <tt>para</tt>s (sub-paragraphs).</td>
+    </tr>
+    <tr>
+      <td>footnote</td>
+      <td>Content of a footnote. Should be contained within the paragraph that
+        has a corresponding citation.</td>
+      <td>Yes</td>
+      <td>Footnote number</td>
+      <td><tt>emblem</tt> should <em>also</em> be the footnote number</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>list</td>
+      <td>Container for <tt>listitem</tt>s.</td>
+      <td>No</td>
+      <td>No</td>
+      <td>-</td>
+      <td>Children should be of type <tt>listitem</tt>.</td>
+    </tr>
+    <tr>
+      <td>listitem</td>
+      <td>Represents an element of a list (ordered or unordered). Includes the
+        bullet, list marker, etc.</td>
+      <td>No</td>
+      <td>Bullet or list marker, e.g. "a)" or "●"</td>
+      <td><tt>emblem</tt> should match the <tt>num</tt> for ordered lists</td>
+      <td>Children can be <tt>para</tt>s, <tt>table</tt>s, etc. or nested
+        <tt>list</tt>s.</td>
+    </tr>
+    <tr>
+      <td>math</td>
+      <td>Indicates that its contents should be rendered as LaTeX-style
+        math.</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>-</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>table, thead, etc.</td>
+      <td>Correspond to their HTML counterparts</td>
+      <td>th, caption</td>
+      <td>No</td>
+      <td>-</td>
+      <td>Each cell can contain <tt>para</tt>, <tt>math</tt>, etc.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Inline Tags</h3>
+<p>Within a <tt>content</tt> tag, we include several "inline" tags to wrap
+text. Each type may have unique, semantic attributes. All can be nested.<p>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Tag</th>
+      <th>Description</th>
+      <th>Attributes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>cite</td>
+      <th>Triggers the &lt;cite&gt; HTML tag</th>
+      <th>None</th>
+    </tr>
+    <tr>
+      <td>footnote_citation</td>
+      <th>Links to a specific footnote, as defined by its text body</th>
+      <th>None</th>
+    </tr>
+    <tr>
+      <td>external_link</td>
+      <th>Links to an url via a &lt;a&gt;</th>
+      <th><tt>href</tt> the full url to link</th>
+    </tr>
+  </tbody>
+</table>
 {% endblock %}
 
 {% block editor-js %}
