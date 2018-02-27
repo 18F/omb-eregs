@@ -1,8 +1,14 @@
 import { Node, ResolvedPos } from 'prosemirror-model';
+import { liftListItem, sinkListItem } from 'prosemirror-schema-list';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { JsonApi } from './Api';
-import { deeperBullet, deeperOrderedLi, renumberList } from './list-utils';
+import {
+  deeperBullet,
+  deeperOrderedLi,
+  renumberList,
+  renumberSublists,
+} from './list-utils';
 import pathToResolvedPos, { SelectionPath } from './path-to-resolved-pos';
 import schema, { factory } from './schema';
 import serializeDoc from './serialize-doc';
@@ -16,6 +22,16 @@ function safeDocCheck(doc: Node) {
   } catch (e) {
     console.error('Doc no longer valid', e);
   }
+}
+
+// Set the cursor to highlight the full ProseMirror node (likely a text
+// element)
+function selectNode(transaction: Transaction, resolved: ResolvedPos): Transaction {
+  return transaction.setSelection(TextSelection.create(
+    transaction.doc,
+    resolved.start(resolved.depth),
+    resolved.end(resolved.depth),
+  ));
 }
 
 // Append the provided element at the closest valid point after the user's
@@ -42,12 +58,7 @@ export function appendNearBlock(
       tr.doc.resolve(insertPos + 1),
       selectionPath,
     );
-    const eltEnd = eltStart.pos + eltStart.parent.nodeSize - 1; // inclusive
-    tr = tr.setSelection(TextSelection.create(
-      tr.doc,
-      eltStart.pos,
-      eltEnd,
-    ));
+    tr = selectNode(tr, eltStart);
     dispatch(tr.scrollIntoView());
     safeDocCheck(tr.doc);
   }
@@ -76,6 +87,39 @@ export function appendOrderedListNear(state: EditorState, dispatch?: Dispatch) {
     [factory.listitem(startMarker, [factory.para(' ')])],
   );
   return appendNearBlock(element, ['listitem', 'para', 'paraText'], state, dispatch);
+}
+
+// In many cases, we haven't implemented features for acting over spans of
+// text (when selection's anchor and head are different). This function
+// replaces the provided EditorState with one that's restricted to a single
+// cursor.
+export function restrictToCursor(state: EditorState): EditorState {
+  const transaction = state.tr.setSelection(TextSelection.create(
+    state.doc,
+    state.selection.anchor,
+  ));
+  return state.apply(transaction);
+}
+
+export function indentLi(state: EditorState, dispatch?: Dispatch) {
+  const restrictedState = restrictToCursor(state);
+  const upstreamFn = sinkListItem(schema.nodes.listitem);
+  if (!dispatch) return upstreamFn(restrictedState, dispatch);
+
+  const resolved = restrictedState.selection.$anchor;
+  const listDepth = walkUpUntil(resolved, n => n.type === schema.nodes.list);
+  const startOfList = resolved.start(listDepth);
+
+  // We want to inject some actions after the (upstream) sinkListItem call; to
+  // do that, we'll wrap the Dispatch we give it
+  const wrappedDispatch: Dispatch = (tr: Transaction) => {
+    let result = tr;
+    result = renumberList(result, startOfList);
+    result = renumberSublists(result, startOfList);
+    dispatch(result);
+    return;
+  };
+  return upstreamFn(restrictedState, wrappedDispatch);
 }
 
 export function makeSave(api: JsonApi) {
@@ -108,28 +152,26 @@ function atEndOfLi(pos: ResolvedPos) {
 }
 
 export function addListItem(state: EditorState, dispatch?: Dispatch) {
-  const pos = state.selection.$head;
-  if (!inLi(pos) || !atEndOfLi(pos)) {
+  const resolved = state.selection.$head;
+  if (!inLi(resolved) || !atEndOfLi(resolved)) {
     return false;
   }
   if (!dispatch) {
     return true;
   }
 
-  const endOfLi: number = pos.end(pos.depth - 2); // paraText < para < li
-  const insertPos = endOfLi + 1;
+  // paraText < para < listitem < list
+  const liDepth = resolved.depth - 2;
+  const listDepth = liDepth - 1;
+  const startOfList = resolved.start(listDepth);
+  const insertPos = resolved.after(liDepth);
   // This marker will be replaced during the renumber step
   const liToInsert = factory.listitem('', [factory.para(' ')]);
   let tr = state.tr.insert(insertPos, liToInsert);
-  tr = renumberList(tr, insertPos);
-  const cursorStart = pathToResolvedPos(
+  tr = renumberList(tr, startOfList);
+  tr = selectNode(tr, pathToResolvedPos(
     tr.doc.resolve(insertPos + 1),
     ['para', 'paraText'],
-  ).pos;
-  tr = tr.setSelection(TextSelection.create(
-    tr.doc,
-    cursorStart,
-    cursorStart + 1, // select the space
   ));
   tr = tr.scrollIntoView();
   dispatch(tr);

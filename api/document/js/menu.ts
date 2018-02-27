@@ -5,6 +5,7 @@ import {
   appendBulletListNear,
   appendOrderedListNear,
   appendParagraphNear,
+  indentLi,
   makeSave,
   makeSaveThenXml,
 } from './commands';
@@ -47,6 +48,12 @@ export default function menu(api: JsonApi) {
           icon: icons.newOrderedList,
           run: appendOrderedListNear,
           title: 'Append ordered list',
+        }),
+        makeButton({
+          enable: indentLi,
+          icon: icons.indentList,
+          run: indentLi,
+          title: 'Indent list',
         }),
         makeButton({
           label: 'Save',

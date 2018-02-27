@@ -11,6 +11,7 @@ import {
   appendBulletListNear,
   appendNearBlock,
   appendParagraphNear,
+  indentLi,
   makeSave,
   makeSaveThenXml,
 } from '../commands';
@@ -156,6 +157,75 @@ describe('appendBulletListNear()', () => {
     expect(resolvedPos.parent.type).toBe(schema.nodes.paraText);
     expect(resolvedPos.parent).toBe(
       modified.doc.content.child(1).content.child(0).content.child(0).content.child(0));
+  });
+});
+
+describe('indentLi()', () => {
+  const doc = factory.policy([
+    factory.para('Intro'),
+    factory.list('1.', [
+      factory.listitem('1.', [factory.list('a.', [
+        factory.listitem('a.', []),
+        factory.listitem('b.', []),
+      ])]),
+      factory.listitem('2.', [factory.list('a.', [
+        factory.listitem('a.', []),
+      ])]),
+    ]),
+  ]);
+  const inIntro = pathToResolvedPos(doc, ['para', 'paraText']);
+  const at1 = pathToResolvedPos(doc, ['list', 'listitem']);
+  const ata = pathToResolvedPos(doc, ['list', 'listitem', 'list', 'listitem']);
+  const atb = pathToResolvedPos(
+    doc,
+    ['list', 'listitem', 'list', new NthType(1, 'listitem')],
+  );
+  const at2 = pathToResolvedPos(doc, ['list', new NthType(1, 'listitem')]);
+
+  it('must be at an indentable li', () => {
+    [inIntro, at1, ata].forEach((resolved) => {
+      const selection = new TextSelection(resolved);
+      const state = EditorState.create({ doc, selection });
+      expect(indentLi(state)).toBe(false);
+    });
+  });
+
+  it('indents the li at the current cursor', () => {
+    const selection = new TextSelection(atb);
+    const state = EditorState.create({ doc, selection });
+    const modified = executeTransform(state, indentLi);
+    const subsublist = pathToResolvedPos(
+      modified.doc,
+      ['list', 'listitem', 'list', 'listitem', 'list'],
+    ).parent;
+    expect(collectMarkers(subsublist)).toEqual(['i.']);
+  });
+
+  it('restricts the cursor', () => {
+    const selection = new TextSelection(atb, at2);
+    const state = EditorState.create({ doc, selection });
+    const modified = executeTransform(state, indentLi);
+    expect(modified.selection.anchor).toBe(modified.selection.head);
+    // We sunk the b.
+    const subsublist = pathToResolvedPos(
+      modified.doc,
+      ['list', 'listitem', 'list', 'listitem', 'list'],
+    ).parent;
+    expect(collectMarkers(subsublist)).toEqual(['i.']);
+    // But left the 2. the same
+    const list = pathToResolvedPos(modified.doc, ['list']).parent;
+    expect(collectMarkers(list)).toEqual(['1.', '2.']);
+  });
+
+  it('joins existing lists', () => {
+    const selection = new TextSelection(at2);
+    const state = EditorState.create({ doc, selection });
+    const modified = executeTransform(state, indentLi);
+    const sublist = pathToResolvedPos(
+      modified.doc,
+      ['list', 'listitem', 'list'],
+    ).parent;
+    expect(collectMarkers(sublist)).toEqual(['a.', 'b.', 'c.']);
   });
 });
 
