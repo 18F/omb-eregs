@@ -23,6 +23,7 @@ describe('menu', () => {
       'Append paragraph',
       'Append bullet list',
       'Append ordered list',
+      'Outdent list',
       'Indent list',
       'Save document',
       'Save document then edit as XML',

@@ -1,9 +1,11 @@
 import { EditorState } from 'prosemirror-state';
 
 import {
+  collapseAdjacentLists,
   collectMarkers,
   deeperBullet,
   deeperOrderedLi,
+  renumberAdjacentList,
   renumberList,
   renumberSublists,
 } from '../list-utils';
@@ -254,5 +256,149 @@ describe('renumberSublists()', () => {
     expect(collectMarkers(sublist)).toEqual(['a>', 'b>']);
     expect(collectMarkers(subsublist1)).toEqual(['i>', 'ii>']);
     expect(collectMarkers(subsublist2)).toEqual(['i>', 'ii>']);
+  });
+});
+
+describe('collapseAdjacentLists()', () => {
+  it('does nothing if there are not two following lists', () => {
+    const doc = factory.policy([
+      factory.para('Some text'),
+      factory.para('More text'),
+      factory.list('*', [factory.listitem('*', [factory.para('li text')])]),
+    ]);
+    const initialState = EditorState.create({ doc });
+    const inFirstPara = pathToResolvedPos(doc, ['para', 'paraText']);
+    const firstTr = collapseAdjacentLists(initialState.tr, inFirstPara.pos);
+    expect(initialState.doc).toEqual(firstTr.doc);
+
+    const inSecondPara = pathToResolvedPos(
+      doc,
+      [new NthType(1, 'para'), 'paraText'],
+    );
+    const secondTr = collapseAdjacentLists(initialState.tr, inSecondPara.pos);
+    expect(initialState.doc).toEqual(secondTr.doc);
+  });
+
+  it('combines two adjacent lists, into the first', () => {
+    const doc = factory.policy([
+      factory.para('Some text'),
+      factory.list('*', [
+        factory.listitem('*', [factory.para('list1 text1')]),
+        factory.listitem('*', [factory.para('list1 text2')]),
+      ]),
+      factory.list('>', [
+        factory.listitem('>', [factory.para('list2 text1')]),
+        factory.listitem('>', [factory.para('list2 text2')]),
+      ]),
+    ]);
+    expect(doc.childCount).toBe(3);
+
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['para']).pos;
+    const resultDoc = collapseAdjacentLists(initialState.tr, pos).doc;
+    expect(resultDoc.childCount).toBe(2);
+    const list = resultDoc.child(1);
+    expect(list.childCount).toBe(4);
+    expect(list.attrs.markerPrefix).toBe('*');
+    expect(list.child(0).textContent).toBe('list1 text1');
+    expect(list.child(1).textContent).toBe('list1 text2');
+    expect(list.child(2).textContent).toBe('list2 text1');
+    expect(list.child(3).textContent).toBe('list2 text2');
+  });
+
+  it('collapses multiple lists', () => {
+    const doc = factory.policy([
+      factory.para('Some text'),
+      factory.list('*', [
+        factory.listitem('*'),
+      ]),
+      factory.list('>', [
+        factory.listitem('>'),
+        factory.listitem('>'),
+      ]),
+      factory.list('1.', [
+        factory.listitem('1.'),
+        factory.listitem('2.'),
+        factory.listitem('3.'),
+      ]),
+      factory.list('o', [
+        factory.listitem('o'),
+        factory.listitem('o'),
+        factory.listitem('o'),
+        factory.listitem('o'),
+      ]),
+    ]);
+    expect(doc.childCount).toBe(5);
+
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['para']).pos;
+    const resultDoc = collapseAdjacentLists(initialState.tr, pos).doc;
+    expect(resultDoc.childCount).toBe(2);
+    const list = resultDoc.child(1);
+    expect(list.childCount).toBe(10);
+    expect(list.attrs.markerPrefix).toBe('*');
+  });
+});
+
+describe('renumberAdjacentList()', () => {
+  it('does nothing if there is no adjacent list', () => {
+    const doc = factory.policy([
+      factory.para('Text'),
+      factory.para('Second'),
+      factory.list('*', []),
+    ]);
+    const initialState = EditorState.create({ doc });
+    const inFirstPara = pathToResolvedPos(doc, ['para']).pos;
+    const result = renumberAdjacentList(initialState.tr, '>', inFirstPara);
+    expect(initialState.doc).toEqual(result.doc);
+  });
+
+  it('uses the provided template', () => {
+    const doc = factory.policy([
+      factory.para('Text'),
+      factory.list('*', [
+        factory.listitem('*', []),
+        factory.listitem('*', []),
+        factory.listitem('*', []),
+      ]),
+    ]);
+    expect(doc.childCount).toBe(2);
+    expect(doc.child(1).childCount).toBe(3);
+
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['para']).pos;
+    const resultDoc = renumberAdjacentList(initialState.tr, '>', pos).doc;
+    expect(resultDoc.childCount).toBe(2);
+    const list = resultDoc.child(1);
+    expect(list.childCount).toBe(3);
+    expect(list.attrs.markerPrefix).toBe('>');
+    expect(collectMarkers(list)).toEqual(['>', '>', '>']);
+  });
+
+  it('renumbers sublists', () => {
+    const doc = factory.policy([
+      factory.para('Text'),
+      factory.list('*', [
+        factory.listitem('*', [factory.list('o', [
+          factory.listitem('o', []),
+          factory.listitem('oo', []),
+          factory.listitem('ooo', []),
+        ])]),
+        factory.listitem('*', [factory.list('1.', [
+          factory.listitem('1.', []),
+          factory.listitem('2.', []),
+        ])]),
+      ]),
+    ]);
+    const initialState = EditorState.create({ doc });
+    const pos = pathToResolvedPos(doc, ['para']).pos;
+    const resultDoc = renumberAdjacentList(initialState.tr, '1.', pos).doc;
+    const list = resultDoc.child(1);
+    const sublist1 = list.child(0).child(0);
+    const sublist2 = list.child(1).child(0);
+
+    expect(collectMarkers(list)).toEqual(['1.', '2.']);
+    expect(collectMarkers(sublist1)).toEqual(['a.', 'b.', 'c.']);
+    expect(collectMarkers(sublist2)).toEqual(['a.', 'b.']);
   });
 });

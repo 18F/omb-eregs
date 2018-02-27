@@ -8,6 +8,7 @@ import {
   indentLi,
   makeSave,
   makeSaveThenXml,
+  outdentLi,
 } from './commands';
 import icons from './icons';
 
@@ -48,6 +49,12 @@ export default function menu(api: JsonApi) {
           icon: icons.newOrderedList,
           run: appendOrderedListNear,
           title: 'Append ordered list',
+        }),
+        makeButton({
+          enable: outdentLi,
+          icon: icons.outdentList,
+          run: outdentLi,
+          title: 'Outdent list',
         }),
         makeButton({
           enable: indentLi,

@@ -4,8 +4,10 @@ import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { JsonApi } from './Api';
 import {
+  collapseAdjacentLists,
   deeperBullet,
   deeperOrderedLi,
+  renumberAdjacentList,
   renumberList,
   renumberSublists,
 } from './list-utils';
@@ -101,6 +103,26 @@ export function restrictToCursor(state: EditorState): EditorState {
   return state.apply(transaction);
 }
 
+type Command = (state: EditorState, dispatch?: Dispatch) => boolean;
+
+// We want to inject some actions _after_ an upstream command; to do that,
+// we'll wrap the Dispatch we give that fn to always call our logic before
+// passing it along to the original
+function appendToCommand(
+  original: Command,
+  appendLogic: (tr: Transaction) => Transaction,
+): Command {
+  return (state: EditorState, dispatch?: Dispatch) => {
+    const wrappedDispatch: Dispatch = (tr: Transaction) => {
+      if (dispatch) {
+        const result = appendLogic(tr);
+        dispatch(result);
+      }
+    };
+    return original(state, wrappedDispatch);
+  };
+}
+
 export function indentLi(state: EditorState, dispatch?: Dispatch) {
   const restrictedState = restrictToCursor(state);
   const upstreamFn = sinkListItem(schema.nodes.listitem);
@@ -108,18 +130,43 @@ export function indentLi(state: EditorState, dispatch?: Dispatch) {
 
   const resolved = restrictedState.selection.$anchor;
   const listDepth = walkUpUntil(resolved, n => n.type === schema.nodes.list);
+  if (listDepth < 0) return false;
   const startOfList = resolved.start(listDepth);
 
-  // We want to inject some actions after the (upstream) sinkListItem call; to
-  // do that, we'll wrap the Dispatch we give it
-  const wrappedDispatch: Dispatch = (tr: Transaction) => {
+  const transform = appendToCommand(upstreamFn, (tr: Transaction) => {
     let result = tr;
     result = renumberList(result, startOfList);
-    result = renumberSublists(result, startOfList);
-    dispatch(result);
-    return;
-  };
-  return upstreamFn(restrictedState, wrappedDispatch);
+    return renumberSublists(result, startOfList);
+  });
+
+  return transform(restrictedState, dispatch);
+}
+
+export function outdentLi(state: EditorState, dispatch?: Dispatch) {
+  const restrictedState = restrictToCursor(state);
+  const upstreamFn = liftListItem(schema.nodes.listitem);
+  if (!dispatch) return upstreamFn(restrictedState, dispatch);
+
+  const resolved = restrictedState.selection.$anchor;
+  const listDepth = walkUpUntil(resolved, n => n.type === schema.nodes.list);
+  if (listDepth < 0) return false;
+  const { markerPrefix, markerSuffix, numeralFn } = resolved.node(listDepth).attrs;
+  const listMarker = markerPrefix + numeralFn(0) + markerSuffix;
+  const transform = appendToCommand(upstreamFn, (tr: Transaction) => {
+    let result = tr;
+    result = collapseAdjacentLists(result, result.selection.anchor);
+    result = renumberAdjacentList(result, listMarker, result.selection.anchor);
+    const newResolved = result.selection.$anchor;
+    const newListDepth = walkUpUntil(newResolved, n => n.type === schema.nodes.list);
+    if (newListDepth >= 0) {
+      const startOfList = newResolved.start(newListDepth);
+      result = renumberList(result, startOfList);
+      result = renumberSublists(result, startOfList);
+    }
+    return result;
+  });
+
+  return transform(restrictedState, dispatch);
 }
 
 export function makeSave(api: JsonApi) {
