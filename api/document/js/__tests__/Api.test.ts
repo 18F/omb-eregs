@@ -23,6 +23,7 @@ const api = new Api<string>({
 });
 
 describe('fetch()', () => {
+  axios.get = jest.fn(async () => ({ data: '' }));
   it('passes the correct args', () => {
     api.fetch();
     expect(axios.get).toHaveBeenCalledWith(
