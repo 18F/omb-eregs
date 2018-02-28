@@ -21,6 +21,7 @@ describe('menu', () => {
       'Undo last change',
       'Redo last undone change',
       'Append paragraph',
+      'Add or remove link',
       'Append bullet list',
       'Append ordered list',
       'Outdent list',
