@@ -5,7 +5,7 @@ from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 
 from reqs.filtersets import (AgencyFilter, AgencyGroupFilter, PolicyFilter,
                              RequirementFilter, TopicFilter)
-from reqs.models import Agency, Requirement
+from reqs.models import Agency, Requirement, WorkflowPhases
 from reqs.serializers import RequirementSerializer
 
 
@@ -70,5 +70,6 @@ class RequirementViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(public=True, policy__public=True)
+        queryset = queryset.filter(
+            public=True, policy__workflow_phase=WorkflowPhases.published.name)
         return queryset

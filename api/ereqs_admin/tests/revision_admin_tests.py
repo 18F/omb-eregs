@@ -26,7 +26,7 @@ def test_schema_matches(admin_client):
 def test_field_deleted(admin_client):
     policy, version = policy_with_version()
     data = json.loads(version.serialized_data)
-    del data[0]['fields']['public']
+    del data[0]['fields']['workflow_phase']
     version.serialized_data = json.dumps(data)
     version.save()
 
