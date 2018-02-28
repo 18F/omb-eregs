@@ -120,10 +120,9 @@ class Policy(models.Model):
     slug = models.SlugField(max_length=title.max_length)
     issuance = models.DateField()
     sunset = models.DateField(blank=True, null=True)
-    public = models.BooleanField(default=True)
     workflow_phase = models.CharField(
         max_length=32, choices=[(e.name, e.value) for e in WorkflowPhases],
-        default=WorkflowPhases.no_doc.name
+        default=WorkflowPhases.no_doc.name,
     )
 
     # Legacy data fields

@@ -4,7 +4,8 @@ from rest_framework import viewsets
 
 from reqs.filtersets import (AgencyFilter, AgencyGroupFilter, PolicyFilter,
                              RequirementFilter, TopicFilter)
-from reqs.models import Agency, AgencyGroup, Policy, Requirement, Topic
+from reqs.models import (Agency, AgencyGroup, Policy, Requirement, Topic,
+                         WorkflowPhases)
 from reqs.serializers import PolicySerializer
 
 
@@ -62,10 +63,11 @@ def relevant_reqs_count(params):
     return Subquery(subquery, output_field=IntegerField())
 
 
-def policy_or_404(identifier, only_public=True):
+def policy_or_404(identifier, only_published=True):
     queryset = Policy.objects.all()
-    if only_public:
-        queryset = queryset.filter(public=True)
+    if only_published:
+        queryset = queryset.filter(
+            workflow_phase=WorkflowPhases.published.name)
 
     test = Q(omb_policy_id=identifier) | Q(slug=identifier)
     if identifier.isdigit():
@@ -88,7 +90,10 @@ class PolicyViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset() \
             .annotate(total_reqs=relevant_reqs_count({}),
                       relevant_reqs=relevant_reqs_count(self.request.GET)) \
-            .filter(public=True, relevant_reqs__gt=0)
+            .filter(
+                workflow_phase=WorkflowPhases.published.name,
+                relevant_reqs__gt=0,
+            )
         return queryset
 
     def get_object(self):

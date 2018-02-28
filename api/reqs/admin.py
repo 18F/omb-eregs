@@ -30,7 +30,7 @@ class PolicyAdmin(EReqsVersionAdmin):
     actions = None
     list_display = ('workflow_phase', '__str__', 'issuance')
     list_display_links = ('__str__',)
-    list_filter = ['public', 'workflow_phase']
+    list_filter = ['workflow_phase']
     ordering = ['-issuance', '-pk']
     search_fields = ['title', 'omb_policy_id']
     fields = [
@@ -38,7 +38,6 @@ class PolicyAdmin(EReqsVersionAdmin):
         'omb_policy_id',
         'issuance',
         'sunset',
-        'public',
         'workflow_phase',
     ]
 
