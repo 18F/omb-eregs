@@ -238,3 +238,76 @@ def test_jump_to():
     assert root.jump_to('root_1').identifier == 'root_1'
     assert para_a.jump_to('root_1').identifier == 'root_1'
     assert para_a.jump_to('root_1__sec_1').identifier == 'root_1__sec_1'
+
+
+def test_add_child_insert_pos():
+    root = tree.DocCursor.new_tree('root')
+    root.add_child('sec', '1')
+    root.add_child('sec', '2')
+    root.add_child('sec', '3')
+
+    assert [n.identifier for n in root.walk()] == [
+        'root_1', 'root_1__sec_1', 'root_1__sec_2', 'root_1__sec_3']
+
+    root.add_child('sec', '4', insert_pos=1)
+    assert [n.identifier for n in root.walk()] == [
+        'root_1', 'root_1__sec_1', 'root_1__sec_4', 'root_1__sec_2',
+        'root_1__sec_3',
+    ]
+
+
+def test_siblings():
+    root = tree.DocCursor.new_tree('root')
+    s1 = root.add_child('sec', '1')
+    s2 = root.add_child('sec', '2')
+    s3 = root.add_child('sec', '3')
+    s4 = root.add_child('sec', '4')
+    s1.add_child('para')
+    s3.add_child('para')
+
+    assert [s.identifier for s in s3.left_siblings()] == [
+        s1.identifier, s2.identifier]
+    assert [s.identifier for s in s3.right_siblings()] == [s4.identifier]
+    assert s1.left_sibling() is None
+    assert s1.right_sibling().identifier == s2.identifier
+    assert s2.left_sibling().identifier == s1.identifier
+
+
+def test_append_to():
+    root = tree.DocCursor.new_tree('root')
+    s1 = root.add_child('sec')
+    s1.add_child('para')
+    p12 = s1.add_child('para')
+    p12.add_child('math')
+    s2 = root.add_child('sec')
+    s2.add_child('para')
+    list_el = s2.add_child('list')
+    list_el.add_child('listitem')
+    list_el.add_child('listitem')
+
+    assert [n.identifier for n in root.walk()] == [
+        'root_1',
+        'root_1__sec_1',
+        'root_1__sec_1__para_1',
+        'root_1__sec_1__para_2',
+        'root_1__sec_1__para_2__math_1',
+        'root_1__sec_2',
+        'root_1__sec_2__para_1',
+        'root_1__sec_2__list_1',
+        'root_1__sec_2__list_1__listitem_1',
+        'root_1__sec_2__list_1__listitem_2',
+    ]
+
+    list_el.append_to(p12)
+    assert [n.identifier for n in root.walk()] == [
+        'root_1',
+        'root_1__sec_1',
+        'root_1__sec_1__para_1',
+        'root_1__sec_1__para_2',
+        'root_1__sec_1__para_2__math_1',
+        'root_1__sec_1__para_2__list_1',
+        'root_1__sec_1__para_2__list_1__listitem_1',
+        'root_1__sec_1__para_2__list_1__listitem_2',
+        'root_1__sec_2',
+        'root_1__sec_2__para_1',
+    ]
