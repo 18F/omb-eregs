@@ -3,6 +3,7 @@ from typing import Any, Callable, Dict, Iterator, List, Optional, Type, TypeVar
 
 from networkx import DiGraph
 from networkx.algorithms.dag import descendants
+from networkx.relabel import relabel_nodes
 
 from document.models import DocNode
 
@@ -126,7 +127,7 @@ class DocCursor():
         return str(child_type_counts[node_type] + 1)
 
     def add_child(self: T, node_type: str, type_emblem: Optional[str] = None,
-                  **attrs) -> T:
+                  insert_pos: Optional[int] = None, **attrs) -> T:
         if type_emblem is None:
             type_emblem = self.next_emblem(node_type)
         if 'policy' not in attrs:
@@ -138,8 +139,15 @@ class DocCursor():
             type_emblem=type_emblem, depth=self.depth + 1,
             **attrs
         ))
-        self.tree.add_edge(self.identifier, identifier,
-                           sort_order=self.next_sort_order())
+        if insert_pos is None:
+            insert_pos = self.next_sort_order()
+        else:
+            # shift children if necessary
+            edges = self.tree.out_edges(self.identifier, data='sort_order')
+            for _, child_idx, sort_order in edges:
+                if sort_order >= insert_pos:
+                    self.tree[self.identifier][child_idx]['sort_order'] += 1
+        self.tree.add_edge(self.identifier, identifier, sort_order=insert_pos)
         return self.__class__(self.tree, identifier=identifier)
 
     def subtree_size(self) -> int:
@@ -219,6 +227,18 @@ class DocCursor():
             return type(self)(self.tree, predecessors[0])
         return None
 
+    def left_sibling(self: T) -> Optional[T]:
+        siblings = list(self.left_siblings())
+        if siblings:
+            return siblings[-1]
+        return None
+
+    def right_sibling(self: T) -> Optional[T]:
+        siblings = list(self.right_siblings())
+        if siblings:
+            return siblings[0]
+        return None
+
     def ancestors(self: T, filter_fn: Callable[[T], bool]=None) \
             -> Iterator[T]:
         parent = self.parent()
@@ -226,6 +246,26 @@ class DocCursor():
             yield parent
         if parent:
             yield from parent.ancestors(filter_fn)
+
+    def left_siblings(self: T) -> Iterator[T]:
+        """What's before this node, sharing the same parent."""
+        parent = self.parent()
+        if parent:
+            for sibling in parent.children():
+                if sibling.identifier == self.identifier:
+                    break
+                yield sibling
+
+    def right_siblings(self: T) -> Iterator[T]:
+        """What's after this node, sharing the same parent."""
+        parent = self.parent()
+        seen_self = False
+        if parent:
+            for sibling in parent.children():
+                if seen_self:
+                    yield sibling
+                if sibling.identifier == self.identifier:
+                    seen_self = True
 
     def add_models(self: T, models: Iterator[DocNode]) -> T:
         """Convert a (linear) list of DocNodes into a tree-aware version.
@@ -256,6 +296,36 @@ class DocCursor():
 
     def jump_to(self: T, identifier: str) -> T:
         return type(self)(self.tree, identifier)
+
+    def append_to(self: T, new_parent: T) -> T:
+        """Move this node (and its subtree) to be the last child of the
+        new_parent. This requires modifying all of the subtree's
+        identifiers."""
+        prev_parent = self.parent()
+        if not prev_parent:
+            raise AssertionError("Can't move a node with no parent")
+        # remove from previous position
+        self.tree.remove_edge(prev_parent.identifier, self.identifier)
+        # add to new position
+        old_prefix = self.identifier
+        self.model.type_emblem = new_parent.next_emblem(self.node_type)
+        new_prefix = (
+            new_parent.identifier
+            + '__' + self.node_type
+            + '_' + self.type_emblem
+        )
+        self.tree.add_edge(new_parent.identifier, self.identifier,
+                           sort_order=new_parent.next_sort_order())
+
+        # relabel
+        label_mapping = {}
+        for node in self.walk():
+            old_label = node.identifier
+            node.model.identifier = new_prefix + old_label[len(old_prefix):]
+            label_mapping[old_label] = node.model.identifier
+        relabel_nodes(self.tree, label_mapping, copy=False)
+
+        return self.jump_to(label_mapping[self.identifier])
 
 
 class XMLAwareCursor(DocCursor):

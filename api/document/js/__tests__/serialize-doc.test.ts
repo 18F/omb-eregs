@@ -1,4 +1,5 @@
 import { Fragment } from 'prosemirror-model';
+import * as repeatString from 'repeat-string';
 
 import serializeDoc, { apiFactory, convertTexts } from '../serialize-doc';
 import schema, { factory } from '../schema';
@@ -51,6 +52,14 @@ describe('serializeDoc()', () => {
     ]);
     const result = serializeDoc(node);
     expect(result.title).toEqual('Stufff');
+  });
+
+  it('trims heading text to for the section title', () => {
+    const node = factory.sec([
+      factory.heading(repeatString('1', 555), 1),
+    ]);
+    const result = serializeDoc(node);
+    expect(result.title).toEqual(repeatString('1', 128));
   });
 
   it('converts footnotes', () => {

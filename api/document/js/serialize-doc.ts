@@ -51,9 +51,9 @@ const NODE_CONVERTERS: NodeConverterMap = {
   },
   sec(node) {
     const headerNode = node.content.child(0);
-    const title = headerNode.textContent;
+    const title = headerNode.textContent || '';
     const sec = defaultNodeConverter(node);
-    sec.title = title;
+    sec.title = title.substr(0, 128); // trim
 
     return sec;
   },
