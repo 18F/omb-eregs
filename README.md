@@ -127,7 +127,6 @@ Let's also load example requirements, agencies, and a whole document:
 ```bash
 bin/manage.py fetch_csv
 bin/manage.py import_reqs data.csv
-bin/manage.py sync_agencies
 bin/manage.py import_xml_doc example_docs/m_16_19_1.xml M-16-19
 bin/manage.py import_xml_doc example_docs/m_15_16.xml M-15-16
 ```

@@ -14,21 +14,23 @@ describe('menu', () => {
     const spanOne = divOne.appendChild(document.createElement('span'));
     const menuBarView = menuBar.spec.view(new EditorView(spanOne, { state }));
     const menuItems = flatten(menuBarView.options.content);
-    const menuItemTitles = menuItems.map(item => item.title);
+    const menuItemTitles = menuItems.map(item => item.spec.title);
     /* It seems that title is the best way to detect the presence of buttons.
      * Note that this approach doesn't check for the order of the buttons. */
     const expectedItemTitles = [
       'Undo last change',
       'Redo last undone change',
       'Append paragraph',
+      'Add or remove link',
       'Append bullet list',
       'Append ordered list',
+      'Outdent list',
+      'Indent list',
       'Save document',
       'Save document then edit as XML',
     ];
-    expectedItemTitles.forEach((title) => {
-      expect(menuItemTitles.includes(title));
-    });
-
+    menuItemTitles.sort();
+    expectedItemTitles.sort();
+    expect(menuItemTitles).toEqual(expectedItemTitles);
   });
 });

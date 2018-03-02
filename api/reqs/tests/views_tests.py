@@ -8,9 +8,10 @@ from reqs.models import Policy, Requirement
 @pytest.mark.django_db
 def test_excludes_nonpublic():
     """The API endpoint should not include policies flagged as nonpublic"""
-    public_policy = mommy.make(Policy, policy_number='0')
-    nonpublic_policy = mommy.make(Policy, policy_number='1', public=False)
-    assert public_policy.public  # The default should be True
+    public_policy = mommy.make(Policy, policy_number='0',
+                               workflow_phase='published')
+    nonpublic_policy = mommy.make(Policy, policy_number='1',
+                                  workflow_phase='edit')
     public_reqs = mommy.make(Requirement, policy=public_policy, _quantity=3)
     nonpublic_reqs = mommy.make(Requirement,
                                 policy=nonpublic_policy, _quantity=4)

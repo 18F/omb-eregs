@@ -13,8 +13,10 @@ PolicySetup = namedtuple('PolicySetup', ('policies', 'reqs'))
 
 @pytest.fixture
 def policy_setup():
-    policies = [mommy.make(Policy, policy_number='0'),
-                mommy.make(Policy, policy_number='1')]
+    policies = [mommy.make(Policy, policy_number='0',
+                           workflow_phase='published'),
+                mommy.make(Policy, policy_number='1',
+                           workflow_phase='published')]
     reqs = [mommy.make(Requirement, policy=policies[0], _quantity=3),
             mommy.make(Requirement, policy=policies[1], _quantity=4)]
     yield PolicySetup(policies, reqs)
@@ -147,7 +149,7 @@ def test_agencies_indirect(policy_setup):
 @pytest.mark.django_db
 def test_nonpublic_reqs():
     client = APIClient()
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, workflow_phase='published')
     mommy.make(Requirement, policy=policy, public=False)
 
     assert client.get('/policies/').json()['count'] == 0
@@ -167,7 +169,7 @@ def test_omb_policy_id():
     path = "/policies/{0}".format(omb_policy_id)
     response = client.get(path)
     assert response.status_code == 301
-    mommy.make(Policy, omb_policy_id=omb_policy_id)
+    mommy.make(Policy, omb_policy_id=omb_policy_id, workflow_phase='published')
     response = client.get(path + '.json').json()
     assert response['omb_policy_id'] == omb_policy_id
 
@@ -179,7 +181,7 @@ def test_pk_id():
     path = "/policies/{0}".format(pk_id)
     response = client.get(path)
     assert response.status_code == 301
-    mommy.make(Policy, pk=pk_id)
+    mommy.make(Policy, pk=pk_id, workflow_phase='published')
     response = client.get(path + '.json').json()
     assert response['id'] == pk_id
 
@@ -191,14 +193,15 @@ def test_slug():
     path = f"/policies/{slug}.json"
     response = client.get(path)
     assert response.status_code == 404
-    mommy.make(Policy, slug=slug, pk=456)
+    mommy.make(Policy, slug=slug, pk=456, workflow_phase='published')
     response = client.get(path).json()
     assert response['id'] == 456
 
 
 @pytest.mark.django_db
 def test_policy_or_404():
-    policy = mommy.make(Policy, omb_policy_id='AAA-BBB-CCC')
+    policy = mommy.make(Policy, omb_policy_id='AAA-BBB-CCC',
+                        workflow_phase='published')
     assert policies_views.policy_or_404(f"{policy.pk}") == policy
     assert policies_views.policy_or_404("AAA-BBB-CCC") == policy
     with pytest.raises(Http404):

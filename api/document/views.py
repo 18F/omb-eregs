@@ -23,8 +23,8 @@ class TreeView(GenericAPIView):
     queryset = DocNode.objects.none()   # Used to determine permissions
 
     def get_object(self, prefetch_related=True):
-        only_public = not self.request.user.is_authenticated
-        policy = policy_or_404(self.kwargs['policy_id'], only_public)
+        only_published = not self.request.user.is_authenticated
+        policy = policy_or_404(self.kwargs['policy_id'], only_published)
         # we'll pass this policy down when we serialize
         self.policy = policy
         query_args = {'policy_id': policy.pk}
@@ -72,7 +72,7 @@ class TreeView(GenericAPIView):
 def render_editor(request, policy_id, filename, title):
     # Verify that the policy is valid; 404 when not. We don't actually load
     # the document content as they'll be retrieved from the API
-    policy_or_404(policy_id, only_public=False)
+    policy_or_404(policy_id, only_published=False)
     return render(request, filename, {
         'document_url': reverse('document', kwargs={'policy_id': policy_id}),
         'title': title,

@@ -51,9 +51,9 @@ const NODE_CONVERTERS: NodeConverterMap = {
   },
   sec(node) {
     const headerNode = node.content.child(0);
-    const title = headerNode.textContent;
+    const title = headerNode.textContent || '';
     const sec = defaultNodeConverter(node);
-    sec.title = title;
+    sec.title = title.substr(0, 128); // trim
 
     return sec;
   },
@@ -94,8 +94,10 @@ function defaultNodeConverter(node: Node): ApiNode {
 }
 
 const MARK_CONVERTERS = {
-  unimplementedMark: node =>
-    apiFactory.content(node.type.name, node.attrs.data),
+  unimplementedMark: mark =>
+    apiFactory.content(mark.type.name, mark.attrs.data),
+  external_link: mark =>
+  apiFactory.content(mark.type.name, { href: mark.attrs.href }),
 };
 
 

@@ -57,8 +57,9 @@ type NodeConverterMap = {
 
 const NODE_TYPE_CONVERTERS: NodeConverterMap = {
   heading(node) {
-    if (!node.identifier)
+    if (!node.identifier) {
       throw new Error('Assertion failure, node needs identifier');
+    }
 
     // Duplicates logic in `ui`
     const depth = node.identifier
@@ -79,8 +80,9 @@ const NODE_TYPE_CONVERTERS: NodeConverterMap = {
     );
   },
   listitem(node) {
-    if (!node.marker)
+    if (!node.marker) {
       throw new Error('Assertion failure, list items must have markers');
+    }
     return factory.listitem(node.marker, mapChildren(node));
   },
   para(node) {
@@ -99,4 +101,5 @@ const NODE_TYPE_CONVERTERS: NodeConverterMap = {
 
 const CONTENT_TYPE_CONVERTERS = {
   unimplementedMark: content => factory.unimplementedMark(content),
+  external_link: content => factory.external_link(content.href),
 };

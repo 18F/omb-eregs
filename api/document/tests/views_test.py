@@ -14,7 +14,7 @@ from reqs.models import Policy, Requirement
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_put_403s_for_anon_users(client):
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, workflow_phase='published')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.nested_set_renumber()
 
@@ -34,7 +34,7 @@ def test_put_fails_with_identifier(admin_client):
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_json_put_works_for_admin_users(admin_client):
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, workflow_phase='published')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sec', text='blah')
     root.nested_set_renumber()
@@ -63,7 +63,7 @@ def test_json_put_works_for_admin_users(admin_client):
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_akn_put_works_for_admin_users(admin_client):
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, workflow_phase='published')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sec', text='blah')
     root.nested_set_renumber()
@@ -90,7 +90,7 @@ def test_akn_put_works_for_admin_users(admin_client):
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_404s(client):
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, workflow_phase='published')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.add_child('sec')
     root.nested_set_renumber()
@@ -106,7 +106,7 @@ def test_404s(client):
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_correct_data(client):
-    policy = mommy.make(Policy)
+    policy = mommy.make(Policy, workflow_phase='published')
     root = DocCursor.new_tree('root', '0', policy=policy)
     sec1 = root.add_child('sec')
     root.add_child('sec')
@@ -130,7 +130,8 @@ def test_correct_data(client):
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_by_pretty_url(client):
-    policy = mommy.make(Policy, omb_policy_id='M-Something-18')
+    policy = mommy.make(Policy, omb_policy_id='M-Something-18',
+                        workflow_phase='published')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.nested_set_renumber()
 
@@ -143,7 +144,8 @@ def test_by_pretty_url(client):
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_nonpublic(client, admin_client):
-    policy = mommy.make(Policy, omb_policy_id='M-Something-18', public=False)
+    policy = mommy.make(Policy, omb_policy_id='M-Something-18',
+                        workflow_phase='edit')
     root = DocCursor.new_tree('root', '0', policy=policy)
     root.nested_set_renumber()
 
@@ -157,7 +159,8 @@ def test_nonpublic(client, admin_client):
 @pytest.mark.django_db
 @pytest.mark.urls('document.urls')
 def test_query_count(client):
-    policy = mommy.make(Policy, omb_policy_id='M-O-A-R')
+    policy = mommy.make(Policy, omb_policy_id='M-O-A-R',
+                        workflow_phase='published')
     root = random_doc(20, save=True, policy=policy, text='placeholder')
 
     # select 3 nodes to have external links
@@ -201,7 +204,7 @@ def test_query_count(client):
 @pytest.mark.parametrize('path_suffix', ['', '/akn'])
 @pytest.mark.django_db
 def test_editor_requires_admin(client, path_suffix):
-    mommy.make(Policy, omb_policy_id='M-11-22')
+    mommy.make(Policy, omb_policy_id='M-11-22', workflow_phase='published')
     result = client.get(f'/admin/document-editor/M-11-22{path_suffix}')
     assert result.status_code == 302
 
@@ -209,7 +212,7 @@ def test_editor_requires_admin(client, path_suffix):
 @pytest.mark.parametrize('path_suffix', ['', '/akn'])
 @pytest.mark.django_db
 def test_editor_checks_policy(admin_client, path_suffix):
-    mommy.make(Policy, omb_policy_id='M-11-22')
+    mommy.make(Policy, omb_policy_id='M-11-22', workflow_phase='published')
     result = admin_client.get(f'/admin/document-editor/M-99-88{path_suffix}')
     assert result.status_code == 404
     result = admin_client.get(f'/admin/document-editor/M-11-22{path_suffix}')
@@ -219,6 +222,6 @@ def test_editor_checks_policy(admin_client, path_suffix):
 @pytest.mark.parametrize('path_suffix', ['', '/akn'])
 @pytest.mark.django_db
 def test_editor_policy_can_be_private(admin_client, path_suffix):
-    mommy.make(Policy, omb_policy_id='M-11-22', public=False)
+    mommy.make(Policy, omb_policy_id='M-11-22', workflow_phase='edit')
     result = admin_client.get(f'/admin/document-editor/M-11-22{path_suffix}')
     assert result.status_code == 200

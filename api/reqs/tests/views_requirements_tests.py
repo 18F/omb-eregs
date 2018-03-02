@@ -32,6 +32,9 @@ def test_requirement_filtering_topic(path, num_results):
     client = APIClient()
     topics = [mommy.make(Topic, name=str(i)*4) for i in range(4)]
     req1, req2, req3 = mommy.make(Requirement, _quantity=3)
+    for req in (req1, req2, req3):
+        req.policy.workflow_phase = 'published'
+        req.policy.save()
     req1.topics.add(topics[0], topics[1])
     req2.topics.add(topics[1], topics[2])
     req3.topics.add(topics[3])
@@ -46,6 +49,9 @@ def test_requirements_queryset_order():
     topics = mommy.make(Topic, _quantity=6)
     req1, req2, req3 = [mommy.make(Requirement, req_id=str(i + 1))
                         for i in range(3)]
+    for req in (req1, req2, req3):
+        req.policy.workflow_phase = 'published'
+        req.policy.save()
     req1.topics.add(topics[0], topics[1])
     req2.topics.add(topics[1], topics[2], topics[3])
     req3.topics.add(topics[0], topics[4], topics[5])
@@ -73,7 +79,8 @@ def test_requirements_ordered_by_key(params, req_ids, omb_policy_ids, result):
     """
     client = APIClient()
     for req_id, omb_policy_id in zip(req_ids, omb_policy_ids):
-        policy = mommy.make(Policy, omb_policy_id=str(omb_policy_id))
+        policy = mommy.make(Policy, omb_policy_id=str(omb_policy_id),
+                            workflow_phase='published')
         mommy.make(Requirement, req_id=str(req_id), policy=policy)
     path = "/requirements/?{0}".format(params)
     response = client.get(path)
@@ -93,8 +100,10 @@ def test_requirements_ordered_by_multiple_keys(params, result):
     """
     We should be able to pass in arbitrary sort fields.
     """
-    policy1 = mommy.make(Policy, omb_policy_id="23")
-    policy2 = mommy.make(Policy, omb_policy_id="17")
+    policy1 = mommy.make(Policy, omb_policy_id="23",
+                         workflow_phase='published')
+    policy2 = mommy.make(Policy, omb_policy_id="17",
+                         workflow_phase='published')
     mommy.make(Requirement, req_id=1, verb="zoot", policy=policy1)
     mommy.make(Requirement, req_id=2, verb="yo", policy=policy1)
     mommy.make(Requirement, req_id=3, verb="xi", policy=policy2)
@@ -120,7 +129,8 @@ def test_requirements_ordered_by_bad_key(params):
     """
     client = APIClient()
     for i in range(3):
-        policy = mommy.make(Policy, omb_policy_id=str(10 - i))
+        policy = mommy.make(Policy, omb_policy_id=str(10 - i),
+                            workflow_phase='published')
         mommy.make(Requirement, req_id=str(i), policy=policy)
     path = "/requirements/?ordering={0}".format(params)
     response = client.get(path)
@@ -131,9 +141,11 @@ def test_requirements_ordered_by_bad_key(params):
 @pytest.mark.django_db
 def test_requirements_agencies_filter():
     client = APIClient()
-    req1 = mommy.make(Requirement)
+    req1 = mommy.make(Requirement,
+                      policy=mommy.make(Policy, workflow_phase='published'))
     req1.agencies.add(*mommy.make(Agency, _quantity=3))
-    req2 = mommy.make(Requirement)
+    req2 = mommy.make(Requirement,
+                      policy=mommy.make(Policy, workflow_phase='published'))
     req2.agencies.add(*mommy.make(Agency, _quantity=4))
 
     path = "/requirements/"
@@ -147,14 +159,14 @@ def test_requirements_agencies_filter():
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('policy_public, req_public, visible', [
-    (False, False, False),
-    (False, True, False),
-    (True, False, False),
-    (True, True, True),
+@pytest.mark.parametrize('workflow, req_public, visible', [
+    ('edit', False, False),
+    ('edit', True, False),
+    ('published', False, False),
+    ('published', True, True),
 ])
-def test_requirements_nonpublic(policy_public, req_public, visible):
-    policy = mommy.make(Policy, public=policy_public)
+def test_requirements_nonpublic(workflow, req_public, visible):
+    policy = mommy.make(Policy, workflow_phase=workflow)
     mommy.make(Requirement, policy=policy, public=req_public)
 
     num_visible = APIClient().get('/requirements/').json()['count']
@@ -166,7 +178,8 @@ def test_requirements_agencies_nonpublic():
     client = APIClient()
     agencies = mommy.make(Agency, _quantity=3)
     agencies.append(mommy.make(Agency, public=False))
-    req = mommy.make(Requirement)
+    req = mommy.make(Requirement,
+                     policy=mommy.make(Policy, workflow_phase='published'))
     req.agencies.add(*agencies)
 
     path = "/requirements/?id={0}".format(req.pk)
@@ -184,9 +197,15 @@ def test_requirements_agencies_nonpublic():
 ])
 def test_requirements_fulltext_search(term, icontains_count, search_count):
     client = APIClient()
-    mommy.make(Requirement, req_text='Full text stems words')
-    mommy.make(Requirement, req_text='Stemmed textual input')
-    mommy.make(Requirement, req_text='Fullerton place')
+    mommy.make(Requirement,
+               policy=mommy.make(Policy, workflow_phase='published'),
+               req_text='Full text stems words')
+    mommy.make(Requirement,
+               policy=mommy.make(Policy, workflow_phase='published'),
+               req_text='Stemmed textual input')
+    mommy.make(Requirement,
+               policy=mommy.make(Policy, workflow_phase='published'),
+               req_text='Fullerton place')
 
     path = "/requirements/?req_text__icontains=" + term
     response = client.get(path).json()
@@ -203,7 +222,8 @@ def applied_agencies():
     g_match, g_nonmatch = mommy.make(AgencyGroup, _quantity=2)
     g_match.agencies.add(a_group_match)
     g_nonmatch.agencies.add(a_group_nonmatch)
-    req = mommy.make(Requirement)
+    req = mommy.make(Requirement,
+                     policy=mommy.make(Policy, workflow_phase='published'))
     req.agencies.add(a_req)
     req.agency_groups.add(g_match)
     yield a_req, a_group_match, a_group_nonmatch
