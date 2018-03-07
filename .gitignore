@@ -17,6 +17,7 @@ ui/lcov.info
 .next
 api/webpack-static/
 api/collected-static/
+api/media/
 
 # Data
 *.csv
