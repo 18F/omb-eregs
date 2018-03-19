@@ -4,16 +4,6 @@ services:
     image: postgres:9.4
     volumes:
       - database_data:/var/lib/postgresql/data
-  # We've temporarily removed pdf upload, so we don't need
-  # minio (a mock S3 server) for now.
-  # minio:
-  #   image: minio/minio
-  #   environment:
-  #       - MINIO_ACCESS_KEY=LOCAL_ID
-  #       - MINIO_SECRET_KEY=LOCAL_KEY
-  #   command: server --address ':9100' minio-test
-  #   ports:
-  #     - 9100:9100
   api:
     image: python:3.6.4
     working_dir: /usr/src/app/api
@@ -36,26 +26,13 @@ services:
       VCAP_APPLICATION: >
         {"uris": ["localhost", "0.0.0.0", "127.0.0.1", "api"]}
       VCAP_SERVICES: >
-        {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}],
-         "s3": [{
-           "credentials": {
-             "access_key_id": "LOCAL_ID",
-             "bucket": "pdfs",
-             "region": "irrelevant fake region",
-             "endpoint": "http://minio:9100",
-             "secret_access_key": "LOCAL_KEY"
-           },
-           "label": "s3",
-           "name": "storage-s3"
-         }]
-        }
+        {"config": [{"credentials": {"DJANGO_SECRET_KEY": "NotASecret"}}]}
     ports:
       - 8001:8001
     volumes:
       - .:/usr/src/app:delegated
     depends_on:
       - persistent_db
-      # - minio
       - api-ui
   api-ui:
     image: node:8

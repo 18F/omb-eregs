@@ -53,6 +53,16 @@ transforms = [
 ]
 
 
+def migrate_doc(doc: DocCursor) -> DocCursor:
+    """Apply all transforms to a given document. Save it and return."""
+    for transform in transforms:
+        doc = transform(doc)
+    doc.nested_set_renumber(bulk_create=False)
+    for node in doc.walk():
+        node.save()
+    return doc
+
+
 class Command(BaseCommand):
     help = ( # noqa (overriding a builtin)
         "Run through (idempotent) document migrations to mass-fixup docs.")
@@ -63,9 +73,5 @@ class Command(BaseCommand):
             for root_docnode in roots:
                 with transaction.atomic():
                     doc = DocCursor.load_from_model(root_docnode)
-                    for transform in transforms:
-                        doc = transform(doc)
-                    doc.nested_set_renumber(bulk_create=False)
-                    for node in doc.walk():
-                        node.save()
+                    migrate_doc(doc)
                 pbar.update(1)
