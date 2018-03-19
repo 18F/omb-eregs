@@ -14,19 +14,6 @@ api: &API
   environment:
     DEBUG: "True"
     DATABASE_URL: postgres://postgres@localhost/postgres
-    VCAP_SERVICES: |
-      {"s3": [{
-         "credentials": {
-           "access_key_id": "LOCAL_ID",
-           "bucket": "pdfs",
-           "region": "irrelevant fake region",
-           "endpoint": "http://localhost:9100",
-           "secret_access_key": "LOCAL_KEY"
-         },
-         "label": "s3",
-         "name": "storage-s3"
-       }]
-      }
 admin-ui: &ADMIN_UI
   docker:
     - image: node:6

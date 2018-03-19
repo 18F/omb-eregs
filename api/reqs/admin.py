@@ -1,28 +1,12 @@
-from django import forms
+from django.conf.urls import url
 from django.contrib import admin
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
 from ereqs_admin.revision_admin import EReqsVersionAdmin
+from reqs.forms import DocumentUploadForm
 from reqs.models import Agency, AgencyGroup, Office, Policy, Requirement, Topic
-
-
-def is_extension_pdf(uploaded_file):
-    if (not uploaded_file.name.endswith('pdf')
-            or uploaded_file.content_type != 'application/pdf'):
-        raise ValidationError('The file must be a PDF.')
-
-
-# This form is temporarily no-longer used. We'll add it back with the pdf
-# upload workflow
-class PolicyForm(forms.ModelForm):
-    document_source = forms.FileField(required=False,
-                                      validators=[is_extension_pdf])
-
-    class Meta:
-        model = Policy
-        fields = '__all__'
 
 
 @admin.register(Policy)
@@ -42,13 +26,46 @@ class PolicyAdmin(EReqsVersionAdmin):
     ]
 
     def response_post_save_change(self, request, obj):
-        """Redirect to the document editor, if that's the button the user
-        clicked."""
-        if '_savethendoc' in request.POST:
-            policy_id = obj.omb_policy_id or obj.slug
+        """Redirect to the document import or editor, if that's the button the
+        user clicked."""
+        policy_id = obj.omb_policy_id or obj.slug
+        if '_savethendoc' in request.POST and obj.has_no_document:
+            return HttpResponseRedirect(reverse(
+                'admin:document_upload', kwargs={'pk': obj.pk}))
+        elif '_savethendoc' in request.POST:
             return HttpResponseRedirect(
                 reverse('document_editor', kwargs={'policy_id': policy_id}))
         return super().response_post_save_change(request, obj)
+
+    def get_urls(self):
+        """Add the document upload view"""
+        urls = super().get_urls()
+        return [
+            url('^(?P<pk>\d+)/document_upload$',
+                self.admin_site.admin_view(self.document_upload),
+                name='document_upload'),
+        ] + urls
+
+    def document_upload(self, request, pk):
+        """Handler for uploading new documents."""
+        policy = get_object_or_404(Policy, pk=pk)
+        if request.method == 'POST':    # submitted form
+            form = DocumentUploadForm(request.POST, request.FILES,
+                                      instance=policy)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse(
+                    'document_editor',
+                    kwargs={'policy_id': policy.omb_policy_id or policy.slug},
+                ))
+        else:
+            form = DocumentUploadForm(instance=policy)
+        context = dict(
+            self.admin_site.each_context(request),
+            form=form,
+            title='Document Upload',
+        )
+        return render(request, 'reqs/admin/document_upload.html', context)
 
 
 @admin.register(Topic)

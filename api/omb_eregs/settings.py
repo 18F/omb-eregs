@@ -199,30 +199,28 @@ STATICFILES_DIRS = [
 ]
 
 # File storage
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
-# In addition to using django-storages, we're maintaining parity between the
-# local docker-compose environment and the cloud.gov environments; see the
-# environment section of the prod-api service in docker-compose.yml for where
-# these values are coming from for local development.
 s3service = env.get_service(label="s3")
-AWS_ACCESS_KEY_ID = s3service.credentials.get("access_key_id")
-AWS_SECRET_ACCESS_KEY = s3service.credentials.get("secret_access_key")
-AWS_STORAGE_BUCKET_NAME = s3service.credentials.get("bucket")
-AWS_AUTO_CREATE_BUCKET = True
-if "endpoint" in s3service.credentials:
-    # For local development, we must override the endpoint, and region is
-    # irrelevant.
-    AWS_S3_ENDPOINT_URL = s3service.credentials["endpoint"]
+if s3service:
+    AWS_ACCESS_KEY_ID = s3service.credentials.get("access_key_id")
+    AWS_SECRET_ACCESS_KEY = s3service.credentials.get("secret_access_key")
+    AWS_STORAGE_BUCKET_NAME = s3service.credentials.get("bucket")
+    AWS_AUTO_CREATE_BUCKET = True
+    if "endpoint" in s3service.credentials:
+        # For local development, we must override the endpoint, and region is
+        # irrelevant.
+        AWS_S3_ENDPOINT_URL = s3service.credentials["endpoint"]
+    else:
+        # On cloud.gov, we need region and we want django-storages to infer the
+        # correct URL for us rather than setting an endpoint ourselves.
+        AWS_S3_REGION_NAME = s3service.credentials["region"]
+    AWS_S3_OBJECT_PARAMETERS = {
+        'ContentDisposition': 'attachment',    # Browsers should download files
+    }
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 else:
-    # On cloud.gov, we need region and we want django-storages to infer the
-    # correct URL for us rather than setting an endpoint ourselves.
-    AWS_S3_REGION_NAME = s3service.credentials["region"]
-AWS_S3_OBJECT_PARAMETERS = {
-    'ContentDisposition': 'attachment',     # Browsers should download files
-}
+    MEDIA_ROOT = 'media'
+
 
 TAGGIT_CASE_INSENSITIVE = True
 

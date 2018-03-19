@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+  <form enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+    <div>
+      {{ form.non_field_errors }}
+      <div class="fieldWrapper">
+        {{ form.document_source.errors }}
+        <label for="{{ form.document_source.id_for_label }}">Document:</label>
+        <input
+          accept=".pdf"
+          id="{{ form.document_source.id_for_label }}"
+          name="{{ form.document_source.html_name }}"
+          type="file"
+        />
+      </div>
+      <input type="submit" value="Submit" />
+    </div>
+  </form>
+</div>
+{% endblock %}
