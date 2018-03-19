@@ -158,6 +158,13 @@ class Policy(models.Model):
     def has_published_document(self):
         return self.workflow_phase == WorkflowPhases.published.name
 
+    @property
+    def has_no_document(self):
+        return self.workflow_phase in (
+            WorkflowPhases.failed.name,
+            WorkflowPhases.no_doc.name,
+        )
+
     def __str__(self):
         text = self.title_with_number
         if len(text) > 100:
