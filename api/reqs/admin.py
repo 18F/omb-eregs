@@ -23,6 +23,7 @@ class PolicyAdmin(EReqsVersionAdmin):
         'issuance',
         'sunset',
         'workflow_phase',
+        'uri'
     ]
 
     def response_post_save_change(self, request, obj):
