@@ -16,6 +16,9 @@ applications:
     command: ./run_api.sh
     routes:
       - route: omb-eregs-api.app.cloud.gov
+      # When creating this service, be sure to configure it to pass two headers:
+      # Accept: Required to get the correct data format
+      # Referer: Required for CSRF validation
       - route: policy-api.cio.gov
     env:
       NEW_RELIC_APP_NAME: OMB Prod API/Admin
