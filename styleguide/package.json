@@ -2,8 +2,8 @@
   "name": "omb-eregs",
   "version": "0.1.0",
   "dependencies": {
-    "@frctl/fractal": "^1.1.7",
-    "@frctl/nunjucks": "^1.0.3"
+    "@frctl/fractal": "^1.5.15",
+    "@frctl/nunjucks": "^2.0.15"
   },
   "scripts": {
     "build": "webpack",
