@@ -4,87 +4,247 @@
 #
 #    pip-compile --output-file requirements_dev.txt requirements_dev.in
 #
-argh==0.26.2              # via watchdog
-attrs==17.2.0             # via flake8-bugbear
+argh==0.26.2
+    # via watchdog
+attrs==17.2.0
+    # via flake8-bugbear
 bandit==1.4.0
+    # via -r requirements_dev.in
 boto3==1.4.7
+    # via -r requirements.txt
 botocore==1.7.4
+    # via
+    #   -r requirements.txt
+    #   boto3
+    #   s3transfer
 certifi==2017.7.27.1
+    # via
+    #   -r requirements.txt
+    #   requests
 cfenv==0.5.3
+    # via -r requirements.txt
 chardet==3.0.4
-colorama==0.3.9           # via pytest-watch, radon
-coverage==4.4.1           # via pytest-cov
+    # via
+    #   -r requirements.txt
+    #   pdfminer.six
+    #   requests
+colorama==0.3.9
+    # via
+    #   pytest-watch
+    #   radon
+coverage==4.4.1
+    # via pytest-cov
 decorator==4.1.2
+    # via
+    #   -r requirements.txt
+    #   networkx
 dj-database-url==0.4.2
-django-admin-interface==0.5.2
-django-apptemplates==1.4
-django-cas-ng==3.5.8
-django-colorfield==0.1.14
-django-cors-headers==2.1.0
-django-debug-toolbar==1.8
-django-filter==1.0.4
-django-flat-responsive==1.4.1
-django-flat-theme==1.1.4
-django-reversion==2.0.10
-django-storages==1.6.5
+    # via -r requirements.txt
 django==1.11.5
+    # via
+    #   -r requirements.txt
+    #   django-debug-toolbar
+    #   django-reversion
+    #   model-mommy
+django-admin-interface==0.5.2
+    # via -r requirements.txt
+django-apptemplates==1.4
+    # via -r requirements.txt
+django-cas-ng==3.5.8
+    # via -r requirements.txt
+django-colorfield==0.1.14
+    # via
+    #   -r requirements.txt
+    #   django-admin-interface
+django-cors-headers==2.1.0
+    # via -r requirements.txt
+django-debug-toolbar==1.8
+    # via -r requirements_dev.in
+django-filter==1.0.4
+    # via -r requirements.txt
+django-flat-responsive==1.4.1
+    # via
+    #   -r requirements.txt
+    #   django-admin-interface
+django-flat-theme==1.1.4
+    # via
+    #   -r requirements.txt
+    #   django-admin-interface
+django-reversion==2.0.10
+    # via -r requirements.txt
+django-storages==1.6.5
+    # via -r requirements.txt
 djangorestframework==3.6.4
-docopt==0.6.2             # via pytest-watch
+    # via -r requirements.txt
+docopt==0.6.2
+    # via pytest-watch
 docutils==0.13.1
-flake8-bugbear==17.4.0
-flake8-builtins==1.0
-flake8-comprehensions==1.4.1
-flake8-isort==2.2.2
-flake8-pep3101==1.0
-flake8-polyfill==1.0.1    # via flake8-isort, radon
-flake8-print==2.0.2
-flake8-string-format==0.2.3
-flake8-tuple==0.2.13
+    # via
+    #   -r requirements.txt
+    #   botocore
 flake8==3.4.1
+    # via
+    #   -r requirements_dev.in
+    #   flake8-bugbear
+    #   flake8-builtins
+    #   flake8-comprehensions
+    #   flake8-isort
+    #   flake8-pep3101
+    #   flake8-polyfill
+    #   flake8-print
+    #   flake8-string-format
+    #   flake8-tuple
+flake8-bugbear==17.4.0
+    # via -r requirements_dev.in
+flake8-builtins==1.0
+    # via -r requirements_dev.in
+flake8-comprehensions==1.4.1
+    # via -r requirements_dev.in
+flake8-isort==2.2.2
+    # via -r requirements_dev.in
+flake8-pep3101==1.0
+    # via -r requirements_dev.in
+flake8-polyfill==1.0.1
+    # via
+    #   flake8-isort
+    #   radon
+flake8-print==2.0.2
+    # via -r requirements_dev.in
+flake8-string-format==0.2.3
+    # via -r requirements_dev.in
+flake8-tuple==0.2.13
+    # via -r requirements_dev.in
 furl==1.0.0
-gitdb2==2.0.2             # via gitpython
-gitpython==2.1.5          # via bandit
+    # via
+    #   -r requirements.txt
+    #   cfenv
+gitdb2==2.0.2
+    # via gitpython
+gitpython==2.1.5
+    # via bandit
 gunicorn==19.7.1
+    # via -r requirements.txt
 idna==2.6
-isort==4.2.15             # via flake8-isort
+    # via
+    #   -r requirements.txt
+    #   requests
+isort==4.2.15
+    # via flake8-isort
 jedi==0.10.2
+    # via -r requirements_dev.in
 jmespath==0.9.3
+    # via
+    #   -r requirements.txt
+    #   boto3
+    #   botocore
 lxml==4.1.0
-mando==0.6.4              # via radon
-mccabe==0.6.1             # via flake8
+    # via -r requirements.txt
+mando==0.6.4
+    # via radon
+mccabe==0.6.1
+    # via flake8
 model-mommy==1.3.2
+    # via -r requirements_dev.in
 mypy==0.560
+    # via -r requirements_dev.in
 networkx==2.0
+    # via -r requirements.txt
 newrelic==2.90.0.75
+    # via -r requirements.txt
 orderedmultidict==0.7.11
-pathtools==0.1.2          # via watchdog
-pbr==3.1.1                # via stevedore
+    # via
+    #   -r requirements.txt
+    #   furl
+pathtools==0.1.2
+    # via watchdog
+pbr==3.1.1
+    # via stevedore
 pdfminer.six==20170720
+    # via -r requirements.txt
 pep8-naming==0.4.1
-psutil==5.4.3             # via mypy
+    # via -r requirements_dev.in
+psutil==5.4.3
+    # via mypy
 psycopg2==2.7.3.1
-py==1.4.34                # via pytest
-pycodestyle==2.3.1        # via flake8
+    # via -r requirements.txt
+py==1.4.34
+    # via pytest
+pycodestyle==2.3.1
+    # via flake8
 pycryptodome==3.4.7
-pyflakes==1.5.0           # via flake8
-pytest-cov==2.5.1
-pytest-django==3.1.2
-pytest-watch==4.1.0
+    # via
+    #   -r requirements.txt
+    #   pdfminer.six
+pyflakes==1.5.0
+    # via flake8
 pytest==3.2.1
+    # via
+    #   -r requirements_dev.in
+    #   pytest-cov
+    #   pytest-django
+    #   pytest-watch
+pytest-cov==2.5.1
+    # via -r requirements_dev.in
+pytest-django==3.1.2
+    # via -r requirements_dev.in
+pytest-watch==4.1.0
+    # via -r requirements_dev.in
 python-cas==1.2.0
+    # via
+    #   -r requirements.txt
+    #   django-cas-ng
 python-dateutil==2.6.1
+    # via
+    #   -r requirements.txt
+    #   botocore
 pytz==2017.2
-pyyaml==3.12              # via bandit, watchdog
+    # via
+    #   -r requirements.txt
+    #   django
+pyyaml==3.12
+    # via
+    #   bandit
+    #   watchdog
 radon==2.2.0
+    # via -r requirements_dev.in
 requests==2.18.4
+    # via
+    #   -r requirements.txt
+    #   python-cas
 s3transfer==0.1.10
+    # via
+    #   -r requirements.txt
+    #   boto3
 six==1.10.0
-smmap2==2.0.3             # via gitdb2
-sqlparse==0.2.3           # via django-debug-toolbar
-stevedore==1.26.0         # via bandit
-testfixtures==5.2.0       # via flake8-isort
+    # via
+    #   -r requirements.txt
+    #   bandit
+    #   flake8-tuple
+    #   furl
+    #   mando
+    #   model-mommy
+    #   orderedmultidict
+    #   pdfminer.six
+    #   python-cas
+    #   python-dateutil
+    #   stevedore
+smmap2==2.0.3
+    # via gitdb2
+sqlparse==0.4.4
+    # via django-debug-toolbar
+stevedore==1.26.0
+    # via bandit
+testfixtures==5.2.0
+    # via flake8-isort
 tqdm==4.19.5
-typed-ast==1.1.0          # via mypy
+    # via -r requirements.txt
+typed-ast==1.1.0
+    # via mypy
 urllib3==1.22
-watchdog==0.8.3           # via pytest-watch
+    # via
+    #   -r requirements.txt
+    #   requests
+watchdog==0.8.3
+    # via pytest-watch
 whitenoise==3.3.0
+    # via -r requirements.txt
