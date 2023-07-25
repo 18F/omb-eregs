@@ -5,42 +5,98 @@
 #    pip-compile --output-file requirements.txt requirements.in
 #
 boto3==1.4.7
-botocore==1.7.4           # via boto3, s3transfer
-certifi==2017.7.27.1      # via requests
+    # via -r requirements.in
+botocore==1.7.4
+    # via
+    #   boto3
+    #   s3transfer
+certifi==2023.7.22
+    # via requests
 cfenv==0.5.3
-chardet==3.0.4            # via pdfminer.six, requests
-decorator==4.1.2          # via networkx
+    # via -r requirements.in
+chardet==3.0.4
+    # via
+    #   pdfminer.six
+    #   requests
+decorator==4.1.2
+    # via networkx
 dj-database-url==0.4.2
-django-admin-interface==0.5.2
-django-apptemplates==1.4
-django-cas-ng==3.5.8
-django-colorfield==0.1.14  # via django-admin-interface
-django-cors-headers==2.1.0
-django-filter==1.0.4
-django-flat-responsive==1.4.1  # via django-admin-interface
-django-flat-theme==1.1.4  # via django-admin-interface
-django-reversion==2.0.10
-django-storages==1.6.5
+    # via -r requirements.in
 django==1.11.5
+    # via
+    #   -r requirements.in
+    #   django-reversion
+django-admin-interface==0.5.2
+    # via -r requirements.in
+django-apptemplates==1.4
+    # via -r requirements.in
+django-cas-ng==3.5.8
+    # via -r requirements.in
+django-colorfield==0.1.14
+    # via django-admin-interface
+django-cors-headers==2.1.0
+    # via -r requirements.in
+django-filter==1.0.4
+    # via -r requirements.in
+django-flat-responsive==1.4.1
+    # via django-admin-interface
+django-flat-theme==1.1.4
+    # via django-admin-interface
+django-reversion==2.0.10
+    # via -r requirements.in
+django-storages==1.6.5
+    # via -r requirements.in
 djangorestframework==3.6.4
-docutils==0.13.1          # via botocore
-furl==1.0.0               # via cfenv
+    # via -r requirements.in
+docutils==0.13.1
+    # via botocore
+furl==1.0.0
+    # via cfenv
 gunicorn==19.7.1
-idna==2.6                 # via requests
-jmespath==0.9.3           # via boto3, botocore
+    # via -r requirements.in
+idna==2.6
+    # via requests
+jmespath==0.9.3
+    # via
+    #   boto3
+    #   botocore
 lxml==4.1.0
+    # via -r requirements.in
 networkx==2.0
+    # via -r requirements.in
 newrelic==2.90.0.75
-orderedmultidict==0.7.11  # via furl
+    # via -r requirements.in
+orderedmultidict==0.7.11
+    # via furl
 pdfminer.six==20170720
+    # via -r requirements.in
 psycopg2==2.7.3.1
-pycryptodome==3.4.7       # via pdfminer.six
-python-cas==1.2.0         # via django-cas-ng
+    # via -r requirements.in
+pycryptodome==3.4.7
+    # via pdfminer.six
+python-cas==1.2.0
+    # via django-cas-ng
 python-dateutil==2.6.1
-pytz==2017.2              # via django
+    # via
+    #   -r requirements.in
+    #   botocore
+pytz==2017.2
+    # via django
 requests==2.18.4
-s3transfer==0.1.10        # via boto3
-six==1.10.0               # via furl, orderedmultidict, pdfminer.six, python-cas, python-dateutil
+    # via
+    #   -r requirements.in
+    #   python-cas
+s3transfer==0.1.10
+    # via boto3
+six==1.10.0
+    # via
+    #   furl
+    #   pdfminer.six
+    #   python-cas
+    #   python-dateutil
 tqdm==4.19.5
-urllib3==1.22             # via requests
+    # via -r requirements.in
+urllib3==1.22
+    # via requests
 whitenoise==3.3.0
+    # via -r requirements.in
