@@ -24,7 +24,7 @@
   "devDependencies": {
     "babel-jest": "^21.0.0",
     "basscss-sass": "^4.0.0",
-    "css-loader": "^0.28.4",
+    "css-loader": "^6.8.1",
     "deps-ok": "^1.2.2",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
