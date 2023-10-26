@@ -34,7 +34,7 @@
     "axios": "^0.17.1",
     "codemirror": "^5.33.0",
     "css-loader": "0.28.7",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "normalize.css": "^7.0.0",
     "pdfjs-dist": "^2.0.185",
     "prosemirror-commands": "^1.0.3",
